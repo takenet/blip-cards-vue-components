@@ -1,7 +1,9 @@
 import PlainText from './components/PlainText'
 
 function install (Vue) {
-  Vue.component('plain-text', PlainText)
+  let components = []
+  components.push({ name: 'plainText', component: Vue.component('plain-text', PlainText) })
+  return components
 }
 
 export {
