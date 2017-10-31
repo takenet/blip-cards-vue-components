@@ -3,11 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 
+import PlainText from './components/PlainText'
+
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  template: '<App/>',
-  components: { App }
-})
+Vue.component('App', App)
+Vue.component('plain-text', PlainText)

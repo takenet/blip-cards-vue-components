@@ -8,9 +8,11 @@
         <div v-show="!item.showContent">
           {{ item.previewContent }}
         </div>
-        <div v-show="item.showContent">
-          {{ item.content }}
-        </div>
+        <transition name="slide-fade">
+          <div v-show="item.showContent">
+            {{ item.content }}
+          </div>
+        </transition>
         <a v-show="!item.showContent" v-on:click="showContent(item)">Ver mais</a>
       </div>
     </div>

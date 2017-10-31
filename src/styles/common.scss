@@ -1,9 +1,10 @@
 @import 'colors';
 @import 'fonts.scss';
+@import 'animations.scss';
 
 .bubble { 
     padding: 10px 16px;
-    font-family: "Avenir-Next";	
+    font-family: "Avenir Next";	
     font-size: 14px;	
     font-weight: 500;	
     line-height: 19px;
@@ -25,4 +26,3 @@
     color: $vue-white;
     float: right;
 }
-
