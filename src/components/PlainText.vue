@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="'bubble plain-text ' + pos">
+    <div :class="'bubble plain-text ' + position">
       <div v-if="!previewDocument.hasPreview">
         {{ previewDocument.content }}
       </div>
@@ -30,7 +30,7 @@ export default {
       type: Object,
       required: true
     },
-    pos: {
+    position: {
       type: String,
       default: 'left'
     }
