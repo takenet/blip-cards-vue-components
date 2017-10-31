@@ -8,9 +8,7 @@ import PlainText from './components/PlainText'
 Vue.config.productionTip = false
 
 Vue.component('App', App)
-var teste = Vue.component('plain-text', PlainText)
-
-console.log(teste)
+Vue.component('plain-text', PlainText)
 
 /* eslint-disable no-new */
 new Vue({
