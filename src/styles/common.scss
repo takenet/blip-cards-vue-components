@@ -1,16 +1,32 @@
 @import 'colors';
-@import 'fonts.scss';
-@import 'animations.scss';
+@import 'fonts';
+@import 'animations';
 
-.bubble { 
+.container {
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.container:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.bubble {
     padding: 10px 16px;
-    margin-bottom: 15px;
-    font-family: "Avenir Next";	
-    font-size: 14px;	
-    font-weight: 500;	
+    margin-bottom: 5px;
+    width: auto;
+    height: auto;
+    max-width: 80%;
+    font-family: "Avenir Next";
+    font-size: 14px;
+    font-weight: 500;
     line-height: 19px;
     white-space: pre-line;
-    clear: both;
 }
 
 .bubble.left {
@@ -28,3 +44,40 @@
     color: $vue-white;
     float: right;
 }
+
+.notification {
+  font-size: 10px;
+  color: $vue-light-gray;
+  line-height: 14px;
+  clear: both;
+}
+
+.notification.left {
+  float: left;
+}
+
+.notification.right {
+  float: right;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.left a {
+  color: $vue-blue;
+}
+
+.left a:visited {color: $vue-blue;}  /* visited link */
+.left a:hover {color: $vue-blue;}  /* mouse over link */
+.left a:active {color: $vue-blue;}  /* selected link */
+
+.right a {
+ font-weight: bold;
+ color: $vue-white;
+}
+
+.right a:visited {color: $vue-white;}  /* visited link */
+.right a:hover {color: $vue-white;}  /* mouse over link */
+.right a:active {color: $vue-white;}  /* selected link */
