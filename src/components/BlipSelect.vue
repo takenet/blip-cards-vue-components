@@ -120,7 +120,7 @@ export default {
      border: 1px solid #0CC8CC;
      box-shadow: 0 -1px 12px 0 #EEEEEE;
      border-radius: 19px;
-     padding: 10px;
+     padding: 10px 16px;
      margin: 2px;
      color: #0CC8CC;
      font-size: 14px;
