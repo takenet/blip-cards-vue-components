@@ -1,6 +1,13 @@
 <template>
   <div style="width: 300px; margin: 0 auto; background-color: #FAF9F8; padding: 20px;">
-    <blip-select position="right" :document="{'content':{'text':'Escolha uma opção','options':[{'text':'Primeira opção'},{'order':2,'text':'Segunda opção'},{'order':3,'text':'Terceira opção','type':'application/json','value':{'key1':'value1','key2':2}}]}}" date="08:32 PM"/>
+    <blip-select position="right" :on-selected="teste" :hide-options="true" :document="{'content':{'scope': 'immediate','text':'Sem opcoes','options':[{'text':'Primeira opção'},{'order':2,'text':'Segunda opção'},{'order':3,'text':'Terceira opção','type':'application/json','value':{'key1':'value1','key2':2}}]}}" date="08:32 PM"/>
+    <blip-select position="left" :on-selected="teste" :hide-options="true" :document="{'content':{'scope': 'immediate','text':'Sem opcoes','options':[{'text':'Primeira opção'},{'order':2,'text':'Segunda opção'},{'order':3,'text':'Terceira opção','type':'application/json','value':{'key1':'value1','key2':2}}]}}" date="08:32 PM"/>
+
+    <blip-select position="right" :on-selected="teste" :hide-options="false" :document="{'content':{'scope': 'immediate','text':'!@#º😞\nEscolha uma opção','options':[{'text':'Primeira opção'},{'order':2,'text':'Segunda opção'},{'order':3,'text':'Terceira opção','type':'application/json','value':{'key1':'value1','key2':2}}]}}" date="08:32 PM"/>
+    <blip-select position="left" :on-selected="teste" :hide-options="false" :document="{'content':{'scope': 'immediate','text':'!@#º😞\nEscolha uma opção','options':[{'text':'Primeira opção'},{'order':2,'text':'Segunda opção'},{'order':3,'text':'Terceira opção','type':'application/json','value':{'key1':'value1','key2':2}}]}}" date="08:32 PM"/>
+
+    <blip-select position="right" :on-selected="teste" :hide-options="false" :document="{'content':{'text':'!@#º😞\nEscolha uma opção','options':[{'text':'Primeira opção'},{'order':2,'text':'Segunda opção'},{'order':3,'text':'Terceira opção','type':'application/json','value':{'key1':'value1','key2':2}}]}}" date="08:32 PM"/>
+    <blip-select position="left" :on-selected="teste" :hide-options="false" :document="{'content':{'text':'!@#º😞\nEscolha uma opção','options':[{'text':'Primeira opção'},{'order':2,'text':'Segunda opção'},{'order':3,'text':'Terceira opção','type':'application/json','value':{'key1':'value1','key2':2}}]}}" date="08:32 PM"/>
 
     <plain-text position="right" :document="{content: 'Oi'}" date="08:32 PM"/>
     <plain-text position="left" :document="{content: 'Oi'}"  date="08:32 PM"/>
@@ -21,7 +28,16 @@
 <script>
 
 export default {
+  data: function () {
+    return {
+      teste: function (obj) {
+        console.log(obj)
+      }
+    }
+  },
   components: {
   }
 }
 </script>
+
+
