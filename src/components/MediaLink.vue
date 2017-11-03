@@ -1,7 +1,10 @@
 <template>
-  <div class="container media-link">
+  <div :class="'container media-link ' + document.content.type.split('/')[0]">
     <div :class="'bubble max-width ' + position">
-      <div class="audio-player-wrapper">
+
+      <blip-image :document="document" :position="position" :date="date" v-if="document.content.type.includes('image')" />
+
+      <div class="audio-player-wrapper" v-if="document.content.type.includes('audio')">
         <div class="audio-player-controls">
           <span v-if="isPlaying" @click="togglePlay"><img class="audio-player-button" :src="pauseImg" alt="Pause"></span>
           <span v-else @click="togglePlay"><img class="audio-player-button" :src="playImg" alt="Play"></span>
@@ -27,7 +30,12 @@
 import PlayImg from '../assets/img/play.png'
 import PauseImg from '../assets/img/pause.png'
 
+import BlipImage from './MediaLink/Image'
+
 export default {
+  components: {
+    BlipImage
+  },
   props: {
     document: {
       type: Object,

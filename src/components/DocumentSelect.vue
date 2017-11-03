@@ -98,8 +98,8 @@ export default {
         width: 100%;
 
         img {
-          border-radius: 13px 13px 0 0;
           width: 100%;
+          display: block;
         }
 
         .title {
