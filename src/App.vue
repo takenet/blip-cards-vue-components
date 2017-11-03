@@ -1,5 +1,11 @@
 <template>
   <div style="width: 300px; margin: 0 auto; background-color: #FAF9F8; padding: 20px;">
+
+    <document-select position="left" :on-selected="teste" :document="{'content':{'header':{'type':'application/vnd.lime.media-link+json','value':{'title':'Seja bem-vindo ao Chapeleiro Maluco','text':'Aqui temos o melhor chapéu para sua cabeça.','type':'image/jpeg','uri':'http://blog.inpulse.vet.br/wp-content/uploads/2016/10/como-evitar-arranhoes-do-seu-gato.jpg','aspectRatio':'1:1'}},'options':[{'label':{'type':'application/vnd.lime.web-link+json','value':{'text':'Visitar site','uri':'https://petersapparel.parseapp.com/view_item?item_id=100'}}},{'label':{'type':'text/plain','value':'Ver estoque'},'value':{'type':'application/json','value':{'action':'show-items'}}}]}}" date="08:32 PM"/>
+    <document-select position="left" :on-selected="teste" :document="{'content':{'header':{'type':'application/vnd.lime.media-link+json','value':{'title':'Seja bem-vindo ao Chapeleiro Maluco','type':'image/jpeg','uri':'http://blog.inpulse.vet.br/wp-content/uploads/2016/10/como-evitar-arranhoes-do-seu-gato.jpg','aspectRatio':'1:1'}},'options':[{'label':{'type':'application/vnd.lime.web-link+json','value':{'text':'Visitar site','uri':'https://petersapparel.parseapp.com/view_item?item_id=100'}}},{'label':{'type':'text/plain','value':'Ver estoque'},'value':{'type':'application/json','value':{'action':'show-items'}}}]}}" date="08:32 PM"/>
+    <document-select position="left" :on-selected="teste" :document="{'content':{'header':{'type':'application/vnd.lime.media-link+json','value':{'text':'Aqui temos o melhor chapéu para sua cabeça.','type':'image/jpeg','uri':'http://blog.inpulse.vet.br/wp-content/uploads/2016/10/como-evitar-arranhoes-do-seu-gato.jpg','aspectRatio':'1:1'}},'options':[{'label':{'type':'application/vnd.lime.web-link+json','value':{'text':'Visitar site','uri':'https://petersapparel.parseapp.com/view_item?item_id=100'}}},{'label':{'type':'text/plain','value':'Ver estoque'},'value':{'type':'application/json','value':{'action':'show-items'}}}]}}" date="08:32 PM"/>
+    <document-select position="left" :on-selected="teste" :document="{'content':{'header':{'type':'application/vnd.lime.media-link+json','value':{'type':'image/jpeg','uri':'http://blog.inpulse.vet.br/wp-content/uploads/2016/10/como-evitar-arranhoes-do-seu-gato.jpg','aspectRatio':'1:1'}},'options':[{'label':{'type':'application/vnd.lime.web-link+json','value':{'text':'Visitar site','uri':'https://petersapparel.parseapp.com/view_item?item_id=100'}}},{'label':{'type':'text/plain','value':'Ver estoque'},'value':{'type':'application/json','value':{'action':'show-items'}}}]}}" date="08:32 PM"/>
+
     <blip-select position="right" :on-selected="teste" :hide-options="true" :document="{'content':{'scope': 'immediate','text':'Sem opcoes','options':[{'text':'Primeira opção'},{'order':2,'text':'Segunda opção'},{'order':3,'text':'Terceira opção','type':'application/json','value':{'key1':'value1','key2':2}}]}}" date="08:32 PM"/>
     <blip-select position="left" :on-selected="teste" :hide-options="true" :document="{'content':{'scope': 'immediate','text':'Sem opcoes','options':[{'text':'Primeira opção'},{'order':2,'text':'Segunda opção'},{'order':3,'text':'Terceira opção','type':'application/json','value':{'key1':'value1','key2':2}}]}}" date="08:32 PM"/>
 
@@ -30,8 +36,8 @@
 export default {
   data: function () {
     return {
-      teste: function (obj) {
-        console.log(obj)
+      teste: function (text, obj) {
+        console.log(text, obj)
       }
     }
   },
@@ -39,5 +45,4 @@ export default {
   }
 }
 </script>
-
 

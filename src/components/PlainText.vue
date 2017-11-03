@@ -1,6 +1,6 @@
 <template>
-  <div v-if="previewDocument.content != null && previewDocument.content.length > 0" class="container">
-    <div :class="'bubble plain-text ' + position">
+  <div v-if="previewDocument.content != null && previewDocument.content.length > 0" class="container plain-text">
+    <div :class="'bubble ' + position">
       <div v-if="!previewDocument.hasPreview" v-html="previewDocument.content">
       </div>
       <div v-else >
@@ -64,4 +64,9 @@ export default {
 
 <style lang="scss">
    @import '../styles/common.scss';
+   @import '../styles/variables.scss';
+
+   .plain-text .bubble {
+     padding: $bubble-padding
+   }
 </style>

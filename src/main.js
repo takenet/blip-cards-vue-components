@@ -5,13 +5,14 @@ import App from './App'
 
 import PlainText from './components/PlainText'
 import BlipSelect from './components/BlipSelect'
-// import './styles/common.scss'
+import DocumentSelect from './components/DocumentSelect'
 
 Vue.config.productionTip = false
 
 Vue.component('App', App)
 Vue.component('plain-text', PlainText)
 Vue.component('blip-select', BlipSelect)
+Vue.component('document-select', DocumentSelect)
 
 /* eslint-disable no-new */
 new Vue({

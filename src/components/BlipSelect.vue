@@ -85,12 +85,12 @@ export default {
     select: function (item) {
       if (this.onSelected) {
         if (item.value) {
-          this.onSelected({
+          this.onSelected(item.text, {
             type: item.type,
             content: item.value
           })
         } else {
-          this.onSelected({
+          this.onSelected(item.text, {
             content: item.order ? item.order.toString() : item.text,
             type: 'text/plain'
           })
@@ -104,14 +104,18 @@ export default {
 </script>
 
 <style lang="scss">
-   @import '../styles/common.scss';
+   @import '../styles/variables.scss';
 
-   .select .options ul {
-     list-style-type: none;
-     clear: both;
-     margin: 0;
-     padding: 10px;
-   }
+    .select .bubble {
+      padding: $bubble-padding
+    }
+
+    .select .options ul {
+      list-style-type: none;
+      clear: both;
+      margin: 0;
+      padding: 10px;
+    }
 
    .select .options li {
      cursor: pointer;
@@ -127,40 +131,8 @@ export default {
      font-weight: 500;
    }
 
-   .select .fixed-options ul {
-     list-style-type: none;
-     clear: both;
-     margin: 0;
-     margin-top: 15px;
-     padding: 0px;
-   }
-
-   .select .fixed-options li {
-     cursor: pointer;
-     text-align: center;
-     padding: 10px;
-     margin: 2px;
-     font-size: 14px;
-     font-weight: 500;
-   }
-
-    .select .fixed-options li:last-child {
-     padding-bottom: 0px;
-   }
-
-    .select .fixed-options ul {
-      margin-left: -16px;
-      margin-right: -16px;
-    }
-
-    .select .left .fixed-options li {
-      color: $vue-blue;
-      border-top: 0.5px solid #e4e2e2;
-    }
-
-   .select .right .fixed-options li {
-     color: $vue-white;
-     border-top: 0.5px solid $vue-white;
-   }
+  .select .fixed-options li:last-child {
+    padding-bottom: 0px;
+  }
 
 </style>
