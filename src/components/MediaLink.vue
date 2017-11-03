@@ -2,15 +2,18 @@
   <div class="container">
     <div :class="'bubble max-width ' + position">
       <div class="audio-player-wrapper">
-        <div class="row middle-xs audio-player-controls">
-          <span class="audio-player-button-wrappers">
-            <a v-if="isPlaying" @click="togglePlay"><img class="audio-player-button" :src="pauseImg" alt="Pause"></a>
-            <a v-else @click="togglePlay"><img class="audio-player-button" :src="playImg" alt="Play"></a>
-          </span>
-          <input class="audio-player-range" type="range" :value="this.currentTime" :max="this.totalTime" @input="setAudioPosition($event)">
+        <div class="audio-player-controls">
+          <span v-if="isPlaying" @click="togglePlay"><img class="audio-player-button" :src="pauseImg" alt="Pause"></span>
+          <span v-else @click="togglePlay"><img class="audio-player-button" :src="playImg" alt="Play"></span>
+          <div class="audio-player-bar">
+            <input class="audio-player-range" type="range" :value="this.currentTime" :max="this.totalTime" @input="setAudioPosition($event)">
+            <div class="audio-player-time">
+              <span>{{getTimeFromSeconds(this.currentTime)}}</span>
+              <span>{{getTimeFromSeconds(this.totalTime)}}</span>
+            </div>
+          </div>
+
         </div>
-        <span>{{getTimeFromSeconds(this.currentTime)}}</span>
-        <span>{{getTimeFromSeconds(this.totalTime)}}</span>
       </div>
     </div>
 
@@ -81,20 +84,47 @@ export default {
 
 <style lang="scss">
    @import '../styles/common.scss';
+   .right .audio-player-wrapper {
+      -webkit-filter: brightness(2);
+      filter: brightness(2);
+    }
+
    .audio-player-wrapper {
       width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .audio-player-controls {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
 
       .audio-player-button {
-        width: 24px;
-        height: 30px;
+        width: 18px;
+        height: 23px;
+        flex-grow: 0;
+        margin-right: 10px;
+      }
+
+      .audio-player-bar {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        margin-top: 15px;
+      }
+
+      .audio-player-time {
+        display: flex;
+        justify-content: space-between;
+        font-family: "Avenir Next";
+        font-size: x-small;
+        color: #A7BEC3;
       }
 
       input[type=range] {
         -webkit-appearance: none;
         border: 1px solid white;
-        width: 85%;
-        position: relative;
-        bottom: 11px;
       }
       input[type=range]::-webkit-slider-runnable-track {
         width: 300px;
