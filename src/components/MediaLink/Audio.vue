@@ -47,6 +47,7 @@ export default {
     this.audio = new Audio(this.document.content.uri)
     this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
     this.audio.addEventListener('loadedmetadata', this.audioLoaded)
+    this.audio.addEventListener('ended', this.resetPlay)
   },
   methods: {
     togglePlay: function () {
@@ -57,6 +58,14 @@ export default {
         this.audio.pause()
       }
     },
+    resetPlay: function (event) {
+      if (this.isPlaying && (this.audio.currentTime = this.totalTime)) {
+        this.isPlaying = false
+        this.audio.pause()
+        this.audio.currentTime = 0
+        console.log(this.audio.currentTime)
+      }
+    },
     audioTimeUpdated: function () {
       this.currentTime = this.audio.currentTime
     },
@@ -64,7 +73,9 @@ export default {
       this.totalTime = this.audio.duration
     },
     setAudioPosition: function (event) {
-      this.audio.currentTime = event.srcElement.value
+      // srcElement is no supported in FF, but needed if working with IE6-8
+      this.audio.currentTime = (event.target || event.srcElement).value
+      console.log('here')
     },
     getTimeFromSeconds: function (seconds) {
       var timeMin = Math.floor(seconds / 60)
@@ -122,13 +133,13 @@ export default {
       input[type=range] {
         -webkit-appearance: none;
         width: auto;
-        height: 5px;
+        height: 3px;
         overflow: hidden;
         margin: 0;
       }
 
       input[type=range]::-webkit-slider-runnable-track {
-        height: 5px;
+        height: 3px;
         background: #ddd;
         border: none;
         overflow: hidden;
@@ -137,7 +148,7 @@ export default {
       input[type=range]::-webkit-slider-thumb {
         -webkit-appearance: none;
         border: none;
-        height: 5px;
+        height: 3px;
         width: 2px;
         border-radius: 50%;
         background: $vue-blue;
