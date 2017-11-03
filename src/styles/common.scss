@@ -46,6 +46,10 @@
     float: right;
 }
 
+.bubble.max-width {
+  width: 100%;
+}
+
 .notification {
   font-size: 10px;
   color: $vue-light-gray;

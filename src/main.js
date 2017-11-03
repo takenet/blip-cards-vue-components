@@ -6,11 +6,14 @@ import App from './App'
 import PlainText from './components/PlainText'
 import BlipSelect from './components/BlipSelect'
 import DocumentSelect from './components/DocumentSelect'
+import MediaLink from './components/MediaLink'
+// import './styles/common.scss'
 
 Vue.config.productionTip = false
 
 Vue.component('App', App)
 Vue.component('plain-text', PlainText)
+Vue.component('media-link', MediaLink)
 Vue.component('blip-select', BlipSelect)
 Vue.component('document-select', DocumentSelect)
 
