@@ -10,7 +10,6 @@
           <span>{{getTimeFromSeconds(this.totalTime)}}</span>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -91,8 +90,6 @@ export default {
 
    .audio-player-wrapper {
       width: 100%;
-      display: flex;
-      flex-direction: column;
 
       .audio-player-controls {
         display: flex;
@@ -124,10 +121,13 @@ export default {
 
       input[type=range] {
         -webkit-appearance: none;
-        border: 1px solid white;
+        width: auto;
+        height: 5px;
+        overflow: hidden;
+        margin: 0;
       }
+
       input[type=range]::-webkit-slider-runnable-track {
-        width: 300px;
         height: 5px;
         background: #ddd;
         border: none;
@@ -137,7 +137,7 @@ export default {
       input[type=range]::-webkit-slider-thumb {
         -webkit-appearance: none;
         border: none;
-        height: 16px;
+        height: 5px;
         width: 2px;
         border-radius: 50%;
         background: $vue-blue;
@@ -146,13 +146,10 @@ export default {
       }
       input[type=range]:focus {
         outline: none;
-      }
-      input[type=range]:focus::-webkit-slider-runnable-track {
-        background: #ccc;
+        background: #ddd;
       }
 
       input[type=range]::-moz-range-track {
-        width: 300px;
         height: 5px;
         background: #ddd;
         border: none;
@@ -160,52 +157,22 @@ export default {
       }
       input[type=range]::-moz-range-thumb {
         border: none;
-        height: 16px;
-        width: 16px;
-        border-radius: 50%;
+        height: 5px;
+        width: 2px;
         background: $vue-blue;
-      }
-
-      /*hide the outline behind the border*/
-      input[type=range]:-moz-focusring{
-        outline: 1px solid white;
-        outline-offset: -1px;
+        box-shadow: -325px 0 0 325px $vue-blue;
       }
 
       input[type=range]::-ms-track {
-        width: 300px;
-        height: 5px;
-
-        /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
-        background: transparent;
-
-        /*leave room for the larger thumb to overflow with a transparent border */
-        border-color: transparent;
-        border-width: 6px 0;
-
-        /*remove default tick marks*/
-        color: transparent;
-      }
-      input[type=range]::-ms-fill-lower {
-        background: #777;
-        border-radius: 10px;
-      }
-      input[type=range]::-ms-fill-upper {
-        background: #ddd;
-        border-radius: 10px;
+        height: 100px;
+        overflow: hidden;
+        background-color: #ddd;
       }
       input[type=range]::-ms-thumb {
         border: none;
-        height: 16px;
-        width: 16px;
-        border-radius: 50%;
+        height: 2px;
+        width: 2px;
         background: $vue-blue;
-      }
-      input[type=range]:focus::-ms-fill-lower {
-        background: #888;
-      }
-      input[type=range]:focus::-ms-fill-upper {
-        background: #ccc;
       }
     }
 </style>
