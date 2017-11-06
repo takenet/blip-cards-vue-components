@@ -1,5 +1,5 @@
 <template>
-  <div class="header image">
+  <div class="header">
     <img :src="previewUri" />
   </div>
 
@@ -40,6 +40,8 @@ export default {
       }
 
       .header {
+        max-width: 300px;
+
         img {
           width: 100%;
           display: block;

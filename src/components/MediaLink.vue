@@ -1,6 +1,6 @@
 <template>
   <div :class="'container media-link ' + document.content.type.split('/')[0]">
-    <div :class="'bubble max-width ' + position">
+    <div :class="'bubble ' + position">
       <blip-image :document="document" :position="position" :date="date" v-if="document.content.type.includes('image')" />
       <blip-audio :document="document" :position="position" :date="date" v-if="document.content.type.includes('audio')" />
     </div>
@@ -39,4 +39,5 @@ export default {
 
 <style lang="scss">
    @import '../styles/variables.scss';
+
 </style>

@@ -79,9 +79,18 @@ export default {
 <style lang="scss">
    @import '../../styles/variables.scss';
 
-   .media-link .bubble {
-     padding: $bubble-padding
-   }
+  .media-link {
+
+    &.audio {
+      .bubble {
+        width: 100%;
+      }
+    }
+
+    .bubble {
+      padding: $bubble-padding
+    }
+  }
 
    .right .audio-player-wrapper {
       -webkit-filter: brightness(2);
@@ -89,7 +98,6 @@ export default {
     }
 
    .audio-player-wrapper {
-      width: 100%;
 
       .audio-player-controls {
         display: flex;

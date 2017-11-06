@@ -2,7 +2,10 @@
   <div v-if="document.content != null" class="container document-select">
     <div :class="'bubble ' + position">
       <div class="header">
-        <img :src="document.content.header.value.uri" />
+        <div :class="'ratio' + aspectRatio">
+          <img :src="document.content.header.value.uri" />
+        </div>
+
         <div class="title" v-if="document.content.header.value.title || document.content.header.value.text">
             <strong v-if="document.content.header.value.title" v-html="document.content.header.value.title"></strong>
             <span v-if="previewContent && !showContent" v-html="previewContent"></span>
@@ -61,6 +64,9 @@ export default {
     }
   },
   computed: {
+    aspectRatio: function () {
+      return this.document.content.header.value.aspectRatio ? this.document.content.header.value.aspectRatio.replace(':', '-') : '2-1'
+    },
     previewContent: function () {
       return this.document.content.header.value.text ? linkify(this.document.content.header.value.text.substring(0, this.length)) : ''
     },
@@ -93,34 +99,65 @@ export default {
 
 <style lang="scss">
    @import '../styles/variables.scss';
-    .document-select {
-      .header {
-        width: 100%;
 
-        img {
+  .document-select {
+
+    .header {
+      max-width: 350px;
+      min-width: 200px;
+
+      .ratio1-1 {
+        overflow: hidden;
+        position: relative;
+
+        &:before {
+          content: '';
+          display: block;
+          padding-top: 100%; // ratio 1:1
+        }
+      }
+
+      .ratio2-1 {
+        overflow: hidden;
+        position: relative;
+
+        &:before {
+          content: '';
+          display: block;
+          padding-top: 50%; // ratio 2:1
+        }
+      }
+
+      img {
+          position: absolute;
           width: 100%;
+          height: 100%;
+          object-fit: cover;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+        }
+
+      .title {
+        strong {
+          color: $vue-dark-gray;
           display: block;
         }
 
-        .title {
-          strong {
-            color: $vue-dark-gray;
-            display: block;
-          }
-
-          margin: 0;
-          padding: 10px 20px;
-          border-bottom: 0.5px solid #e4e2e2;
-        }
-      }
-
-      .fixed-options ul {
-        margin: 0px;
-      }
-
-      .fixed-options li:first-child {
-        border-top: 0px;
+        margin: 0;
+        padding: 10px 20px;
+        border-bottom: 0.5px solid #e4e2e2;
       }
     }
+
+    .fixed-options ul {
+      margin: 0px;
+    }
+
+    .fixed-options li:first-child {
+      border-top: 0px;
+    }
+  }
 
 </style>
