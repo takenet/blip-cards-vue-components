@@ -4,7 +4,7 @@
       <span v-if="isPlaying" @click="togglePlay"><img class="audio-player-button" :src="pauseImg" alt="Pause"></span>
       <span v-else @click="togglePlay"><img class="audio-player-button" :src="playImg" alt="Play"></span>
       <div class="audio-player-bar">
-        <input class="audio-player-range" type="range" :value="this.currentTime" :max="this.totalTime" @input="setAudioPosition($event)">
+        <input class="audio-player-range" type="range" :value="this.currentTime" :max="this.totalTime" @input="setAudioPosition($event)" @change="setAudioPosition($event)">
         <div class="audio-player-time">
           <span>{{getTimeFromSeconds(this.currentTime)}}</span>
           <span>{{getTimeFromSeconds(this.totalTime)}}</span>
@@ -58,12 +58,11 @@ export default {
         this.audio.pause()
       }
     },
-    resetPlay: function (event) {
+    resetPlay: function () {
       if (this.isPlaying && (this.audio.currentTime = this.totalTime)) {
         this.isPlaying = false
         this.audio.pause()
         this.audio.currentTime = 0
-        console.log(this.audio.currentTime)
       }
     },
     audioTimeUpdated: function () {
@@ -135,6 +134,7 @@ export default {
         height: 3px;
         overflow: hidden;
         margin: 0;
+        border-radius: 3px;
       }
 
       input[type=range]:focus {
