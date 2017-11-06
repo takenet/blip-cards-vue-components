@@ -1,8 +1,10 @@
 <template>
-  <div :class="'container media-link ' + document.type.split('/')[0]">
+  <div :class="'container collection'">
     <div :class="'bubble ' + position">
-      <blip-image :document="document" :position="position" :date="date" v-if="document.type.includes('image')" />
-      <blip-audio :document="document" :position="position" :date="date" v-if="document.type.includes('audio')" />
+
+      <div class=''  v-for="item in document.content.items">
+        <document-select :position="position" :on-selected="onSelected" :document="item" />
+      </div>
     </div>
 
     <div :class="'notification ' + position" v-if="date">
@@ -13,14 +15,7 @@
 
 <script>
 
-import BlipImage from './MediaLink/Image'
-import BlipAudio from './MediaLink/Audio'
-
 export default {
-  components: {
-    BlipImage,
-    BlipAudio
-  },
   props: {
     document: {
       type: Object,
@@ -32,6 +27,9 @@ export default {
     },
     date: {
       type: String
+    },
+    onSelected: {
+      type: Function
     }
   }
 }

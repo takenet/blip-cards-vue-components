@@ -1,16 +1,16 @@
 <template>
-  <div v-if="document.content != null" class="container document-select">
+  <div v-if="document != null" class="container document-select">
     <div :class="'bubble ' + position">
       <div class="header">
         <div :class="'ratio' + aspectRatio">
-          <img :src="document.content.header.value.uri" />
+          <img :src="document.header.value.uri" />
         </div>
 
-        <div class="title" v-if="document.content.header.value.title || document.content.header.value.text">
-            <strong v-if="document.content.header.value.title" v-html="document.content.header.value.title"></strong>
+        <div class="title" v-if="document.header.value.title || document.header.value.text">
+            <strong v-if="document.header.value.title" v-html="document.header.value.title"></strong>
             <span v-if="previewContent && !showContent" v-html="previewContent"></span>
             <transition name="slide-fade">
-              <div v-if="showContent && hasPreview" v-html="document.content.header.value.text">
+              <div v-if="showContent && hasPreview" v-html="document.header.value.text">
               </div>
             </transition>
             <a style="display: block;" v-if="!showContent && hasPreview" @click="showContent = true">Ver mais</a>
@@ -65,16 +65,16 @@ export default {
   },
   computed: {
     aspectRatio: function () {
-      return this.document.content.header.value.aspectRatio ? this.document.content.header.value.aspectRatio.replace(':', '-') : '2-1'
+      return this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
     },
     previewContent: function () {
-      return this.document.content.header.value.text ? linkify(this.document.content.header.value.text.substring(0, this.length)) : ''
+      return this.document.header.value.text ? linkify(this.document.header.value.text.substring(0, this.length)) : ''
     },
     hasPreview: function () {
-      return this.document.content.header.value.text && this.document.content.header.value.text.length > this.length
+      return this.document.header.value.text && this.document.header.value.text.length > this.length
     },
     options: function () {
-      return this.document.content.options.map(function (x) {
+      return this.document.options.map(function (x) {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',

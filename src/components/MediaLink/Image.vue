@@ -1,6 +1,8 @@
 <template>
   <div class="header">
-    <img :src="previewUri" />
+    <a :href="document.uri" target="_blank">
+      <img :src="previewUri" />
+    </a>
   </div>
 
 </template>
@@ -23,7 +25,7 @@ export default {
   },
   computed: {
     previewUri: function () {
-      return this.document.content.previewUri ? this.document.content.previewUri : this.document.content.uri
+      return this.document.previewUri ? this.document.previewUri : this.document.uri
     }
   }
 }

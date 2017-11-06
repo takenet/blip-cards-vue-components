@@ -44,7 +44,7 @@ export default {
     }
   },
   mounted: function () {
-    this.audio = new Audio(this.document.content.uri)
+    this.audio = new Audio(this.document.uri)
     this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
     this.audio.addEventListener('loadedmetadata', this.audioLoaded)
     this.audio.addEventListener('ended', this.resetPlay)
