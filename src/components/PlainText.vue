@@ -47,7 +47,7 @@ export default {
       previewDocument: {
         ...this.document,
         hasPreview: this.document.length > this.length,
-        previewContent: linkify(this.document.substring(0, this.length)),
+        previewContent: linkify(this.document.substring(0, this.length - 3) + '...'),
         content: linkify(this.document),
         showContent: false
       }
