@@ -97,15 +97,19 @@ export default {
     }
 
     .bubble {
-      padding: $bubble-padding
+      padding: $bubble-padding;
+      color: $vue-london;
+    }
+
+    .right {
+      color: $vue-cotton;
+    }
+
+    .notification {
+      color: $vue-london;
     }
   }
-
-   .right .audio-player-wrapper {
-      -webkit-filter: brightness(2);
-      filter: brightness(2);
-    }
-
+  
    .audio-player-wrapper {
 
       .audio-player-controls {
@@ -119,6 +123,7 @@ export default {
         height: 20px;
         flex-grow: 0;
         margin-right: 15px;
+        color: inherit;
       }
 
       .audio-player-bar {
@@ -133,7 +138,7 @@ export default {
         justify-content: space-between;
         font-family: "Avenir Next";
         font-size: x-small;
-        color: #A7BEC3;
+        color: inherit;
       }
 
       input[type=range] {
@@ -142,7 +147,8 @@ export default {
         height: 3px;
         overflow: hidden;
         margin: 0;
-        border-radius: 3px;
+        border-radius: 1.5px;
+        padding: 0;
       }
 
       input[type=range]:focus {
@@ -151,10 +157,8 @@ export default {
 
       input[type=range]::-webkit-slider-runnable-track {
         height: 3px;
-        background: #ddd;
-        border: none;
-        overflow: hidden;
-        border-radius: 3px;
+        background: $vue-cotton;
+        border-radius: 1.5px;
       }
 
       input[type=range]::-webkit-slider-thumb {
@@ -162,25 +166,24 @@ export default {
         border: none;
         height: 3px;
         width: 2px;
-        border-radius: 50%;
-        background: $vue-light-blip;
-        margin-top: -4px;
-        box-shadow: -325px 0 0 325px $vue-light-blip;
+        border-radius: 1.5px;
+        background: $vue-neon-blip;
+        box-shadow: -1000px 0 0 1000px $vue-neon-blip;
       }
 
       input[type=range]::-moz-range-track {
-        height: 5px;
-        background: #ddd;
-        border: none;
-        border-radius: 3px;
+        height: 3px;
+        background: $vue-cotton;
+        border-radius: 1.5px;
       }
 
       input[type=range]::-moz-range-thumb {
         border: none;
-        height: 5px;
+        height: 3px;
         width: 2px;
-        background: $vue-light-blip;
-        box-shadow: -1000px 0 0 1000px $vue-light-blip;
+        border-radius: 1.5px;
+        background: $vue-neon-blip;
+        box-shadow: -1000px 0 0 1000px $vue-neon-blip;
       }
 
       input[type=range]:-moz-focus-outer{
@@ -188,16 +191,21 @@ export default {
       }
 
       input[type=range]::-ms-track {
-        height: 100px;
+        height: 3px;
+        background: $vue-cotton;
+        border-radius: 1.5px;
         overflow: hidden;
-        background-color: #ddd;
+        border-color: transparent;
+        color: transparent;
       }
-
+      
       input[type=range]::-ms-thumb {
         border: none;
-        height: 2px;
+        height: 3px;
         width: 2px;
-        background: $vue-light-blip;
+        border-radius: 1.5px;
+        background: $vue-neon-blip;
+        box-shadow: -1000px 0 0 1000px $vue-neon-blip;
       }
     }
 </style>
