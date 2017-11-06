@@ -1,8 +1,8 @@
 <template>
   <div :class="'container media-link ' + document.type.split('/')[0]">
     <div :class="'bubble ' + position">
-      <blip-image :document="document" :position="position" :date="date" v-if="document.type.includes('image')" />
-      <blip-audio :document="document" :position="position" :date="date" v-if="document.type.includes('audio')" />
+      <blip-image :document="document" :position="position" :date="date" v-if="document.type.indexOf('image') != -1" />
+      <blip-audio :document="document" :position="position" :date="date" v-if="document.type.indexOf('audio') != -1" />
     </div>
 
     <div :class="'notification ' + position" v-if="date">
