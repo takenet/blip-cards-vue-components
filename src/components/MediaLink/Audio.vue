@@ -44,7 +44,7 @@ export default {
     }
   },
   mounted: function () {
-    this.audio = new Audio(this.document.content.uri)
+    this.audio = new Audio(this.document.uri)
     this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
     this.audio.addEventListener('loadedmetadata', this.audioLoaded)
     this.audio.addEventListener('ended', this.resetPlay)
@@ -88,9 +88,18 @@ export default {
 <style lang="scss">
    @import '../../styles/variables.scss';
 
-   .media-link .bubble {
-     padding: $bubble-padding
-   }
+  .media-link {
+
+    &.audio {
+      .bubble {
+        width: 100%;
+      }
+    }
+
+    .bubble {
+      padding: $bubble-padding
+    }
+  }
 
    .right .audio-player-wrapper {
       -webkit-filter: brightness(2);
@@ -98,7 +107,6 @@ export default {
     }
 
    .audio-player-wrapper {
-      width: 100%;
 
       .audio-player-controls {
         display: flex;
@@ -157,7 +165,7 @@ export default {
         border-radius: 50%;
         background: $vue-blue;
         margin-top: -4px;
-        box-shadow: -325px 0 0 325px $vue-blue;
+        box-shadow: -1000px 0 0 1000px $vue-blue;
       }
 
       input[type=range]::-moz-range-track {
@@ -172,7 +180,7 @@ export default {
         height: 5px;
         width: 2px;
         background: $vue-blue;
-        box-shadow: -325px 0 0 325px $vue-blue;
+        box-shadow: -1000px 0 0 1000px $vue-blue;
       }
 
       input[type=range]:-moz-focus-outer{

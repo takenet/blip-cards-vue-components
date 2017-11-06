@@ -31,7 +31,7 @@ export default {
       default: 532
     },
     document: {
-      type: Object,
+      type: String,
       required: true
     },
     position: {
@@ -46,9 +46,9 @@ export default {
     return {
       previewDocument: {
         ...this.document,
-        hasPreview: this.document.content.length > this.length,
-        previewContent: linkify(this.document.content.substring(0, this.length)),
-        content: linkify(this.document.content),
+        hasPreview: this.document.length > this.length,
+        previewContent: linkify(this.document.substring(0, this.length)),
+        content: linkify(this.document),
         showContent: false
       }
     }

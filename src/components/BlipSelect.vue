@@ -1,6 +1,6 @@
 <template>
-  <div v-if="document.content != null" class="container select">
-   <div v-if="document.content.scope === 'immediate'">
+  <div v-if="document != null" class="container select">
+   <div v-if="document.scope === 'immediate'">
       <div :class="'bubble ' + position" v-html="text" v-if="text">
       </div>
 
@@ -66,7 +66,7 @@ export default {
   },
   computed: {
     options: function () {
-      return this.document.content.options.map(function (x) {
+      return this.document.options.map(function (x) {
         let opts = {
           ...x,
           previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text
@@ -77,7 +77,7 @@ export default {
   },
   data: function () {
     return {
-      text: linkify(this.document.content.text),
+      text: linkify(this.document.text),
       hide: this.hideOptions
     }
   },
