@@ -75,7 +75,6 @@ export default {
     setAudioPosition: function (event) {
       // srcElement is no supported in FF, but needed if working with IE6-8
       this.audio.currentTime = (event.target || event.srcElement).value
-      console.log('here')
     },
     getTimeFromSeconds: function (seconds) {
       var timeMin = Math.floor(seconds / 60)
@@ -117,10 +116,10 @@ export default {
       }
 
       .audio-player-button {
-        width: 18px;
-        height: 23px;
+        width: 15px;
+        height: 20px;
         flex-grow: 0;
-        margin-right: 10px;
+        margin-right: 15px;
       }
 
       .audio-player-bar {
@@ -146,6 +145,10 @@ export default {
         margin: 0;
       }
 
+      input[type=range]:focus {
+        outline: none;
+      }
+
       input[type=range]::-webkit-slider-runnable-track {
         height: 3px;
         background: #ddd;
@@ -153,6 +156,7 @@ export default {
         overflow: hidden;
         border-radius: 3px;
       }
+
       input[type=range]::-webkit-slider-thumb {
         -webkit-appearance: none;
         border: none;
@@ -163,10 +167,6 @@ export default {
         margin-top: -4px;
         box-shadow: -325px 0 0 325px $vue-blue;
       }
-      input[type=range]:focus {
-        outline: none;
-        background: #ddd;
-      }
 
       input[type=range]::-moz-range-track {
         height: 5px;
@@ -174,6 +174,7 @@ export default {
         border: none;
         border-radius: 3px;
       }
+
       input[type=range]::-moz-range-thumb {
         border: none;
         height: 5px;
@@ -182,11 +183,16 @@ export default {
         box-shadow: -325px 0 0 325px $vue-blue;
       }
 
+      input[type=range]:-moz-focus-outer{
+        border: 0;
+      }
+
       input[type=range]::-ms-track {
         height: 100px;
         overflow: hidden;
         background-color: #ddd;
       }
+      
       input[type=range]::-ms-thumb {
         border: none;
         height: 2px;
