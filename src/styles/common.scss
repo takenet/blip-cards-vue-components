@@ -42,7 +42,7 @@
 .bubble.right {
     border-radius: 13px 2px 13px 13px;
     box-shadow: 0 -1px 12px 0 #EEEEEE;
-    background-color: $vue-blue;
+    background-color: $vue-light-blip;
     color: $vue-white;
     float: right;
 }
@@ -68,12 +68,12 @@ a {
 }
 
 .left a {
-  color: $vue-blue;
+  color: $vue-light-blip;
 }
 
-.left a:visited {color: $vue-blue;}  /* visited link */
-.left a:hover {color: $vue-blue;}  /* mouse over link */
-.left a:active {color: $vue-blue;}  /* selected link */
+.left a:visited {color: $vue-light-blip;}  /* visited link */
+.left a:hover {color: $vue-light-blip;}  /* mouse over link */
+.left a:active {color: $vue-light-blip;}  /* selected link */
 
 .right a {
  font-weight: bold;
@@ -113,7 +113,7 @@ a {
 }
 
 .left .fixed-options li {
-  color: $vue-blue;
+  color: $vue-light-blip;
   border-top: 0.5px solid #e4e2e2;
 }
 

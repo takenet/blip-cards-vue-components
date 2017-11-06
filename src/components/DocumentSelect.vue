@@ -78,7 +78,7 @@ export default {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          previewText: x.label.type === 'application/vnd.lime.web-link+json' ? x.label.value.text : x.label.value
+          previewText: x.label.type === 'application/vnd.lime.web-link+json' ? x.label.value.title || x.label.value.text : x.label.value
         }
         return opts
       })

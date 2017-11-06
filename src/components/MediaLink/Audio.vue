@@ -163,9 +163,9 @@ export default {
         height: 3px;
         width: 2px;
         border-radius: 50%;
-        background: $vue-blue;
+        background: $vue-light-blip;
         margin-top: -4px;
-        box-shadow: -325px 0 0 325px $vue-blue;
+        box-shadow: -325px 0 0 325px $vue-light-blip;
       }
 
       input[type=range]::-moz-range-track {
@@ -179,8 +179,8 @@ export default {
         border: none;
         height: 5px;
         width: 2px;
-        background: $vue-blue;
-        box-shadow: -325px 0 0 325px $vue-blue;
+        background: $vue-light-blip;
+        box-shadow: -325px 0 0 325px $vue-light-blip;
       }
 
       input[type=range]:-moz-focus-outer{
@@ -192,12 +192,12 @@ export default {
         overflow: hidden;
         background-color: #ddd;
       }
-      
+
       input[type=range]::-ms-thumb {
         border: none;
         height: 2px;
         width: 2px;
-        background: $vue-blue;
+        background: $vue-light-blip;
       }
     }
 </style>
