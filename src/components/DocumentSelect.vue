@@ -68,17 +68,28 @@ export default {
       return this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
     },
     previewContent: function () {
-      return this.document.header.value.text ? linkify(this.document.header.value.text.substring(0, this.length)) : ''
+      if (this.document.header.value.text && this.document.header.value.text.length > this.length) {
+        return linkify(this.document.header.value.text.substring(0, this.length)) + '...'
+      }
+      return this.document.header.value.text ? linkify(this.document.header.value.text) : ''
     },
     hasPreview: function () {
       return this.document.header.value.text && this.document.header.value.text.length > this.length
     },
     options: function () {
+      let getOptionContent = function (text) {
+        if (text.length > 34) {
+          return text.substring(0, 34) + '...'
+        } else {
+          return text
+        }
+      }
+
       return this.document.options.map(function (x) {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          previewText: x.label.type === 'application/vnd.lime.web-link+json' ? x.label.value.title || x.label.value.text : x.label.value
+          previewText: x.label.type === 'application/vnd.lime.web-link+json' ? getOptionContent(x.label.value.title || x.label.value.text) : getOptionContent(x.label.value)
         }
         return opts
       })
@@ -103,8 +114,6 @@ export default {
   .document-select {
 
     .header {
-      max-width: 350px;
-      min-width: 200px;
 
       .ratio1-1 {
         overflow: hidden;

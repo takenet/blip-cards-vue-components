@@ -1,12 +1,16 @@
 <template>
   <div :class="'container collection'">
-    <div :class="'slideshow-container bubble ' + position">
-        <div style="float: left" v-for="item in document.items">
-          <document-select class="slide-item" :position="position" :on-selected="onSelected" :document="item" />
+    <div :class="'slideshow-container ' + position" :id="id">
+      <div class="slideshow-list">
+        <div class="slideshow-track">
+          <div v-for="item in document.items">
+            <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" />
+          </div>
         </div>
-        <div style="clear: both"></div>
-        <a class="prev" ng-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
-        <a class="next" @click="plusSlides(1)">&#10095;</a>
+      </div>
+
+        <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
+        <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
     </div>
 
     <div :class="'notification ' + position" v-if="date">
@@ -16,6 +20,8 @@
 </template>
 
 <script>
+
+import { guid } from '../utils'
 
 export default {
   props: {
@@ -30,40 +36,66 @@ export default {
     date: {
       type: String
     },
-    slideIndex: {
+    initWith: {
       type: Number,
-      default: 1
+      default: 2
     },
     onSelected: {
       type: Function
     }
   },
-  created: function () {
-    this.showSlides(1)
+  data: function () {
+    return {
+      id: guid(),
+      slideIndex: 1,
+      width: 0,
+      elementsWidth: 0,
+      elementsLength: 0,
+      showPrev: false,
+      showNext: false
+    }
+  },
+  mounted: function () {
+    var element = document.getElementById(this.id)
+    let listElement = element.querySelector('.slideshow-list')
+    this.width = parseInt(window.getComputedStyle(listElement).width.toString().replace('px', ''))
+
+    let elements = element.querySelectorAll('.slide-item')
+    this.elementsLength = elements.length
+
+    for (let i = 0; i < this.elementsLength; i++) {
+      if (this.width < 350) {
+        this.elementsWidth = this.width
+        elements[i].style.width = this.width + 'px'
+      } else {
+        this.elementsWidth = this.width / this.initWith
+        elements[i].style.width = this.elementsWidth + 'px'
+      }
+    }
+
+    this.showSlides(this.slideIndex)
   },
   methods: {
     plusSlides: function (n) {
       this.showSlides(this.slideIndex += n)
     },
     showSlides: function (n) {
-      let i
-      let slides = document.getElementsByClassName('slide-item')
-      if (n > slides.length) {
-        this.slideIndex = 1
-      }
+      var element = document.getElementById(this.id)
+      let trackElement = element.querySelector('.slideshow-track')
 
-      if (n < 1) {
-        this.slideIndex = slides.length
-      }
+      this.showPrev = true
+      this.showNext = true
 
-      for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = 'none'
-      }
-
-      slides[this.slideIndex - 1].style.display = 'block'
-
-      if (this.slideIndex === 1) {
+      if (n === 1) {
         this.showPrev = false
+        trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
+      } else {
+        let margin = this.elementsWidth === this.width ? 15 : 45
+        trackElement.style.transform = 'translate3d(' + (this.elementsWidth * (n - 1) - margin) * -1 + 'px, 0px, 0px)'
+      }
+
+      if (n === this.elementsLength) {
+        this.showNext = false
       }
     }
   }
@@ -73,11 +105,39 @@ export default {
 <style lang="scss">
    @import '../styles/variables.scss';
 
-   .collection {
+    .collection {
     .slideshow-container {
-      width: 90%;
       position: relative;
       margin: auto;
+
+      .slideshow-list {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        margin: 0;
+        padding: 0px 30px;
+      }
+
+      .slideshow-track {
+        position: relative;
+        transition: all .8s ease;
+        opacity: 1;
+        width: 30000px;
+        transform: translate3d(0px, 0px, 0px);
+        display: block;
+        top: 0;
+        left: 0;
+      }
+
+      .bubble {
+        width: 100%;
+      }
+
+      .slide-item {
+        float: left;
+        height: 100%;
+        min-height: 1px;
+      }
 
       a {
         text-decoration: none;
@@ -132,5 +192,4 @@ export default {
       to {opacity: 1}
     }
   }
-
 </style>
