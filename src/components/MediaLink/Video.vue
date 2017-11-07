@@ -3,9 +3,9 @@
     <div class="video-player">
       <video :src="this.document.uri" ref="blipVideo"></video>
     </div>
-    <div class="video-player-controls">
-      <span v-if="isPlaying" @click="togglePlay"><img class="video-player-button player-button-right" :src="pauseImg" alt="Pause"></span>
-      <span v-else @click="togglePlay"><img class="video-player-button player-button-right" :src="playImg" alt="Play"></span>
+    <div :class="'video-player-controls ' + isFullScreen">
+      <span v-if="isPlaying" @click="togglePlay"><img class="video-player-button player-button-right player-button" :src="pauseImg" alt="Pause"></span>
+      <span v-else @click="togglePlay"><img class="video-player-button player-button-right player-button" :src="playImg" alt="Play"></span>
       <div class="video-player-bar">
         <input class="video-player-range" type="range" :value="this.currentTime" :max="this.totalTime" @input="setVideoPosition($event)" @change="setVideoPosition($event)">
         <div class="video-player-time">
@@ -13,16 +13,17 @@
           <span>{{getTimeFromSeconds(this.totalTime)}}</span>
         </div>
       </div>
-      <span @click="setVolume()"><img class="video-player-button player-button-left" :src="playImg" alt="Volume"></span>
-      <span @click="toogleFullScreen()"><img class="video-player-button player-button-left" :src="playImg" alt="FullScreen"></span>
+      <span @click="setVolume()"><img class="video-player-button player-button-left" :src="volumeImg" alt="Volume"></span>
+      <span @click="toogleFullScreen()"><img class="video-player-button player-button-left player-button" :src="expandImg" alt="FullScreen"></span>
     </div>
   </div>
-
 </template>
 
 <script>
-import PlayImg from '../../assets/img/play.png'
-import PauseImg from '../../assets/img/pause.png'
+import PlayImg from '../../assets/img/Play.svg'
+import PauseImg from '../../assets/img/Pause.svg'
+import VolumeImg from '../../assets/img/Volume.svg'
+import ExpandImg from '../../assets/img/FullScreen.svg'
 
 export default {
   props: {
@@ -45,7 +46,10 @@ export default {
       currentTime: 0,
       totalTime: 0,
       playImg: PlayImg,
-      pauseImg: PauseImg
+      pauseImg: PauseImg,
+      volumeImg: VolumeImg,
+      expandImg: ExpandImg,
+      isFullScreen: false
     }
   },
   mounted: function () {
@@ -54,6 +58,15 @@ export default {
     this.video.addEventListener('loadedmetadata', this.videoLoaded)
     this.video.addEventListener('canplay', this.readyToPlay)
     this.video.addEventListener('ended', this.resetPlay)
+    this.video.addEventListener('fullscreenchange webkitfullscreenchange', this.fullScreenChange)
+    // gambs
+    document.addEventListener('keydown', (event) => {
+      console.log(event.keyCode)
+      if ((document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) && (event.keyCode === 13 || event.keyCode === 27 || event.keyCode === 122)) {
+        console.log(event.keyCode, 'funciona')
+        this.toogleFullScreen()
+      }
+    })
   },
   methods: {
     togglePlay: function () {
@@ -85,27 +98,45 @@ export default {
       console.log('change volume')
     },
     toogleFullScreen: function () {
-      if (!this.video.fullscreenElement && !this.video.mozFullScreenElement && !this.video.webkitFullscreenElement && !this.video.msFullscreenElement) {  // current working methods
+      if (!(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen)) {
+        this.isFullScreen = 'is-full-screen'
         if (this.video.requestFullscreen) {
           this.video.requestFullscreen()
         } else if (this.video.msRequestFullscreen) {
           this.video.msRequestFullscreen()
         } else if (this.video.mozRequestFullScreen) {
           this.video.mozRequestFullScreen()
+          console.log('moz')
         } else if (this.video.webkitRequestFullscreen) {
-          this.video.webkitRequestFullscreen()
+          this.video.webkitRequestFullscreen(this)
+          console.log('chrome')
         }
       } else {
+        this.isFullScreen = ''
         if (this.video.exitFullscreen) {
           this.video.exitFullscreen()
         } else if (this.video.msExitFullscreen) {
           this.video.msExitFullscreen()
         } else if (this.video.mozCancelFullScreen) {
           this.video.mozCancelFullScreen()
-        } else if (this.video.webkitExitFullscreen) {
-          this.video.webkitExitFullscreen()
+        } else if (this.video.webkitExitFullScreen) {
+          console.log(this.video.webkitExitFullScreen)
+          this.video.webkitExitFullScreen()
         }
       }
+    },
+    fullScreenChange: function () {
+      console.log('mudou')
+      /*
+      console.log('Mudou')
+      if (document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) {
+        this.isFullScreen = 'is-full-screen'
+        console.log(this.isFullScreen)
+      } else {
+        this.isFullScreen = ''
+        console.log(this.isFullScreen)
+      }
+      */
     },
     getTimeFromSeconds: function (seconds) {
       var timeMin = Math.floor(seconds / 60)
@@ -161,9 +192,27 @@ export default {
         align-items: center;
       }
 
+      video::-webkit-media-controls-enclosure {
+        display:none;
+      }
+
+      video::-moz-media-controls-enclosure {
+        display:none;
+      }
+
+      .is-full-screen {
+        background: #dddddd;
+        position: absolute;
+        z-index: 2147483647;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 0;
+      }
+
       .video-player-button {
-        width: 15px;
-        height: 20px;
+        width: auto;
+        height: auto;
         flex-grow: 0;
         fill: inherit;
       }
@@ -174,6 +223,10 @@ export default {
 
       .player-button-left {
         margin-left: 15px;
+      }
+
+      .is-full-screen .player-button {
+        margin: 15px;
       }
 
       .video-player-bar {
