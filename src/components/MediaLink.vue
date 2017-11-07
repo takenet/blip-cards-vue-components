@@ -3,6 +3,7 @@
     <div :class="'bubble ' + position">
       <blip-image :document="document" :position="position" :date="date" v-if="document.type.indexOf('image') != -1" />
       <blip-audio :document="document" :position="position" :date="date" v-if="document.type.indexOf('audio') != -1" />
+      <blip-video :document="document" :position="position" :date="date" v-if="document.type.indexOf('video') != -1" />
     </div>
 
     <div :class="'notification ' + position" v-if="date">
@@ -15,11 +16,13 @@
 
 import BlipImage from './MediaLink/Image'
 import BlipAudio from './MediaLink/Audio'
+import BlipVideo from './MediaLink/Video'
 
 export default {
   components: {
     BlipImage,
-    BlipAudio
+    BlipAudio,
+    BlipVideo
   },
   props: {
     document: {
