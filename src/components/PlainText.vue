@@ -63,7 +63,6 @@ export default {
 
 
 <style lang="scss">
-   @import '../styles/common.scss';
    @import '../styles/variables.scss';
 
    .plain-text .bubble {
