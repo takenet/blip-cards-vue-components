@@ -166,16 +166,16 @@ export default {
       height: 16px;
     }
     .slider {
-      border-radius: 2px;
-      height: 4px;
+      border-radius: 1.5px;
+      height: 3px;
       flex-grow: 1;
-      background-color: #D8D8D8;
+      background-color: $vue-cotton;
       cursor: pointer;
       position: relative;
       .progress {
         width: 0;
         height: 100%;
-        background-color: #44BFA3;
+        background-color: $vue-neon-blip;
         border-radius: inherit;
         position: absolute;
         pointer-events: none;
@@ -185,7 +185,7 @@ export default {
           height: 16px;
           width: 16px;
           border-radius: 8px;
-          background-color: #44BFA3;
+          background-color: $vue-neon-blip;
           position: absolute;
           pointer-events: all;
           box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.32);

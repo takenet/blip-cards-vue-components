@@ -61,7 +61,6 @@ export default {
     this.video.addEventListener('fullscreenchange webkitfullscreenchange', this.fullScreenChange)
     // gambs
     document.addEventListener('keydown', (event) => {
-      console.log(event.keyCode)
       if ((document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) && (event.keyCode === 13 || event.keyCode === 27 || event.keyCode === 122)) {
         console.log(event.keyCode, 'funciona')
         this.toogleFullScreen()
@@ -106,22 +105,19 @@ export default {
           this.video.msRequestFullscreen()
         } else if (this.video.mozRequestFullScreen) {
           this.video.mozRequestFullScreen()
-          console.log('moz')
         } else if (this.video.webkitRequestFullscreen) {
           this.video.webkitRequestFullscreen(this)
-          console.log('chrome')
         }
       } else {
         this.isFullScreen = ''
         if (this.video.exitFullscreen) {
-          this.video.exitFullscreen()
+          document.exitFullscreen()
         } else if (this.video.msExitFullscreen) {
-          this.video.msExitFullscreen()
+          document.msExitFullscreen()
         } else if (this.video.mozCancelFullScreen) {
-          this.video.mozCancelFullScreen()
+          document.mozCancelFullScreen()
         } else if (this.video.webkitExitFullScreen) {
-          console.log(this.video.webkitExitFullScreen)
-          this.video.webkitExitFullScreen()
+          document.webkitCancelFullScreen()
         }
       }
     },
