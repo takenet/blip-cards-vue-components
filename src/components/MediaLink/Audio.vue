@@ -4,6 +4,11 @@
       <span v-if="isPlaying" @click="togglePlay"><img class="audio-player-button" :src="pauseImg" alt="Pause"></span>
       <span v-else @click="togglePlay"><img class="audio-player-button" :src="playImg" alt="Play"></span>
       <div class="audio-player-bar">
+        <div class="slider" data-direction="horizontal" ref="audioSlider">
+          <div class="progress" ref="audioProgress">
+            <div class="pin" id="progress-pin" data-method="rewind" ref="audioPin"></div>
+          </div>
+        </div>
         <input class="audio-player-range" type="range" :value="this.currentTime" :max="this.totalTime" @input="setAudioPosition($event)" @change="setAudioPosition($event)">
         <div class="audio-player-time">
           <span>{{getTimeFromSeconds(this.currentTime)}}</span>
@@ -40,7 +45,10 @@ export default {
       currentTime: 0,
       totalTime: 0,
       playImg: PlayImg,
-      pauseImg: PauseImg
+      pauseImg: PauseImg,
+      progress: null,
+      slider: null,
+      pin: null
     }
   },
   mounted: function () {
@@ -48,6 +56,11 @@ export default {
     this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
     this.audio.addEventListener('loadedmetadata', this.audioLoaded)
     this.audio.addEventListener('ended', this.resetPlay)
+
+    this.progress = this.$refs.audioProgress
+    this.slider = this.$refs.audioSlider
+    this.pin = this.$refs.audioPin
+    this.slider.addEventListener('click', this.movePlayer)
   },
   methods: {
     togglePlay: function () {
@@ -66,6 +79,10 @@ export default {
       }
     },
     audioTimeUpdated: function () {
+      var current = this.audio.currentTime
+      var percent = (current / this.totalTime) * 100
+      this.progress.style.width = percent + '%'
+
       this.currentTime = this.audio.currentTime
     },
     audioLoaded: function () {
@@ -109,103 +126,71 @@ export default {
       color: $vue-london;
     }
   }
-  
-   .audio-player-wrapper {
 
-      .audio-player-controls {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-      }
+  .audio-player-wrapper {
+    .audio-player-controls {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
 
-      .audio-player-button {
-        width: 15px;
-        height: 20px;
-        flex-grow: 0;
-        margin-right: 15px;
-        color: inherit;
-      }
+    .audio-player-button {
+      width: 15px;
+      height: 20px;
+      flex-grow: 0;
+      margin-right: 15px;
+      color: inherit;
+    }
 
-      .audio-player-bar {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        margin-top: 15px;
-      }
+    .audio-player-bar {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      margin-top: 15px;
+    }
 
-      .audio-player-time {
-        display: flex;
-        justify-content: space-between;
-        font-family: "Avenir Next";
-        font-size: x-small;
-        color: inherit;
-      }
-
-      input[type=range] {
-        -webkit-appearance: none;
-        width: auto;
-        height: 3px;
-        overflow: hidden;
-        margin: 0;
-        border-radius: 1.5px;
-        padding: 0;
-      }
-
-      input[type=range]:focus {
-        outline: none;
-      }
-
-      input[type=range]::-webkit-slider-runnable-track {
-        height: 3px;
-        background: $vue-cotton;
-        border-radius: 1.5px;
-      }
-
-      input[type=range]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        border: none;
-        height: 3px;
-        width: 2px;
-        border-radius: 1.5px;
-        background: $vue-neon-blip;
-        box-shadow: -1000px 0 0 1000px $vue-neon-blip;
-      }
-
-      input[type=range]::-moz-range-track {
-        height: 3px;
-        background: $vue-cotton;
-        border-radius: 1.5px;
-      }
-
-      input[type=range]::-moz-range-thumb {
-        border: none;
-        height: 3px;
-        width: 2px;
-        border-radius: 1.5px;
-        background: $vue-neon-blip;
-        box-shadow: -1000px 0 0 1000px $vue-neon-blip;
-      }
-
-      input[type=range]:-moz-focus-outer{
-        border: 0;
-      }
-
-      input[type=range]::-ms-track {
-        height: 3px;
-        background: $vue-cotton;
-        border-radius: 1.5px;
-        overflow: hidden;
-        border-color: transparent;
-        color: transparent;
-      }
-      
-      input[type=range]::-ms-thumb {
-        border: none;
-        height: 3px;
-        width: 2px;
-        border-radius: 1.5px;
-        background: $vue-neon-blip;
-        box-shadow: -1000px 0 0 1000px $vue-neon-blip;
+    .audio-player-time {
+      display: flex;
+      justify-content: space-between;
+      font-family: "Avenir Next";
+      font-size: x-small;
+      color: inherit;
+    }
+    .audio-player-range{
+      position: relative;
+      bottom: 14px;
+      opacity: 0;
+      margin-bottom: -9px;
+      width: 100%;
+      padding: 0;
+      height: 16px;
+    }
+    .slider {
+      border-radius: 2px;
+      height: 4px;
+      flex-grow: 1;
+      background-color: #D8D8D8;
+      cursor: pointer;
+      position: relative;
+      .progress {
+        width: 0;
+        height: 100%;
+        background-color: #44BFA3;
+        border-radius: inherit;
+        position: absolute;
+        pointer-events: none;
+        .pin {
+          right: -8px;
+          top: -6px;
+          height: 16px;
+          width: 16px;
+          border-radius: 8px;
+          background-color: #44BFA3;
+          position: absolute;
+          pointer-events: all;
+          box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.32);
+        }
       }
     }
+  }
 </style>
