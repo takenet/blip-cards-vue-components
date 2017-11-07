@@ -13,8 +13,8 @@
           <span>{{getTimeFromSeconds(this.totalTime)}}</span>
         </div>
       </div>
-      <span @click="setVolume(event)"><img class="video-player-button player-button-left" :src="playImg" alt="Play"></span>
-      <span @click="setVolume(event)"><img class="video-player-button player-button-left" :src="playImg" alt="Play"></span>
+      <span @click="setVolume()"><img class="video-player-button player-button-left" :src="playImg" alt="Volume"></span>
+      <span @click="toogleFullScreen()"><img class="video-player-button player-button-left" :src="playImg" alt="FullScreen"></span>
     </div>
   </div>
 
@@ -77,12 +77,35 @@ export default {
     videoLoaded: function () {
       this.totalTime = this.video.duration
     },
-    setvideoPosition: function (event) {
+    setVideoPosition: function (event) {
       // srcElement is no supported in FF, but needed if working with IE6-8
       this.video.currentTime = (event.target || event.srcElement).value
     },
-    setVolume: function (event) {
+    setVolume: function () {
       console.log('change volume')
+    },
+    toogleFullScreen: function () {
+      if (!this.video.fullscreenElement && !this.video.mozFullScreenElement && !this.video.webkitFullscreenElement && !this.video.msFullscreenElement) {  // current working methods
+        if (this.video.requestFullscreen) {
+          this.video.requestFullscreen()
+        } else if (this.video.msRequestFullscreen) {
+          this.video.msRequestFullscreen()
+        } else if (this.video.mozRequestFullScreen) {
+          this.video.mozRequestFullScreen()
+        } else if (this.video.webkitRequestFullscreen) {
+          this.video.webkitRequestFullscreen()
+        }
+      } else {
+        if (this.video.exitFullscreen) {
+          this.video.exitFullscreen()
+        } else if (this.video.msExitFullscreen) {
+          this.video.msExitFullscreen()
+        } else if (this.video.mozCancelFullScreen) {
+          this.video.mozCancelFullScreen()
+        } else if (this.video.webkitExitFullscreen) {
+          this.video.webkitExitFullscreen()
+        }
+      }
     },
     getTimeFromSeconds: function (seconds) {
       var timeMin = Math.floor(seconds / 60)
@@ -146,11 +169,11 @@ export default {
       }
 
       .player-button-right {
-        margin-right: 15px;  
+        margin-right: 15px;
       }
 
       .player-button-left {
-        margin-left: 15px;  
+        margin-left: 15px;
       }
 
       .video-player-bar {
@@ -225,7 +248,7 @@ export default {
         border-color: transparent;
         color: transparent;
       }
-      
+
       input[type=range]::-ms-thumb {
         border: none;
         height: 3px;
