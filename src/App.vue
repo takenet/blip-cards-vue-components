@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 1000px; margin: 0 auto; background-color: #FAF9F8; padding: 20px;">
+  <div style="width: 800px; margin: 0 auto; background-color: #FAF9F8; padding: 20px;">
 
     <collection position="left" date="08:32 PM" :on-selected="teste" :document="{'itemType':'application/vnd.lime.document-select+json','items':[{'header':{'type':'application/vnd.lime.media-link+json','value':{'title':'Titulo','text':'Este é o primeiro item','type':'image/jpeg','uri':'http://www.isharearena.com/wp-content/uploads/2012/12/wallpaper-281049.jpg'}},'options':[{'label':{'type':'application/vnd.lime.web-link+json','value':{'title':'Link','uri':'https://server.com/first/link1'}}},{'label':{'type':'text/plain','value':'Texto 1'},'value':{'type':'application/json','value':{'key1':'value1','key2':2}}}]},{'header':{'type':'application/vnd.lime.media-link+json','value':{'title':'Titulo 2','text':'Este é outro item','type':'image/jpeg','uri':'http://www.freedigitalphotos.net/images/img/homepage/87357.jpg'}},'options':[{'label':{'type':'application/vnd.lime.web-link+json','value':{'title':'Segundo link','text':'Weblink','uri':'https://server.com/second/link2'}}},{'label':{'type':'text/plain','value':'Segundo texto'},'value':{'type':'application/json','value':{'key3':'value3','key4':4}}},{'label':{'type':'text/plain','value':'Mais um texto'},'value':{'type':'application/json','value':{'key5':'value5','key6':6}}}]}]}" />
 
@@ -35,6 +35,7 @@
     <media-link position="right" date="08:33 PM" :document="{'title':'Gato','text':'Segue uma imagem de um gato','type':'image/jpeg','uri':'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg','aspectRatio':'1:1','size':227791,'previewUri':'https://upload.wikimedia.org/wikipedia/commons/f/ff/Vertical_velocity.jpg','previewType':'image/jpeg'}"></media-link>
     <media-link position="left" date="08:33 PM" :document="{'title':'Gato','text':'Segue uma imagem de um gato','type':'image/jpeg','uri':'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg','aspectRatio':'1:1','size':227791,'previewUri':'http://lh6.googleusercontent.com/-S4JRFil2Mio/AAAAAAAAAAI/AAAAAAAAAZM/SoDL3SPaN-E/photo.jpg','previewType':'image/jpeg'}"></media-link>
 
+    <media-link position="right" date="08:33 PM" :document="{type:'video/mp4',uri:'http://www.onirikal.com/videos/mp4/nestlegold.mp4',size:1}"></media-link>
 
     <div style="clear: both"></div>
   </div>
