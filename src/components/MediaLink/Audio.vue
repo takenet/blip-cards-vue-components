@@ -1,8 +1,21 @@
 <template>
   <div class="audio-player-wrapper">
     <div class="audio-player-controls">
-      <span v-if="isPlaying" @click="togglePlay"><img class="audio-player-button" :src="pauseImg" alt="Pause"></span>
-      <span v-else @click="togglePlay"><img class="audio-player-button" :src="playImg" alt="Play"></span>
+      <span v-if="isPlaying" @click="togglePlay">
+        <svg  class="audio-player-button" width="12px" height="18px" viewBox="0 0 12 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="Pause" stroke="none" stroke-width="1" :fill="buttonColor" fill-rule="nonzero">
+                <path d="M4.61538462,17.351355 C4.61538462,17.7095549 4.33986449,18 4,18 L0.615384615,18 C0.275520128,18 0,17.7095885 0,17.351355 L0,0.648645015 C0,0.290411481 0.275520128,0 0.615384615,0 L4,0 C4.33986449,0 4.61538462,0.290411481 4.61538462,0.648645015 L4.61538462,17.351355 Z" id="Shape"></path>
+                <path d="M12,17.351355 C12,17.7095549 11.7244799,18 11.3846154,18 L8,18 C7.66013551,18 7.38461538,17.7095885 7.38461538,17.351355 L7.38461538,0.648645015 C7.38461538,0.290411481 7.66013551,0 8,0 L11.3846154,0 C11.7244799,0 12,0.290411481 12,0.648645015 L12,17.351355 Z" id="Shape"></path>
+            </g>
+        </svg>
+      </span>
+      <span v-else @click="togglePlay">
+        <svg class="audio-player-button" width="14px" height="18px" viewBox="0 0 14 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <g id="Play" stroke="none" stroke-width="1" :fill="buttonColor" fill-rule="evenodd">
+            <path d="M13.3805199,7.82862117 C14.2064934,8.35374536 14.2064934,9.64760806 13.3805199,10.1700254 L1.21459333,17.8790651 C0.677273234,18.2201251 0,17.7992137 0,17.1238607 L0,0.876139285 C0,0.200786266 0.677273234,-0.220125134 1.21459333,0.120934907 L13.3805199,7.82862117 Z" id="play-copy-3"></path>
+          </g>
+        </svg>
+      </span>
       <div class="audio-player-bar">
         <div class="slider" data-direction="horizontal" ref="audioSlider">
           <div class="progress" ref="audioProgress">
@@ -21,8 +34,6 @@
 </template>
 
 <script>
-import PlayImg from '../../assets/img/play.png'
-import PauseImg from '../../assets/img/pause.png'
 import { default as base } from '../../mixins/baseComponent.js'
 
 export default {
@@ -35,8 +46,7 @@ export default {
       audio: Audio,
       currentTime: 0,
       totalTime: 0,
-      playImg: PlayImg,
-      pauseImg: PauseImg,
+      buttonColor: this.position === 'left' ? '#A7BEC3' : '#fff',
       progress: null,
       slider: null,
       pin: null
@@ -122,13 +132,12 @@ export default {
     .audio-player-controls {
       display: flex;
       justify-content: space-around;
-      align-items: center;
+      margin-top:5px;
     }
 
     .audio-player-button {
-      width: 15px;
-      height: 20px;
       flex-grow: 0;
+
       margin-right: 15px;
       color: inherit;
     }
@@ -137,7 +146,7 @@ export default {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      margin-top: 15px;
+      margin-top: 8px;
     }
 
     .audio-player-time {
@@ -145,13 +154,14 @@ export default {
       justify-content: space-between;
       font-family: "Avenir Next";
       font-size: x-small;
+      line-height: 10px;
       color: inherit;
     }
     .audio-player-range{
       position: relative;
-      bottom: 14px;
+      bottom: 10px;
       opacity: 0;
-      margin-bottom: -9px;
+      margin: 0 0 -9px 0;
       width: 100%;
       padding: 0;
       height: 16px;
@@ -173,8 +183,8 @@ export default {
         .pin {
           right: -8px;
           top: -6px;
-          height: 16px;
-          width: 16px;
+          height: 14px;
+          width: 14px;
           border-radius: 8px;
           background-color: $vue-neon-blip;
           position: absolute;
