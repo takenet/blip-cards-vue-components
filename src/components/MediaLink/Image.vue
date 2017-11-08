@@ -9,20 +9,12 @@
 
 <script>
 
+import { default as base } from '../../mixins/baseComponent.js'
+
 export default {
-  props: {
-    document: {
-      type: Object,
-      required: true
-    },
-    position: {
-      type: String,
-      default: 'left'
-    },
-    date: {
-      type: String
-    }
-  },
+  mixins: [
+    base
+  ],
   computed: {
     previewUri: function () {
       return this.document.previewUri ? this.document.previewUri : this.document.uri

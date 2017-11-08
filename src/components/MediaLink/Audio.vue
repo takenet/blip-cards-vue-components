@@ -23,21 +23,12 @@
 <script>
 import PlayImg from '../../assets/img/play.png'
 import PauseImg from '../../assets/img/pause.png'
+import { default as base } from '../../mixins/baseComponent.js'
 
 export default {
-  props: {
-    document: {
-      type: Object,
-      required: true
-    },
-    position: {
-      type: String,
-      default: 'left'
-    },
-    date: {
-      type: String
-    }
-  },
+  mixins: [
+    base
+  ],
   data: function () {
     return {
       isPlaying: false,

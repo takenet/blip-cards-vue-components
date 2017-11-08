@@ -25,20 +25,12 @@ import PauseImg from '../../assets/img/Pause.svg'
 import VolumeImg from '../../assets/img/Volume.svg'
 import ExpandImg from '../../assets/img/FullScreen.svg'
 
+import { default as base } from '../../mixins/baseComponent.js'
+
 export default {
-  props: {
-    document: {
-      type: Object,
-      required: true
-    },
-    position: {
-      type: String,
-      default: 'left'
-    },
-    date: {
-      type: String
-    }
-  },
+  mixins: [
+    base
+  ],
   data: function () {
     return {
       isPlaying: false,

@@ -22,21 +22,15 @@
 
 <script>
 
+import { default as base } from '../mixins/baseComponent.js'
+
 export default {
+  mixins: [
+    base
+  ],
   props: {
     length: {
       type: Number
-    },
-    document: {
-      type: Object,
-      required: true
-    },
-    position: {
-      type: String,
-      default: 'left'
-    },
-    date: {
-      type: String
     },
     hideOptions: {
       type: Boolean,

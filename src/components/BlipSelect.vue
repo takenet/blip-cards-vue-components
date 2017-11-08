@@ -41,21 +41,14 @@
 <script>
 
 import { linkify } from '../utils'
+import { default as base } from '../mixins/baseComponent.js'
 const optionSize = 34
 
 export default {
+  mixins: [
+    base
+  ],
   props: {
-    document: {
-      type: Object,
-      required: true
-    },
-    position: {
-      type: String,
-      default: 'left'
-    },
-    date: {
-      type: String
-    },
     hideOptions: {
       type: Boolean,
       default: false

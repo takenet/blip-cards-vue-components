@@ -17,25 +17,16 @@
 import BlipImage from './MediaLink/Image'
 import BlipAudio from './MediaLink/Audio'
 import BlipVideo from './MediaLink/Video'
+import { default as base } from '../mixins/baseComponent.js'
 
 export default {
+  mixins: [
+    base
+  ],
   components: {
     BlipImage,
     BlipAudio,
     BlipVideo
-  },
-  props: {
-    document: {
-      type: Object,
-      required: true
-    },
-    position: {
-      type: String,
-      default: 'left'
-    },
-    date: {
-      type: String
-    }
   }
 }
 </script>

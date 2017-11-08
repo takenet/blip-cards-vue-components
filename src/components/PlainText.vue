@@ -23,23 +23,18 @@
 <script>
 
 import { linkify } from '../utils'
+import { default as base } from '../mixins/baseComponent.js'
+
+console.log(base)
 
 export default {
+  mixins: [
+    base
+  ],
   props: {
     length: {
       type: Number,
       default: 532
-    },
-    document: {
-      type: String,
-      required: true
-    },
-    position: {
-      type: String,
-      default: 'left'
-    },
-    date: {
-      type: String
     }
   },
   data: function () {

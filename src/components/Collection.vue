@@ -30,20 +30,13 @@
 <script>
 
 import { guid } from '../utils'
+import { default as base } from '../mixins/baseComponent.js'
 
 export default {
+  mixins: [
+    base
+  ],
   props: {
-    document: {
-      type: Object,
-      required: true
-    },
-    position: {
-      type: String,
-      default: 'left'
-    },
-    date: {
-      type: String
-    },
     initWith: {
       type: Number,
       default: 2
