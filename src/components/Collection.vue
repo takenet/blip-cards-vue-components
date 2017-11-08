@@ -57,24 +57,26 @@ export default {
     }
   },
   mounted: function () {
-    var element = document.getElementById(this.id)
-    let listElement = element.querySelector('.slideshow-list')
-    this.width = parseInt(window.getComputedStyle(listElement).width.toString().replace('px', ''))
+    if (this.document.itemType === 'application/vnd.lime.document-select+json') {
+      var element = document.getElementById(this.id)
+      let listElement = element.querySelector('.slideshow-list')
+      this.width = parseInt(window.getComputedStyle(listElement).width.toString().replace('px', ''))
 
-    let elements = element.querySelectorAll('.slide-item')
-    this.elementsLength = elements.length
+      let elements = element.querySelectorAll('.slide-item')
+      this.elementsLength = elements.length
 
-    for (let i = 0; i < this.elementsLength; i++) {
-      if (this.width < 350) {
-        this.elementsWidth = this.width
-        elements[i].style.width = this.width + 'px'
-      } else {
-        this.elementsWidth = this.width / this.initWith
-        elements[i].style.width = this.elementsWidth + 'px'
+      for (let i = 0; i < this.elementsLength; i++) {
+        if (this.width < 350) {
+          this.elementsWidth = this.width
+          elements[i].style.width = this.width + 'px'
+        } else {
+          this.elementsWidth = this.width / this.initWith
+          elements[i].style.width = this.elementsWidth + 'px'
+        }
       }
-    }
 
-    this.showSlides(this.slideIndex)
+      this.showSlides(this.slideIndex)
+    }
   },
   methods: {
     plusSlides: function (n) {

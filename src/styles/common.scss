@@ -123,6 +123,11 @@ a {
 }
 
 .header {
+  .ratio {
+    background-size: cover;
+    background-position: center center;
+  }
+
   .ratio1-1 {
     overflow: hidden;
     position: relative;

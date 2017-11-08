@@ -2,8 +2,7 @@
   <div v-if="document != null" class="container document-select">
     <div :class="'bubble ' + position">
       <div class="header">
-        <div :class="'ratio' + aspectRatio">
-          <img :src="document.header.value.uri" />
+        <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + document.header.value.uri + ')'">
         </div>
 
         <div class="title" v-if="document.header.value.title || document.header.value.text">
