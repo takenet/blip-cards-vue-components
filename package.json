@@ -83,7 +83,6 @@
     "shelljs": "^0.7.6",
     "sinon": "^4.0.0",
     "sinon-chai": "^2.8.0",
-    "stats-webpack-plugin": "0.4.3",
     "url-loader": "^0.5.8",
     "vue": "^2.5.2",
     "vue-loader": "^13.3.0",

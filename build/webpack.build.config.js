@@ -5,7 +5,6 @@ var path = require('path')
 var version = require("./../package.json").version;
 var banner = "/**\n" + " * blip-cards v" + version + "\n" + " * https://github.com/takenet/blip-cards-vue-components\n" + " * Released under the MIT License.\n" + " */\n";
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var StatsPlugin = require("stats-webpack-plugin");
 
 var utils = require('./utils')
 var merge = require('webpack-merge')
@@ -53,8 +52,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       banner: banner,
       raw: true
     }),
-    new ExtractTextPlugin({filename: cssFileName, allChunks: true}),
-    new StatsPlugin('stats.json')
+    new ExtractTextPlugin({filename: cssFileName, allChunks: true})
   ],
   resolve: {
     aliasFields: ["browser"]
