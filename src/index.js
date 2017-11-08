@@ -19,8 +19,12 @@ function install (Vue) {
 }
 
 export {
+  BlipCard,
   PlainText,
+  BlipSelect,
+  DocumentSelect,
   MediaLink,
+  Collection,
   install
 }
 
