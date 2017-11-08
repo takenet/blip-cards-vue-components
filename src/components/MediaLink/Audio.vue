@@ -57,7 +57,6 @@ export default {
     this.audio.addEventListener('ended', this.resetPlay)
 
     this.progress = this.$refs.audioProgress
-    this.slider = this.$refs.audioSlider
   },
   methods: {
     togglePlay: function () {
