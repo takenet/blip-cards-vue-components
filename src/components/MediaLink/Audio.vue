@@ -3,7 +3,7 @@
     <div class="audio-player-controls">
       <span v-if="isPlaying" @click="togglePlay">
         <svg  class="audio-player-button" width="12px" height="18px" viewBox="0 0 12 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <g id="Pause" stroke="none" stroke-width="1" :fill="buttonColor" fill-rule="nonzero">
+            <g id="Pause" stroke="none" stroke-width="1" fill-rule="nonzero">
                 <path d="M4.61538462,17.351355 C4.61538462,17.7095549 4.33986449,18 4,18 L0.615384615,18 C0.275520128,18 0,17.7095885 0,17.351355 L0,0.648645015 C0,0.290411481 0.275520128,0 0.615384615,0 L4,0 C4.33986449,0 4.61538462,0.290411481 4.61538462,0.648645015 L4.61538462,17.351355 Z" id="Shape"></path>
                 <path d="M12,17.351355 C12,17.7095549 11.7244799,18 11.3846154,18 L8,18 C7.66013551,18 7.38461538,17.7095885 7.38461538,17.351355 L7.38461538,0.648645015 C7.38461538,0.290411481 7.66013551,0 8,0 L11.3846154,0 C11.7244799,0 12,0.290411481 12,0.648645015 L12,17.351355 Z" id="Shape"></path>
             </g>
@@ -11,7 +11,7 @@
       </span>
       <span v-else @click="togglePlay">
         <svg class="audio-player-button" width="14px" height="18px" viewBox="0 0 14 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <g id="Play" stroke="none" stroke-width="1" :fill="buttonColor" fill-rule="evenodd">
+          <g id="Play" stroke="none" stroke-width="1" fill-rule="evenodd">
             <path d="M13.3805199,7.82862117 C14.2064934,8.35374536 14.2064934,9.64760806 13.3805199,10.1700254 L1.21459333,17.8790651 C0.677273234,18.2201251 0,17.7992137 0,17.1238607 L0,0.876139285 C0,0.200786266 0.677273234,-0.220125134 1.21459333,0.120934907 L13.3805199,7.82862117 Z" id="play-copy-3"></path>
           </g>
         </svg>
@@ -19,7 +19,7 @@
       <div class="audio-player-bar">
         <div class="slider" data-direction="horizontal" ref="audioSlider">
           <div class="progress" ref="audioProgress">
-            <div class="pin" id="progress-pin" data-method="rewind" ref="audioPin"></div>
+            <div class="pin" id="progress-pin" data-method="rewind"></div>
           </div>
         </div>
         <input class="audio-player-range" type="range" :value="this.currentTime" :max="this.totalTime" @input="setAudioPosition($event)" @change="setAudioPosition($event)">
@@ -46,10 +46,8 @@ export default {
       audio: Audio,
       currentTime: 0,
       totalTime: 0,
-      buttonColor: this.position === 'left' ? '#A7BEC3' : '#fff',
       progress: null,
-      slider: null,
-      pin: null
+      slider: null
     }
   },
   mounted: function () {
@@ -60,8 +58,6 @@ export default {
 
     this.progress = this.$refs.audioProgress
     this.slider = this.$refs.audioSlider
-    this.pin = this.$refs.audioPin
-    this.slider.addEventListener('click', this.movePlayer)
   },
   methods: {
     togglePlay: function () {
@@ -119,8 +115,22 @@ export default {
       color: $vue-london;
     }
 
+    .left {
+      .progress .pin {
+        background-color: $vue-neon-blip;
+      }
+      .audio-player-button {
+        fill: $vue-london;
+      }
+    }
     .right {
       color: $vue-cotton;
+      .progress .pin{
+        background-color: $vue-white;
+      }
+      .audio-player-button {
+        fill: $vue-white;
+      }
     }
 
     .notification {
@@ -160,7 +170,7 @@ export default {
     .audio-player-range{
       position: relative;
       bottom: 10px;
-      opacity: 0;
+      opacity: 1;
       margin: 0 0 -9px 0;
       width: 100%;
       padding: 0;
@@ -173,6 +183,7 @@ export default {
       background-color: $vue-cotton;
       cursor: pointer;
       position: relative;
+
       .progress {
         width: 0;
         height: 100%;
@@ -180,13 +191,13 @@ export default {
         border-radius: inherit;
         position: absolute;
         pointer-events: none;
+
         .pin {
           right: -8px;
           top: -6px;
           height: 14px;
           width: 14px;
           border-radius: 8px;
-          background-color: $vue-neon-blip;
           position: absolute;
           pointer-events: all;
           box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.32);
