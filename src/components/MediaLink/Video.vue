@@ -50,14 +50,11 @@ export default {
     this.video.addEventListener('loadedmetadata', this.videoLoaded)
     this.video.addEventListener('canplay', this.readyToPlay)
     this.video.addEventListener('ended', this.resetPlay)
-    this.video.addEventListener('fullscreenchange webkitfullscreenchange', this.fullScreenChange)
-    // gambs
-    document.addEventListener('keydown', (event) => {
-      if ((document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) && (event.keyCode === 13 || event.keyCode === 27 || event.keyCode === 122)) {
-        console.log(event.keyCode, 'funciona')
-        this.toogleFullScreen()
-      }
-    })
+
+    document.addEventListener('fullscreenchange', this.fullScreenChange)
+    document.addEventListener('webkitfullscreenchange', this.fullScreenChange)
+    document.addEventListener('mozfullscreenchange', this.fullScreenChange)
+    document.addEventListener('MSFullscreenChange', this.fullScreenChange)
   },
   methods: {
     togglePlay: function () {
@@ -114,17 +111,11 @@ export default {
       }
     },
     fullScreenChange: function () {
-      console.log('mudou')
-      /*
-      console.log('Mudou')
       if (document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) {
         this.isFullScreen = 'is-full-screen'
-        console.log(this.isFullScreen)
       } else {
         this.isFullScreen = ''
-        console.log(this.isFullScreen)
       }
-      */
     },
     getTimeFromSeconds: function (seconds) {
       var timeMin = Math.floor(seconds / 60)
@@ -189,7 +180,7 @@ export default {
       }
 
       .is-full-screen {
-        background: #dddddd;
+        background: $vue-white;
         position: absolute;
         z-index: 2147483647;
         bottom: 0;
