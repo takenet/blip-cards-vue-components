@@ -2,7 +2,7 @@
 var baseComponent = {
   props: {
     document: {
-      type: String,
+      type: Object,
       required: true
     },
     position: {

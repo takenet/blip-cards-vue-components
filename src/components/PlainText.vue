@@ -32,6 +32,10 @@ export default {
     base
   ],
   props: {
+    document: {
+      type: String,
+      required: true
+    },
     length: {
       type: Number,
       default: 532
