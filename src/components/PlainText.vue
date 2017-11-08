@@ -25,13 +25,15 @@
 import { linkify } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
 
-console.log(base)
-
 export default {
   mixins: [
     base
   ],
   props: {
+    document: {
+      type: String,
+      required: true
+    },
     length: {
       type: Number,
       default: 532

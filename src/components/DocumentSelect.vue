@@ -17,7 +17,7 @@
         </div>
       </div>
 
-      <div class="fixed-options">
+      <div class="fixed-options" v-if="options">
         <ul>
           <li v-for="(item, index) in options">
             <span v-if="!item.isLink" @click="select(item)" v-html="item.previewText"></span>
@@ -108,45 +108,7 @@ export default {
 
     .header {
 
-      .ratio1-1 {
-        overflow: hidden;
-        position: relative;
-
-        &:before {
-          content: '';
-          display: block;
-          padding-top: 100%; // ratio 1:1
-        }
-      }
-
-      .ratio2-1 {
-        overflow: hidden;
-        position: relative;
-
-        &:before {
-          content: '';
-          display: block;
-          padding-top: 50%; // ratio 2:1
-        }
-      }
-
-      img {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          top: 0;
-          left: 0;
-          bottom: 0;
-          right: 0;
-        }
-
       .title {
-        strong {
-          color: $vue-dark-gray;
-          display: block;
-        }
-
         margin: 0;
         padding: 10px 20px;
         border-bottom: 0.5px solid #e4e2e2;
