@@ -25,7 +25,8 @@
     "bundle:full": "cross-env MINIFY=false webpack --progress --config build/webpack.build.config.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
-    "lint": "eslint --ext .js,.vue src test/unit/specs"
+    "lint": "eslint --ext .js,.vue src test/unit/specs",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
