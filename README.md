@@ -1,10 +1,49 @@
 # blip-cards
 
-> A Vue.js project
+> Reusable BLiP cards using Vue
 
-## Build Setup
+- No need to render the cards yourself
+- One simple blip-card tag
 
-``` bash
+## Usage
+
+### NPM
+
+```
+$ npm install blip-cards
+```
+
+Just import or require like so:
+
+```
+var Vue = require('vue');
+var blipCards = require("blip-cards");
+
+var components = blipCards.install(Vue);
+```
+
+Then, reference the cards via <blip-card> tag as following
+
+```html
+<blip-card :document="document" :position="'left'" :date="13:00 PM" :on-selected="function" :hide-options="false" />
+```
+
+| Attribute   |      Description      |  Type |
+|----------|:-------------:|------:|
+| document | BLiP JSON envelope (REQUIRED) | Object |
+| position |  Card position, possible values are 'left' and 'right'. Default: 'left' | String |
+| date |    Date that will be shown below the card (OPTIONAL)   |   String |
+| on-selected | callback function that will be called when the user interacts with the card (OPTIONAL) | Function |
+| hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
+
+## Contributions
+Any contribution to the code via pull request would be nice and any idea and/or suggestion are very welcome.
+
+However, please do not feel bad if your pull requests or contributions do not get merged or implemented into `blip-cards`.
+
+### Building
+
+```bash
 # install dependencies
 npm install
 
@@ -12,16 +51,9 @@ npm install
 npm run dev
 
 # build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run all tests
-npm test
+npm run bundle:min
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+<a id="license"></a>
+## License
+`blip-cards` is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

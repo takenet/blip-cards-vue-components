@@ -20,6 +20,13 @@
     </div>
   </div>
 
+  <div v-else-if="document.itemType === 'application/vnd.lime.container+json'">
+    <div v-for="item in document.items">
+        <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: item.type, content: item.value }" />
+      </div>
+    </div>
+  </div>
+
   <div v-else>
     <div v-for="item in document.items">
       <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: document.itemType, content: item }" />
