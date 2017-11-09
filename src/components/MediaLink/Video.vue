@@ -1,5 +1,5 @@
 <template>
-  <div class="video-player-wrapper">
+  <div class="video-player-wrapper" ref="blipVideoPlayerWrapper">
     <div class="video-player">
       <video :src="this.document.uri" ref="blipVideo"></video>
     </div>
@@ -50,7 +50,7 @@
           </div>
         </div>
       </div>
-      <span @click="toggleFullScreen()">
+      <div class='volume-control' @click="toggleFullScreen()">
         <svg class="video-player-button player-button-left player-button" width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <g id="FullScreen" stroke="none" stroke-width="1" fill-rule="nonzero">
             <path d="M0.0780693648,6.13503995 L4.36301393e-05,0.516244875 C-0.00367188104,0.230291656 0.230405323,-0.00367006956 0.516499683,4.36086149e-05 L6.13806809,0.0817445285 C6.58764494,0.0891718848 6.81057561,0.631368898 6.49104165,0.950745222 L4.92681145,2.51420373 L7.52766927,5.11377846 L5.11258701,7.52766927 L2.51172918,4.92809455 L0.94749898,6.49155306 C0.63168053,6.8072157 0.0855003872,6.58439501 0.0780693648,6.13503995 Z" id="Shape"></path>
@@ -59,7 +59,7 @@
             <path d="M0.519917957,17.8990811 L6.13874559,17.8173398 C6.58810325,17.8099088 6.81092523,17.2674442 6.49154706,16.9479102 L4.92807949,15.3873955 L7.52766927,12.7865377 L5.11376447,10.3714554 L2.51417469,12.9723133 L0.950707121,11.4080831 C0.631328947,11.0885491 0.0891287926,11.3114798 0.0817013932,11.7610566 L0,17.382625 C0,17.6687194 0.23396308,17.9027966 0.519917957,17.8990811 Z" id="Shape"></path>
           </g>
         </svg>
-      </span>
+      </div>
     </div>
   </div>
 </template>
@@ -80,10 +80,12 @@ export default {
       progress: null,
       videoPlayerControls: null,
       volumeProgress: null,
-      volumeSliderWrapper: null
+      volumeSliderWrapper: null,
+      videoPlayer: null
     }
   },
   mounted: function () {
+    this.videoPlayer = this.$refs.blipVideoPlayerWrapper
     this.video = this.$refs.blipVideo
     this.video.addEventListener('timeupdate', this.videoTimeUpdated)
     this.video.addEventListener('loadedmetadata', this.videoLoaded)
@@ -146,32 +148,34 @@ export default {
     },
     toggleFullScreen: function () {
       if (!(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen)) {
-        if (this.video.requestFullscreen) {
-          this.video.requestFullscreen()
-        } else if (this.video.msRequestFullscreen) {
-          this.video.msRequestFullscreen()
-        } else if (this.video.mozRequestFullScreen) {
-          this.video.mozRequestFullScreen()
-        } else if (this.video.webkitRequestFullscreen) {
-          this.video.webkitRequestFullscreen(this)
+        if (this.videoPlayer.requestFullscreen) {
+          this.videoPlayer.requestFullscreen()
+        } else if (this.videoPlayer.msRequestFullscreen) {
+          this.videoPlayer.msRequestFullscreen()
+        } else if (this.videoPlayer.mozRequestFullScreen) {
+          this.videoPlayer.mozRequestFullScreen()
+        } else if (this.videoPlayer.webkitRequestFullscreen) {
+          this.videoPlayer.webkitRequestFullscreen(this)
         }
       } else {
-        if (this.video.exitFullscreen) {
+        if (document.exitFullscreen) {
           document.exitFullscreen()
-        } else if (this.video.msExitFullscreen) {
-          document.msExitFullscreen()
-        } else if (this.video.mozCancelFullScreen) {
+        } else if (document.mozCancelFullScreen) {
           document.mozCancelFullScreen()
-        } else if (this.video.webkitExitFullScreen) {
+        } else if (document.webkitCancelFullScreen) {
           document.webkitCancelFullScreen()
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen()
         }
       }
     },
     fullScreenChange: function () {
       if (document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) {
         this.videoPlayerControls.classList.add('is-full-screen')
+        this.video.classList.add('video-full-screen')
       } else {
         this.videoPlayerControls.classList.remove('is-full-screen')
+        this.video.classList.remove('video-full-screen')
       }
     },
     getTimeFromSeconds: function (seconds) {
@@ -208,6 +212,9 @@ export default {
       .video-player-button {
         fill: $vue-london;
       }
+      .video-player-controls {
+        background-color: $vue-white;
+      }
     }
     .right {
       color: $vue-cotton;
@@ -217,6 +224,9 @@ export default {
       .video-player-button {
         fill: $vue-white;
       }
+      .video-player-controls {
+        background-color: $vue-light-blip;
+      }
     }
 
     .notification {
@@ -225,9 +235,13 @@ export default {
   }
 
   .video-player-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     .video-player {
       display: flex;
       align-self: top;
+      justify-content: center;
     }
 
     video {
@@ -282,22 +296,12 @@ export default {
 
     .is-full-screen {
       background-color: $vue-white;
-      position: absolute;
-      z-index: 2147483647;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      padding: 0;
-      .player-button {
-        margin: 15px !important;
-        fill: $vue-london !important;
-      }
-      .video-player-time {
-        color: $vue-london !important;
-      }
-      .pin {
-        background-color: $vue-light-blip !important;
-      }
+      margin: 0;
+    }
+
+    .video-full-screen {
+      width: auto;
+      height: auto;
     }
 
     .video-player-button {
