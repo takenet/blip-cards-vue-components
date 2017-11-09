@@ -10,8 +10,8 @@ function install (Vue) {
 
   components.push(Vue.component('blip-card', BlipCard))
   components.push(Vue.component('plain-text', PlainText))
-  components.push(Vue.component('media-link', MediaLink))
   components.push(Vue.component('blip-select', BlipSelect))
+  components.push(Vue.component('media-link', MediaLink))
   components.push(Vue.component('document-select', DocumentSelect))
   components.push(Vue.component('collection', Collection))
 
