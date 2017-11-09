@@ -36,3 +36,24 @@ Then, reference the cards via <blip-card> tag as following
 | on-selected | callback function that will be called when the user interacts with the card (OPTIONAL) | Function |
 | hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 
+## Contributions
+Any contribution to the code via pull request would be nice and any idea and/or suggestion are very welcome.
+
+However, please do not feel bad if your pull requests or contributions do not get merged or implemented into `blip-cards`.
+
+### Building
+
+```bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run bundle:min
+```
+
+<a id="license"></a>
+## License
+`blip-cards` is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
