@@ -3,7 +3,7 @@
     <div class="video-player">
       <video :src="this.document.uri" ref="blipVideo"></video>
     </div>
-    <div :class="'video-player-controls ' + isFullScreen" ref="videoPlayerControls">
+    <div class="video-player-controls" ref="videoPlayerControls">
       <span v-if="isPlaying" @click="togglePlay">
         <svg  class="video-player-button player-button-right player-button" width="12px" height="18px" viewBox="0 0 12 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <g id="Pause" stroke="none" stroke-width="1" fill-rule="nonzero">
@@ -146,7 +146,6 @@ export default {
     },
     toggleFullScreen: function () {
       if (!(document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen)) {
-        this.videoPlayerControls.classList.add('is-full-screen')
         if (this.video.requestFullscreen) {
           this.video.requestFullscreen()
         } else if (this.video.msRequestFullscreen) {
@@ -157,7 +156,6 @@ export default {
           this.video.webkitRequestFullscreen(this)
         }
       } else {
-        this.videoPlayerControls.classList.remove('is-full-screen')
         if (this.video.exitFullscreen) {
           document.exitFullscreen()
         } else if (this.video.msExitFullscreen) {
@@ -279,9 +277,6 @@ export default {
     }
 
     video::-webkit-media-controls-enclosure {
-      display:none;
-    }
-    video::-moz-media-controls-enclosure {
       display:none;
     }
 
