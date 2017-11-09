@@ -1,27 +1,38 @@
 # blip-cards
 
-> A Vue.js project
+> Reusable BLiP cards using Vue
 
-## Build Setup
+- No need to render the cards yourself
+- One simple blip-card tag
 
-``` bash
-# install dependencies
-npm install
+## Usage
 
-# serve with hot reload at localhost:8080
-npm run dev
+### NPM
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run all tests
-npm test
+```
+$ npm install blip-cards
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+Just import or require like so:
+
+```
+var Vue = require('vue');
+var blipCards = require("blip-cards");
+
+var components = blipCards.install(Vue);
+```
+
+Then, reference the cards via <blip-card> tag as following
+
+```html
+<blip-card :document="document" :position="'left'" :date="13:00 PM" :on-selected="function" :hide-options="false" />
+```
+
+| Attribute   |      Description      |  Type |
+|----------|:-------------:|------:|
+| document | BLiP JSON envelope (REQUIRED) | Object |
+| position |  Card position, possible values are 'left' and 'right'. Default: 'left' | String |
+| date |    Date that will be shown below the card (OPTIONAL)   |   String |
+| on-selected | callback function that will be called when the user interacts with the card (OPTIONAL) | Function |
+| hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
+
