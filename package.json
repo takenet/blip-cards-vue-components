@@ -4,7 +4,7 @@
   "description": "Reusable BLiP cards using Vue",
   "license": "MIT",
   "main": "dist/blip-cards.js",
-  "author": "Breno Fernandes Queiroz <brenof@takenet.com.br>",
+  "author": "Breno Queiroz <brenoqueiroz@gmail.com>",
   "private": false,
   "files": [
     "dist/blip-cards.js",
@@ -14,6 +14,10 @@
     "type": "git",
     "url": "git+https://github.com/takenet/blip-cards-vue-components.git"
   },
+  "bugs": {
+    "url": "https://github.com/takenet/blip-cards-vue-components/issues"
+  },
+  "homepage": "https://github.com/takenet/blip-cards-vue-components#readme",
   "keywords": [
     "vue",
     "component",
@@ -27,7 +31,6 @@
     "start": "npm run dev",
     "build": "node build/build.js",
     "bundle:min": "cross-env MINIFY=true webpack --progress --config build/webpack.build.config.js",
-    "bundle:full": "cross-env MINIFY=false webpack --progress --config build/webpack.build.config.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
