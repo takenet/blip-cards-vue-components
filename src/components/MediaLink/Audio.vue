@@ -169,7 +169,7 @@ export default {
     .audio-player-range{
       position: relative;
       bottom: 10px;
-      opacity: 1;
+      opacity: 0;
       margin: 0 0 -9px 0;
       width: 100%;
       padding: 0;
