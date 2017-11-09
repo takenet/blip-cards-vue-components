@@ -26,6 +26,7 @@ import { linkify } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
+  name: 'plain-text',
   mixins: [
     base
   ],

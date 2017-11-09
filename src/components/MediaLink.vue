@@ -20,6 +20,7 @@ import BlipVideo from './MediaLink/Video'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
+  name: 'media-link',
   mixins: [
     base
   ],

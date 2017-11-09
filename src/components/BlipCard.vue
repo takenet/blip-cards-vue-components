@@ -25,6 +25,7 @@
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
+  name: 'blip-card',
   mixins: [
     base
   ],

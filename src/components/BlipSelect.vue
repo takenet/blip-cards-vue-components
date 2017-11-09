@@ -45,6 +45,7 @@ import { default as base } from '../mixins/baseComponent.js'
 const optionSize = 34
 
 export default {
+  name: 'blip-select',
   mixins: [
     base
   ],

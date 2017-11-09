@@ -33,6 +33,7 @@ import { guid } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
+  name: 'collection',
   mixins: [
     base
   ],
