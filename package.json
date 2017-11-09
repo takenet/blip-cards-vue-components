@@ -6,6 +6,10 @@
   "main": "dist/blip-cards.js",
   "author": "Breno Fernandes Queiroz <brenof@takenet.com.br>",
   "private": false,
+  "files": [
+    "dist/blip-cards.js",
+    "dist/blip-cards.css"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/takenet/blip-cards-vue-components.git"
