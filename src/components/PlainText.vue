@@ -9,13 +9,13 @@
         <div v-if="!previewDocument.hasPreview" v-html="previewDocument.content">
         </div>
         <div v-else >
-          <div v-show="!previewDocument.showContent" v-html="previewDocument.previewContent">
+          <div v-show="!showContent" v-html="previewDocument.previewContent">
           </div>
           <transition name="slide-fade">
-            <div v-show="previewDocument.showContent" v-html="previewDocument.content">
+            <div v-show="showContent" v-html="previewDocument.content">
             </div>
           </transition>
-          <a style="display: block;" v-show="!previewDocument.showContent" v-on:click="showContent(previewDocument)">Ver mais</a>
+          <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">Ver mais</a>
         </div>
       </div>
 
@@ -62,19 +62,14 @@ export default {
         ...this.document,
         hasPreview: this.text.length > this.length,
         previewContent: linkify(this.text.substring(0, this.length - 3) + '...'),
-        content: linkify(this.text),
-        showContent: false
+        content: linkify(this.text)
       }
     }
   },
   data: function () {
     return {
-      text: this.document
-    }
-  },
-  methods: {
-    showContent: function (document) {
-      document.showContent = true
+      text: this.document,
+      showContent: false
     }
   }
 }

@@ -26,7 +26,6 @@ var baseComponent = {
   data: function () {
     return {
       isEditing: false,
-      editableDocument: this.document,
       editSvg: editSvg,
       approveSvg: approveSvg
     }
