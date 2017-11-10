@@ -1,26 +1,26 @@
 <template>
   <div v-if="document.type === 'text/plain'">
-    <plain-text :length="length" :position="position" :document="document.content" :date="date" :on-save="save" />
+    <plain-text :length="length" :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
   </div>
 
   <div v-else-if="document.type === 'application/vnd.lime.media-link+json'">
-    <media-link :position="position" :document="document.content" :date="date" :on-save="save" />
+    <media-link :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
   </div>
 
   <div v-else-if="document.type === 'application/vnd.lime.document-select+json'">
-    <document-select :length="length" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" />
+    <document-select :length="length" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
   </div>
 
   <div v-else-if="document.type === 'application/vnd.lime.collection+json'">
-    <collection :length="length" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" />
+    <collection :length="length" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
   </div>
 
   <div v-else-if="document.type === 'application/vnd.lime.select+json'">
-    <blip-select :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" />
+    <blip-select :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
   </div>
 
   <div v-else-if="document.type === 'application/vnd.lime.web-link+json'">
-    <web-link :position="position" :document="document.content" :date="date" :on-save="save" />
+    <web-link :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
   </div>
 </template>
 

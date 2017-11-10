@@ -1,3 +1,6 @@
+import editSvg from '../assets/img/Edit.svg'
+import approveSvg from '../assets/img/Approve.svg'
+
 // define um objeto mixin
 var baseComponent = {
   props: {
@@ -23,7 +26,9 @@ var baseComponent = {
   data: function () {
     return {
       isEditing: false,
-      editableDocument: this.document
+      editableDocument: this.document,
+      editSvg: editSvg,
+      approveSvg: approveSvg
     }
   },
   methods: {

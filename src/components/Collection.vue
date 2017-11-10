@@ -5,7 +5,7 @@
         <div class="slideshow-list">
           <div class="slideshow-track">
             <div v-for="item in document.items">
-              <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" />
+              <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :editable="editable" />
             </div>
           </div>
         </div>
@@ -22,14 +22,14 @@
 
   <div v-else-if="document.itemType === 'application/vnd.lime.container+json'">
     <div v-for="item in document.items">
-        <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: item.type, content: item.value }" />
+        <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: item.type, content: item.value }" :editable="editable" />
       </div>
     </div>
   </div>
 
   <div v-else>
     <div v-for="item in document.items">
-      <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: document.itemType, content: item }" />
+      <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: document.itemType, content: item }" :editable="editable" />
     </div>
   </div>
 </template>
