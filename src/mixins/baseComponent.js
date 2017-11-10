@@ -1,3 +1,6 @@
+import editSvg from '../assets/img/Edit.svg'
+import approveSvg from '../assets/img/Approve.svg'
+
 // define um objeto mixin
 var baseComponent = {
   props: {
@@ -11,6 +14,32 @@ var baseComponent = {
     },
     date: {
       type: String
+    },
+    onSave: {
+      type: Function
+    },
+    editable: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: function () {
+    return {
+      isEditing: false,
+      editSvg: editSvg,
+      approveSvg: approveSvg
+    }
+  },
+  methods: {
+    toggleEdit: function () {
+      this.isEditing = !this.isEditing
+    },
+    save: function (document) {
+      this.isEditing = false
+
+      if (this.onSave) {
+        this.onSave(document)
+      }
     }
   }
 }

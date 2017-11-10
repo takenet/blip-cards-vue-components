@@ -1,15 +1,22 @@
 <template>
-  <div class="header" :id="id" >
+
+  <div class="header" :id="id" v-if="!isEditing">
     <a :href="document.uri" target="_blank">
       <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + previewUri + ')'">
       </div>
     </a>
 
-    <div class="title" v-if="document.title || document.text">
-        <strong v-if="document.title" v-html="document.title"></strong>
-        <span v-if="document.text" v-html="document.text"></span>
+    <div class="title" v-if="title || text">
+        <strong v-if="title" v-html="title"></strong>
+        <span v-if="text" v-html="text"></span>
     </div>
   </div>
+
+  <div v-else>
+    <input type="text" v-model="title" />
+    <editable class="editable" :content="text" @update="text = $event"></editable>
+  </div>
+
 </template>
 
 <script>
@@ -23,7 +30,9 @@ export default {
   ],
   data: function () {
     return {
-      id: guid()
+      id: guid(),
+      title: this.document.title,
+      text: this.document.text
     }
   },
   computed: {
@@ -35,7 +44,7 @@ export default {
     }
   },
   mounted: function () {
-    let element = document.getElementById(this.id)
+    let element = this.$el
     let container = element.parentNode.parentNode
 
     let width = parseInt(window.getComputedStyle(container).width.toString().replace('px', ''))

@@ -20,7 +20,12 @@
       <div style="clear: both">
       </div>
 
-      <div>
+      <br />
+
+      <input type="radio" value="true" v-model="isSample" > Samples
+      <input type="radio" value="false" v-model="isSample" > JSON
+
+      <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendMenu">ENVIAR Menu</button>
@@ -30,9 +35,10 @@
         <button class="button" @click="sendImage">ENVIAR Imagem</button>
         <button class="button"  @click="sendAudio">ENVIAR Audio</button>
         <button class="button" @click="sendVideo">ENVIAR Video</button>
+        <button class="button" @click="sendWebLink">ENVIAR WebLink</button>
       </div>
 
-      <div>
+      <div v-else>
         <h1>JSON:</h1>
         <textarea v-model="json" id='textarea' style="width: 100%; height: 300px;"></textarea>
         <button class="button" @click="send">ENVIAR JSON</button>
@@ -41,7 +47,7 @@
 
     <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px;'">
       <div v-for="(item, index) in documents">
-        <blip-card :position="item.position" :date="item.date" :on-selected="teste" :hide-options="false" :document="item.document" />
+        <blip-card :position="item.position" :date="item.date" :on-selected="teste" :hide-options="false" :document="item.document" :on-save="save" :editable="true" />
       </div>
       <div style="clear: both"></div>
     </div>
@@ -81,12 +87,14 @@ export default {
     },
     sendAudio: function () {
       this.json = JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'application/vnd.lime.media-link+json', 'content': {'type': 'audio/mp3', 'uri': 'http://blaamandagjazzband.dk/jazz/mp3/basin_street_blues.mp3', 'size': '1'}})
-
       this.send()
     },
     sendVideo: function () {
-      this.json = JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'application/vnd.lime.media-link+json', 'content': {'type': 'video/mp4', 'uri': 'http://p.demo.flowplayer.netdna-cdn.com/vod/demo.flowplayer/bbb-800.mp4', 'size': '1'}})
-
+      this.json = JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'application/vnd.lime.media-link+json', 'content': {'type': 'video/mp4', 'uri': 'http://www.onirikal.com/videos/mp4/nestlegold.mp4', 'size': '1'}})
+      this.send()
+    },
+    sendWebLink: function () {
+      this.json = JSON.stringify({'id': '1', 'to': '553199991111@0mn.io', 'type': 'application/vnd.lime.web-link+json', 'content': {'uri': 'http://limeprotocol.org/content-types.html#web-link', 'target': 'self', 'text': 'Segue documentação do web-link'}})
       this.send()
     }
   },
@@ -96,9 +104,13 @@ export default {
       json: JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'text/plain', 'content': 'Seja bem-vindo ao nosso serviço! Como podemos te ajudar?'}),
       width: 700,
       position: 'left',
+      isSample: 'true',
       date: '08:32 PM',
       teste: function (text, obj) {
         console.log(text, obj)
+      },
+      save: function (d) {
+        console.log(d)
       }
     }
   },

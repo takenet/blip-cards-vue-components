@@ -2,12 +2,10 @@
 @import 'fonts';
 @import 'animations';
 
-
-
 .container {
   margin-bottom: 10px;
   font-family: "Avenir Next";
-  overflow: hidden;
+  position: relative;
 }
 
 .container:after {
@@ -170,4 +168,49 @@ a {
     margin: 0;
     padding: 10px 20px;
   }
+}
+
+.editIco {
+  background-color: $vue-light-blip;
+  padding: 3px;
+  float: left;
+  border-radius: 50%;
+	width: 25px;
+  height: 25px;
+  text-align: center;
+  position: absolute;
+  top: -27px;
+  left: -15px;
+  display: none;
+}
+
+.saveIco {
+  background-color: $vue-light-blip;
+  padding: 3px;
+  float: left;
+  border-radius: 50%;
+	width: 25px;
+  height: 25px;
+  text-align: center;
+  position: absolute;
+  top: -27px;
+  left: -15px;
+}
+
+.saveIco img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.editIco img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.container:hover > .editIco {
+  display: block;
+}
+
+.editable {
+  outline: -webkit-focus-ring-color auto 5px;
 }
