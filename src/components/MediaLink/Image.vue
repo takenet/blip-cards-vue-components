@@ -1,7 +1,6 @@
 <template>
 
   <div class="header" :id="id" v-if="!isEditing">
-  {{ isEditing }}
     <a :href="document.uri" target="_blank">
       <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + previewUri + ')'">
       </div>
