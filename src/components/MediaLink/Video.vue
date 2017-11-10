@@ -1,6 +1,20 @@
 <template>
   <div class="video-player-wrapper" ref="blipVideoPlayerWrapper">
     <div class="video-player">
+      <div class="sk-circle" ref="animation">
+        <div class="sk-circle1 sk-child"></div>
+        <div class="sk-circle2 sk-child"></div>
+        <div class="sk-circle3 sk-child"></div>
+        <div class="sk-circle4 sk-child"></div>
+        <div class="sk-circle5 sk-child"></div>
+        <div class="sk-circle6 sk-child"></div>
+        <div class="sk-circle7 sk-child"></div>
+        <div class="sk-circle8 sk-child"></div>
+        <div class="sk-circle9 sk-child"></div>
+        <div class="sk-circle10 sk-child"></div>
+        <div class="sk-circle11 sk-child"></div>
+        <div class="sk-circle12 sk-child"></div>
+      </div>
       <video :src="this.document.uri" ref="blipVideo"></video>
     </div>
     <div class="video-player-controls" ref="videoPlayerControls">
@@ -82,14 +96,19 @@ export default {
       volumeProgress: null,
       volumeSliderWrapper: null,
       videoPlayerWrapper: null,
-      inactivityTimeout: null
+      inactivityTimeout: null,
+      animation: null
     }
   },
   mounted: function () {
+    this.animation = this.$refs.animation
     this.videoPlayerWrapper = this.$refs.blipVideoPlayerWrapper
     this.video = this.$refs.blipVideo
     this.video.addEventListener('timeupdate', this.videoTimeUpdated)
     this.video.addEventListener('loadedmetadata', this.videoLoaded)
+    this.video.addEventListener('seeking', this.readyToPlay)
+    this.video.addEventListener('waiting', this.readyToPlay)
+    this.video.addEventListener('seeked', this.readyToPlay)
     this.video.addEventListener('canplay', this.readyToPlay)
     this.video.addEventListener('ended', this.resetPlay)
 
@@ -117,6 +136,14 @@ export default {
         this.isPlaying = false
         this.video.pause()
         this.video.currentTime = 0
+      }
+    },
+    readyToPlay: function (event) {
+      console.log(event)
+      if (event.type === 'seeked' || event.type === 'canplay') {
+        this.animation.classList.add('hide')
+      } else {
+        this.animation.classList.remove('hide')
       }
     },
     videoTimeUpdated: function () {
@@ -202,6 +229,7 @@ export default {
 
 <style lang="scss">
    @import '../../styles/variables.scss';
+   @import '../../styles/loading.scss';
 
   .media-link {
 
@@ -244,9 +272,17 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
+
+    .sk-circle{
+      position: absolute;
+      color: white;
+    }
+
     .video-player {
       display: flex;
       align-self: top;
+      align-items: center;
+      justify-content: center;
     }
 
     video {
