@@ -85,7 +85,7 @@ export default {
       this.send()
     },
     sendVideo: function () {
-      this.json = JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'application/vnd.lime.media-link+json', 'content': {'type': 'video/mp4', 'uri': 'http://www.onirikal.com/videos/mp4/nestlegold.mp4', 'size': '1'}})
+      this.json = JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'application/vnd.lime.media-link+json', 'content': {'type': 'video/mp4', 'uri': 'http://p.demo.flowplayer.netdna-cdn.com/vod/demo.flowplayer/bbb-800.mp4', 'size': '1'}})
 
       this.send()
     }
