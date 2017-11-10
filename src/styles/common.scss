@@ -7,7 +7,6 @@
 .container {
   margin-bottom: 10px;
   font-family: "Avenir Next";
-  overflow: hidden;
 }
 
 .container:after {
@@ -170,4 +169,18 @@ a {
     margin: 0;
     padding: 10px 20px;
   }
+}
+
+.editIco {
+  float: left;
+  border-radius: 50%;
+	width: 25px;
+	height: 25px;
+}
+
+.saveIco {
+  float: left;
+  border-radius: 50%;
+	width: 25px;
+	height: 25px;
 }

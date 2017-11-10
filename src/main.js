@@ -9,6 +9,7 @@ import BlipSelect from './components/BlipSelect'
 import DocumentSelect from './components/DocumentSelect'
 import MediaLink from './components/MediaLink'
 import Collection from './components/Collection'
+import WebLink from './components/WebLink'
 
 Vue.config.productionTip = false
 
@@ -19,6 +20,7 @@ Vue.component(MediaLink.name, MediaLink)
 Vue.component(BlipSelect.name, BlipSelect)
 Vue.component(DocumentSelect.name, DocumentSelect)
 Vue.component(Collection.name, Collection)
+Vue.component(WebLink.name, WebLink)
 
 /* eslint-disable no-new */
 new Vue({

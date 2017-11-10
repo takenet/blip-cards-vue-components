@@ -11,6 +11,31 @@ var baseComponent = {
     },
     date: {
       type: String
+    },
+    onSave: {
+      type: Function
+    },
+    editable: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: function () {
+    return {
+      isEditing: false,
+      editableDocument: this.document
+    }
+  },
+  methods: {
+    toggleEdit: function () {
+      this.isEditing = !this.isEditing
+    },
+    save: function (document) {
+      this.isEditing = false
+
+      if (this.onSave) {
+        this.onSave(document)
+      }
     }
   }
 }

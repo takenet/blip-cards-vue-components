@@ -4,6 +4,7 @@ import BlipSelect from './components/BlipSelect'
 import DocumentSelect from './components/DocumentSelect'
 import MediaLink from './components/MediaLink'
 import Collection from './components/Collection'
+import WebLink from './components/WebLink'
 
 function install (Vue) {
   let components = []
@@ -14,6 +15,7 @@ function install (Vue) {
   components.push(Vue.component(BlipSelect.name, BlipSelect))
   components.push(Vue.component(DocumentSelect.name, DocumentSelect))
   components.push(Vue.component(Collection.name, Collection))
+  components.push(Vue.component(WebLink.name, WebLink))
 
   return components
 }

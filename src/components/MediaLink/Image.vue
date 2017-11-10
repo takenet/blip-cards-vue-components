@@ -35,7 +35,7 @@ export default {
     }
   },
   mounted: function () {
-    let element = document.getElementById(this.id)
+    let element = this.$el
     let container = element.parentNode.parentNode
 
     let width = parseInt(window.getComputedStyle(container).width.toString().replace('px', ''))

@@ -45,6 +45,10 @@ export default {
     base
   ],
   props: {
+    length: {
+      type: Number,
+      default: 532
+    },
     initWith: {
       type: Number,
       default: 2
@@ -66,7 +70,7 @@ export default {
   },
   mounted: function () {
     if (this.document.itemType === 'application/vnd.lime.document-select+json') {
-      var element = document.getElementById(this.id)
+      var element = this.$el
       let listElement = element.querySelector('.slideshow-list')
       this.width = parseInt(window.getComputedStyle(listElement).width.toString().replace('px', ''))
 
