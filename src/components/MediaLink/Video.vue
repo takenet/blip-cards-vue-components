@@ -81,7 +81,8 @@ export default {
       videoPlayerControls: null,
       volumeProgress: null,
       volumeSliderWrapper: null,
-      videoPlayerWrapper: null
+      videoPlayerWrapper: null,
+      inactivityTimeout: null
     }
   },
   mounted: function () {
@@ -172,9 +173,22 @@ export default {
     fullScreenChange: function () {
       if (document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) {
         this.videoPlayerWrapper.classList.add('video-full-screen')
+        this.videoPlayerWrapper.addEventListener('mousemove', this.showPlayerControls)
+        this.showPlayerControls()
       } else {
+        this.videoPlayerControls.classList.remove('hide-player')
         this.videoPlayerWrapper.classList.remove('video-full-screen')
+        this.videoPlayerWrapper.removeEventListener('mousemove', this.showPlayerControls)
       }
+    },
+    showPlayerControls: function () {
+      clearTimeout(this.inactivityTimeout)
+      this.videoPlayerControls.classList.remove('hide-player')
+      this.inactivityTimeout = setTimeout(() => {
+        this.videoPlayerControls.classList.add('hide-player')
+        this.volumeSliderWrapper.classList.add('hide')
+        // player.userActive(false);
+      }, 3000)
     },
     getTimeFromSeconds: function (seconds) {
       var timeMin = Math.floor(seconds / 60)
@@ -263,6 +277,7 @@ export default {
       -ms-transform: rotate(90deg); /* IE 9 */
       -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
       transform: rotate(-90deg);
+      transition: all 0.15s linear;
     }
     .volume-slider {
       width: 100px;
@@ -271,7 +286,8 @@ export default {
     }
 
     .hide {
-      display: none;
+      opacity: 0;
+      visibility: hidden;
     }
 
     .video-player-volume{
@@ -356,8 +372,14 @@ export default {
   .video-full-screen {
     background-color: $vue-black;
     display: flex;
-    width: 100%; 
+    width: 100%;
     height: 100%;
+
+    .video-player-controls.hide-player {
+      bottom:-50px;
+      visibility: hidden;
+      opacity: 0;
+    }
 
     .video-player-controls {
       background-color: $vue-black-transparent;
@@ -367,6 +389,7 @@ export default {
       bottom: 0;
       left: 0;
       padding: 0;
+      transition: all 0.5s linear;
       .player-button {
         fill: $vue-london !important;
       }
@@ -380,9 +403,12 @@ export default {
         padding-right: 15px;
         margin: 0;
       }
+      .volume-slider-wrapper {
+        left: -55px;
+      }
       .video-player-bar {
         margin-right: 15px;
-         
+
       }
       .video-player-time {
         color: $vue-london !important;
