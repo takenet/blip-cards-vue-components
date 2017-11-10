@@ -29,6 +29,7 @@
         <h1>Examples:</h1>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendMenu">ENVIAR Menu</button>
+        <button class="button" @click="sendQuickReply">ENVIAR QuickReply</button>
         <button class="button" @click="sendMultimediaMenu">ENVIAR Menu Multimídia</button>
         <button class="button" @click="sendCollection">ENVIAR Coleção</button>
         <button class="button" @click="sendImage">ENVIAR Imagem</button>
@@ -62,6 +63,10 @@ export default {
     },
     sendText: function () {
       this.json = JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'text/plain', 'content': 'Seja bem-vindo ao nosso serviço! Como podemos te ajudar?'})
+      this.send()
+    },
+    sendQuickReply: function () {
+      this.json = JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'application/vnd.lime.select+json', 'content': {'scope': 'immediate', 'text': 'Choice an option', 'options': [{'text': 'First option'}, {'order': '2', 'text': 'Second option'}, {'order': '3', 'text': 'Third option', 'type': 'application/json', 'value': {'key1': 'value1', 'key2': '2'}}]}})
       this.send()
     },
     sendMenu: function () {
