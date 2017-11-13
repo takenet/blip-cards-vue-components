@@ -190,7 +190,7 @@ export default {
 
     .audio-player-button {
       flex-grow: 0;
-
+      width: 14px;
       margin-right: 15px;
       color: inherit;
     }
