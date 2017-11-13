@@ -1,19 +1,21 @@
 <template>
   <div class="video-player-wrapper" ref="blipVideoPlayerWrapper">
     <div class="video-player">
-      <div class="sk-circle" ref="animation">
-        <div class="sk-circle1 sk-child"></div>
-        <div class="sk-circle2 sk-child"></div>
-        <div class="sk-circle3 sk-child"></div>
-        <div class="sk-circle4 sk-child"></div>
-        <div class="sk-circle5 sk-child"></div>
-        <div class="sk-circle6 sk-child"></div>
-        <div class="sk-circle7 sk-child"></div>
-        <div class="sk-circle8 sk-child"></div>
-        <div class="sk-circle9 sk-child"></div>
-        <div class="sk-circle10 sk-child"></div>
-        <div class="sk-circle11 sk-child"></div>
-        <div class="sk-circle12 sk-child"></div>
+      <div class="sk-circle-wrapper" ref="animation"> 
+        <div class="sk-circle">
+          <div class="sk-circle1 sk-child"></div>
+          <div class="sk-circle2 sk-child"></div>
+          <div class="sk-circle3 sk-child"></div>
+          <div class="sk-circle4 sk-child"></div>
+          <div class="sk-circle5 sk-child"></div>
+          <div class="sk-circle6 sk-child"></div>
+          <div class="sk-circle7 sk-child"></div>
+          <div class="sk-circle8 sk-child"></div>
+          <div class="sk-circle9 sk-child"></div>
+          <div class="sk-circle10 sk-child"></div>
+          <div class="sk-circle11 sk-child"></div>
+          <div class="sk-circle12 sk-child"></div>
+        </div>
       </div>
       <video :src="this.document.uri" ref="blipVideo"></video>
     </div>
@@ -101,9 +103,15 @@ export default {
     }
   },
   mounted: function () {
-    this.animation = this.$refs.animation
-    this.videoPlayerWrapper = this.$refs.blipVideoPlayerWrapper
     this.video = this.$refs.blipVideo
+    this.progress = this.$refs.videoProgress
+    this.videoPlayerControls = this.$refs.videoPlayerControls
+    this.volumeProgress = this.$refs.volumeProgress
+    this.volumeProgress.style.width = this.video.volume * 100 + '%'
+    this.volumeSliderWrapper = this.$refs.volumeSliderWrapper
+    this.videoPlayerWrapper = this.$refs.blipVideoPlayerWrapper
+    this.animation = this.$refs.animation
+
     this.video.addEventListener('timeupdate', this.videoTimeUpdated)
     this.video.addEventListener('loadedmetadata', this.videoLoaded)
     this.video.addEventListener('seeking', this.readyToPlay)
@@ -116,11 +124,6 @@ export default {
     document.addEventListener('webkitfullscreenchange', this.fullScreenChange)
     document.addEventListener('mozfullscreenchange', this.fullScreenChange)
     document.addEventListener('MSFullscreenChange', this.fullScreenChange)
-    this.progress = this.$refs.videoProgress
-    this.videoPlayerControls = this.$refs.videoPlayerControls
-    this.volumeProgress = this.$refs.volumeProgress
-    this.volumeProgress.style.width = this.video.volume * 100 + '%'
-    this.volumeSliderWrapper = this.$refs.volumeSliderWrapper
   },
   methods: {
     togglePlay: function () {
@@ -141,7 +144,7 @@ export default {
     readyToPlay: function (event) {
       console.log(event)
       if (event.type === 'seeked' || event.type === 'canplay') {
-        this.animation.classList.add('hide')
+        // this.animation.classList.add('hide')
       } else {
         this.animation.classList.remove('hide')
       }
@@ -269,16 +272,28 @@ export default {
   }
 
   .video-player-wrapper {
+    position: relative;
     display: flex;
     justify-content: center;
     flex-direction: column;
 
-    .sk-circle{
+    .sk-circle-wrapper {
       position: absolute;
-      color: white;
+      left: 50%;
+      padding: 5px;
+      border-radius: 100%;
+      margin-left: -25px;
+      background-color: $vue-black-transparent-soft;
+      
+      .sk-circle{
+        position: relative;
+        color: white;
+      }
     }
-
+    
     .video-player {
+      height: 100%;
+      width: 100%;
       display: flex;
       align-self: top;
       align-items: center;
