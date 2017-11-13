@@ -27,6 +27,12 @@
     font-weight: 500;
     line-height: 19px;
     white-space: pre-line;
+
+    input[type=text], textarea {
+      width: 90%;
+      padding: 5px;
+      margin: 2px;
+    }
 }
 
 .bubble.left {
@@ -211,6 +217,6 @@ a {
   display: block;
 }
 
-.editable {
-  outline: -webkit-focus-ring-color auto 5px;
+.container:hover > div > .editIco {
+  display: block;
 }

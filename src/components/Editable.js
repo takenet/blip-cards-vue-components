@@ -3,7 +3,7 @@ export default {
   template: '<div contenteditable="true" @input="update"></div>',
   props: ['content'],
   mounted: function () {
-    this.$el.innerText = this.content
+    this.$el.innerText = this.content || ''
   },
   methods: {
     update: function (event) {
