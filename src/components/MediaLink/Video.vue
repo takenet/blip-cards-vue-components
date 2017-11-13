@@ -144,7 +144,7 @@ export default {
     readyToPlay: function (event) {
       console.log(event)
       if (event.type === 'seeked' || event.type === 'canplay') {
-        // this.animation.classList.add('hide')
+        this.animation.classList.add('hide')
       } else {
         this.animation.classList.remove('hide')
       }
@@ -217,7 +217,6 @@ export default {
       this.inactivityTimeout = setTimeout(() => {
         this.videoPlayerControls.classList.add('hide-player')
         this.volumeSliderWrapper.classList.add('hide')
-        // player.userActive(false);
       }, 3000)
     },
     getTimeFromSeconds: function (seconds) {
