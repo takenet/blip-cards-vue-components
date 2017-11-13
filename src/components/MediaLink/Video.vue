@@ -241,34 +241,29 @@ export default {
       .bubble {
         width: 100%;
         padding: 0;
+        color: $vue-london;
       }
-    }
+      .left {
+        .progress .pin {
+          background-color: $vue-neon-blip;
+        }
+        .video-player-button {
+          fill: $vue-london;
+        }
+      }
+      .right {
+        color: $vue-cotton;
+        .progress .pin{
+          background-color: $vue-white;
+        }
+        .video-player-button {
+          fill: $vue-white;
+        }
+      }
 
-    .bubble {
-      padding: $bubble-padding;
-      color: $vue-london;
-    }
-
-    .left {
-      .progress .pin {
-        background-color: $vue-neon-blip;
+      .notification {
+        color: $vue-london;
       }
-      .video-player-button {
-        fill: $vue-london;
-      }
-    }
-    .right {
-      color: $vue-cotton;
-      .progress .pin{
-        background-color: $vue-white;
-      }
-      .video-player-button {
-        fill: $vue-white;
-      }
-    }
-
-    .notification {
-      color: $vue-london;
     }
   }
 
@@ -440,27 +435,9 @@ export default {
       width: 100%;
       bottom: 0;
       left: 0;
-      padding: 0;
       transition: all 0.5s linear;
       .player-button {
         fill: $vue-london !important;
-      }
-      .player-button-left {
-        padding: 15px;
-        margin: 0;
-      }
-      .player-button-right {
-        padding-top: 15px;
-        padding-bottom: 15px;
-        padding-right: 15px;
-        margin: 0;
-      }
-      .volume-slider-wrapper {
-        left: -55px;
-      }
-      .video-player-bar {
-        margin-right: 15px;
-
       }
       .video-player-time {
         color: $vue-london !important;
