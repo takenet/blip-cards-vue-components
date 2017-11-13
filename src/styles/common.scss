@@ -132,7 +132,6 @@ a {
 
   .ratio1-1 {
     overflow: hidden;
-    position: relative;
 
     &:before {
       content: '';
@@ -143,7 +142,6 @@ a {
 
   .ratio2-1 {
     overflow: hidden;
-    position: relative;
 
     &:before {
       content: '';
@@ -246,4 +244,22 @@ form {
   display: block;
   margin-top: 0em;
   padding: 10px;
+}
+
+.form-check {
+  position: relative;
+  display: block;
+  margin-bottom: .5rem;
+}
+
+.form-check-input {
+  position: absolute;
+  margin-top: .25rem;
+  margin-left: -1.25rem;
+}
+
+.form-check-label {
+  padding-left: 1.25rem;
+  margin-bottom: 0;
+  display: inline-block;
 }

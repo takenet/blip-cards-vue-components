@@ -120,5 +120,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "mime-types": "^2.1.17"
   }
 }

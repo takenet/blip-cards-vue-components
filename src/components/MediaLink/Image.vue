@@ -7,7 +7,7 @@
     <div :class="'bubble ' + position">
       <div class="header" :id="id" v-if="!isEditing">
         <a :href="document.uri" target="_blank">
-          <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + previewUri + ')'">
+          <div :class="'ratio ratio' + aspect" :style="'background-image: url(' + previewUri + ')'">
           </div>
         </a>
 
@@ -28,6 +28,16 @@
           <div class="form-group">
             <input type="text" class="form-control" v-model="image" placeholder="Image Uri" />
           </div>
+          <div class="form-check">
+            <span>Aspect Ratio:</span>
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" v-model="aspect" value="1-1"/> 1:1
+            </label>
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" v-model="aspect" value="2-1"/> 2:1
+            </label>
+          </div>
+          <hr />
           <div class="form-group">
             <input type="text" class="form-control" v-model="title" placeholder="Title" />
           </div>
@@ -44,6 +54,7 @@
 
 import { guid } from '../../utils'
 import { default as base } from '../../mixins/baseComponent.js'
+import mime from 'mime-types'
 
 export default {
   mixins: [
@@ -55,15 +66,16 @@ export default {
       title: this.document.title,
       text: this.document.text,
       preview: this.document.previewUri,
-      image: this.document.uri
+      image: this.document.uri,
+      aspect: this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
     }
   },
   computed: {
-    aspectRatio: function () {
-      return this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
-    },
     previewUri: function () {
       return this.preview ? this.preview : this.image
+    },
+    type: function () {
+      return mime.lookup(this.image)
     }
   },
   methods: {
@@ -73,12 +85,12 @@ export default {
         title: this.title,
         text: this.text,
         previewUri: this.preview,
-        uri: this.image
+        uri: this.image,
+        type: this.type
       })
     }
   },
   mounted: function () {
-    console.log(JSON.stringify(this.document))
     let element = this.$el
     let container = element.parentNode
     let width = parseInt(window.getComputedStyle(container).width.toString().replace('px', ''))
@@ -95,7 +107,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="scss">
    @import '../../styles/variables.scss';
