@@ -1,27 +1,15 @@
 <template>
-  <div v-if="document.type === 'text/plain'">
-    <plain-text :length="length" :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
-  </div>
+  <plain-text v-if="document.type === 'text/plain'" :length="length" :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
 
-  <div v-else-if="document.type === 'application/vnd.lime.media-link+json'">
-    <media-link :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
-  </div>
+  <media-link v-else-if="document.type === 'application/vnd.lime.media-link+json'" :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
 
-  <div v-else-if="document.type === 'application/vnd.lime.document-select+json'">
-    <document-select :length="length" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
-  </div>
+  <document-select v-else-if="document.type === 'application/vnd.lime.document-select+json'" :length="length" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
 
-  <div v-else-if="document.type === 'application/vnd.lime.collection+json'">
-    <collection :length="length" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
-  </div>
+  <collection v-else-if="document.type === 'application/vnd.lime.collection+json'" :length="length" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
 
-  <div v-else-if="document.type === 'application/vnd.lime.select+json'">
-    <blip-select :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
-  </div>
+  <blip-select v-else-if="document.type === 'application/vnd.lime.select+json'" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
 
-  <div v-else-if="document.type === 'application/vnd.lime.web-link+json'">
-    <web-link :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
-  </div>
+  <web-link v-else-if="document.type === 'application/vnd.lime.web-link+json'" :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
 </template>
 
 <script>

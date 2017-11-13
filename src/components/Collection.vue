@@ -1,22 +1,20 @@
 <template>
-  <div v-if="document.itemType === 'application/vnd.lime.document-select+json'">
-    <div :class="'container collection'">
-      <div :class="'slideshow-container ' + position" :id="id">
-        <div class="slideshow-list">
-          <div class="slideshow-track">
-            <div v-for="item in document.items">
-              <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :editable="editable" />
-            </div>
+  <div :class="'container collection'" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
+    <div :class="'slideshow-container ' + position" :id="id">
+      <div class="slideshow-list">
+        <div class="slideshow-track">
+          <div v-for="item in document.items">
+            <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :editable="editable" />
           </div>
         </div>
-
-          <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
-          <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
       </div>
 
-      <div :class="'notification ' + position" v-if="date">
-        {{ date }}
-      </div>
+        <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
+        <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
+    </div>
+
+    <div :class="'notification ' + position" v-if="date">
+      {{ date }}
     </div>
   </div>
 
