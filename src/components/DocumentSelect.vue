@@ -104,6 +104,10 @@ export default {
 <style lang="scss">
    @import '../styles/variables.scss';
 
+   .container.document-select {
+     overflow: hidden;
+   }
+
   .document-select {
 
     .header {

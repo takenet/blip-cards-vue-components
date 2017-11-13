@@ -1,22 +1,43 @@
 <template>
+  <div>
+    <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
+      <img :src="editSvg" />
+    </div>
 
-  <div class="header" :id="id" v-if="!isEditing">
-    <a :href="document.uri" target="_blank">
-      <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + previewUri + ')'">
+    <div :class="'bubble ' + position">
+      <div class="header" :id="id" v-if="!isEditing">
+        <a :href="document.uri" target="_blank">
+          <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + previewUri + ')'">
+          </div>
+        </a>
+
+        <div class="title" v-if="title || text">
+            <strong v-if="title" v-html="title"></strong>
+            <span v-if="text" v-html="text"></span>
+        </div>
       </div>
-    </a>
 
-    <div class="title" v-if="title || text">
-        <strong v-if="title" v-html="title"></strong>
-        <span v-if="text" v-html="text"></span>
+      <div v-else>
+        <form>
+          <div class="saveIco" @click="imgSave()">
+            <img :src="approveSvg" />
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" v-model="preview" placeholder="Preview Uri" />
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" v-model="image" placeholder="Image Uri" />
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" v-model="title" placeholder="Title" />
+          </div>
+          <div class="form-group">
+            <textarea v-model="text" class="form-control" placeholder="Text" />
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-
-  <div v-else>
-    <input type="text" v-model="title" />
-    <editable class="editable" :content="text" @update="text = $event"></editable>
-  </div>
-
 </template>
 
 <script>
@@ -32,7 +53,9 @@ export default {
     return {
       id: guid(),
       title: this.document.title,
-      text: this.document.text
+      text: this.document.text,
+      preview: this.document.previewUri,
+      image: this.document.uri
     }
   },
   computed: {
@@ -40,21 +63,34 @@ export default {
       return this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
     },
     previewUri: function () {
-      return this.document.previewUri ? this.document.previewUri : this.document.uri
+      return this.preview ? this.preview : this.image
+    }
+  },
+  methods: {
+    imgSave: function () {
+      this.save({
+        ...this.document,
+        title: this.title,
+        text: this.text,
+        previewUri: this.preview,
+        uri: this.image
+      })
     }
   },
   mounted: function () {
+    console.log(JSON.stringify(this.document))
     let element = this.$el
-    let container = element.parentNode.parentNode
-
+    let container = element.parentNode
     let width = parseInt(window.getComputedStyle(container).width.toString().replace('px', ''))
 
+    var bubble = element.querySelector('.bubble')
+
     if (width <= 400) {
-      element.style.width = width + 'px'
+      bubble.style.width = width + 'px'
     } else if (width < 700) {
-      element.style.width = (width / 2) + 'px'
+      bubble.style.width = (width / 2) + 'px'
     } else {
-      element.style.width = (width / 3) + 'px'
+      bubble.style.width = (width / 3) + 'px'
     }
   }
 }

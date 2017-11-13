@@ -1,18 +1,9 @@
 <template>
   <div :class="'container media-link ' + document.type.split('/')[0]">
-    <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-      <img :src="editSvg" />
-    </div>
 
-    <div v-if="isEditing"  class="saveIco" @click="save(text)">
-      <img :src="approveSvg" />
-    </div>
-
-    <div :class="'bubble ' + position">
-      <blip-image :document="document" :position="position" :date="date" v-if="document.type.indexOf('image') != -1" :editable="editable" :isEditing="isEditing" />
-      <blip-audio :document="document" :position="position" :date="date" v-if="document.type.indexOf('audio') != -1" :editable="editable" :isEditing="isEditing" />
-      <blip-video :document="document" :position="position" :date="date" v-if="document.type.indexOf('video') != -1" :editable="editable" :isEditing="isEditing" />
-    </div>
+    <blip-image :document="document" :position="position" :date="date" v-if="document.type.indexOf('image') != -1" :editable="editable" :on-save="save" />
+    <blip-audio :document="document" :position="position" :date="date" v-if="document.type.indexOf('audio') != -1" :editable="editable" :on-save="save" />
+    <blip-video :document="document" :position="position" :date="date" v-if="document.type.indexOf('video') != -1" :editable="editable" :on-save="save" />
 
     <div :class="'notification ' + position" v-if="date">
       {{ date }}

@@ -2,6 +2,10 @@
 @import 'fonts';
 @import 'animations';
 
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
 .container {
   margin-bottom: 10px;
   font-family: "Avenir Next";
@@ -175,25 +179,27 @@ a {
   padding: 3px;
   float: left;
   border-radius: 50%;
-	width: 25px;
-  height: 25px;
+	width: 30px;
+  height: 30px;
   text-align: center;
   position: absolute;
-  top: -27px;
+  top: -17px;
   left: -15px;
   display: none;
+  z-index: 1;
 }
 
 .saveIco {
+  z-index: 1;
   background-color: $vue-light-blip;
   padding: 3px;
   float: left;
   border-radius: 50%;
-	width: 25px;
-  height: 25px;
+	width: 30px;
+  height: 30px;
   text-align: center;
   position: absolute;
-  top: -27px;
+  top: -17px;
   left: -15px;
 }
 
@@ -211,6 +217,33 @@ a {
   display: block;
 }
 
-.editable {
-  outline: -webkit-focus-ring-color auto 5px;
+.container:hover > div > .editIco {
+  display: block;
+}
+
+.form-group {
+  margin-bottom: 0.3rem;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  color: #495057;
+  background-color: #fff;
+  background-image: none;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.form-control:focus {
+  border: 1px solid $vue-light-blip;
+}
+
+form {
+  display: block;
+  margin-top: 0em;
+  padding: 10px;
 }
