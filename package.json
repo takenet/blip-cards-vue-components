@@ -122,6 +122,7 @@
     }
   },
   "dependencies": {
-    "mime-types": "^2.1.17"
+    "mime-types": "^2.1.17",
+    "vee-validate": "^2.0.0-rc.21"
   }
 }

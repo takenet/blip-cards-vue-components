@@ -1,3 +1,5 @@
+import VeeValidate from 'vee-validate'
+
 import BlipCard from './components/BlipCard'
 import PlainText from './components/PlainText'
 import BlipSelect from './components/BlipSelect'
@@ -16,6 +18,8 @@ function install (Vue) {
   components.push(Vue.component(DocumentSelect.name, DocumentSelect))
   components.push(Vue.component(Collection.name, Collection))
   components.push(Vue.component(WebLink.name, WebLink))
+
+  Vue.use(VeeValidate)
 
   return components
 }
