@@ -236,10 +236,6 @@ a {
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
-.form-control:focus {
-  border: 1px solid $vue-light-blip;
-}
-
 form {
   display: block;
   margin-top: 0em;
@@ -262,4 +258,25 @@ form {
   padding-left: 1.25rem;
   margin-bottom: 0;
   display: inline-block;
+}
+
+.input-error {
+  border-color: $vue-warning;
+}
+
+input:focus, textarea:focus {
+  outline: none !important;
+}
+
+.input-error:invalid {
+  border-color: $vue-warning;
+}
+
+.help.input-error {
+  color: $vue-warning;
+}
+
+.is-disabled {
+  opacity: .5;
+  pointer-events: none;
 }
