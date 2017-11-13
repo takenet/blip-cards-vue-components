@@ -18,14 +18,23 @@
       </div>
 
       <div v-else>
-        <div class="saveIco" @click="imgSave()">
-          <img :src="approveSvg" />
-        </div>
-
-        <input type="text" v-model="preview" placeholder="Preview Uri" />
-        <input type="text" v-model="image" placeholder="Image Uri" />
-        <input type="text" v-model="title" placeholder="Title" />
-        <textarea v-model="text" placeholder="Text" />
+        <form>
+          <div class="saveIco" @click="imgSave()">
+            <img :src="approveSvg" />
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" v-model="preview" placeholder="Preview Uri" />
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" v-model="image" placeholder="Image Uri" />
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" v-model="title" placeholder="Title" />
+          </div>
+          <div class="form-group">
+            <textarea v-model="text" class="form-control" placeholder="Text" />
+          </div>
+        </form>
       </div>
     </div>
   </div>

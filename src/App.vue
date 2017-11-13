@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="float" style="width: 150px">
+    <div class="float" style="width: 200px">
       <div>
         <h1>Width:</h1>
         <input v-model="width" >
