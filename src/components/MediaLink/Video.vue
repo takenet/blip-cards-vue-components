@@ -340,13 +340,13 @@ export default {
       border-radius: 100%;
       margin-left: -25px;
       background-color: $vue-black-transparent-soft;
-      
+
       .sk-circle{
         position: relative;
         color: white;
       }
     }
-    
+
     .video-player {
       height: 100%;
       width: 100%;

@@ -18,7 +18,7 @@
 
       <div class="fixed-options" v-if="options">
         <ul>
-          <li v-for="(item, index) in options">
+          <li v-for="(item, index) in options" v-bind:key="index">
             <span v-if="!item.isLink" @click="select(item)" v-html="item.previewText"></span>
             <a v-if="item.isLink" :href="item.label.value.uri" target="_blank" v-html="item.previewText"></a>
           </li>
@@ -70,6 +70,10 @@ export default {
       return this.document.header.value.text && this.document.header.value.text.length > this.length
     },
     options: function () {
+      if (!this.document.options) {
+        return null
+      }
+
       let getOptionContent = function (text) {
         if (text.length > 34) {
           return text.substring(0, 34) + '...'
