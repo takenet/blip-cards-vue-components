@@ -18,17 +18,17 @@
       </div>
 
       <div v-else>
-        <form novalidate>
+        <form novalidate v-on:submit.prevent>
           <div class="saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
             <input type="text" name="preview" :class="{'input-error': errors.has('preview') }" v-validate="'url'" class="form-control" v-model="preview" placeholder="Preview Uri" />
-            <span v-show="errors.has('preview')" class="help input-error">{{ errors.first('preview') }}</span>
+            <span v-if="errors.has('preview')" class="help input-error">{{ errors.first('preview') }}</span>
           </div>
           <div class="form-group">
             <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="image" placeholder="Image Uri" />
-            <span v-show="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
+            <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
           </div>
           <div class="form-check">
             <span>Aspect Ratio:</span>
