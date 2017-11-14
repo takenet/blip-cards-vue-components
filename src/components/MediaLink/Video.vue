@@ -124,15 +124,13 @@ export default {
     }
   },
   mounted: function () {
-    // this.video = this.$el.querySelector('#blipVideo')
-    // this.progress = this.$el.querySelector('#videoProgress')
-    // this.videoPlayerControls = this.$el.querySelector('#videoPlayerControls')
-    // this.volumeProgress = this.$el.querySelector('#volumeProgress')
-    // this.volumeProgress.style.width = this.video.volume * 100 + '%'
-    // this.volumeSliderWrapper = this.$el.querySelector('#volumeSliderWrapper')
-    // this.videoPlayerWrapper = this.$el.querySelector('#blipVideoPlayerWrapper')
-    // this.animation = this.$el.querySelector('#animation')
-
+    this.initVideo()
+    document.addEventListener('fullscreenchange', this.fullScreenChange)
+    document.addEventListener('webkitfullscreenchange', this.fullScreenChange)
+    document.addEventListener('mozfullscreenchange', this.fullScreenChange)
+    document.addEventListener('MSFullscreenChange', this.fullScreenChange)
+  },
+  updated: function () {
     this.initVideo()
   },
   methods: {
@@ -158,7 +156,6 @@ export default {
       if (!this.animation) {
         this.animation = this.$el.querySelector('#animation')
       }
-      console.log(this.video)
 
       this.volumeProgress.style.width = this.video.volume * 100 + '%'
 
@@ -169,11 +166,6 @@ export default {
       this.video.addEventListener('seeked', this.readyToPlay)
       this.video.addEventListener('canplay', this.readyToPlay)
       this.video.addEventListener('ended', this.resetPlay)
-
-      document.addEventListener('fullscreenchange', this.fullScreenChange)
-      document.addEventListener('webkitfullscreenchange', this.fullScreenChange)
-      document.addEventListener('mozfullscreenchange', this.fullScreenChange)
-      document.addEventListener('MSFullscreenChange', this.fullScreenChange)
     },
     toggleEdit: function () {
       this.isEditing = !this.isEditing
@@ -195,10 +187,6 @@ export default {
         uri: this.videoUri,
         type: mime.lookup(this.videoUri)
       })
-
-      this.initVideo()
-      console.log(this.document.uri)
-      console.log(this.video)
     },
     togglePlay: function () {
       this.isPlaying = !this.isPlaying
