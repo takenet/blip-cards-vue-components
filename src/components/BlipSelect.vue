@@ -1,5 +1,8 @@
 <template>
-  <div v-if="document != null" class="container select">
+  <div v-if="!isEditing" class="container select">
+    <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
+      <img :src="editSvg" />
+    </div>
    <div v-if="document.scope === 'immediate'">
       <div :class="'bubble ' + position" v-html="text" v-if="text">
       </div>
@@ -11,7 +14,7 @@
       <transition name="fade">
         <div class="options" v-if="!hide">
           <ul>
-            <li v-for="(item, index) in options">
+            <li v-for="(item, index) in options" v-bind:key="index">
               <span @click="select(item)" v-html="item.previewText"></span>
             </li>
           </ul>
@@ -24,7 +27,7 @@
         <span v-html="text"></span>
         <div class="fixed-options">
           <ul>
-            <li v-for="(item, index) in options">
+            <li v-for="(item, index) in options" v-bind:key="index">
               <span @click="select(item)" v-html="item.text"></span>
             </li>
           </ul>
@@ -33,6 +36,52 @@
 
       <div :class="'notification ' + position" v-if="date">
         {{ date }}
+      </div>
+    </div>
+  </div>
+
+  <div class="container select" v-else>
+    <form :class="'bubble ' + position" novalidate>
+      <div class="saveIco" @click="selectSave()" :class="{'is-disabled': errors.any() }">
+        <img :src="approveSvg" />
+      </div>
+      <div class="form-group">
+        <input type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-model="text" />
+        <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
+      </div>
+
+      <div class="form-group text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
+        <ul>
+          <li v-for="(item, index) in options" v-bind:key="index">
+            <span @click="editOption(item)" v-html="item.text"></span>
+          </li>
+          <li v-if="document.scope === 'immediate'" @click="editOption({})">
+            <span>+</span>
+          </li>
+        </ul>
+        <div v-if="document.scope !== 'immediate'" @click="editOption({})" class="dashed-border primary-color btn" style="margin-top: 10px;">
+          <span>Add Button</span>
+        </div>
+      </div>
+    </form>
+
+    <div v-if="isAddingOption">
+      <div class="form-group">
+        <input type="text" name="optionText" :class="{'input-error': errors.has('optionText') }"
+        v-validate="'required'" class="form-control" v-model="selectedOption.text" placeholder="Text" />
+        <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
+      </div>
+      <div class="form-group">
+        <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
+        <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
+      </div>
+      <div class="form-group">
+        <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+        <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
+      </div>
+      <div class="form-group">
+        <button @click="saveOption()">Save</button>
+
       </div>
     </div>
   </div>
@@ -58,30 +107,55 @@ export default {
       type: Function
     }
   },
-  computed: {
-    options: function () {
-      return this.document.options.map(function (x) {
+  data: function () {
+    return {
+      isAddingOption: false,
+      selectedOption: {},
+      text: linkify(this.document.text),
+      hide: this.hideOptions,
+      options: this.document.options.map(function (x) {
         let opts = {
           ...x,
-          previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text
+          previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text,
+          value: x.value ? JSON.stringify(x.value) : ''
         }
         return opts
       })
     }
   },
-  data: function () {
-    return {
-      text: linkify(this.document.text),
-      hide: this.hideOptions
-    }
-  },
   methods: {
+    saveOption: function () {
+      if (!this.options.includes(this.selectedOption) && this.selectedOption.text) {
+        this.options.push(this.selectedOption)
+      }
+
+      this.selectedOption = {}
+      this.isAddingOption = false
+    },
+    editOption: function (item) {
+      this.isAddingOption = true
+      this.selectedOption = item
+    },
+    selectSave: function () {
+      this.selectedOption = {}
+
+      this.save({
+        ...this.document,
+        title: this.title,
+        options: this.options.map(function (x) {
+          return {
+            ...x,
+            value: x.value ? JSON.parse(x.value) : null
+          }
+        })
+      })
+    },
     select: function (item) {
       if (this.onSelected) {
         if (item.value) {
           this.onSelected(item.text, {
             type: item.type,
-            content: item.value
+            content: JSON.parse(item.value)
           })
         } else {
           this.onSelected(item.text, {

@@ -280,3 +280,19 @@ input:focus, textarea:focus {
   opacity: .5;
   pointer-events: none;
 }
+
+.text-center {
+  text-align: center;
+}
+
+.dashed-border {
+  border: 1px dashed $vue-time;
+}
+
+.primary-color {
+  color: $vue-light-blip;
+}
+
+.btn {
+  padding: 5px;
+}

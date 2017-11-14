@@ -144,7 +144,6 @@ export default {
       }
     },
     readyToPlay: function (event) {
-      console.log(event)
       if (event.type === 'seeked' || event.type === 'canplay') {
         this.animation.classList.add('hide')
       } else {
@@ -280,13 +279,13 @@ export default {
       border-radius: 100%;
       margin-left: -25px;
       background-color: $vue-black-transparent-soft;
-      
+
       .sk-circle{
         position: relative;
         color: white;
       }
     }
-    
+
     .video-player {
       height: 100%;
       width: 100%;
