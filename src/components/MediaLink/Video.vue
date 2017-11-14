@@ -267,9 +267,10 @@ export default {
         this.videoPlayerWrapper.addEventListener('mousemove', this.showPlayerControls)
         this.showPlayerControls()
       } else {
+        this.videoPlayerWrapper.removeEventListener('mousemove', this.showPlayerControls)
+        clearTimeout(this.inactivityTimeout)
         this.videoPlayerControls.classList.remove('hide-player')
         this.videoPlayerWrapper.classList.remove('video-full-screen')
-        this.videoPlayerWrapper.removeEventListener('mousemove', this.showPlayerControls)
       }
     },
     showPlayerControls: function () {
