@@ -41,7 +41,7 @@
   </div>
 
   <div class="container select" v-else>
-    <form :class="'bubble ' + position" novalidate>
+    <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <div class="saveIco" @click="selectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </div>
@@ -54,35 +54,37 @@
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index">
             <span @click="editOption(item)" v-html="item.text"></span>
+            <span @click="deleteOption(item)">X</span>
           </li>
-          <li v-if="document.scope === 'immediate'" @click="editOption({})">
-            <span>+</span>
+          <li class="add" v-if="document.scope === 'immediate'" @click="editOption({})">
+            <span>Add option</span>
           </li>
         </ul>
-        <div v-if="document.scope !== 'immediate'" @click="editOption({})" class="dashed-border primary-color btn" style="margin-top: 10px;">
+        <div v-if="document.scope !== 'immediate'" @click="editOption({})" class="add primary-color btn" style="margin-top: 10px;">
           <span>Add Button</span>
         </div>
       </div>
     </form>
 
     <div v-if="isAddingOption">
-      <div class="form-group">
-        <input type="text" name="optionText" :class="{'input-error': errors.has('optionText') }"
-        v-validate="'required'" class="form-control" v-model="selectedOption.text" placeholder="Text" />
-        <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
-      </div>
-      <div class="form-group">
-        <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
-        <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
-      </div>
-      <div class="form-group">
-        <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
-        <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
-      </div>
-      <div class="form-group">
-        <button @click="saveOption()">Save</button>
-
-      </div>
+      <form novalidate v-on:submit.prevent>
+        <div class="form-group">
+          <input type="text" name="optionText" :class="{'input-error': errors.has('optionText') }"
+          v-validate="'required'" class="form-control" v-model="selectedOption.text" placeholder="Text" />
+          <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
+        </div>
+        <div class="form-group">
+          <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
+          <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
+        </div>
+        <div class="form-group">
+          <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+          <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
+        </div>
+        <div class="form-group">
+          <button @click="saveOption()">Save</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -124,6 +126,10 @@ export default {
     }
   },
   methods: {
+    deleteOption: function (item) {
+      let index = this.options.indexOf(item)
+      this.options.splice(index, 1)
+    },
     saveOption: function () {
       if (!this.options.includes(this.selectedOption) && this.selectedOption.text) {
         this.options.push(this.selectedOption)
@@ -197,6 +203,7 @@ export default {
      color: #0CC8CC;
      font-size: 14px;
      font-weight: 500;
+     min-width: 70px;
    }
 
   .select .fixed-options li:last-child {
