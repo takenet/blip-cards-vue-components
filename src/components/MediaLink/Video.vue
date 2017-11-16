@@ -73,7 +73,15 @@
             </div>
           </div>
           <div class='volume-control' @click="toggleFullScreen()">
-            <svg class="video-player-button player-button-right player-button" width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <svg v-if="this.isFullScreen" class="video-player-button player-button-right player-button" width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="FullScreen" stroke="none" stroke-width="1" fill-rule="nonzero">
+                <path d="M0.0780693648,6.13503995 L4.36301393e-05,0.516244875 C-0.00367188104,0.230291656 0.230405323,-0.00367006956 0.516499683,4.36086149e-05 L6.13806809,0.0817445285 C6.58764494,0.0891718848 6.81057561,0.631368898 6.49104165,0.950745222 L4.92681145,2.51420373 L7.52766927,5.11377846 L5.11258701,7.52766927 L2.51172918,4.92809455 L0.94749898,6.49155306 C0.63168053,6.8072157 0.0855003872,6.58439501 0.0780693648,6.13503995 Z" id="Shape"></path>
+                <path d="M15.5522025,4.92924443 L17.115661,6.49424709 C17.4350374,6.81393884 17.9772344,6.59089808 17.9846617,6.14109922 L18.0663626,0.516754744 C18.0700763,0.230519103 17.8361146,-0.0036736943 17.5501614,4.36516849e-05 L11.9313663,0.0818252633 C11.4820112,0.0892599553 11.2591905,0.631992469 11.5785669,0.951684224 L13.1383117,2.50925219 L10.538737,5.11139438 L12.9526278,7.52766927 L15.5522025,4.92924443 Z" id="Shape"></path>
+                <path d="M11.5785669,16.9479102 C11.2591905,17.2674442 11.4820112,17.8099088 11.9313663,17.8173398 L17.5501614,17.8990811 C17.8361146,17.9027966 18.0700763,17.6687194 18.0663626,17.382625 L17.9846617,11.7610566 C17.9772344,11.3114798 17.4350374,11.0885491 17.115661,11.4080831 L15.5522025,12.9723133 L12.9526278,10.3714554 L10.538737,12.7865377 L13.1383117,15.3873955 L11.5785669,16.9479102 Z" id="Shape"></path>
+                <path d="M0.519917957,17.8990811 L6.13874559,17.8173398 C6.58810325,17.8099088 6.81092523,17.2674442 6.49154706,16.9479102 L4.92807949,15.3873955 L7.52766927,12.7865377 L5.11376447,10.3714554 L2.51417469,12.9723133 L0.950707121,11.4080831 C0.631328947,11.0885491 0.0891287926,11.3114798 0.0817013932,11.7610566 L0,17.382625 C0,17.6687194 0.23396308,17.9027966 0.519917957,17.8990811 Z" id="Shape"></path>
+              </g>
+            </svg>
+            <svg v-else class="video-player-button player-button-right player-button" width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
               <g id="FullScreen" stroke="none" stroke-width="1" fill-rule="nonzero">
                 <path d="M0.0780693648,6.13503995 L4.36301393e-05,0.516244875 C-0.00367188104,0.230291656 0.230405323,-0.00367006956 0.516499683,4.36086149e-05 L6.13806809,0.0817445285 C6.58764494,0.0891718848 6.81057561,0.631368898 6.49104165,0.950745222 L4.92681145,2.51420373 L7.52766927,5.11377846 L5.11258701,7.52766927 L2.51172918,4.92809455 L0.94749898,6.49155306 C0.63168053,6.8072157 0.0855003872,6.58439501 0.0780693648,6.13503995 Z" id="Shape"></path>
                 <path d="M15.5522025,4.92924443 L17.115661,6.49424709 C17.4350374,6.81393884 17.9772344,6.59089808 17.9846617,6.14109922 L18.0663626,0.516754744 C18.0700763,0.230519103 17.8361146,-0.0036736943 17.5501614,4.36516849e-05 L11.9313663,0.0818252633 C11.4820112,0.0892599553 11.2591905,0.631992469 11.5785669,0.951684224 L13.1383117,2.50925219 L10.538737,5.11139438 L12.9526278,7.52766927 L15.5522025,4.92924443 Z" id="Shape"></path>
@@ -115,6 +123,7 @@ export default {
     return {
       videoUri: this.document.uri,
       isPlaying: false,
+      isFullScreen: false,
       video: null,
       currentTime: 0,
       totalTime: 0,
@@ -258,7 +267,8 @@ export default {
       }
     },
     toggleFullScreen: function () {
-      if (document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) {
+      this.isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen
+      if (this.isFullScreen) {
         if (document.exitFullscreen) {
           document.exitFullscreen()
         } else if (document.mozCancelFullScreen) {
@@ -343,7 +353,7 @@ export default {
       .notification {
       color: $vue-london;
     }
-    
+
     .form-group {
       padding: $bubble-padding;
       color: $vue-london;
@@ -449,6 +459,7 @@ export default {
       width: 100%;
       bottom: -11px;
       opacity: 0;
+      cursor: pointer;
     }
 
     video::-webkit-media-controls-enclosure {
@@ -492,6 +503,7 @@ export default {
       width: 100%;
       padding: 0;
       height: 16px;
+      cursor: pointer;
     }
 
     .slider {
@@ -499,7 +511,6 @@ export default {
       height: 3px;
       flex-grow: 1;
       background-color: $vue-cotton;
-      cursor: pointer;
       position: relative;
 
       .progress {
