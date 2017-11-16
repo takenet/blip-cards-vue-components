@@ -1,7 +1,7 @@
 <template>
   <div class="container web-link">
     <div :class="'bubble ' + position">
-      <a :href="this.uri" v-if="this.title || this.text" class="web-link-wrapper">
+      <a :href="this.uri" :target="this.target" v-if="this.title || this.text" class="web-link-wrapper">
         <img class="preview" :src="this.imgPreview">
         <div class="description-column">
           <span>{{this.title}}</span>
@@ -41,7 +41,8 @@ export default {
       imgPreview: this.document.previewUri,
       title: this.document.title,
       text: this.document.text,
-      uri: new URL(this.document.uri)
+      uri: new URL(this.document.uri),
+      target: this.document.target === 'blank' ? '_blank' : '_self'
     }
   },
   computed: {
