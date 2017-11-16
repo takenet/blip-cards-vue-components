@@ -95,10 +95,6 @@
           <div class="form-group">
             <input type="text" name="video" class="form-control" v-model="videoUri" placeholder="Video Uri" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
             <span v-if="errors.has('video')" class="help input-error">{{ errors.first('video') }}</span>
-            <div class="upload-intructions">
-              <span>Supported formats: XXX,XXX,XXX,XXX.</span><br>
-              <span>Maximum file size: ~20MB.</span>
-            </div>
           </div>
         </form>
       </div>
@@ -349,6 +345,7 @@ export default {
     }
     
     .form-group {
+      padding: $bubble-padding;
       color: $vue-london;
       .input-error {
         color: $vue-delete;
@@ -356,11 +353,6 @@ export default {
       .help {
         padding: 5px;
         font-size: 11px;
-      }
-      .upload-intructions {
-        padding: 5px;
-        padding-bottom: 0px;
-        font-size: 12px;
       }
       ::-webkit-input-placeholder {
         color: $vue-time;

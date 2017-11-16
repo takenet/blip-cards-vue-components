@@ -47,10 +47,6 @@
           <div class="form-group">
             <input type="text" name="audio" class="form-control" v-model="audioUri" placeholder="File URL" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
             <span v-if="errors.has('audio')" class="help input-error">{{ errors.first('audio') }}</span>
-            <div class="upload-intructions">
-              <span>Supported formats: XXX,XXX,XXX,XXX.</span><br>
-              <span>Maximum file size: ~20MB.</span>
-            </div>
           </div>
         </form>
       </div>
@@ -207,11 +203,6 @@ export default {
       .help {
         padding: 5px;
         font-size: 11px;
-      }
-      .upload-intructions {
-        padding: 5px;
-        padding-bottom: 0px;
-        font-size: 12px;
       }
       ::-webkit-input-placeholder {
         color: $vue-time;
