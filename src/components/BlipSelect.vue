@@ -14,8 +14,8 @@
       <transition name="fade">
         <div class="options" v-if="!hide">
           <ul>
-            <li v-for="(item, index) in options" v-bind:key="index">
-              <span @click="select(item)" v-html="item.previewText"></span>
+            <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
+              <span v-html="item.previewText"></span>
             </li>
           </ul>
         </div>
@@ -27,8 +27,8 @@
         <span v-html="text"></span>
         <div class="fixed-options">
           <ul>
-            <li v-for="(item, index) in options" v-bind:key="index">
-              <span @click="select(item)" v-html="item.text"></span>
+            <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
+              <span v-html="item.text"></span>
             </li>
           </ul>
         </div>
