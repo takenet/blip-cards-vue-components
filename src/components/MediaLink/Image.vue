@@ -17,21 +17,23 @@
         </div>
       </div>
 
-      <div v-else>
+      <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <div class="saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
-            <img :src="approveSvg" />
+          <div v-if="errors.any()" class="saveIco" @click="imgCancel()" >
+            <img :src="closeSvg" />
           </div>
-          <div class="form-group">
-            <input type="text" name="preview" :class="{'input-error': errors.has('preview') }" v-validate="'url'" class="form-control" v-model="preview" placeholder="Preview Uri" />
-            <span v-if="errors.has('preview')" class="help input-error">{{ errors.first('preview') }}</span>
+          <div v-else class="saveIco" @click="imgSave()">
+            <img :src="approveSvg" />
           </div>
           <div class="form-group">
             <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="image" placeholder="Image Uri" />
             <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
+            <div class="upload-intructions">
+              <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
+            </div>
           </div>
           <div class="form-check">
-            <span>Aspect Ratio:</span>
+            <span>Aspect Ratio:</span><br>
             <label class="form-check-label">
               <input type="radio" class="form-check-input" v-model="aspect" value="1-1"/> 1:1
             </label>
@@ -39,7 +41,6 @@
               <input type="radio" class="form-check-input" v-model="aspect" value="2-1"/> 2:1
             </label>
           </div>
-          <hr />
           <div class="form-group">
             <input type="text" class="form-control" v-model="title" placeholder="Title" />
           </div>
@@ -90,6 +91,16 @@ export default {
         uri: this.image,
         type: this.type
       })
+    },
+    imgCancel: function () {
+      this.save({
+        ...this.document,
+        title: this.document.title,
+        text: this.document.text,
+        previewUri: this.document.preview,
+        uri: this.document.image,
+        type: this.document.type
+      })
     }
   },
   mounted: function () {
@@ -123,6 +134,51 @@ export default {
         img {
           width: 100%;
           display: block;
+        }
+      }
+
+      .form {
+        padding: $bubble-padding;
+      }
+
+      .form-check {
+        color: $vue-cloud;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        .form-check-label {
+          margin-top: 3px;
+        }
+      }
+
+      .form-group {
+        color: $vue-london;
+        .input-error {
+          color: $vue-delete;
+        }
+        .help {
+          padding: 5px;
+          font-size: 11px;
+        }
+        .upload-intructions {
+          padding: 5px;
+          padding-bottom: 0px;
+          font-size: 12px;
+        }
+        ::-webkit-input-placeholder {
+          color: $vue-time;
+          font-size: 12px;
+        }
+        ::-moz-placeholder {
+          color: $vue-time;
+          font-size: 12px;
+        }
+        :-ms-input-placeholder {
+          color: $vue-time;
+          font-size: 12px;
+        }
+        :-moz-placeholder {
+          color: $vue-time;
+          font-size: 12px;
         }
       }
    }
