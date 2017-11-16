@@ -107,7 +107,6 @@ export default {
       })
     },
     audioCancel: function () {
-      console.log('url: ' + this.document.uri)
       this.progress = null
       this.audioUri = this.document.uri
       this.initAudio(this.audioUri)
