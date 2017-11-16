@@ -23,6 +23,7 @@
 
 import { default as base } from '../mixins/baseComponent.js'
 import { linkify } from '../utils'
+import MetaInspector from 'node-metainspector'
 
 export default {
   name: 'web-link',
@@ -52,6 +53,14 @@ export default {
     if (this.title && this.title.length > this.length) this.title = this.title.substring(0, this.length - 3) + '...'
     if (this.text && this.text.length > this.length) this.text = this.text.substring(0, this.length - 3) + '...'
     this.uri = this.uri.protocol + '//' + this.uri.hostname
+
+    var client = new MetaInspector(this.uri, { timeout: 5000 })
+    client.on('fetch', () => {
+      if (!this.title && client.title) this.title = client.title
+      if (!this.text && client.description) this.text = client.description
+      if (!this.imgPreview && client.image) this.imgPreview = client.image
+    })
+    client.fetch()
   }
 }
 </script>
