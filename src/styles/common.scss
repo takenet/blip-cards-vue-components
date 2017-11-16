@@ -296,3 +296,8 @@ input:focus, textarea:focus {
 .btn {
   padding: 5px;
 }
+
+.add {
+  background-color: $vue-white !important;
+  border: 1px dashed $vue-light-gray !important;
+}

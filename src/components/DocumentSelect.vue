@@ -18,8 +18,8 @@
 
       <div class="fixed-options" v-if="options">
         <ul>
-          <li v-for="(item, index) in options" v-bind:key="index">
-            <span v-if="!item.isLink" @click="select(item)" v-html="item.previewText"></span>
+          <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
+            <span v-if="!item.isLink" v-html="item.previewText"></span>
             <a v-if="item.isLink" :href="item.label.value.uri" target="_blank" v-html="item.previewText"></a>
           </li>
         </ul>
@@ -94,6 +94,12 @@ export default {
   },
   methods: {
     select: function (item) {
+      if (item.isLink) {
+        let win = window.open(item.label.value.uri, '_blank')
+        win.focus()
+        return
+      }
+
       if (this.onSelected) {
         this.onSelected(item.previewText, {
           type: item.value.type,

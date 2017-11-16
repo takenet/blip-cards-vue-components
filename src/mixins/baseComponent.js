@@ -1,5 +1,6 @@
 import editSvg from '../assets/img/Edit.svg'
 import approveSvg from '../assets/img/Approve.svg'
+import closeSvg from '../assets/img/Close.svg'
 
 // define um objeto mixin
 var baseComponent = {
@@ -27,7 +28,8 @@ var baseComponent = {
     return {
       isEditing: false,
       editSvg: editSvg,
-      approveSvg: approveSvg
+      approveSvg: approveSvg,
+      closeSvg: closeSvg
     }
   },
   methods: {

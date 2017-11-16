@@ -86,12 +86,19 @@
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
-          <div class="saveIco" @click="videoSave()" :class="{'is-disabled': errors.any() }">
+          <div v-if="errors.any()" class="saveIco" @click="videoCancel()" >
+            <img :src="closeSvg" />
+          </div>
+          <div v-else class="saveIco" @click="videoSave()">
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
             <input type="text" name="video" class="form-control" v-model="videoUri" placeholder="Video Uri" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
             <span v-if="errors.has('video')" class="help input-error">{{ errors.first('video') }}</span>
+            <div class="upload-intructions">
+              <span>Supported formats: XXX,XXX,XXX,XXX.</span><br>
+              <span>Maximum file size: ~20MB.</span>
+            </div>
           </div>
         </form>
       </div>
@@ -99,6 +106,7 @@
   </div>
 </template>
 
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
@@ -182,6 +190,21 @@ export default {
       this.volumeSliderWrapper = null
       this.videoPlayerWrapper = null
       this.animation = null
+      this.save({
+        ...this.document,
+        uri: this.videoUri,
+        type: mime.lookup(this.videoUri)
+      })
+    },
+    videoCancel: function () {
+      this.video = null
+      this.progress = null
+      this.videoPlayerControls = null
+      this.volumeProgress = null
+      this.volumeSliderWrapper = null
+      this.videoPlayerWrapper = null
+      this.animation = null
+      this.videoUri = this.document.uri
       this.save({
         ...this.document,
         uri: this.videoUri,
@@ -322,8 +345,40 @@ export default {
       }
 
       .notification {
-        color: $vue-london;
+      color: $vue-london;
+    }
+    
+    .form-group {
+      color: $vue-london;
+      .input-error {
+        color: $vue-delete;
       }
+      .help {
+        padding: 5px;
+        font-size: 11px;
+      }
+      .upload-intructions {
+        padding: 5px;
+        padding-bottom: 0px;
+        font-size: 12px;
+      }
+      ::-webkit-input-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      ::-moz-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      :-ms-input-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      :-moz-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+    }
     }
   }
 

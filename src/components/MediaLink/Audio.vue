@@ -38,12 +38,19 @@
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
-          <div class="saveIco" @click="audioSave()" :class="{'is-disabled': errors.any() }">
+          <div v-if="errors.any()" class="saveIco" @click="audioCancel()" >
+            <img :src="closeSvg" />
+          </div>
+          <div v-else class="saveIco" @click="audioSave()">
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
-            <input type="text" name="audio" class="form-control" v-model="audioUri" placeholder="Audio Uri" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
+            <input type="text" name="audio" class="form-control" v-model="audioUri" placeholder="File URL" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
             <span v-if="errors.has('audio')" class="help input-error">{{ errors.first('audio') }}</span>
+            <div class="upload-intructions">
+              <span>Supported formats: XXX,XXX,XXX,XXX.</span><br>
+              <span>Maximum file size: ~20MB.</span>
+            </div>
           </div>
         </form>
       </div>
@@ -71,12 +78,12 @@ export default {
     }
   },
   mounted: function () {
-    this.initAudio()
+    this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
   methods: {
-    initAudio: function () {
-      this.audio = new Audio(this.audioUri)
+    initAudio: function (uri) {
+      this.audio = new Audio(uri)
 
       this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
       this.audio.addEventListener('loadedmetadata', this.audioLoaded)
@@ -92,7 +99,17 @@ export default {
     },
     audioSave: function () {
       this.progress = null
-      this.initAudio()
+      this.initAudio(this.audioUri)
+      this.save({
+        ...this.document,
+        uri: this.audioUri,
+        type: mime.lookup(this.audioUri)
+      })
+    },
+    audioCancel: function () {
+      this.progress = null
+      this.audioUri = this.document.uri
+      this.initAudio(this.audioUri)
       this.save({
         ...this.document,
         uri: this.audioUri,
@@ -119,11 +136,13 @@ export default {
         this.progress = this.$el.querySelector('.progress')
       }
 
-      var current = this.audio.currentTime
-      var percent = (current / this.totalTime) * 100
-      this.progress.style.width = percent + '%'
+      try {
+        var current = this.audio.currentTime
+        var percent = (current / this.totalTime) * 100
+        this.progress.style.width = percent + '%'
 
-      this.currentTime = this.audio.currentTime
+        this.currentTime = this.audio.currentTime
+      } catch (e) {}
     },
     audioLoaded: function () {
       this.totalTime = this.audio.duration
@@ -178,6 +197,38 @@ export default {
 
     .notification {
       color: $vue-london;
+    }
+    
+    .form-group {
+      color: $vue-london;
+      .input-error {
+        color: $vue-delete;
+      }
+      .help {
+        padding: 5px;
+        font-size: 11px;
+      }
+      .upload-intructions {
+        padding: 5px;
+        padding-bottom: 0px;
+        font-size: 12px;
+      }
+      ::-webkit-input-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      ::-moz-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      :-ms-input-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      :-moz-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
     }
   }
 
