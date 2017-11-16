@@ -101,7 +101,7 @@
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
-            <input type="text" name="video" class="form-control" v-model="videoUri" placeholder="Video Uri" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
+            <input type="text" name="video" class="form-control" v-model="editVideoUri" placeholder="Video Uri" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
             <span v-if="errors.has('video')" class="help input-error">{{ errors.first('video') }}</span>
           </div>
         </form>
@@ -122,6 +122,7 @@ export default {
   data: function () {
     return {
       videoUri: this.document.uri,
+      editVideoUri: this.document.uri,
       isPlaying: false,
       isFullScreen: false,
       video: null,
@@ -195,6 +196,7 @@ export default {
       this.volumeSliderWrapper = null
       this.videoPlayerWrapper = null
       this.animation = null
+      this.videoUri = this.editVideoUri
       this.save({
         ...this.document,
         uri: this.videoUri,
@@ -209,12 +211,8 @@ export default {
       this.volumeSliderWrapper = null
       this.videoPlayerWrapper = null
       this.animation = null
-      this.videoUri = this.document.uri
-      this.save({
-        ...this.document,
-        uri: this.videoUri,
-        type: mime.lookup(this.videoUri)
-      })
+      this.editVideoUri = this.videoUri
+      this.isEditing = false
     },
     togglePlay: function () {
       this.isPlaying = !this.isPlaying
