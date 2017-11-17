@@ -192,7 +192,7 @@ export default {
     .notification {
       color: $vue-london;
     }
-    
+
     .form-group {
       color: $vue-london;
       .input-error {
@@ -233,6 +233,7 @@ export default {
       width: 14px;
       margin-right: 15px;
       color: inherit;
+      cursor: pointer;
     }
 
     .audio-player-bar {
@@ -258,13 +259,13 @@ export default {
       width: 100%;
       padding: 0;
       height: 16px;
+      cursor: pointer;
     }
     .slider {
       border-radius: 1.5px;
       height: 3px;
       flex-grow: 1;
       background-color: $vue-cotton;
-      cursor: pointer;
       position: relative;
 
       .progress {

@@ -468,6 +468,9 @@ export default {
       flex-grow: 0;
     }
 
+    .player-button {
+      cursor: pointer;
+    }
     .player-button-left {
       margin-right: 15px;
       width: 14px;
