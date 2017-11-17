@@ -41,7 +41,7 @@
   </div>
 
   <div class="container select" v-else>
-    <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
+    <form class="bubble left" novalidate v-on:submit.prevent>
       <div class="saveIco" @click="selectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </div>
@@ -50,41 +50,53 @@
         <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
       </div>
 
-      <div class="form-group text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
+      <div class="text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index">
-            <span @click="editOption(item)" v-html="item.text"></span>
+            <span @click="editOption(item, $event)" v-html="item.text"></span>
             <span @click="deleteOption(item)">X</span>
           </li>
-          <li class="add" v-if="document.scope === 'immediate'" @click="editOption({})">
+          <li class="add" v-if="document.scope === 'immediate'" @click="editOption({}, $event)">
             <span>Add option</span>
           </li>
         </ul>
-        <div v-if="document.scope !== 'immediate'" @click="editOption({})" class="add primary-color btn" style="margin-top: 10px;">
+        <div v-if="document.scope !== 'immediate'" @click="editOption({}, $event)" class="add primary-color btn" style="margin-top: 10px;">
           <span>Add Button</span>
         </div>
       </div>
     </form>
 
-    <div v-if="isAddingOption">
-      <form novalidate v-on:submit.prevent>
+    <div v-bind:style="styleObject">
+      <div class="bubble left" style="float: none">
         <div class="form-group">
           <input type="text" name="optionText" :class="{'input-error': errors.has('optionText') }"
           v-validate="'required'" class="form-control" v-model="selectedOption.text" placeholder="Text" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
-        <div class="form-group">
-          <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
-          <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
+
+        <div class="line"></div>
+
+        <div class="tabs">
+          <span :class="{ 'active': tab === 'mime'}" @click="setTab('mime')">MIME Type</span>
+          <span :class="{ 'active': tab === 'value'}" @click="setTab('value')">Value</span>
         </div>
-        <div class="form-group">
-          <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
-          <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
+
+        <div>
+          <div class="form-group" v-if="tab === 'mime'">
+            <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.type" placeholder="Type" />
+            <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
+          </div>
+
+          <div class="form-group" v-if="tab === 'value'">
+            <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value" placeholder="Value" />
+            <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
+          </div>
+
+          <div class="form-group">
+            <button @click="saveOption()" class="btn add primary-color" :class="{'is-disabled': errors.any() }">Save</button>
+          </div>
         </div>
-        <div class="form-group">
-          <button @click="saveOption()">Save</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
@@ -111,7 +123,10 @@ export default {
   },
   data: function () {
     return {
-      isAddingOption: false,
+      styleObject: {
+        display: 'none'
+      },
+      tab: 'mime',
       selectedOption: {},
       text: linkify(this.document.text),
       hide: this.hideOptions,
@@ -126,24 +141,65 @@ export default {
     }
   },
   methods: {
+    setTab: function (name) {
+      this.tab = name
+    },
     deleteOption: function (item) {
       let index = this.options.indexOf(item)
       this.options.splice(index, 1)
     },
     saveOption: function () {
       if (!this.options.includes(this.selectedOption) && this.selectedOption.text) {
+        this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.push(this.selectedOption)
       }
 
       this.selectedOption = {}
-      this.isAddingOption = false
+      this.styleObject = {
+        display: 'none'
+      }
     },
-    editOption: function (item) {
-      this.isAddingOption = true
+    getPosition: function (el) {
+      let xPosition = 0
+      let yPosition = 0
+
+      while (el) {
+        if (el.tagName === 'body') {
+          let xScrollPos = el.scrollLeft || document.documentElement.scrollLeft
+          let yScrollPos = el.scrollTop || document.documentElement.scrollTop
+
+          xPosition += (el.offsetLeft - xScrollPos + el.clientLeft)
+          yPosition += (el.offsetTop - yScrollPos + el.clientTop)
+        } else {
+          xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft)
+          yPosition += (el.offsetTop - el.scrollTop + el.clientTop)
+        }
+
+        el = el.offsetParent
+      }
+      return {
+        x: xPosition,
+        y: yPosition
+      }
+    },
+    editOption: function (item, $event) {
+      let pos = this.getPosition($event.currentTarget)
+      this.styleObject = {
+        top: pos.y + 'px',
+        left: pos.x + 'px',
+        position: 'fixed',
+        display: 'block',
+        width: '350px',
+        'z-index': 1
+      }
+
       this.selectedOption = item
     },
     selectSave: function () {
       this.selectedOption = {}
+      this.styleObject = {
+        display: 'none'
+      }
 
       this.save({
         ...this.document,

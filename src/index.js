@@ -28,7 +28,6 @@ function install (Vue) {
   Validator.extend('mime', MimeValidator)
 
   Vue.use(VeeValidate)
-
   return components
 }
 

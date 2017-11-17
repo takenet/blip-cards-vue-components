@@ -123,6 +123,7 @@
   },
   "dependencies": {
     "mime-types": "^2.1.17",
-    "vee-validate": "^2.0.0-rc.21"
+    "vee-validate": "^2.0.0-rc.21",
+    "vue-my-dropdown": "^2.0.5"
   }
 }
