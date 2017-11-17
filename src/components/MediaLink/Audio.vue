@@ -45,12 +45,8 @@
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
-            <input type="text" name="audio" class="form-control" v-model="audioUri" placeholder="File URL" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
+            <input type="text" name="audio" class="form-control" v-model="editAudioUri" placeholder="File URL" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
             <span v-if="errors.has('audio')" class="help input-error">{{ errors.first('audio') }}</span>
-            <div class="upload-intructions">
-              <span>Supported formats: XXX,XXX,XXX,XXX.</span><br>
-              <span>Maximum file size: ~20MB.</span>
-            </div>
           </div>
         </form>
       </div>
@@ -69,6 +65,7 @@ export default {
   data: function () {
     return {
       audioUri: this.document.uri,
+      editAudioUri: this.document.uri,
       isPlaying: false,
       audio: Audio,
       currentTime: 0,
@@ -99,6 +96,7 @@ export default {
     },
     audioSave: function () {
       this.progress = null
+      this.audioUri = this.editAudioUri
       this.initAudio(this.audioUri)
       this.save({
         ...this.document,
@@ -108,13 +106,9 @@ export default {
     },
     audioCancel: function () {
       this.progress = null
-      this.audioUri = this.document.uri
+      this.editAudioUri = this.audioUri
       this.initAudio(this.audioUri)
-      this.save({
-        ...this.document,
-        uri: this.audioUri,
-        type: mime.lookup(this.audioUri)
-      })
+      this.isEditing = false
     },
     togglePlay: function () {
       this.isPlaying = !this.isPlaying
@@ -207,11 +201,6 @@ export default {
       .help {
         padding: 5px;
         font-size: 11px;
-      }
-      .upload-intructions {
-        padding: 5px;
-        padding-bottom: 0px;
-        font-size: 12px;
       }
       ::-webkit-input-placeholder {
         color: $vue-time;

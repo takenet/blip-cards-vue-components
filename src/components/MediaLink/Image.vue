@@ -17,34 +17,35 @@
         </div>
       </div>
 
-      <div v-else>
+      <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <div class="saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
+          <div v-if="errors.any()" class="saveIco" @click="imgCancel()" >
+            <img :src="closeSvg" />
+          </div>
+          <div v-else class="saveIco" @click="imgSave()">
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
-            <input type="text" name="preview" :class="{'input-error': errors.has('preview') }" v-validate="'url'" class="form-control" v-model="preview" placeholder="Preview Uri" />
-            <span v-if="errors.has('preview')" class="help input-error">{{ errors.first('preview') }}</span>
-          </div>
-          <div class="form-group">
-            <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="image" placeholder="Image Uri" />
+            <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="editImage" placeholder="Image Uri" />
             <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
+            <div class="upload-intructions">
+              <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
+            </div>
           </div>
           <div class="form-check">
-            <span>Aspect Ratio:</span>
+            <span>Aspect Ratio:</span><br>
             <label class="form-check-label">
-              <input type="radio" class="form-check-input" v-model="aspect" value="1-1"/> 1:1
+              <input type="radio" class="form-check-input" v-model="editAspect" value="1-1"/> 1:1
             </label>
             <label class="form-check-label">
-              <input type="radio" class="form-check-input" v-model="aspect" value="2-1"/> 2:1
+              <input type="radio" class="form-check-input" v-model="editAspect" value="2-1"/> 2:1
             </label>
           </div>
-          <hr />
           <div class="form-group">
-            <input type="text" class="form-control" v-model="title" placeholder="Title" />
+            <input type="text" class="form-control" v-model="editTitle" placeholder="Title" />
           </div>
           <div class="form-group">
-            <textarea v-model="text" class="form-control" placeholder="Text" />
+            <textarea v-model="editText" class="form-control" placeholder="Text" />
           </div>
         </form>
       </div>
@@ -69,7 +70,11 @@ export default {
       text: this.document.text,
       preview: this.document.previewUri,
       image: this.document.uri,
-      aspect: this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
+      aspect: this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1',
+      editTitle: this.document.title,
+      editText: this.document.text,
+      editImage: this.document.uri,
+      editAspect: this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
     }
   },
   computed: {
@@ -82,6 +87,10 @@ export default {
   },
   methods: {
     imgSave: function () {
+      this.title = this.editTitle
+      this.text = this.editText
+      this.image = this.editImage
+      this.aspect = this.editAspect
       this.save({
         ...this.document,
         title: this.title,
@@ -90,6 +99,13 @@ export default {
         uri: this.image,
         type: this.type
       })
+    },
+    imgCancel: function () {
+      this.editTitle = this.title
+      this.editText = this.text
+      this.editImage = this.image
+      this.editAspect = this.aspect
+      this.isEditing = false
     }
   },
   mounted: function () {
@@ -115,15 +131,60 @@ export default {
 
    .media-link.image {
 
-      .bubble {
-        padding: 0;
-      }
+    .bubble {
+      padding: 0;
+    }
 
-      .header {
-        img {
-          width: 100%;
-          display: block;
-        }
+    .header {
+      img {
+        width: 100%;
+        display: block;
       }
+    }
+
+    .form {
+      padding: $bubble-padding;
+    }
+
+    .form-check {
+      color: $vue-cloud;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      .form-check-label {
+        margin-top: 3px;
+      }
+    }
+
+    .form-group {
+      color: $vue-london;
+      .input-error {
+        color: $vue-delete;
+      }
+      .help {
+        padding: 5px;
+        font-size: 11px;
+      }
+      .upload-intructions {
+        padding: 5px;
+        padding-bottom: 0px;
+        font-size: 12px;
+      }
+      ::-webkit-input-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      ::-moz-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      :-ms-input-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      :-moz-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+    }
    }
 </style>
