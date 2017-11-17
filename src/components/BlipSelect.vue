@@ -152,6 +152,8 @@ export default {
       if (!this.options.includes(this.selectedOption) && this.selectedOption.text) {
         this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.push(this.selectedOption)
+      } else {
+        this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
       }
 
       this.selectedOption = {}
