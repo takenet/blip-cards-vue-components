@@ -174,7 +174,7 @@ export default {
 
       label{
         position: absolute;
-        z-index: 10;
+        z-index: 1;
         cursor: pointer;
       }
       .check{
@@ -186,7 +186,6 @@ export default {
         width: 16px;
         top: 0px;
         left: 0px;
-        z-index: 5;
         transition: border .25s linear;
         -webkit-transition: border .25s linear;
         -moz-transition: border .25s linear;

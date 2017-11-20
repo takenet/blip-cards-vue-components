@@ -5,7 +5,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + document.header.value.uri + ')'">
+        <div :class="'ratio ratio' + aspect" :style="'background-image: url(' + previewUri + ')'">
         </div>
 
         <div class="title" v-if="document.header.value.title || document.header.value.text">
@@ -35,55 +35,96 @@
   </div>
 
   <div v-else class="container document-select">
-    <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
+    <form class="editing bubble left" novalidate v-on:submit.prevent>
       <div class="saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </div>
       <div class="header">
-        <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + document.header.value.uri + ')'">
+        <div class="form-group">
+          <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="previewUri" placeholder="Image Uri" />
+          <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
+          <div class="upload-intructions">
+            <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
+          </div>
         </div>
-
-        <div class="title" v-if="document.header.value.title || document.header.value.text">
-          <div class="form-group">
-            <input type="title" name="title" :class="{'input-error': errors.has('title') }" v-validate="'required'" class="form-control" v-model="title" />
-            <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
+        <div class="form-check">
+          <div>
+            <span>Aspect Ratio:</span>
           </div>
-          <div class="form-group">
-            <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-model="content" />
-            <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
+          <div class="form-check-wrapper">
+            <span class="form-check-container">
+              <input type="radio" name="aspect-selector" id="1-1" class="form-check-input" v-model="aspect" value="1-1"/>
+              <label class="form-check-label" for="1-1"><span class="radio">1:1</span></label>
+              <div class="check"></div>
+            </span>
+            <span class="form-check-container">
+              <input type="radio" name="aspect-selector" id="2-1" class="form-check-input" v-model="aspect" value="2-1"/>
+              <label class="form-check-label" for="2-1"><span class="radio">2:1</span></label>
+              <div class="check"></div>
+            </span>
           </div>
+        </div>
+        <div class="form-group" v-if="document.header.value.title || document.header.value.text">
+          <input type="title" name="title" :class="{'input-error': errors.has('title') }" v-validate="'required'" class="form-control" v-model="title" />
+          <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
+          <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" />
+          <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
       </div>
 
       <div class="fixed-options" v-if="options">
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index">
-            <span @click="editOption(item)" v-html="item.previewText"></span>
+            <span @click="editOption(item, $event)" v-html="item.previewText"></span>
             <span @click="deleteOption(item)">X</span>
           </li>
         </ul>
-        <div @click="editOption()" class="add primary-color btn" style="margin-top: 10px;">
+        <div @click="editOption(null, $event)" class="add-button">
           <span>Add Button</span>
         </div>
       </div>
     </form>
-    <div v-if="isAddingOption">
-      <form novalidate v-on:submit.prevent>
-        <div class="form-group">
-          <input type="text" name="optionText" :class="{'input-error': errors.has('optionText') }"
-          v-validate="'required'" class="form-control" v-model="selectedOption.previewText" placeholder="Text" />
+    <div v-if="isAddingOption" v-bind:style="styleObject" class="modal">
+      <form novalidate v-on:submit.prevent class="bubble left" style="float: none">
+
+        <div class="tabs">
+          <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
+          <span :class="{ 'active': headerTab === 'weblink'}" @click="setTab('weblink')">Link</span>
+        </div>
+
+        <div class="form-group" v-if="headerTab === 'weblink'">
+          <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.weblink" placeholder="Uri" />
+          <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
+        </div>
+        <div class="form-group" v-if="headerTab === 'weblink'">
+          <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.previewText" placeholder="Text" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
-        <div class="form-group">
-          <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
-          <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
+
+        <div v-if="headerTab === 'plainText'">
+          <div class="form-group">
+            <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.previewText" placeholder="Text" />
+            <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
+          </div>
+
+          <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
+          <div class="line"></div>
+
+          <div v-if="this.showPayload">
+            <div class="form-group">
+              <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
+              <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
+            </div>
+            <div class="form-group">
+              <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+              <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
+            </div>
+          </div>
         </div>
+
         <div class="form-group">
-          <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
-          <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
-        </div>
-        <div class="form-group">
-          <button @click="saveOption()">Save</button>
+          <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
+          <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Save</button>
         </div>
       </form>
     </div>
@@ -111,18 +152,28 @@ export default {
   },
   data: function () {
     return {
+      styleObject: {
+        display: 'none'
+      },
+      headerTab: 'plainText',
+      showPayload: false,
       showContent: false,
       title: this.document.header.value.title,
       content: this.document.header.value.text,
+      aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '1-1',
+      previewUri: this.document.header.value.uri,
       isAddingOption: false,
       selectedOption: {}
     }
   },
   computed: {
-    aspectRatio: function () {
-      return this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
-    },
     previewTitle: function () {
+      if (this.title && this.title.length > this.length) {
+        return linkify(this.title.substring(0, this.length)) + '...'
+      }
+      return this.title ? linkify(this.title) : ''
+    },
+    previewWebLink: function () {
       if (this.title && this.title.length > this.length) {
         return linkify(this.title.substring(0, this.length)) + '...'
       }
@@ -155,6 +206,7 @@ export default {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
           previewText: x.label.type === 'application/vnd.lime.web-link+json' ? getOptionContent(x.label.value.title || x.label.value.text) : getOptionContent(x.label.value),
+          weblink: x.label.type === 'application/vnd.lime.web-link+json' ? x.label.value.uri : '',
           value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
         }
         return opts
@@ -162,6 +214,12 @@ export default {
     }
   },
   methods: {
+    setTab: function (name) {
+      this.headerTab = name
+    },
+    toggleShowPayload: function () {
+      this.showPayload = !this.showPayload
+    },
     select: function (item) {
       if (item.isLink) {
         let win = window.open(item.label.value.uri, '_blank')
@@ -191,9 +249,17 @@ export default {
         }
       newDocument.header.value.title = this.title
       newDocument.header.value.text = this.content
+      this.styleObject = {
+        display: 'none'
+      }
       this.save(newDocument)
     },
-    editOption: function (item) {
+    editOption: function (item, $event) {
+      this.styleObject = {
+        top: $event.layerY + 'px',
+        left: $event.layerX + 'px',
+        width: '350px'
+      }
       this.isAddingOption = true
       if (item) {
         this.selectedOption = item
@@ -213,6 +279,15 @@ export default {
 
       this.selectedOption = {}
       this.isAddingOption = false
+      this.styleObject = {
+        display: 'none'
+      }
+    },
+    cancelOption: function (item) {
+      this.errors.clear()
+      this.styleObject = {
+        display: 'none'
+      }
     }
   }
 }
@@ -221,9 +296,6 @@ export default {
 <style lang="scss">
    @import '../styles/variables.scss';
 
-   .container.document-select {
-   }
-
   .document-select {
 
     .header {
@@ -231,16 +303,120 @@ export default {
       .title {
         margin: 0;
         padding: 10px 20px;
-        border-bottom: 0.5px solid #e4e2e2;
+      }
+    }
+    .fixed-options ul {
+      margin:  0px;
+    }
+    .editing .fixed-options ul {
+      margin:  0px -10px;
+    }
+
+    .add-button {
+      cursor: pointer;
+      text-align: center;
+      padding: 5px;
+      margin: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: $vue-light-blip;
+      background-color: $vue-white !important;
+      border: 1px dashed $vue-london !important;
+    }
+
+    .form-check {
+      padding: 0px 10px;
+      color: $vue-cloud;
+      margin: 0;
+
+      input[type="radio"] {
+        position: absolute;
+        visibility: hidden;
+      }
+
+      .form-check-container {
+        margin-left: 5px;
+        margin-top: 8px;
+        position: relative;
+        width: 40px;
+        height: 20px;
+        display: inline-block;
+      }
+
+      label{
+        position: absolute;
+        z-index: 1;
+        cursor: pointer;
+      }
+      .check{
+        display: block;
+        position: absolute;
+        border: 1px solid $vue-time;
+        border-radius: 100%;
+        height: 16px;
+        width: 16px;
+        top: 0px;
+        left: 0px;
+        transition: border .25s linear;
+        -webkit-transition: border .25s linear;
+        -moz-transition: border .25s linear;
+        -ms-transition: border .25s linear;
+      }
+      .check::before {
+        display: block;
+        position: absolute;
+        content: '';
+        border-radius: 100%;
+        height: 8px;
+        width: 8px;
+        top: 3px;
+        left: 3px;
+        margin: auto;
+        transition: background 0.25s linear;
+        -webkit-transition: background 0.25s linear;
+        -moz-transition: background 0.25s linear;
+        -ms-transition: background 0.25s linear;
+      }
+      input[type=radio]:checked ~ .check {
+        border: 1px solid $vue-light-blip;
+      }
+
+      input[type=radio]:checked ~ .check::before{
+        background: $vue-light-blip;
       }
     }
 
-    .fixed-options ul {
-      margin: 0px;
-    }
+    .form-group {
+      padding: 10px;
+      color: $vue-london;
 
-    .fixed-options li:first-child {
-      border-top: 0px;
+      .textarea {
+        margin-top: 10px;
+      }
+      .input-error {
+        color: $vue-delete;
+      }
+      .upload-intructions {
+        padding: 5px;
+        padding-bottom: 0px;
+        font-size: 12px;
+      }
+      ::-webkit-input-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      ::-moz-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      :-ms-input-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
+      :-moz-placeholder {
+        color: $vue-time;
+        font-size: 12px;
+      }
     }
   }
 
