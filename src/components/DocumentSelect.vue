@@ -1,5 +1,8 @@
 <template>
-  <div v-if="document != null" class="container document-select">
+  <div v-if="!isEditing" class="container document-select">
+    <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
+      <img :src="editSvg" />
+    </div>
     <div :class="'bubble ' + position">
       <div class="header">
         <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + document.header.value.uri + ')'">
@@ -30,6 +33,61 @@
       {{ date }}
     </div>
   </div>
+
+  <div v-else class="container document-select">
+    <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
+      <div class="saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
+        <img :src="approveSvg" />
+      </div>
+      <div class="header">
+        <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + document.header.value.uri + ')'">
+        </div>
+
+        <div class="title" v-if="document.header.value.title || document.header.value.text">
+          <div class="form-group">
+            <input type="title" name="title" :class="{'input-error': errors.has('title') }" v-validate="'required'" class="form-control" v-model="title" />
+            <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
+          </div>
+          <div class="form-group">
+            <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-model="content" />
+            <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixed-options" v-if="options">
+        <ul>
+          <li v-for="(item, index) in options" v-bind:key="index">
+            <span @click="editOption(item)" v-html="item.previewText"></span>
+            <span @click="deleteOption(item)">X</span>
+          </li>
+        </ul>
+        <div @click="editOption()" class="add primary-color btn" style="margin-top: 10px;">
+          <span>Add Button</span>
+        </div>
+      </div>
+    </form>
+    <div v-if="isAddingOption">
+      <form novalidate v-on:submit.prevent>
+        <div class="form-group">
+          <input type="text" name="optionText" :class="{'input-error': errors.has('optionText') }"
+          v-validate="'required'" class="form-control" v-model="selectedOption.previewText" placeholder="Text" />
+          <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
+        </div>
+        <div class="form-group">
+          <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
+          <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
+        </div>
+        <div class="form-group">
+          <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+          <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
+        </div>
+        <div class="form-group">
+          <button @click="saveOption()">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -53,21 +111,31 @@ export default {
   },
   data: function () {
     return {
-      showContent: false
+      showContent: false,
+      title: this.document.header.value.title,
+      content: this.document.header.value.text,
+      isAddingOption: false,
+      selectedOption: {}
     }
   },
   computed: {
     aspectRatio: function () {
       return this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
     },
-    previewContent: function () {
-      if (this.document.header.value.text && this.document.header.value.text.length > this.length) {
-        return linkify(this.document.header.value.text.substring(0, this.length)) + '...'
+    previewTitle: function () {
+      if (this.title && this.title.length > this.length) {
+        return linkify(this.title.substring(0, this.length)) + '...'
       }
-      return this.document.header.value.text ? linkify(this.document.header.value.text) : ''
+      return this.title ? linkify(this.title) : ''
+    },
+    previewContent: function () {
+      if (this.content && this.content.length > this.length) {
+        return linkify(this.content.substring(0, this.length)) + '...'
+      }
+      return this.content ? linkify(this.content) : ''
     },
     hasPreview: function () {
-      return this.document.header.value.text && this.document.header.value.text.length > this.length
+      return this.content && this.content.length > this.length
     },
     options: function () {
       if (!this.document.options) {
@@ -86,7 +154,8 @@ export default {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          previewText: x.label.type === 'application/vnd.lime.web-link+json' ? getOptionContent(x.label.value.title || x.label.value.text) : getOptionContent(x.label.value)
+          previewText: x.label.type === 'application/vnd.lime.web-link+json' ? getOptionContent(x.label.value.title || x.label.value.text) : getOptionContent(x.label.value),
+          value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
         }
         return opts
       })
@@ -106,6 +175,44 @@ export default {
           content: item.value.value
         })
       }
+    },
+    documentSelectSave: function () {
+      this.selectedOption = {}
+      this.isAddingOption = false
+      var newDocument =
+        {
+          ...this.document,
+          options: this.options.map(function (x) {
+            return {
+              label: { type: x.label.type, value: x.previewText },
+              value: x.value && x.value.value ? { type: x.value.type, value: JSON.parse(x.value.value) } : null
+            }
+          })
+        }
+      newDocument.header.value.title = this.title
+      newDocument.header.value.text = this.content
+      this.save(newDocument)
+    },
+    editOption: function (item) {
+      this.isAddingOption = true
+      if (item) {
+        this.selectedOption = item
+      } else {
+        this.selectedOption = { label: {}, value: {} }
+      }
+    },
+    deleteOption: function (item) {
+      let index = this.options.indexOf(item)
+      this.document.options.splice(index, 1)
+    },
+    saveOption: function () {
+      if (!this.options.includes(this.selectedOption) && this.selectedOption.previewText) {
+        this.selectedOption.label.type = 'text/plain'
+        this.options.push(this.selectedOption)
+      }
+
+      this.selectedOption = {}
+      this.isAddingOption = false
     }
   }
 }
@@ -115,7 +222,6 @@ export default {
    @import '../styles/variables.scss';
 
    .container.document-select {
-     overflow: hidden;
    }
 
   .document-select {
