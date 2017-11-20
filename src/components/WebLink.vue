@@ -2,7 +2,7 @@
   <div class="container web-link">
     <div v-if="this.title || this.text" :class="'bubble ' + position">
       <a :href="this.uri" :target="this.target" class="web-link-wrapper">
-        <img class="preview" :src="this.imgPreview">
+        <img v-if="this.title" class="preview" :src="this.imgPreview">
         <div class="right-column">
           <div class="link-description">
             <span class="text big-text" v-text="this.title"></span>
@@ -53,8 +53,6 @@ export default {
     }
   },
   created: function () {
-    if (this.title && this.title.length > this.length) this.title = this.title.substring(0, this.length - 3) + '...'
-    if (this.text && this.text.length > this.length) this.text = this.text.substring(0, this.length - 3) + '...'
     this.uri = new URL(this.uri)
     this.uri = (this.uri.protocol + '//' + this.uri.hostname)
 
@@ -83,6 +81,13 @@ export default {
 
       a {
         word-break: break-all;
+      }
+    }
+
+    &.right .web-link-wrapper {
+      .text::after {
+        content: "";
+        background: linear-gradient(to right, rgba(255, 255, 255, 0), $vue-light-blip 50%);
       }
     }
 
@@ -118,11 +123,10 @@ export default {
         position: absolute;
         bottom: 0;
         right: 0;
-        width: 40%;
+        width: 50px;
         height: 19px;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+        background: linear-gradient(to right, rgba(255, 255, 255, 0), $vue-white 50%);
       }
-
 
       .big-text {
         max-height: 38px;
