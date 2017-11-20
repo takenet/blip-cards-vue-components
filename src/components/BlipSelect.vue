@@ -60,7 +60,7 @@
             <span>Add option</span>
           </li>
         </ul>
-        <div v-if="document.scope !== 'immediate'" @click="editOption({}, $event)" class="add primary-color btn" style="margin-top: 10px;">
+        <div v-if="document.scope !== 'immediate'" @click="editOption({}, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
           <span>Add Button</span>
         </div>
       </div>
@@ -93,7 +93,8 @@
           </div>
 
           <div class="form-group">
-            <button @click="saveOption()" class="btn add primary-color" :class="{'is-disabled': errors.any() }">Save</button>
+            <button @click="cancelOption()" class="btn btn-dashed delete-color">Cancel</button>
+            <button @click="saveOption()" class="btn btn-dashed primary-color" :class="{'is-disabled': errors.any() }">Save</button>
           </div>
         </div>
       </div>
@@ -147,6 +148,13 @@ export default {
     deleteOption: function (item) {
       let index = this.options.indexOf(item)
       this.options.splice(index, 1)
+    },
+    cancelOption: function () {
+      this.errors.clear()
+      this.selectedOption = {}
+      this.styleObject = {
+        display: 'none'
+      }
     },
     saveOption: function () {
       if (this.options.indexOf(this.selectedOption) === -1 && this.selectedOption.text) {
@@ -205,7 +213,7 @@ export default {
 
       this.save({
         ...this.document,
-        title: this.title,
+        text: this.text,
         options: this.options.map(function (x) {
           return {
             ...x,

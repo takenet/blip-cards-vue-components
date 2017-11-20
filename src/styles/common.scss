@@ -293,13 +293,19 @@ input:focus, textarea:focus {
   color: $vue-light-blip;
 }
 
+.delete-color {
+  color: $vue-delete;
+}
+
+
 .btn {
   padding: 5px;
 }
 
-.add {
+.btn-dashed {
   background-color: $vue-white !important;
   border: 1px dashed $vue-light-gray !important;
+  width: 49%;
 }
 
 /* The Modal (background) */
