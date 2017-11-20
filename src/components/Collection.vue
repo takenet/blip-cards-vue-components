@@ -1,10 +1,11 @@
 <template>
   <div :class="'container collection'" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
+
     <div :class="'slideshow-container ' + position" :id="id">
       <div class="slideshow-list">
         <div class="slideshow-track">
-          <div v-for="item in document.items">
-            <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :editable="editable" />
+          <div v-for="(item, index) in document.items" v-bind:key="index">
+            <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :editable="editable" :on-save="collectionSave" />
           </div>
         </div>
       </div>
@@ -19,14 +20,14 @@
   </div>
 
   <div v-else-if="document.itemType === 'application/vnd.lime.container+json'">
-    <div v-for="item in document.items">
+    <div v-for="(item, index) in document.items" v-bind:key="index">
         <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: item.type, content: item.value }" :editable="editable" />
       </div>
     </div>
   </div>
 
   <div v-else>
-    <div v-for="item in document.items">
+    <div v-for="(item, index) in document.items" v-bind:key="index">
       <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: document.itemType, content: item }" :editable="editable" />
     </div>
   </div>
@@ -89,6 +90,9 @@ export default {
     }
   },
   methods: {
+    collectionSave: function (document) {
+      console.log(document)
+    },
     plusSlides: function (n) {
       this.showSlides(this.slideIndex += n)
     },

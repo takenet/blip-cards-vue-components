@@ -1,10 +1,9 @@
 <template>
   <div>
-    <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-      <img :src="editSvg" />
-    </div>
-
     <div :class="'bubble ' + position">
+      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
+        <img :src="editSvg" />
+      </div>
       <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!isEditing">
         <div class="video-player">
           <div class="sk-circle-wrapper" id="animation">

@@ -9,20 +9,19 @@
 .container {
   margin-bottom: 10px;
   font-family: "Avenir Next";
-  position: relative;
 }
 
 .container:after {
-    content: ".";
-    display: block;
-    clear: both;
-    visibility: hidden;
-    line-height: 0;
-    height: 0;
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
 }
 
 .bubble {
-    overflow: hidden;
+    position: relative;
     margin-bottom: 5px;
     width: auto;
     height: auto;
@@ -175,15 +174,13 @@ a {
 .editIco {
   background-color: $vue-light-blip;
   padding: 3px;
-  float: left;
   border-radius: 50%;
 	width: 30px;
   height: 30px;
   text-align: center;
   position: absolute;
   top: -17px;
-  left: -15px;
-  display: none;
+  right: -17px;
   z-index: 1;
 }
 
@@ -191,14 +188,13 @@ a {
   z-index: 1;
   background-color: $vue-light-blip;
   padding: 3px;
-  float: left;
   border-radius: 50%;
 	width: 30px;
   height: 30px;
   text-align: center;
   position: absolute;
   top: -17px;
-  left: -15px;
+  right: -17px;
 }
 
 .saveIco img {

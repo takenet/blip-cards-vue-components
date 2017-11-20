@@ -1,11 +1,11 @@
 <template>
   <div v-if="!isEditing">
     <div v-if="previewDocument.content != null && previewDocument.content.length > 0" class="container plain-text">
-      <div v-if="editable" class="editIco" @click="toggleEdit">
-        <img :src="editSvg" />
-      </div>
-
       <div :class="'bubble ' + position">
+        <div v-if="editable" class="editIco" @click="toggleEdit">
+          <img :src="editSvg" />
+        </div>
+
         <div v-if="!previewDocument.hasPreview" v-html="previewDocument.content">
         </div>
         <div v-else >
@@ -26,11 +26,10 @@
   </div>
 
   <div class="container plain-text" v-else>
-    <div class="saveIco" @click="save(text)">
-      <img :src="approveSvg" />
-    </div>
-
-    <div :class="'bubble ' + position">
+   <div :class="'bubble ' + position">
+      <div class="saveIco" @click="save(text)">
+        <img :src="approveSvg" />
+      </div>
       <editable class="editable" :content="text" @update="text = $event"></editable>
     </div>
   </div>

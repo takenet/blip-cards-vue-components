@@ -1,10 +1,11 @@
 <template>
   <div v-if="!isEditing" class="container select">
-    <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-      <img :src="editSvg" />
-    </div>
    <div v-if="document.scope === 'immediate'">
-      <div :class="'bubble ' + position" v-html="text" v-if="text">
+      <div :class="'bubble ' + position">
+        <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
+          <img :src="editSvg" />
+        </div>
+        <span v-html="text" v-if="text"></span>
       </div>
 
       <div :class="'notification ' + position" v-if="date">
@@ -24,6 +25,9 @@
 
     <div v-else>
       <div :class="'bubble ' + position">
+        <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
+          <img :src="editSvg" />
+        </div>
         <span v-html="text"></span>
         <div class="fixed-options">
           <ul>

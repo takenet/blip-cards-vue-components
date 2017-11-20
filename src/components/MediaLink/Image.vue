@@ -1,10 +1,9 @@
 <template>
   <div>
-    <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-      <img :src="editSvg" />
-    </div>
-
     <div :class="'bubble ' + position">
+      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
+        <img :src="editSvg" />
+      </div>
       <div class="header" :id="id" v-if="!isEditing">
         <a :href="document.uri" target="_blank">
           <div :class="'ratio ratio' + aspect" :style="'background-image: url(' + previewUri + ')'">
