@@ -40,6 +40,10 @@
     float: left;
 }
 
+.ratio {
+  border-radius: 13px 13px 0px 0px !important;
+}
+
 .bubble.right {
     border-radius: 13px 2px 13px 13px;
     box-shadow: 0 -1px 12px 0 #EEEEEE;
@@ -179,6 +183,7 @@ a {
   height: 30px;
   text-align: center;
   position: absolute;
+  display: none;
   top: -17px;
   right: -17px;
   z-index: 1;
@@ -212,6 +217,10 @@ a {
 }
 
 .container:hover > div > .editIco {
+  display: block;
+}
+
+.container:hover > div > div > .editIco {
   display: block;
 }
 
@@ -332,4 +341,8 @@ input:focus, textarea:focus {
   background-color: $vue-light-gray;
   width: 100%;
   height: 1px;
+}
+
+video {
+  border-radius: 13px 13px 13px 2px !important;
 }

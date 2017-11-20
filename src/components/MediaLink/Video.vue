@@ -408,6 +408,7 @@ export default {
       align-self: top;
       align-items: center;
       justify-content: center;
+      border-radius: 13px 13px 13px 2px !important;
     }
 
     video {
