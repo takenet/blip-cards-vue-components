@@ -33,13 +33,21 @@
             </div>
           </div>
           <div class="form-check">
-            <span>Aspect Ratio:</span><br>
-            <label class="form-check-label">
-              <input type="radio" class="form-check-input" v-model="editAspect" value="1-1"/> 1:1
-            </label>
-            <label class="form-check-label">
-              <input type="radio" class="form-check-input" v-model="editAspect" value="2-1"/> 2:1
-            </label>
+            <div>
+              <span>Aspect Ratio:</span>
+            </div>
+            <div class="form-check-wrapper">
+              <span class="form-check-container">
+                <input type="radio" name="aspect-selector" id="1-1" class="form-check-input" v-model="editAspect" value="1-1"/>
+                <label class="form-check-label" for="1-1"><span class="radio">1:1</span></label>
+                <div class="check"></div>
+              </span>
+              <span class="form-check-container">
+                <input type="radio" name="aspect-selector" id="2-1" class="form-check-input" v-model="editAspect" value="2-1"/>
+                <label class="form-check-label" for="2-1"><span class="radio">2:1</span></label>
+                <div class="check"></div>
+              </span>
+            </div>
           </div>
           <div class="form-group">
             <input type="text" class="form-control" v-model="editTitle" placeholder="Title" />
@@ -149,9 +157,63 @@ export default {
     .form-check {
       color: $vue-cloud;
       margin-top: 10px;
-      margin-bottom: 15px;
-      .form-check-label {
-        margin-top: 3px;
+      margin-bottom: 12px;
+
+      input[type="radio"] {
+        position: absolute;
+        visibility: hidden;
+      }
+
+      .form-check-container {
+        margin-left: 5px;
+        margin-top: 8px;
+        position: relative;
+        width: 40px;
+        height: 20px;
+        display: inline-block;
+      }
+
+      label{
+        position: absolute;
+        z-index: 10;
+        cursor: pointer;
+      }
+      .check{
+        display: block;
+        position: absolute;
+        border: 1px solid $vue-time;
+        border-radius: 100%;
+        height: 16px;
+        width: 16px;
+        top: 0px;
+        left: 0px;
+        z-index: 5;
+        transition: border .25s linear;
+        -webkit-transition: border .25s linear;
+        -moz-transition: border .25s linear;
+        -ms-transition: border .25s linear;
+      }
+      .check::before {
+        display: block;
+        position: absolute;
+        content: '';
+        border-radius: 100%;
+        height: 8px;
+        width: 8px;
+        top: 3px;
+        left: 3px;
+        margin: auto;
+        transition: background 0.25s linear;
+        -webkit-transition: background 0.25s linear;
+        -moz-transition: background 0.25s linear;
+        -ms-transition: background 0.25s linear;
+      }
+      input[type=radio]:checked ~ .check {
+        border: 1px solid $vue-light-blip;
+      }
+
+      input[type=radio]:checked ~ .check::before{
+        background: $vue-light-blip;
       }
     }
 
