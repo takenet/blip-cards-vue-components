@@ -9,6 +9,7 @@
 .container {
   margin-bottom: 10px;
   font-family: "Avenir Next";
+  position: relative;
 }
 
 .container:after {
@@ -310,6 +311,9 @@ input:focus, textarea:focus {
 .btn-dashed {
   background-color: $vue-white !important;
   border: 1px dashed $vue-light-gray !important;
+}
+
+.w-49 {
   width: 49%;
 }
 

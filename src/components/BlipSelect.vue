@@ -60,7 +60,7 @@
             <span @click="editOption(item, index, $event)" v-html="item.text"></span>
             <span @click="deleteOption(item, index)">X</span>
           </li>
-          <li class="add" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
+          <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
             <span>Add option</span>
           </li>
         </ul>
@@ -97,8 +97,8 @@
           </div>
 
           <div class="form-group">
-            <button @click="cancelOption()" class="btn btn-dashed delete-color">Cancel</button>
-            <button @click="saveOption()" class="btn btn-dashed primary-color" :class="{'is-disabled': errors.any() }">Save</button>
+            <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
+            <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Save</button>
           </div>
         </div>
       </div>
