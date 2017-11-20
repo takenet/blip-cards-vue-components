@@ -53,20 +53,20 @@
       <div class="text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index">
-            <span @click="editOption(item, $event)" v-html="item.text"></span>
-            <span @click="deleteOption(item)">X</span>
+            <span @click="editOption(item, index, $event)" v-html="item.text"></span>
+            <span @click="deleteOption(item, index)">X</span>
           </li>
-          <li class="add" v-if="document.scope === 'immediate'" @click="editOption({}, $event)">
+          <li class="add" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
             <span>Add option</span>
           </li>
         </ul>
-        <div v-if="document.scope !== 'immediate'" @click="editOption({}, $event)" class="add primary-color btn" style="margin-top: 10px;">
+        <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
           <span>Add Button</span>
         </div>
       </div>
     </form>
 
-    <div v-bind:style="styleObject">
+    <div v-bind:style="styleObject" class="modal">
       <div class="bubble left" style="float: none">
         <div class="form-group">
           <input type="text" name="optionText" :class="{'input-error': errors.has('optionText') }"
@@ -93,7 +93,8 @@
           </div>
 
           <div class="form-group">
-            <button @click="saveOption()" class="btn add primary-color" :class="{'is-disabled': errors.any() }">Save</button>
+            <button @click="cancelOption()" class="btn btn-dashed delete-color">Cancel</button>
+            <button @click="saveOption()" class="btn btn-dashed primary-color" :class="{'is-disabled': errors.any() }">Save</button>
           </div>
         </div>
       </div>
@@ -104,6 +105,7 @@
 <script>
 
 import { linkify } from '../utils'
+import _ from 'lodash'
 import { default as base } from '../mixins/baseComponent.js'
 const optionSize = 34
 
@@ -144,16 +146,23 @@ export default {
     setTab: function (name) {
       this.tab = name
     },
-    deleteOption: function (item) {
-      let index = this.options.indexOf(item)
+    deleteOption: function (index) {
       this.options.splice(index, 1)
     },
+    cancelOption: function (item) {
+      this.errors.clear()
+      this.selectedOption = {}
+      this.styleObject = {
+        display: 'none'
+      }
+    },
     saveOption: function () {
-      if (!this.options.includes(this.selectedOption) && this.selectedOption.text) {
+      if (this.selectedOption.index === -1) {
         this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.push(this.selectedOption)
       } else {
         this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
+        this.options.splice(this.selectedOption.index, 1, this.selectedOption)
       }
 
       this.selectedOption = {}
@@ -161,41 +170,15 @@ export default {
         display: 'none'
       }
     },
-    getPosition: function (el) {
-      let xPosition = 0
-      let yPosition = 0
-
-      while (el) {
-        if (el.tagName === 'body') {
-          let xScrollPos = el.scrollLeft || document.documentElement.scrollLeft
-          let yScrollPos = el.scrollTop || document.documentElement.scrollTop
-
-          xPosition += (el.offsetLeft - xScrollPos + el.clientLeft)
-          yPosition += (el.offsetTop - yScrollPos + el.clientTop)
-        } else {
-          xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft)
-          yPosition += (el.offsetTop - el.scrollTop + el.clientTop)
-        }
-
-        el = el.offsetParent
-      }
-      return {
-        x: xPosition,
-        y: yPosition
-      }
-    },
-    editOption: function (item, $event) {
-      let pos = this.getPosition($event.currentTarget)
+    editOption: function (item, index, $event) {
       this.styleObject = {
-        top: pos.y + 'px',
-        left: pos.x + 'px',
-        position: 'fixed',
-        display: 'block',
-        width: '350px',
-        'z-index': 1
+        top: $event.layerY + 'px',
+        left: $event.layerX + 'px',
+        width: '350px'
       }
 
-      this.selectedOption = item
+      this.selectedOption = _.clone(item)
+      this.selectedOption.index = index
     },
     selectSave: function () {
       this.selectedOption = {}
@@ -205,7 +188,7 @@ export default {
 
       this.save({
         ...this.document,
-        title: this.title,
+        text: this.text,
         options: this.options.map(function (x) {
           return {
             ...x,
