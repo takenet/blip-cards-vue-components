@@ -53,14 +53,14 @@
       <div class="text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index">
-            <span @click="editOption(item, $event)" v-html="item.text"></span>
-            <span @click="deleteOption(item)">X</span>
+            <span @click="editOption(item, index, $event)" v-html="item.text"></span>
+            <span @click="deleteOption(item, index)">X</span>
           </li>
-          <li class="add" v-if="document.scope === 'immediate'" @click="editOption({}, $event)">
+          <li class="add" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
             <span>Add option</span>
           </li>
         </ul>
-        <div v-if="document.scope !== 'immediate'" @click="editOption({}, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
+        <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
           <span>Add Button</span>
         </div>
       </div>
@@ -105,6 +105,7 @@
 <script>
 
 import { linkify } from '../utils'
+import _ from 'lodash'
 import { default as base } from '../mixins/baseComponent.js'
 const optionSize = 34
 
@@ -145,11 +146,10 @@ export default {
     setTab: function (name) {
       this.tab = name
     },
-    deleteOption: function (item) {
-      let index = this.options.indexOf(item)
+    deleteOption: function (index) {
       this.options.splice(index, 1)
     },
-    cancelOption: function () {
+    cancelOption: function (item) {
       this.errors.clear()
       this.selectedOption = {}
       this.styleObject = {
@@ -157,11 +157,12 @@ export default {
       }
     },
     saveOption: function () {
-      if (this.options.indexOf(this.selectedOption) === -1 && this.selectedOption.text) {
+      if (this.selectedOption.index === -1) {
         this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.push(this.selectedOption)
       } else {
         this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
+        this.options.splice(this.selectedOption.index, 1, this.selectedOption)
       }
 
       this.selectedOption = {}
@@ -169,14 +170,15 @@ export default {
         display: 'none'
       }
     },
-    editOption: function (item, $event) {
+    editOption: function (item, index, $event) {
       this.styleObject = {
         top: $event.layerY + 'px',
         left: $event.layerX + 'px',
         width: '350px'
       }
 
-      this.selectedOption = item
+      this.selectedOption = _.clone(item)
+      this.selectedOption.index = index
     },
     selectSave: function () {
       this.selectedOption = {}
