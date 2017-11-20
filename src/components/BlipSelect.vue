@@ -66,7 +66,7 @@
       </div>
     </form>
 
-    <div v-bind:style="styleObject">
+    <div v-bind:style="styleObject" class="modal">
       <div class="bubble left" style="float: none">
         <div class="form-group">
           <input type="text" name="optionText" :class="{'input-error': errors.has('optionText') }"
@@ -169,38 +169,11 @@ export default {
         display: 'none'
       }
     },
-    getPosition: function (el) {
-      let xPosition = 0
-      let yPosition = 0
-
-      while (el) {
-        if (el.tagName === 'body') {
-          let xScrollPos = el.scrollLeft || document.documentElement.scrollLeft
-          let yScrollPos = el.scrollTop || document.documentElement.scrollTop
-
-          xPosition += (el.offsetLeft - xScrollPos + el.clientLeft)
-          yPosition += (el.offsetTop - yScrollPos + el.clientTop)
-        } else {
-          xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft)
-          yPosition += (el.offsetTop - el.scrollTop + el.clientTop)
-        }
-
-        el = el.offsetParent
-      }
-      return {
-        x: xPosition,
-        y: yPosition
-      }
-    },
     editOption: function (item, $event) {
-      let pos = this.getPosition($event.currentTarget)
       this.styleObject = {
-        top: pos.y + 'px',
-        left: pos.x + 'px',
-        position: 'fixed',
-        display: 'block',
-        width: '350px',
-        'z-index': 1
+        top: $event.layerY + 'px',
+        left: $event.layerX + 'px',
+        width: '350px'
       }
 
       this.selectedOption = item
