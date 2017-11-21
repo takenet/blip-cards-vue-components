@@ -27,10 +27,11 @@
 
   <div class="container plain-text" v-else>
    <div :class="'bubble ' + position">
-      <div class="saveIco" @click="save(text)">
+      <div class="saveIco" @click="save(text)" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </div>
-      <editable class="editable" :content="text" @update="text = $event"></editable>
+      <textarea name="text" v-validate="'required'"  v-model="text" style="width: 100%; min-width: 300px"></textarea>
+      <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
     </div>
   </div>
 </template>
