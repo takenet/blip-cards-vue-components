@@ -93,11 +93,11 @@
         </div>
 
         <div class="form-group" v-if="headerTab === 'weblink'">
-          <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.label.uri" placeholder="Uri" />
+          <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.label.value.uri" placeholder="Uri" />
           <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
         </div>
         <div class="form-group" v-if="headerTab === 'weblink'">
-          <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.label.value" placeholder="Text" />
+          <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.text" placeholder="Text" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
 
@@ -138,7 +138,7 @@ import { default as base } from '../mixins/baseComponent.js'
 const optionSize = 34
 
 let getOptionContent = function (item) {
-  let text = item.label.type === 'application/vnd.lime.web-link+json' ? item.label.value.title || item.label.value.text : item.label.value
+  let text = item.label.type === item.label.value.title || item.label.value.text || item.label.value.uri || item.label.value
   if (text.length > optionSize) {
     return text.substring(0, optionSize) + '...'
   } else {
@@ -165,7 +165,7 @@ export default {
       styleObject: {
         display: 'none'
       },
-      headerTab: 'plainText',
+      headerTab: null,
       showPayload: false,
       showContent: false,
       title: this.document.header.value.title,
@@ -206,9 +206,9 @@ export default {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          previewText: getOptionContent(x),
           value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
         }
+        opts.previewText = getOptionContent(opts)
         return opts
       })
     }
@@ -216,6 +216,13 @@ export default {
   methods: {
     setTab: function (name) {
       this.headerTab = name
+      if (this.headerTab === 'weblink' && typeof this.selectedOption.label.value === 'string') {
+        this.selectedOption.label.value = { text: this.selectedOption.label.value, uri: this.selectedOption.LinkUri }
+      }
+      if (this.headerTab === 'plainText' && typeof this.selectedOption.label.value === 'object') {
+        this.selectedOption.LinkUri = this.selectedOption.label.value.uri
+        this.selectedOption.label.value = this.selectedOption.label.value.text
+      }
     },
     toggleShowPayload: function () {
       this.showPayload = !this.showPayload
@@ -229,7 +236,7 @@ export default {
 
       if (this.onSelected) {
         this.onSelected(item.label.value, {
-          type: item.value.type || 'plain/text',
+          type: item.value.type || 'text/plain',
           content: item.value.value || item.label.value
         })
       }
@@ -244,7 +251,7 @@ export default {
             return {
               label: {
                 type: x.label.type,
-                value: x.label.type === 'plain/text' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri }
+                value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri }
               },
               value: x.value && x.value.value ? { type: x.value.type, value: JSON.parse(x.value.value) } : null
             }
@@ -266,13 +273,23 @@ export default {
 
       this.selectedOption = item
       this.selectedOption.index = index
+      this.showPayload = typeof this.selectedOption.value.type === 'string'
+      this.headerTab = this.selectedOption.label.type === 'application/vnd.lime.web-link+json' ? 'weblink' : 'plainText'
     },
     deleteOption: function (index) {
       this.document.options.splice(index, 1)
     },
     saveOption: function () {
-      this.selectedOption.label.type = this.headerTab === 'plainText' ? 'plain/text' : 'application/vnd.lime.web-link+json'
-      this.selectedOption.label.value = this.headerTab === 'plainText' ? this.selectedOption.label.value : { text: this.selectedOption.label.value, uri: this.selectedOption.label.uri }
+      if (this.headerTab === 'weblink') {
+        this.selectedOption.label.type = 'application/vnd.lime.web-link+json'
+        this.selectedOption.isLink = true
+        this.selectedOption.value = {}
+      } else {
+        this.selectedOption.label.type = 'text/plain'
+        this.selectedOption.isLink = false
+        this.selectedOption.value = this.showPayload ? this.selectedOption.value : {}
+      }
+      this.selectedOption.label.value = this.selectedOption.label.value
       this.selectedOption.previewText = getOptionContent(this.selectedOption)
 
       if (this.selectedOption.index === -1) {
@@ -282,12 +299,15 @@ export default {
       }
 
       this.selectedOption = { label: {}, value: {} }
+      this.headerTab = null
       this.styleObject = {
         display: 'none'
       }
     },
     cancelOption: function (item) {
       this.errors.clear()
+      this.selectedOption = { label: {}, value: {} }
+      this.headerTab = null
       this.styleObject = {
         display: 'none'
       }
