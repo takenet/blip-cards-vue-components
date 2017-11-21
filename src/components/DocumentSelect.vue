@@ -84,7 +84,7 @@
         </div>
       </div>
     </form>
-    <div v-if="isAddingOption" v-bind:style="styleObject" class="modal">
+    <div v-bind:style="styleObject" class="modal">
       <form novalidate v-on:submit.prevent class="bubble left" style="float: none">
 
         <div class="tabs">
@@ -162,7 +162,6 @@ export default {
       content: this.document.header.value.text,
       aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '1-1',
       previewUri: this.document.header.value.uri,
-      isAddingOption: false,
       selectedOption: {}
     }
   },
@@ -236,7 +235,6 @@ export default {
     },
     documentSelectSave: function () {
       this.selectedOption = {}
-      this.isAddingOption = false
       var newDocument =
         {
           ...this.document,
@@ -260,7 +258,7 @@ export default {
         left: $event.layerX + 'px',
         width: '350px'
       }
-      this.isAddingOption = true
+
       if (item) {
         this.selectedOption = item
       } else {
@@ -278,7 +276,6 @@ export default {
       }
 
       this.selectedOption = {}
-      this.isAddingOption = false
       this.styleObject = {
         display: 'none'
       }
@@ -386,38 +383,7 @@ export default {
       }
     }
 
-    .form-group {
-      padding: 10px;
-      color: $vue-london;
 
-      .textarea {
-        margin-top: 10px;
-      }
-      .input-error {
-        color: $vue-delete;
-      }
-      .upload-intructions {
-        padding: 5px;
-        padding-bottom: 0px;
-        font-size: 12px;
-      }
-      ::-webkit-input-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      ::-moz-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      :-ms-input-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      :-moz-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-    }
   }
 
 </style>

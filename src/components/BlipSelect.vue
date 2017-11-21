@@ -71,37 +71,38 @@
     </form>
 
     <div v-bind:style="styleObject" class="modal">
-      <div class="bubble left" style="float: none">
-        <div class="form-group">
-          <input type="text" name="optionText" :class="{'input-error': errors.has('optionText') }"
-          v-validate="'required'" class="form-control" v-model="selectedOption.text" placeholder="Text" />
-          <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
-        </div>
-
-        <div class="line"></div>
+      <form novalidate v-on:submit.prevent class="bubble left" style="float: none">
 
         <div class="tabs">
-          <span :class="{ 'active': tab === 'mime'}" @click="setTab('mime')">MIME Type</span>
-          <span :class="{ 'active': tab === 'value'}" @click="setTab('value')">Value</span>
+          <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
         </div>
 
-        <div>
-          <div class="form-group" v-if="tab === 'mime'">
-            <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.type" placeholder="Type" />
-            <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
-          </div>
-
-          <div class="form-group" v-if="tab === 'value'">
-            <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value" placeholder="Value" />
-            <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
-          </div>
-
+        <div v-if="headerTab === 'plainText'">
           <div class="form-group">
-            <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
-            <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Save</button>
+            <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.text" placeholder="Text" />
+            <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
+          </div>
+
+          <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
+          <div class="line"></div>
+
+          <div v-if="this.showPayload">
+            <div class="form-group">
+              <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
+              <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
+            </div>
+            <div class="form-group">
+              <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+              <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
+            </div>
           </div>
         </div>
-      </div>
+
+        <div class="form-group">
+          <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
+          <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Save</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -132,7 +133,8 @@ export default {
       styleObject: {
         display: 'none'
       },
-      tab: 'mime',
+      showPayload: false,
+      headerTab: 'plainText',
       selectedOption: {},
       text: linkify(this.document.text),
       hide: this.hideOptions,
@@ -148,7 +150,7 @@ export default {
   },
   methods: {
     setTab: function (name) {
-      this.tab = name
+      this.headerTab = name
     },
     deleteOption: function (index) {
       this.options.splice(index, 1)

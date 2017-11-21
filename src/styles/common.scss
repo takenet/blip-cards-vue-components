@@ -350,3 +350,36 @@ input:focus, textarea:focus {
 video {
   border-radius: 13px 13px 13px 2px !important;
 }
+
+.form-group {
+  padding: 10px;
+  color: $vue-london;
+
+  .textarea {
+    margin-top: 10px;
+  }
+  .input-error {
+    color: $vue-delete;
+  }
+  .upload-intructions {
+    padding: 5px;
+    padding-bottom: 0px;
+    font-size: 12px;
+  }
+  ::-webkit-input-placeholder {
+    color: $vue-time;
+    font-size: 12px;
+  }
+  ::-moz-placeholder {
+    color: $vue-time;
+    font-size: 12px;
+  }
+  :-ms-input-placeholder {
+    color: $vue-time;
+    font-size: 12px;
+  }
+  :-moz-placeholder {
+    color: $vue-time;
+    font-size: 12px;
+  }
+}
