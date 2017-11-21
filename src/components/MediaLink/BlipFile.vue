@@ -19,10 +19,20 @@
 <script>
 
 import { default as base } from '../../mixins/baseComponent.js'
-import fileIconDefault from '../../assets/img/ItemDefault.png'
-import fileIconCss from '../../assets/img/ItemCSS.png'
-import fileIconPdf from '../../assets/img/ItemPDF.png'
-import fileIconZip from '../../assets/img/ItemZIP.png'
+import fileIconDefault from '../../assets/img/ItemDefault.svg'
+import fileIconCss from '../../assets/img/ItemCSS.svg'
+import fileIconCsv from '../../assets/img/ItemCSV.svg'
+import fileIconDoc from '../../assets/img/ItemDoc.svg'
+import fileIconJpg from '../../assets/img/ItemJPG.svg'
+import fileIconJs from '../../assets/img/ItemJS.svg'
+import fileIconPdf from '../../assets/img/ItemPDF.svg'
+import fileIconPhp from '../../assets/img/ItemPHP.svg'
+import fileIconPng from '../../assets/img/ItemPNG.svg'
+import fileIconPpt from '../../assets/img/ItemPPT.svg'
+import fileIconRar from '../../assets/img/ItemRAR.svg'
+import fileIconTxt from '../../assets/img/ItemTXT.svg'
+import fileIconXls from '../../assets/img/ItemXLS.svg'
+import fileIconZip from '../../assets/img/ItemZIP.svg'
 
 export default {
   mixins: [
@@ -66,30 +76,30 @@ export default {
         case 'css':
           return fileIconCss
         case 'csv':
-          return fileIconDefault
+          return fileIconCsv
         case 'doc':
         case 'docx':
-          return fileIconDefault
+          return fileIconDoc
         case 'jpg':
-          return fileIconDefault
+          return fileIconJpg
         case 'js':
-          return fileIconDefault
+          return fileIconJs
         case 'pdf':
           return fileIconPdf
         case 'php':
-          return fileIconDefault
+          return fileIconPhp
         case 'png':
-          return fileIconDefault
+          return fileIconPng
         case 'ppt':
         case 'pptx':
-          return fileIconDefault
+          return fileIconPpt
         case 'rar':
-          return fileIconDefault
+          return fileIconRar
         case 'txt':
-          return fileIconDefault
+          return fileIconTxt
         case 'xls':
         case 'xlsx':
-          return fileIconDefault
+          return fileIconXls
         case 'zip':
           return fileIconZip
         default:
@@ -112,6 +122,17 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      overflow: hidden;
+    }
+
+    .right {
+      .file-icon-wrapper {
+        background-color: $vue-white;
+        padding-right: 20px !important;
+      }
+      .description-wrapper {
+        padding-left: 20px !important;
+      }
     }
 
     .file-wrapper {
@@ -125,7 +146,7 @@ export default {
       .file-icon-wrapper {
         display: flex;
         padding: 20px;
-        padding-right: 0;
+        padding-right: 10px;
         justify-content: center;
 
         .file-icon {
@@ -141,6 +162,7 @@ export default {
       .description-wrapper {
         overflow: hidden;
         padding: 20px;
+        padding-left: 10px;
         display: flex;
         flex-direction: column;
         
