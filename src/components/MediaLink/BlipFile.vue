@@ -3,13 +3,13 @@
     <div :class="'bubble ' + position">
       <a :href="this.uri" class="file-wrapper">
         <div class="file-icon-wrapper">
-          <img class="file-icon" :src="icon"/>
+          <img class="file-icon" :src="type | fileTypeFilter"/>
         </div>
         <div class="description-wrapper">
           <div class="link-description">
-            <span :title="title" class="text big-text" v-text="title"></span>
+            <span :title="title" class="text big-text">{{ title }}</span>
           </div>
-          <span class="text small-text" v-text="sizeInBytes"></span>
+          <span class="text small-text">{{ size | sizeInBytesFilter }}</span>
         </div>
       </a>
     </div>
@@ -44,34 +44,29 @@ export default {
       title: this.document.title,
       uri: this.document.uri,
       type: this.document.type,
-      size: this.document.size,
-      sizeInBytes: '',
-      icon: null
+      size: this.document.size
     }
   },
-  created: function () {
-    this.sizeInBytes = this.sizeInBytesFilter()
-    this.icon = this.fileTypeFilter()
-  },
-  methods: {
-    sizeInBytesFilter: function () {
+  filters: {
+    sizeInBytesFilter: function (size) {
       var SIZES = ['B', 'KB', 'MB', 'GB']
+      console.log(SIZES)
 
-      if (!this.size) {
+      if (!size) {
         return ''
       }
 
-      var log = Math.floor(Math.log(this.size) / Math.log(1024))
-      var number = log === 0 ? this.size : (this.size / (1024 * log)).toFixed(1)
+      var log = Math.floor(Math.log(size) / Math.log(1024))
+      var number = log === 0 ? size : (size / (1024 * log)).toFixed(1)
 
       return number + SIZES[log]
     },
-    fileTypeFilter: function () {
-      if (!this.type) {
+    fileTypeFilter: function (type) {
+      if (!type) {
         return fileIconDefault
       }
 
-      var extension = this.type.substr(this.type.indexOf('/') + 1)
+      var extension = type.substr(type.indexOf('/') + 1)
       switch (extension) {
         case 'css':
           return fileIconCss
