@@ -4,6 +4,7 @@
     <blip-image :document="document" :position="position" :date="date" v-if="document.type.indexOf('image') != -1" :editable="editable" :on-save="save" />
     <blip-audio :document="document" :position="position" :date="date" v-if="document.type.indexOf('audio') != -1" :editable="editable" :on-save="save" />
     <blip-video :document="document" :position="position" :date="date" v-if="document.type.indexOf('video') != -1" :editable="editable" :on-save="save" />
+    <blip-file :document="document" :position="position" :date="date" v-if="document.type.indexOf('application') != -1" :editable="editable" :on-save="save" />
 
     <div :class="'notification ' + position" v-if="date">
       {{ date }}
@@ -16,6 +17,7 @@
 import BlipImage from './MediaLink/Image'
 import BlipAudio from './MediaLink/Audio'
 import BlipVideo from './MediaLink/Video'
+import BlipFile from './MediaLink/BlipFile'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
@@ -26,7 +28,8 @@ export default {
   components: {
     BlipImage,
     BlipAudio,
-    BlipVideo
+    BlipVideo,
+    BlipFile
   }
 }
 </script>
