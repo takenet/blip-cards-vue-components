@@ -165,15 +165,10 @@ export default {
           display: flex;
           flex-direction: column;
           flex-grow: 1;
-          max-height: 76px;
           span {
             overflow: hidden;
             text-overflow: ellipsis;
           }
-        }
-        
-        .big-text {
-          max-height: 38px;
         }
 
         .small-text {
