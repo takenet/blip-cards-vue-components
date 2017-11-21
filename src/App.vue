@@ -36,6 +36,7 @@
         <button class="button"  @click="sendAudio">ENVIAR Audio</button>
         <button class="button" @click="sendVideo">ENVIAR Video</button>
         <button class="button" @click="sendWebLink">ENVIAR WebLink</button>
+        <button class="button" @click="sendFile">ENVIAR Documento</button>
       </div>
 
       <div v-else>
@@ -95,6 +96,10 @@ export default {
     },
     sendWebLink: function () {
       this.json = JSON.stringify({'id': '1', 'to': '553199991111@0mn.io', 'type': 'application/vnd.lime.web-link+json', 'content': {'uri': 'http://limeprotocol.org/content-types.html#web-link', 'target': 'self', 'text': 'Segue documentação do web-link'}})
+      this.send()
+    },
+    sendFile: function () {
+      this.json = JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'application/vnd.lime.media-link+json', 'content': {'uri': 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf', 'title': 'pdf_open_parameters.pdf', 'type': 'application/pdf', 'size': '5540'}})
       this.send()
     }
   },
