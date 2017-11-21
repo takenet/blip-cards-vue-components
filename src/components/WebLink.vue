@@ -1,7 +1,7 @@
 <template>
   <div class="container web-link">
     <div v-if="this.title || this.text" :class="'bubble ' + position">
-      <a :href="this.uri" :target="this.target" class="web-link-wrapper">
+      <span class="link web-link-wrapper" @click="handleWeblink()">
         <img v-if="this.title" class="preview" :src="this.imgPreview">
         <div class="right-column">
           <div class="link-description">
@@ -10,7 +10,7 @@
           </div>
           <span class="text small-text" v-text="this.uri"></span>
         </div>
-      </a>
+      </span>
     </div>
     <div v-else :class="'bubble text-link ' + position">
         <span v-html="this.textLink"></span>
@@ -33,9 +33,8 @@ export default {
     base
   ],
   props: {
-    length: {
-      type: Number,
-      default: 532
+    onClick: {
+      type: Function
     }
   },
   data: function () {
@@ -44,7 +43,7 @@ export default {
       title: this.document.title,
       text: this.document.text,
       uri: this.document.uri,
-      target: this.document.target === 'blank' ? '_blank' : '_self'
+      target: this.document.target || 'callback'
     }
   },
   computed: {
@@ -53,9 +52,6 @@ export default {
     }
   },
   created: function () {
-    this.uri = new URL(this.uri)
-    this.uri = (this.uri.protocol + '//' + this.uri.hostname)
-
     var client = new MetaInspector(this.uri, { timeout: 5000 })
     client.on('fetch', () => {
       if (!this.title && client.title) this.title = client.title
@@ -63,6 +59,15 @@ export default {
       if (!this.imgPreview && client.image) this.imgPreview = client.image
     })
     client.fetch()
+  },
+  methods: {
+    handleWeblink: function () {
+      if (this.target === 'blank') {
+        window.open(this.uri, '_blank')
+      } else {
+        this.onClick(this.uri)
+      }
+    }
   }
 }
 </script>
@@ -74,6 +79,7 @@ export default {
   .web-link .bubble {
     padding: 0;
     height: 100px;
+    overflow: hidden;
 
     &.text-link {
       padding: $bubble-padding;
@@ -100,6 +106,10 @@ export default {
       display: flex;
       flex-direction: row;
       flex-grow: 1;
+
+      &.link {
+        cursor: pointer;
+      }
 
       .preview {
         height: 100px;

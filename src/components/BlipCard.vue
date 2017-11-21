@@ -9,7 +9,7 @@
 
   <blip-select v-else-if="document.type === 'application/vnd.lime.select+json'" :position="position" :document="document.content" :date="date" :on-selected="onSelected" :on-save="save" :editable="editable" />
 
-  <web-link v-else-if="document.type === 'application/vnd.lime.web-link+json'" :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" />
+  <web-link v-else-if="document.type === 'application/vnd.lime.web-link+json'" :position="position" :document="document.content" :date="date" :on-save="save" :editable="editable" :on-click="onSelected"/>
 </template>
 
 <script>

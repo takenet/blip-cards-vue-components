@@ -75,11 +75,11 @@
       <div class="fixed-options" v-if="options">
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index">
-            <span @click="editOption(item, $event)" v-html="item.previewText"></span>
-            <span @click="deleteOption(item)">X</span>
+            <span @click="editOption(item, index, $event)" v-html="item.previewText"></span>
+            <span @click="deleteOption(index)">X</span>
           </li>
         </ul>
-        <div @click="editOption(null, $event)" class="add-button">
+        <div @click="editOption({label: {}, value: {}}, -1, $event)" class="add-button">
           <span>Add Button</span>
         </div>
       </div>
@@ -93,17 +93,17 @@
         </div>
 
         <div class="form-group" v-if="headerTab === 'weblink'">
-          <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.weblink" placeholder="Uri" />
+          <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.label.uri" placeholder="Uri" />
           <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
         </div>
         <div class="form-group" v-if="headerTab === 'weblink'">
-          <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.previewText" placeholder="Text" />
+          <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.label.value" placeholder="Text" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
 
         <div v-if="headerTab === 'plainText'">
           <div class="form-group">
-            <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.previewText" placeholder="Text" />
+            <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.label.value" placeholder="Text" />
             <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
           </div>
 
@@ -135,6 +135,16 @@
 
 import { linkify } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
+const optionSize = 34
+
+let getOptionContent = function (item) {
+  let text = item.label.type === 'application/vnd.lime.web-link+json' ? item.label.value.title || item.label.value.text : item.label.value
+  if (text.length > optionSize) {
+    return text.substring(0, optionSize) + '...'
+  } else {
+    return text
+  }
+}
 
 export default {
   name: 'document-select',
@@ -162,7 +172,7 @@ export default {
       content: this.document.header.value.text,
       aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '1-1',
       previewUri: this.document.header.value.uri,
-      selectedOption: {}
+      selectedOption: { label: {}, value: {} }
     }
   },
   computed: {
@@ -192,20 +202,11 @@ export default {
         return null
       }
 
-      let getOptionContent = function (text) {
-        if (text.length > 34) {
-          return text.substring(0, 34) + '...'
-        } else {
-          return text
-        }
-      }
-
       return this.document.options.map(function (x) {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          previewText: x.label.type === 'application/vnd.lime.web-link+json' ? getOptionContent(x.label.value.title || x.label.value.text) : getOptionContent(x.label.value),
-          weblink: x.label.type === 'application/vnd.lime.web-link+json' ? x.label.value.uri : '',
+          previewText: getOptionContent(x),
           value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
         }
         return opts
@@ -227,20 +228,24 @@ export default {
       }
 
       if (this.onSelected) {
-        this.onSelected(item.previewText, {
-          type: item.value.type,
-          content: item.value.value
+        this.onSelected(item.label.value, {
+          type: item.value.type || 'plain/text',
+          content: item.value.value || item.label.value
         })
       }
     },
     documentSelectSave: function () {
-      this.selectedOption = {}
+      this.selectedOption = { label: {}, value: {} }
+
       var newDocument =
         {
           ...this.document,
           options: this.options.map(function (x) {
             return {
-              label: { type: x.label.type, value: x.previewText },
+              label: {
+                type: x.label.type,
+                value: x.label.type === 'plain/text' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri }
+              },
               value: x.value && x.value.value ? { type: x.value.type, value: JSON.parse(x.value.value) } : null
             }
           })
@@ -252,30 +257,31 @@ export default {
       }
       this.save(newDocument)
     },
-    editOption: function (item, $event) {
+    editOption: function (item, index, $event) {
       this.styleObject = {
         top: $event.layerY + 'px',
         left: $event.layerX + 'px',
         width: '350px'
       }
 
-      if (item) {
-        this.selectedOption = item
-      } else {
-        this.selectedOption = { label: {}, value: {} }
-      }
+      this.selectedOption = item
+      this.selectedOption.index = index
     },
-    deleteOption: function (item) {
-      let index = this.options.indexOf(item)
+    deleteOption: function (index) {
       this.document.options.splice(index, 1)
     },
     saveOption: function () {
-      if (!this.options.includes(this.selectedOption) && this.selectedOption.previewText) {
-        this.selectedOption.label.type = 'text/plain'
+      this.selectedOption.label.type = this.headerTab === 'plainText' ? 'plain/text' : 'application/vnd.lime.web-link+json'
+      this.selectedOption.label.value = this.headerTab === 'plainText' ? this.selectedOption.label.value : { text: this.selectedOption.label.value, uri: this.selectedOption.label.uri }
+      this.selectedOption.previewText = getOptionContent(this.selectedOption)
+
+      if (this.selectedOption.index === -1) {
         this.options.push(this.selectedOption)
+      } else {
+        this.options.splice(this.selectedOption.index, 1, this.selectedOption)
       }
 
-      this.selectedOption = {}
+      this.selectedOption = { label: {}, value: {} }
       this.styleObject = {
         display: 'none'
       }
