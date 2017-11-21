@@ -58,7 +58,7 @@
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index">
             <span @click="editOption(item, index, $event)" v-html="item.text"></span>
-            <span @click="deleteOption(item, index)">X</span>
+            <span @click="deleteOption(index)">X</span>
           </li>
           <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
             <span>Add option</span>
