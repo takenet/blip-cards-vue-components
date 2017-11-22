@@ -92,6 +92,7 @@ export default {
    @import '../styles/variables.scss';
 
    .plain-text .bubble {
-     padding: $bubble-padding
+     padding: $bubble-padding;
+     word-wrap: break-word;
    }
 </style>
