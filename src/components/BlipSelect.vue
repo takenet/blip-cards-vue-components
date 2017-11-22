@@ -70,12 +70,14 @@
         <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
           <span>Add Button</span>
         </div>
+        <div class="form-group">
+          <span v-show="errors.any()" class="help input-error">{{ errors.all() }}</span>
+        </div>
       </div>
     </form>
 
     <div v-bind:style="styleObject" class="modal">
       <form novalidate v-on:submit.prevent class="bubble left" style="float: none">
-
         <div class="tabs">
           <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
         </div>
@@ -89,13 +91,13 @@
           <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
           <div class="line"></div>
 
-          <div v-if="showPayload">
+          <div v-show="showPayload">
             <div class="form-group">
-              <input type="text" name="type" v-validate="'required|mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
+              <input type="text" name="type" v-validate="showPayload ? 'required|mime' : 'mime'"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
               <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
             </div>
             <div class="form-group">
-              <textarea type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+              <textarea type="text" name="value" v-validate="showPayload ? 'required|json' : 'json'" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
               <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
             </div>
           </div>
@@ -159,7 +161,7 @@ export default {
       }
       this.showPayload = false
       this.headerTab = 'plainText'
-      this.selectedOption = { value: {} }
+      this.selectedOption = {}
       this.text = linkify(this.document.text)
       this.hide = this.hideOptions
       this.options = this.document.options.map(function (x) {
@@ -179,7 +181,7 @@ export default {
     },
     cancelOption: function (item) {
       this.errors.clear()
-      this.selectedOption = { value: {} }
+      this.selectedOption = {}
       this.styleObject = {
         display: 'none'
       }
@@ -193,7 +195,7 @@ export default {
         this.options.splice(this.selectedOption.index, 1, this.selectedOption)
       }
 
-      this.selectedOption = { value: {} }
+      this.selectedOption = {}
       this.styleObject = {
         display: 'none'
       }
@@ -206,15 +208,18 @@ export default {
       }
 
       this.selectedOption = _.clone(item)
+      console.log(this.selectedOption)
 
-      if (!this.selectedOption.value) {
-        this.selectedOption.value = {}
+      if (!this.selectedOption.value || !this.selectedOption.type) {
+        this.showPayload = false
+      } else {
+        this.showPayload = true
       }
 
       this.selectedOption.index = index
     },
     selectSave: function () {
-      this.selectedOption = { value: {} }
+      this.selectedOption = {}
       this.styleObject = {
         display: 'none'
       }
