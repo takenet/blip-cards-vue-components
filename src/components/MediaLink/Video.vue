@@ -348,36 +348,8 @@ export default {
       }
 
       .notification {
-      color: $vue-london;
-    }
-
-    .form-group {
-      padding: $bubble-padding;
-      color: $vue-london;
-      .input-error {
-        color: $vue-delete;
+        color: $vue-london;
       }
-      .help {
-        padding: 5px;
-        font-size: 11px;
-      }
-      ::-webkit-input-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      ::-moz-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      :-ms-input-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      :-moz-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-    }
     }
   }
 

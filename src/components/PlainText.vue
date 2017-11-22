@@ -27,11 +27,16 @@
 
   <div class="container plain-text" v-else>
    <div :class="'bubble ' + position">
-      <div class="saveIco" @click="save(text)" :class="{'is-disabled': errors.any() }">
+      <div v-if="errors.any()" class="saveIco" @click="cancel()" >
+        <img :src="closeSvg" />
+      </div>
+      <div v-else class="saveIco" @click="save(text)">
         <img :src="approveSvg" />
       </div>
-      <textarea name="text" class="form-control" v-validate="'required'"  v-model="text" style="width: 100%; min-width: 300px"></textarea>
-      <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
+      <div class="form-group">
+        <textarea name="text" class="form-control" v-validate="'required'"  v-model="text" style="width: 100%; min-width: 300px"></textarea>
+        <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -70,6 +75,13 @@ export default {
     return {
       text: this.document,
       showContent: false
+    }
+  },
+  methods: {
+    cancel: function () {
+      this.text = this.document
+      this.showContent = false
+      this.isEditing = false
     }
   }
 }
