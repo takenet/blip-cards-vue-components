@@ -103,8 +103,33 @@
           <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
         </div>
         <div class="form-group" v-if="headerTab === 'weblink'">
-          <input type="text" name="optionTarget" class="form-control" v-validate="''" v-model="selectedOption.label.value.target" placeholder="Target" />
-          <span v-show="errors.has('optionTarget')" class="help input-error">{{ errors.first('optionTarget') }}</span>
+          <div class="form-check">
+            <div>
+              <span>Target:</span>
+            </div>
+            <div class="form-check-wrapper">
+              <span class="form-check-container">
+                <input type="radio" id="blankOption" class="form-check-input" v-model="selectedOption.label.value.target" value="blank"/>
+                <label class="form-check-label" for="blankOption"><span class="radio">Blank</span></label>
+                <div class="check"></div>
+              </span> <br>
+              <span class="form-check-container">
+                <input type="radio" id="selfOption" class="form-check-input" v-model="selectedOption.label.value.target" value="self"/>
+                <label class="form-check-label" for="selfOption"><span class="radio">Self</span></label>
+                <div class="check"></div>
+              </span><br>
+              <span class="form-check-container">
+                <input type="radio" id="selfCompactOption" class="form-check-input" v-model="selectedOption.label.value.target" value="selfCompact"/>
+                <label class="form-check-label" for="selfCompactOption"><span class="radio">SelfCompact</span></label>
+                <div class="check"></div>
+              </span><br>
+              <span class="form-check-container">
+                <input type="radio" id="selfTallOption" class="form-check-input" v-model="selectedOption.label.value.target" value="selfTall"/>
+                <label class="form-check-label" for="selfTallOption"><span class="radio">SelfTall</span></label>
+                <div class="check"></div>
+              </span>
+            </div>
+          </div>
         </div>
 
         <div v-if="headerTab === 'plainText'">
