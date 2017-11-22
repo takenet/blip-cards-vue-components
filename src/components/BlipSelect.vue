@@ -89,13 +89,13 @@
           <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
           <div class="line"></div>
 
-          <div v-if="this.showPayload">
+          <div v-if="showPayload">
             <div class="form-group">
-              <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
+              <input type="text" name="type" v-validate="'required|mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
               <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
             </div>
             <div class="form-group">
-              <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+              <textarea type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
               <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
             </div>
           </div>
@@ -138,7 +138,7 @@ export default {
       },
       showPayload: false,
       headerTab: 'plainText',
-      selectedOption: {},
+      selectedOption: { value: {} },
       text: linkify(this.document.text),
       hide: this.hideOptions,
       options: this.document.options.map(function (x) {
@@ -159,7 +159,7 @@ export default {
       }
       this.showPayload = false
       this.headerTab = 'plainText'
-      this.selectedOption = {}
+      this.selectedOption = { value: {} }
       this.text = linkify(this.document.text)
       this.hide = this.hideOptions
       this.options = this.document.options.map(function (x) {
@@ -179,7 +179,7 @@ export default {
     },
     cancelOption: function (item) {
       this.errors.clear()
-      this.selectedOption = {}
+      this.selectedOption = { value: {} }
       this.styleObject = {
         display: 'none'
       }
@@ -193,7 +193,7 @@ export default {
         this.options.splice(this.selectedOption.index, 1, this.selectedOption)
       }
 
-      this.selectedOption = {}
+      this.selectedOption = { value: {} }
       this.styleObject = {
         display: 'none'
       }
@@ -206,10 +206,15 @@ export default {
       }
 
       this.selectedOption = _.clone(item)
+
+      if (!this.selectedOption.value) {
+        this.selectedOption.value = {}
+      }
+
       this.selectedOption.index = index
     },
     selectSave: function () {
-      this.selectedOption = {}
+      this.selectedOption = { value: {} }
       this.styleObject = {
         display: 'none'
       }
