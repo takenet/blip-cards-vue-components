@@ -97,7 +97,7 @@
               <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
             </div>
             <div class="form-group">
-              <input type="text" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+              <textarea name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
               <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
             </div>
           </div>
@@ -181,13 +181,13 @@ export default {
     },
     cancelOption: function (item) {
       this.errors.clear()
+      this.$validator.clean()
       this.selectedOption = {}
       this.styleObject = {
         display: 'none'
       }
     },
     saveOption: function () {
-      console.log(this.selectedOption)
       if (this.selectedOption.index === -1) {
         this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.push(this.selectedOption)
@@ -197,6 +197,9 @@ export default {
       }
 
       this.selectedOption = {}
+      this.errors.clear()
+      this.$validator.clean()
+
       this.styleObject = {
         display: 'none'
       }
