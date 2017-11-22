@@ -6,7 +6,7 @@
       </div>
       <div class="header" :id="id" v-if="!isEditing">
         <a :href="document.uri" target="_blank">
-          <div :class="'ratio ratio' + aspect" :style="'background-image: url(' + previewUri + ')'">
+          <div :class="'ratio ratio' + aspect" :style="styleObject">
           </div>
         </a>
 
@@ -72,6 +72,10 @@ export default {
   ],
   data: function () {
     return {
+      styleObject: {
+        'border-radius': this.document.title || this.document.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px',
+        'background-image': 'url(' + this.document.uri + ')'
+      },
       id: guid(),
       title: this.document.title,
       text: this.document.text,
@@ -81,15 +85,14 @@ export default {
     }
   },
   computed: {
-    previewUri: function () {
-      return this.preview ? this.preview : this.image
-    },
     type: function () {
       return mime.lookup(this.image)
     }
   },
   methods: {
     imgSave: function () {
+      this.styleObject['border-radius'] = this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'
+
       this.save({
         ...this.document,
         aspectRatio: this.aspect.replace('-', ':'),
@@ -134,10 +137,6 @@ export default {
 
     .bubble {
       padding: 0;
-    }
-
-    .ratio {
-      border-radius: 13px 13px 13px 2px !important;
     }
 
     .header {
