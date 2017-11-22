@@ -30,7 +30,7 @@
       <div class="saveIco" @click="save(text)" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </div>
-      <textarea name="text" v-validate="'required'"  v-model="text" style="width: 100%; min-width: 300px"></textarea>
+      <textarea name="text" class="form-control" v-validate="'required'"  v-model="text" style="width: 100%; min-width: 300px"></textarea>
       <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
     </div>
   </div>

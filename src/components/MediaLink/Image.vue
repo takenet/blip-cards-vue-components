@@ -142,6 +142,10 @@ export default {
       padding: 0;
     }
 
+    .ratio {
+      border-radius: 13px 13px 13px 2px !important;
+    }
+
     .header {
       img {
         width: 100%;
