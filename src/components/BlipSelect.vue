@@ -222,19 +222,22 @@ export default {
       this.selectedOption.index = index
     },
     selectSave: function () {
-      this.selectedOption = {}
-      this.styleObject = {
-        display: 'none'
-      }
+      this.$validator.validateAll().then((result) => {
+        if (!result) return
+        this.selectedOption = {}
+        this.styleObject = {
+          display: 'none'
+        }
 
-      this.save({
-        ...this.document,
-        text: this.text,
-        options: this.options.map(function (x) {
-          return {
-            ...x,
-            value: x.value ? JSON.parse(x.value) : null
-          }
+        this.save({
+          ...this.document,
+          text: this.text,
+          options: this.options.map(function (x) {
+            return {
+              ...x,
+              value: x.value ? JSON.parse(x.value) : null
+            }
+          })
         })
       })
     },

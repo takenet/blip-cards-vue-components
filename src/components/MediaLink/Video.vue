@@ -187,17 +187,20 @@ export default {
       this.video.load()
     },
     videoSave: function () {
-      this.video = null
-      this.progress = null
-      this.videoPlayerControls = null
-      this.volumeProgress = null
-      this.volumeSliderWrapper = null
-      this.videoPlayerWrapper = null
-      this.animation = null
-      this.save({
-        ...this.document,
-        uri: this.videoUri,
-        type: mime.lookup(this.videoUri)
+      this.$validator.validateAll().then((result) => {
+        if (!result) return
+        this.video = null
+        this.progress = null
+        this.videoPlayerControls = null
+        this.volumeProgress = null
+        this.volumeSliderWrapper = null
+        this.videoPlayerWrapper = null
+        this.animation = null
+        this.save({
+          ...this.document,
+          uri: this.videoUri,
+          type: mime.lookup(this.videoUri)
+        })
       })
     },
     videoCancel: function () {

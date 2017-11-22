@@ -93,12 +93,15 @@ export default {
       this.audio.load()
     },
     audioSave: function () {
-      this.progress = null
-      this.initAudio(this.audioUri)
-      this.save({
-        ...this.document,
-        uri: this.audioUri,
-        type: mime.lookup(this.audioUri)
+      this.$validator.validateAll().then((result) => {
+        if (!result) return
+        this.progress = null
+        this.initAudio(this.audioUri)
+        this.save({
+          ...this.document,
+          uri: this.audioUri,
+          type: mime.lookup(this.audioUri)
+        })
       })
     },
     audioCancel: function () {

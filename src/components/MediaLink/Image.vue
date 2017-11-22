@@ -91,16 +91,19 @@ export default {
   },
   methods: {
     imgSave: function () {
-      this.styleObject['border-radius'] = this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'
+      this.$validator.validateAll().then((result) => {
+        if (!result) return
+        this.styleObject['border-radius'] = this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'
 
-      this.save({
-        ...this.document,
-        aspectRatio: this.aspect.replace('-', ':'),
-        title: this.title,
-        text: this.text,
-        previewUri: this.preview,
-        uri: this.image,
-        type: this.type
+        this.save({
+          ...this.document,
+          aspectRatio: this.aspect.replace('-', ':'),
+          title: this.title,
+          text: this.text,
+          previewUri: this.preview,
+          uri: this.image,
+          type: this.type
+        })
       })
     },
     imgCancel: function () {
