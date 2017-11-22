@@ -79,7 +79,7 @@
             <span @click="deleteOption(index)">X</span>
           </li>
         </ul>
-        <div @click="editOption({label: {}, value: {}}, -1, $event)" class="add-button">
+        <div @click="editOption({label: {}, value: {}}, options.length, $event, true)" class="add-button">
           <span>Add Button</span>
         </div>
       </div>
@@ -112,11 +112,11 @@
 
           <div v-if="this.showPayload">
             <div class="form-group">
-              <input type="text" name="type" v-validate="'mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
+              <input type="text" name="type" v-validate="'required|mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
               <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
             </div>
             <div class="form-group">
-              <textarea type="text" name="value" v-validate="'json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+              <textarea type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
               <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
             </div>
           </div>
@@ -134,6 +134,7 @@
 <script>
 
 import { linkify } from '../utils'
+import _ from 'lodash'
 import { default as base } from '../mixins/baseComponent.js'
 const optionSize = 34
 
@@ -172,7 +173,16 @@ export default {
       content: this.document.header.value.text,
       aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '1-1',
       previewUri: this.document.header.value.uri,
-      selectedOption: { label: {}, value: {} }
+      selectedOption: { label: {}, value: {} },
+      options: this.document.options.map(function (x) {
+        let opts = {
+          ...x,
+          isLink: x.label.type === 'application/vnd.lime.web-link+json',
+          value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
+        }
+        opts.previewText = getOptionContent(opts)
+        return opts
+      })
     }
   },
   computed: {
@@ -196,21 +206,6 @@ export default {
     },
     hasPreview: function () {
       return this.content && this.content.length > this.length
-    },
-    options: function () {
-      if (!this.document.options) {
-        return null
-      }
-
-      return this.document.options.map(function (x) {
-        let opts = {
-          ...x,
-          isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
-        }
-        opts.previewText = getOptionContent(opts)
-        return opts
-      })
     }
   },
   methods: {
@@ -271,13 +266,14 @@ export default {
         width: '350px'
       }
 
-      this.selectedOption = item
+      this.selectedOption = _.clone(item)
       this.selectedOption.index = index
+
       this.showPayload = typeof this.selectedOption.value.type === 'string'
       this.headerTab = this.selectedOption.label.type === 'application/vnd.lime.web-link+json' ? 'weblink' : 'plainText'
     },
     deleteOption: function (index) {
-      this.document.options.splice(index, 1)
+      this.options.splice(index, 1)
     },
     saveOption: function () {
       if (this.headerTab === 'weblink') {
@@ -292,7 +288,7 @@ export default {
       this.selectedOption.label.value = this.selectedOption.label.value
       this.selectedOption.previewText = getOptionContent(this.selectedOption)
 
-      if (this.selectedOption.index === -1) {
+      if (this.selectedOption.isNew) {
         this.options.push(this.selectedOption)
       } else {
         this.options.splice(this.selectedOption.index, 1, this.selectedOption)
