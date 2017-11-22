@@ -70,9 +70,6 @@
         <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
           <span>Add Button</span>
         </div>
-        <div class="form-group">
-          <span v-show="errors.any()" class="help input-error">{{ errors.all() }}</span>
-        </div>
       </div>
     </form>
 
