@@ -40,7 +40,6 @@ export default {
   },
   methods: {
     saveCard: function (document) {
-      console.log('savecard')
       this.editableDocument.content = document
       this.save(this.editableDocument)
     }
