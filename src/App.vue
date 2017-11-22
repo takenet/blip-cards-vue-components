@@ -47,7 +47,7 @@
     </div>
 
     <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px;'">
-      <div v-for="(item, index) in documents">
+      <div v-for="(item, index) in documents" v-bind:key="index">
         <blip-card :position="item.position" :date="item.date" :on-selected="teste" :hide-options="false" :document="item.document" :on-save="save" :editable="true" />
       </div>
       <div style="clear: both"></div>
