@@ -246,37 +246,42 @@ export default {
         opts.previewText = getOptionContent(opts)
         return opts
       })
+      this.headerTab = null
       this.styleObject = {
         display: 'none'
       }
       this.isEditing = false
     },
     documentSelectSave: function () {
-      this.selectedOption = { label: {}, value: {} }
-
-      var newDocument =
-        {
-          ...this.document,
-          options: this.options.map(function (x) {
-            return {
-              label: {
-                type: x.label.type,
-                value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri }
-              },
-              value: x.value && x.value.value ? { type: x.value.type, value: JSON.parse(x.value.value) } : null
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.selectedOption = { label: {}, value: {} }
+          var newDocument =
+            {
+              ...this.document,
+              options: this.options.map(function (x) {
+                return {
+                  label: {
+                    type: x.label.type,
+                    value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri }
+                  },
+                  value: x.value && x.value.value ? { type: x.value.type, value: JSON.parse(x.value.value) } : null
+                }
+              })
             }
-          })
-        }
-      newDocument.header.value.title = this.title
-      newDocument.header.value.text = this.content
-      newDocument.header.value.type = this.type
-      newDocument.header.value.aspectRatio = this.aspect.replace('-', ':')
-      newDocument.header.value.uri = this.previewUri
+          newDocument.header.value.title = this.title
+          newDocument.header.value.text = this.content
+          newDocument.header.value.type = this.type
+          newDocument.header.value.aspectRatio = this.aspect.replace('-', ':')
+          newDocument.header.value.uri = this.previewUri
 
-      this.styleObject = {
-        display: 'none'
-      }
-      this.save(newDocument)
+          this.headerTab = null
+          this.styleObject = {
+            display: 'none'
+          }
+          this.save(newDocument)
+        }
+      })
     },
     editOption: function (item, index, $event) {
       this.styleObject = {
