@@ -22,8 +22,7 @@
       <div class="fixed-options" v-if="options">
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
-            <span v-if="!item.isLink" v-html="item.previewText"></span>
-            <a v-if="item.isLink" :href="item.label.value.uri" target="_blank" v-html="item.previewText"></a>
+            <span v-html="item.previewText"></span>
           </li>
         </ul>
       </div>
@@ -96,15 +95,15 @@
         </div>
 
         <div class="form-group" v-if="headerTab === 'weblink'">
-          <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.label.value.uri" placeholder="Uri" />
-          <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
-        </div>
-        <div class="form-group" v-if="headerTab === 'weblink'">
           <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.text" placeholder="Text" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
         <div class="form-group" v-if="headerTab === 'weblink'">
-          <input type="text" name="optionTarget" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.target" placeholder="Target" />
+          <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.label.value.uri" placeholder="Uri" />
+          <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
+        </div>
+        <div class="form-group" v-if="headerTab === 'weblink'">
+          <input type="text" name="optionTarget" class="form-control" v-validate="''" v-model="selectedOption.label.value.target" placeholder="Target" />
           <span v-show="errors.has('optionTarget')" class="help input-error">{{ errors.first('optionTarget') }}</span>
         </div>
 
@@ -131,7 +130,7 @@
 
         <div class="form-group">
           <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
-          <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Save</button>
+          <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Apply</button>
         </div>
       </form>
     </div>
@@ -167,7 +166,11 @@ export default {
     },
     onSelected: {
       type: Function
+    },
+    onOpenLink: {
+      type: Function
     }
+
   },
   data: function () {
     return {
@@ -211,10 +214,11 @@ export default {
     setTab: function (name) {
       this.headerTab = name
       if (this.headerTab === 'weblink' && typeof this.selectedOption.label.value !== 'object') {
-        this.selectedOption.label.value = { text: this.selectedOption.label.value, uri: this.selectedOption.LinkUri, target: '' }
+        this.selectedOption.label.value = { text: this.selectedOption.label.value, uri: this.selectedOption.LinkUri, target: this.selectedOption.LinkTarget }
       }
       if (this.headerTab === 'plainText' && typeof this.selectedOption.label.value !== 'string') {
         this.selectedOption.LinkUri = this.selectedOption.label.value.uri
+        this.selectedOption.LinkTarget = this.selectedOption.label.value.target
         this.selectedOption.label.value = this.selectedOption.label.value.text
       }
     },
@@ -223,8 +227,12 @@ export default {
     },
     select: function (item) {
       if (item.isLink) {
-        let win = window.open(item.label.value.uri, '_blank')
-        win.focus()
+        if (item.label.value.target === 'blank' || item.label.value.target === '' || item.label.value.target === undefined) {
+          let win = window.open(item.label.value.uri, '_blank')
+          win.focus()
+        } else if (this.onOpenLink) {
+          this.onOpenLink(item.label.value.uri, item.label.value.target)
+        }
         return
       }
 

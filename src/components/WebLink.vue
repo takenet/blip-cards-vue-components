@@ -33,7 +33,7 @@ export default {
     base
   ],
   props: {
-    onClick: {
+    onOpenLink: {
       type: Function
     }
   },
@@ -43,7 +43,7 @@ export default {
       title: this.document.title,
       text: this.document.text,
       uri: this.document.uri,
-      target: this.document.target || 'callback'
+      target: this.document.target || 'blank'
     }
   },
   computed: {
@@ -65,7 +65,7 @@ export default {
       if (this.target === 'blank') {
         window.open(this.uri, '_blank')
       } else {
-        this.onClick(this.uri)
+        this.onOpenLink(this.uri, this.target)
       }
     }
   }
