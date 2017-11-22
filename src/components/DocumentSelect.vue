@@ -103,6 +103,10 @@
           <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.text" placeholder="Text" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
+        <div class="form-group" v-if="headerTab === 'weblink'">
+          <input type="text" name="optionTarget" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.target" placeholder="Target" />
+          <span v-show="errors.has('optionTarget')" class="help input-error">{{ errors.first('optionTarget') }}</span>
+        </div>
 
         <div v-if="headerTab === 'plainText'">
           <div class="form-group">
@@ -206,10 +210,10 @@ export default {
   methods: {
     setTab: function (name) {
       this.headerTab = name
-      if (this.headerTab === 'weblink' && typeof this.selectedOption.label.value === 'string') {
-        this.selectedOption.label.value = { text: this.selectedOption.label.value, uri: this.selectedOption.LinkUri }
+      if (this.headerTab === 'weblink' && typeof this.selectedOption.label.value !== 'object') {
+        this.selectedOption.label.value = { text: this.selectedOption.label.value, uri: this.selectedOption.LinkUri, target: '' }
       }
-      if (this.headerTab === 'plainText' && typeof this.selectedOption.label.value === 'object') {
+      if (this.headerTab === 'plainText' && typeof this.selectedOption.label.value !== 'string') {
         this.selectedOption.LinkUri = this.selectedOption.label.value.uri
         this.selectedOption.label.value = this.selectedOption.label.value.text
       }
@@ -263,7 +267,7 @@ export default {
               return {
                 label: {
                   type: x.label.type,
-                  value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri }
+                  value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri, target: x.label.value.target }
                 },
                 value: x.value && x.value.value ? { type: x.value.type, value: JSON.parse(x.value.value) } : null
               }
