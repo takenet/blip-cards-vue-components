@@ -44,7 +44,7 @@
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
-            <input type="text" name="audio" class="form-control" v-model="editAudioUri" placeholder="File URL" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
+            <input type="text" name="audio" class="form-control" v-model="audioUri" placeholder="File URL" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
             <span v-if="errors.has('audio')" class="help input-error">{{ errors.first('audio') }}</span>
           </div>
         </form>
@@ -64,7 +64,6 @@ export default {
   data: function () {
     return {
       audioUri: this.document.uri,
-      editAudioUri: this.document.uri,
       isPlaying: false,
       audio: Audio,
       currentTime: 0,
@@ -95,7 +94,6 @@ export default {
     },
     audioSave: function () {
       this.progress = null
-      this.audioUri = this.editAudioUri
       this.initAudio(this.audioUri)
       this.save({
         ...this.document,
@@ -105,7 +103,7 @@ export default {
     },
     audioCancel: function () {
       this.progress = null
-      this.editAudioUri = this.audioUri
+      this.audioUri = this.document.uri
       this.initAudio(this.audioUri)
       this.isEditing = false
     },
