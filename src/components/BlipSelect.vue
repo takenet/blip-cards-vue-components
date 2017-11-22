@@ -212,7 +212,6 @@ export default {
       }
 
       this.selectedOption = _.clone(item)
-      console.log(this.selectedOption)
 
       if (!this.selectedOption.value || !this.selectedOption.type) {
         this.showPayload = false

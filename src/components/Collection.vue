@@ -4,8 +4,16 @@
     <div :class="'slideshow-container ' + position" :id="id">
       <div class="slideshow-list">
         <div class="slideshow-track">
-          <div v-for="(item, index) in document.items" v-bind:key="index">
+          <div v-for="(item, index) in items" v-bind:key="index">
             <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :editable="editable" :on-save="collectionSave" />
+          </div>
+          <div v-if="isEditing">
+            <document-select :style="styleObject" v-if="isEditing" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
+              :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" />
+          </div>
+          <div v-if="editable" @click="isEditing = true">
+            <div :class="'collection-editable slide-item'" :style="styleObject">
+            </div>
           </div>
         </div>
       </div>
@@ -38,6 +46,8 @@
 import { guid } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
 
+let newCollection = {'header': {'type': 'application/vnd.lime.media-link+json', 'value': {'title': '', 'text': '', 'type': '', 'uri': '', 'aspectRatio': ''}}, 'options': []}
+
 export default {
   name: 'collection',
   mixins: [
@@ -64,7 +74,10 @@ export default {
       elementsWidth: 0,
       elementsLength: 0,
       showPrev: false,
-      showNext: false
+      showNext: false,
+      items: this.document.items,
+      styleObject: {},
+      newDocumentSelect: newCollection
     }
   },
   mounted: function () {
@@ -86,10 +99,17 @@ export default {
         }
       }
 
+      this.styleObject.width = this.elementsWidth + 'px'
       this.showSlides(this.slideIndex)
     }
   },
   methods: {
+    addToCollection: function (document) {
+      console.log(document)
+      this.isEditing = false
+      this.newDocumentSelect = newCollection
+      this.items.push(document)
+    },
     collectionSave: function (document) {
       console.log(document)
     },
@@ -107,7 +127,7 @@ export default {
         this.showPrev = false
         trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
       } else {
-        let margin = this.elementsWidth === this.width ? 15 : 45
+        let margin = this.elementsWidth === this.width ? 15 : -15
         trackElement.style.transform = 'translate3d(' + (this.elementsWidth * (n - 1) - margin) * -1 + 'px, 0px, 0px)'
       }
 
@@ -121,6 +141,11 @@ export default {
 
 <style lang="scss">
    @import '../styles/variables.scss';
+
+   .collection-editable {
+     height: 100%;
+     border: 1px dashed $vue-time;
+   }
 
     .collection {
     .slideshow-container {
@@ -141,7 +166,7 @@ export default {
         opacity: 1;
         width: 30000px;
         transform: translate3d(0px, 0px, 0px);
-        display: block;
+        display: flex;
         top: 0;
         left: 0;
       }

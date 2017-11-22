@@ -64,7 +64,7 @@
             </span>
           </div>
         </div>
-        <div class="form-group" v-if="document.header.value.title || document.header.value.text">
+        <div class="form-group">
           <input type="title" name="title" :class="{'input-error': errors.has('title') }" v-validate="'required'" class="form-control" v-model="title" />
           <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
           <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" />
@@ -110,7 +110,7 @@
           <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
           <div class="line"></div>
 
-          <div v-if="this.showPayload">
+          <div v-if="showPayload">
             <div class="form-group">
               <input type="text" name="type" v-validate="'required|mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
               <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
@@ -136,6 +136,7 @@
 import { linkify } from '../utils'
 import _ from 'lodash'
 import { default as base } from '../mixins/baseComponent.js'
+import mime from 'mime-types'
 const optionSize = 34
 
 let getOptionContent = function (item) {
@@ -171,7 +172,7 @@ export default {
       showContent: false,
       title: this.document.header.value.title,
       content: this.document.header.value.text,
-      aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '1-1',
+      aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1',
       previewUri: this.document.header.value.uri,
       selectedOption: { label: {}, value: {} },
       options: this.document.options.map(function (x) {
@@ -186,6 +187,9 @@ export default {
     }
   },
   computed: {
+    type: function () {
+      return mime.lookup(this.previewUri)
+    },
     previewTitle: function () {
       if (this.title && this.title.length > this.length) {
         return linkify(this.title.substring(0, this.length)) + '...'
@@ -254,6 +258,10 @@ export default {
         }
       newDocument.header.value.title = this.title
       newDocument.header.value.text = this.content
+      newDocument.header.value.type = this.type
+      newDocument.header.value.aspectRatio = this.aspect.replace('-', ':')
+      newDocument.header.value.uri = this.previewUri
+
       this.styleObject = {
         display: 'none'
       }
