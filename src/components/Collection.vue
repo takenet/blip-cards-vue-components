@@ -5,10 +5,11 @@
       <div class="slideshow-list">
         <div class="slideshow-track">
           <div v-for="(item, index) in items" v-bind:key="index">
-            <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :editable="editable" :on-save="collectionSave" />
+            <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item"
+            :editable="editable" :on-save="collectionSave" :style="styleObject" />
           </div>
           <div v-if="isEditing">
-            <document-select :style="styleObject" v-if="isEditing" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
+            <document-select :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
               :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" />
           </div>
           <div v-if="editable" @click="isEditing = true">
@@ -45,6 +46,7 @@
 
 import { guid } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
+import _ from 'lodash'
 
 let newCollection = {'header': {'type': 'application/vnd.lime.media-link+json', 'value': {'title': '', 'text': '', 'type': '', 'uri': '', 'aspectRatio': ''}}, 'options': []}
 
@@ -66,6 +68,14 @@ export default {
       type: Function
     }
   },
+  computed: {
+    showPrev: function () {
+      return this.slideIndex !== 1
+    },
+    showNext: function () {
+      return this.slideIndex !== this.items.length
+    }
+  },
   data: function () {
     return {
       id: guid(),
@@ -73,11 +83,9 @@ export default {
       width: 0,
       elementsWidth: 0,
       elementsLength: 0,
-      showPrev: false,
-      showNext: false,
       items: this.document.items,
       styleObject: {},
-      newDocumentSelect: newCollection
+      newDocumentSelect: _.cloneDeep(newCollection)
     }
   },
   mounted: function () {
@@ -99,16 +107,19 @@ export default {
         }
       }
 
-      this.styleObject.width = this.elementsWidth + 'px'
+      this.styleObject['width'] = this.elementsWidth + 'px'
       this.showSlides(this.slideIndex)
     }
   },
   methods: {
     addToCollection: function (document) {
-      console.log(document)
-      this.isEditing = false
-      this.newDocumentSelect = newCollection
       this.items.push(document)
+      this.newDocumentSelect = _.cloneDeep(newCollection)
+
+      this.save({
+        ...this.document,
+        items: this.items
+      })
     },
     collectionSave: function (document) {
       console.log(document)
@@ -117,22 +128,14 @@ export default {
       this.showSlides(this.slideIndex += n)
     },
     showSlides: function (n) {
-      var element = document.getElementById(this.id)
+      var element = this.$el
       let trackElement = element.querySelector('.slideshow-track')
 
-      this.showPrev = true
-      this.showNext = true
-
       if (n === 1) {
-        this.showPrev = false
         trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
       } else {
         let margin = this.elementsWidth === this.width ? 15 : -15
         trackElement.style.transform = 'translate3d(' + (this.elementsWidth * (n - 1) - margin) * -1 + 'px, 0px, 0px)'
-      }
-
-      if (n === this.elementsLength) {
-        this.showNext = false
       }
     }
   }
