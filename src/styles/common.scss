@@ -194,7 +194,7 @@ a {
 .saveIco {
   z-index: 1;
   background-color: $vue-light-blip;
-  padding: 3px;
+  padding: 5px;
   border-radius: 50%;
 	width: 30px;
   height: 30px;
@@ -212,6 +212,10 @@ a {
 .editIco img {
   display: inline-block;
   vertical-align: middle;
+}
+
+.closeIco {
+  right: 17px;
 }
 
 .container:hover > .editIco {
