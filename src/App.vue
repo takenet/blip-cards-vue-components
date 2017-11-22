@@ -48,7 +48,7 @@
 
     <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px;'">
       <div v-for="(item, index) in documents" v-bind:key="index">
-        <blip-card :position="item.position" :date="item.date" :on-selected="teste" :hide-options="false" :document="item.document" :on-save="save" :editable="true" />
+        <blip-card :position="item.position" :date="item.date" :on-selected="teste" :hide-options="false" :document="item.document" :on-save="save" :editable="true" :on-open-link="teste"/>
       </div>
       <div style="clear: both"></div>
     </div>
@@ -107,7 +107,7 @@ export default {
     return {
       documents: [],
       json: JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'text/plain', 'content': 'Seja bem-vindo ao nosso serviço! Como podemos te ajudar?'}),
-      width: 700,
+      width: 400,
       position: 'left',
       isSample: 'true',
       date: '08:32 PM',
