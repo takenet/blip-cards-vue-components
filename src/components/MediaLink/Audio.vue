@@ -37,10 +37,10 @@
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
-          <div v-if="errors.any()" class="saveIco" @click="audioCancel()" >
+          <div class="saveIco closeIco" @click="audioCancel()" >
             <img :src="closeSvg" />
           </div>
-          <div v-else class="saveIco" @click="audioSave()">
+          <div class="saveIco" @click="audioSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
           </div>
           <div class="form-group">

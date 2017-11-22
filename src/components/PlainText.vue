@@ -27,10 +27,10 @@
 
   <div class="container plain-text" v-else>
    <div :class="'bubble ' + position">
-      <div v-if="errors.any()" class="saveIco" @click="cancel()" >
+      <div class="saveIco closeIco" @click="cancel()" >
         <img :src="closeSvg" />
       </div>
-      <div v-else class="saveIco" @click="save(text)">
+      <div class="saveIco" @click="save(text)" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </div>
       <div class="form-group">

@@ -46,10 +46,10 @@
 
   <div class="container select" v-else>
     <form class="bubble left" novalidate v-on:submit.prevent>
-      <div v-if="errors.any()" class="saveIco" @click="cancel()" >
+      <div class="saveIco closeIco" @click="cancel()" >
         <img :src="closeSvg" />
       </div>
-      <div v-else class="saveIco" @click="selectSave(text)">
+      <div class="saveIco" :class="{'is-disabled': errors.any() }" @click="selectSave(text)">
         <img :src="approveSvg" />
       </div>
       <div class="form-group">

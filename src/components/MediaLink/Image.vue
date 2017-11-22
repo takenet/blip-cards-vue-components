@@ -18,10 +18,10 @@
 
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <div v-if="errors.any()" class="saveIco" @click="imgCancel()" >
+          <div class="saveIco closeIco" @click="imgCancel()" >
             <img :src="closeSvg" />
           </div>
-          <div v-else class="saveIco" @click="imgSave()">
+          <div class="saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
           </div>
           <div class="form-group">

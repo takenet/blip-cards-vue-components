@@ -82,7 +82,7 @@
             <span @click="deleteOption(index)">X</span>
           </li>
         </ul>
-        <div @click="editOption({label: {}, value: {}}, options.length, $event, true)" class="add-button">
+        <div @click="editOption({label: {}, value: {}}, -1, $event, true)" class="add-button">
           <span>Add Button</span>
         </div>
       </div>
@@ -285,7 +285,7 @@ export default {
         width: '350px'
       }
 
-      this.selectedOption = _.clone(item)
+      this.selectedOption = _.cloneDeep(item)
       this.selectedOption.index = index
 
       this.showPayload = typeof this.selectedOption.value.type === 'string'
@@ -307,7 +307,7 @@ export default {
       this.selectedOption.label.value = this.selectedOption.label.value
       this.selectedOption.previewText = getOptionContent(this.selectedOption)
 
-      if (this.selectedOption.isNew) {
+      if (this.selectedOption.index === -1) {
         this.options.push(this.selectedOption)
       } else {
         this.options.splice(this.selectedOption.index, 1, this.selectedOption)
