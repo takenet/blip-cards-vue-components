@@ -93,10 +93,10 @@
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
-          <div v-if="errors.any()" class="saveIco" @click="videoCancel()" >
+          <div class="saveIco closeIco" @click="videoCancel()" >
             <img :src="closeSvg" />
           </div>
-          <div v-else class="saveIco" @click="videoSave()">
+          <div class="saveIco" @click="videoSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
