@@ -70,6 +70,9 @@
         <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
           <span>Add Button</span>
         </div>
+        <div class="form-group">
+          <span v-show="errors.any()" class="help input-error">{{ errors.all() }}</span>
+        </div>
       </div>
     </form>
 
@@ -90,11 +93,11 @@
 
           <div v-show="showPayload">
             <div class="form-group">
-              <input type="text" name="type" v-validate="showPayload ? 'required|mime' : 'mime'"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
+              <input type="text" name="type" v-validate="showPayload ? 'required|mime' : ''"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
               <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
             </div>
             <div class="form-group">
-              <textarea type="text" name="value" v-validate="showPayload ? 'required|json' : 'json'" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+              <input type="text" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
               <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
             </div>
           </div>
@@ -184,6 +187,7 @@ export default {
       }
     },
     saveOption: function () {
+      console.log(this.selectedOption)
       if (this.selectedOption.index === -1) {
         this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.push(this.selectedOption)
