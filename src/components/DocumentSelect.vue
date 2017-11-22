@@ -39,6 +39,9 @@
       <div class="saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </div>
+      <div class="saveIco closeIco" @click="documentSelectCancel()">
+        <img :src="closeSvg" />
+      </div>
       <div class="header">
         <div class="form-group">
           <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="previewUri" placeholder="Image Uri" />
@@ -190,18 +193,6 @@ export default {
     type: function () {
       return mime.lookup(this.previewUri)
     },
-    previewTitle: function () {
-      if (this.title && this.title.length > this.length) {
-        return linkify(this.title.substring(0, this.length)) + '...'
-      }
-      return this.title ? linkify(this.title) : ''
-    },
-    previewWebLink: function () {
-      if (this.title && this.title.length > this.length) {
-        return linkify(this.title.substring(0, this.length)) + '...'
-      }
-      return this.title ? linkify(this.title) : ''
-    },
     previewContent: function () {
       if (this.content && this.content.length > this.length) {
         return linkify(this.content.substring(0, this.length)) + '...'
@@ -239,6 +230,26 @@ export default {
           content: item.value.value || item.label.value
         })
       }
+    },
+    documentSelectCancel: function () {
+      this.selectedOption = {}
+      this.title = this.document.header.value.title
+      this.content = this.document.header.value.text
+      this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '1-1'
+      this.previewUri = this.document.header.value.uri
+      this.options = this.document.options.map(function (x) {
+        let opts = {
+          ...x,
+          isLink: x.label.type === 'application/vnd.lime.web-link+json',
+          value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
+        }
+        opts.previewText = getOptionContent(opts)
+        return opts
+      })
+      this.styleObject = {
+        display: 'none'
+      }
+      this.isEditing = false
     },
     documentSelectSave: function () {
       this.selectedOption = { label: {}, value: {} }
