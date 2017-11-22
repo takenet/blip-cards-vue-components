@@ -25,7 +25,7 @@
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
-            <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="editImage" placeholder="Image Uri" />
+            <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="image" placeholder="Image Uri" />
             <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
             <div class="upload-intructions">
               <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
@@ -37,22 +37,22 @@
             </div>
             <div class="form-check-wrapper">
               <span class="form-check-container">
-                <input type="radio" name="aspect-selector" id="1-1" class="form-check-input" v-model="editAspect" value="1-1"/>
+                <input type="radio" name="aspect-selector" id="1-1" class="form-check-input" v-model="aspect" value="1-1"/>
                 <label class="form-check-label" for="1-1"><span class="radio">1:1</span></label>
                 <div class="check"></div>
               </span>
               <span class="form-check-container">
-                <input type="radio" name="aspect-selector" id="2-1" class="form-check-input" v-model="editAspect" value="2-1"/>
+                <input type="radio" name="aspect-selector" id="2-1" class="form-check-input" v-model="aspect" value="2-1"/>
                 <label class="form-check-label" for="2-1"><span class="radio">2:1</span></label>
                 <div class="check"></div>
               </span>
             </div>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" v-model="editTitle" placeholder="Title" />
+            <input type="text" class="form-control" v-model="title" placeholder="Title" />
           </div>
           <div class="form-group">
-            <textarea v-model="editText" class="form-control" placeholder="Text" />
+            <textarea v-model="text" class="form-control" placeholder="Text" />
           </div>
         </form>
       </div>
@@ -77,11 +77,7 @@ export default {
       text: this.document.text,
       preview: this.document.previewUri,
       image: this.document.uri,
-      aspect: this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1',
-      editTitle: this.document.title,
-      editText: this.document.text,
-      editImage: this.document.uri,
-      editAspect: this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
+      aspect: this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
     }
   },
   computed: {
@@ -94,12 +90,9 @@ export default {
   },
   methods: {
     imgSave: function () {
-      this.title = this.editTitle
-      this.text = this.editText
-      this.image = this.editImage
-      this.aspect = this.editAspect
       this.save({
         ...this.document,
+        aspectRatio: this.aspect.replace('-', ':'),
         title: this.title,
         text: this.text,
         previewUri: this.preview,
@@ -108,11 +101,12 @@ export default {
       })
     },
     imgCancel: function () {
-      this.editTitle = this.title
-      this.editText = this.text
-      this.editImage = this.image
-      this.editAspect = this.aspect
       this.isEditing = false
+      this.title = this.document.title
+      this.text = this.document.text
+      this.preview = this.document.previewUri
+      this.image = this.document.uri
+      this.aspect = this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
     }
   },
   mounted: function () {
