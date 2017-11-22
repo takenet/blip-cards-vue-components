@@ -46,7 +46,10 @@
 
   <div class="container select" v-else>
     <form class="bubble left" novalidate v-on:submit.prevent>
-      <div class="saveIco" @click="selectSave()" :class="{'is-disabled': errors.any() }">
+      <div v-if="errors.any()" class="saveIco" @click="cancel()" >
+        <img :src="closeSvg" />
+      </div>
+      <div v-else class="saveIco" @click="selectSave(text)">
         <img :src="approveSvg" />
       </div>
       <div class="form-group">
@@ -149,6 +152,25 @@ export default {
     }
   },
   methods: {
+    cancel: function () {
+      this.isEditing = false
+      this.styleObject = {
+        display: 'none'
+      }
+      this.showPayload = false
+      this.headerTab = 'plainText'
+      this.selectedOption = {}
+      this.text = linkify(this.document.text)
+      this.hide = this.hideOptions
+      this.options = this.document.options.map(function (x) {
+        let opts = {
+          ...x,
+          previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text,
+          value: x.value ? JSON.stringify(x.value) : ''
+        }
+        return opts
+      })
+    },
     setTab: function (name) {
       this.headerTab = name
     },
