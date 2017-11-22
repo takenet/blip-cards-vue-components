@@ -103,33 +103,13 @@
           <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
         </div>
         <div class="form-group" v-if="headerTab === 'weblink'">
-          <div class="form-check">
-            <div>
-              <span>Target:</span>
-            </div>
-            <div class="form-check-wrapper">
-              <span class="form-check-container">
-                <input type="radio" id="blankOption" class="form-check-input" v-model="selectedOption.label.value.target" value="blank"/>
-                <label class="form-check-label" for="blankOption"><span class="radio">Blank</span></label>
-                <div class="check"></div>
-              </span> <br>
-              <span class="form-check-container">
-                <input type="radio" id="selfOption" class="form-check-input" v-model="selectedOption.label.value.target" value="self"/>
-                <label class="form-check-label" for="selfOption"><span class="radio">Self</span></label>
-                <div class="check"></div>
-              </span><br>
-              <span class="form-check-container">
-                <input type="radio" id="selfCompactOption" class="form-check-input" v-model="selectedOption.label.value.target" value="selfCompact"/>
-                <label class="form-check-label" for="selfCompactOption"><span class="radio">SelfCompact</span></label>
-                <div class="check"></div>
-              </span><br>
-              <span class="form-check-container">
-                <input type="radio" id="selfTallOption" class="form-check-input" v-model="selectedOption.label.value.target" value="selfTall"/>
-                <label class="form-check-label" for="selfTallOption"><span class="radio">SelfTall</span></label>
-                <div class="check"></div>
-              </span>
-            </div>
-          </div>
+          <select v-model="selectedOption.label.value.target" class="form-control">
+            <option disabled value="">Target</option>
+            <option value='blank'>Blank</option>
+            <option value='self'>Self</option>
+            <option value='selfCompact'>SelfCompact</option>
+            <option value='selfTall'>SelfTall</option>
+          </select>
         </div>
 
         <div v-if="headerTab === 'plainText'">
