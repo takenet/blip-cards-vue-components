@@ -9,8 +9,8 @@
         </div>
 
         <div class="title" v-if="document.header.value.title || document.header.value.text">
-            <strong v-if="document.header.value.title" v-html="document.header.value.title"></strong>
-            <span v-if="previewContent && !showContent" v-html="previewContent"></span>
+            <strong class="hide-overflow" v-if="document.header.value.title" v-html="document.header.value.title"></strong>
+            <span class="hide-overflow" v-if="previewContent && !showContent" v-html="previewContent"></span>
             <transition name="slide-fade">
               <div v-if="showContent && hasPreview" v-html="document.header.value.text">
               </div>
@@ -34,7 +34,7 @@
   </div>
 
   <div v-else class="blip-container document-select">
-    <form class="editing bubble left" novalidate v-on:submit.prevent>
+    <form v-if="!showOptionDialog" class="editing bubble left" novalidate v-on:submit.prevent>
       <div class="saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </div>
@@ -55,13 +55,13 @@
           </div>
           <div class="form-check-wrapper">
             <span class="form-check-container">
-              <input type="radio" name="aspect-selector" id="1-1" class="form-check-input" v-model="aspect" value="1-1"/>
-              <label class="form-check-label" for="1-1"><span class="radio">1:1</span></label>
+              <input type="radio" name="aspect-selector" :id="_uid+'1-1'" class="form-check-input" v-model="aspect" value="1-1"/>
+              <label class="form-check-label" :for="_uid+'1-1'"><span class="radio">1:1</span></label>
               <div class="check"></div>
             </span>
             <span class="form-check-container">
-              <input type="radio" name="aspect-selector" id="2-1" class="form-check-input" v-model="aspect" value="2-1"/>
-              <label class="form-check-label" for="2-1"><span class="radio">2:1</span></label>
+              <input type="radio" name="aspect-selector" :id="_uid+'2-1'" class="form-check-input" v-model="aspect" value="2-1"/>
+              <label class="form-check-label" :for="_uid+'2-1'"><span class="radio">2:1</span></label>
               <div class="check"></div>
             </span>
           </div>
@@ -86,59 +86,57 @@
         </div>
       </div>
     </form>
-    <div v-bind:style="styleObject" class="modal">
-      <form novalidate v-on:submit.prevent class="bubble left" style="float: none">
+    <form v-else novalidate v-on:submit.prevent class="editing bubble left" style="min-width: 250px">
 
-        <div class="tabs">
-          <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
-          <span :class="{ 'active': headerTab === 'weblink'}" @click="setTab('weblink')">Link</span>
-        </div>
+      <div class="tabs">
+        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
+        <span :class="{ 'active': headerTab === 'weblink'}" @click="setTab('weblink')">Link</span>
+      </div>
 
-        <div class="form-group" v-if="headerTab === 'weblink'">
-          <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.text" placeholder="Text" />
+      <div class="form-group" v-if="headerTab === 'weblink'">
+        <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.text" placeholder="Text" />
+        <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
+      </div>
+      <div class="form-group" v-if="headerTab === 'weblink'">
+        <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.label.value.uri" placeholder="Uri" />
+        <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
+      </div>
+      <div class="form-group" v-if="headerTab === 'weblink'">
+        <select v-model="selectedOption.label.value.target" class="form-control">
+          <option disabled value="">Target</option>
+          <option value='blank'>Blank</option>
+          <option value='self'>Self</option>
+          <option value='selfCompact'>SelfCompact</option>
+          <option value='selfTall'>SelfTall</option>
+        </select>
+      </div>
+
+      <div v-if="headerTab === 'plainText'">
+        <div class="form-group">
+          <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.label.value" placeholder="Text" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
-        <div class="form-group" v-if="headerTab === 'weblink'">
-          <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.label.value.uri" placeholder="Uri" />
-          <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
-        </div>
-        <div class="form-group" v-if="headerTab === 'weblink'">
-          <select v-model="selectedOption.label.value.target" class="form-control">
-            <option disabled value="">Target</option>
-            <option value='blank'>Blank</option>
-            <option value='self'>Self</option>
-            <option value='selfCompact'>SelfCompact</option>
-            <option value='selfTall'>SelfTall</option>
-          </select>
-        </div>
 
-        <div v-if="headerTab === 'plainText'">
+        <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
+        <div class="line"></div>
+
+        <div v-if="showPayload">
           <div class="form-group">
-            <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.label.value" placeholder="Text" />
-            <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
+            <input type="text" name="type" v-validate="'required|mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
+            <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
-
-          <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
-          <div class="line"></div>
-
-          <div v-if="showPayload">
-            <div class="form-group">
-              <input type="text" name="type" v-validate="'required|mime'"  class="form-control" v-model="selectedOption.value.type" placeholder="Postback mime type" />
-              <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
-            </div>
-            <div class="form-group">
-              <textarea type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
-              <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
-            </div>
+          <div class="form-group">
+            <textarea type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
+      </div>
 
-        <div class="form-group">
-          <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
-          <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Apply</button>
-        </div>
-      </form>
-    </div>
+      <div class="form-group">
+        <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
+        <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Apply</button>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -179,9 +177,7 @@ export default {
   },
   data: function () {
     return {
-      styleObject: {
-        display: 'none'
-      },
+      showOptionDialog: false,
       headerTab: null,
       showPayload: false,
       showContent: false,
@@ -223,7 +219,7 @@ export default {
       }
       if (this.headerTab === 'plainText' && typeof this.selectedOption.label.value !== 'string') {
         this.selectedOption.LinkUri = this.selectedOption.label.value.uri
-        this.selectedOption.LinkTarget = this.selectedOption.label.value.target
+        this.selectedOption.LinkTarget = this.selectedOption.label.value.target || ''
         this.selectedOption.label.value = this.selectedOption.label.value.text
       }
     },
@@ -264,9 +260,7 @@ export default {
         return opts
       })
       this.headerTab = null
-      this.styleObject = {
-        display: 'none'
-      }
+      this.showOptionDialog = false
       this.isEditing = false
     },
     documentSelectSave: function () {
@@ -293,60 +287,57 @@ export default {
         newDocument.header.value.uri = this.previewUri
 
         this.headerTab = null
-        this.styleObject = {
-          display: 'none'
-        }
+        this.showOptionDialog = false
         this.save(newDocument)
       })
     },
     editOption: function (item, index, $event) {
-      this.styleObject = {
-        top: $event.layerY + 'px',
-        left: $event.layerX + 'px',
-        width: '350px'
-      }
+      this.showOptionDialog = true
 
       this.selectedOption = _.cloneDeep(item)
       this.selectedOption.index = index
 
       this.showPayload = typeof this.selectedOption.value.type === 'string'
       this.headerTab = this.selectedOption.label.type === 'application/vnd.lime.web-link+json' ? 'weblink' : 'plainText'
+      this.selectedOption.LinkTarget = (this.selectedOption.label.value ? this.selectedOption.label.value.target : '') || ''
+      if (this.headerTab === 'weblink') {
+        this.selectedOption.label.value.target = this.selectedOption.label.value.target || ''
+      }
     },
     deleteOption: function (index) {
       this.options.splice(index, 1)
     },
     saveOption: function () {
-      if (this.headerTab === 'weblink') {
-        this.selectedOption.label.type = 'application/vnd.lime.web-link+json'
-        this.selectedOption.isLink = true
-        this.selectedOption.value = {}
-      } else {
-        this.selectedOption.label.type = 'text/plain'
-        this.selectedOption.isLink = false
-        this.selectedOption.value = this.showPayload ? this.selectedOption.value : {}
-      }
-      this.selectedOption.label.value = this.selectedOption.label.value
-      this.selectedOption.previewText = getOptionContent(this.selectedOption)
+      this.$validator.validateAll().then((result) => {
+        if (!result) return
+        if (this.headerTab === 'weblink') {
+          this.selectedOption.label.type = 'application/vnd.lime.web-link+json'
+          this.selectedOption.isLink = true
+          this.selectedOption.value = {}
+        } else {
+          this.selectedOption.label.type = 'text/plain'
+          this.selectedOption.isLink = false
+          this.selectedOption.value = this.showPayload ? this.selectedOption.value : {}
+        }
+        this.selectedOption.label.value = this.selectedOption.label.value
+        this.selectedOption.previewText = getOptionContent(this.selectedOption)
 
-      if (this.selectedOption.index === -1) {
-        this.options.push(this.selectedOption)
-      } else {
-        this.options.splice(this.selectedOption.index, 1, this.selectedOption)
-      }
+        if (this.selectedOption.index === -1) {
+          this.options.push(this.selectedOption)
+        } else {
+          this.options.splice(this.selectedOption.index, 1, this.selectedOption)
+        }
 
-      this.selectedOption = { label: {}, value: {} }
-      this.headerTab = null
-      this.styleObject = {
-        display: 'none'
-      }
+        this.selectedOption = { label: {}, value: {} }
+        this.headerTab = null
+        this.showOptionDialog = false
+      })
     },
     cancelOption: function (item) {
       this.errors.clear()
       this.selectedOption = { label: {}, value: {} }
       this.headerTab = null
-      this.styleObject = {
-        display: 'none'
-      }
+      this.showOptionDialog = false
     }
   }
 }
@@ -362,7 +353,13 @@ export default {
       .title {
         margin: 0;
         padding: 10px 20px;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
+    }
+    .hide-overflow {
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
     .fixed-options ul {
       margin:  0px;
@@ -444,7 +441,6 @@ export default {
         background: $vue-light-blip;
       }
     }
-
 
   }
 
