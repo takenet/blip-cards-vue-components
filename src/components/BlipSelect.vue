@@ -77,7 +77,7 @@
     </form>
   </div>
 
-  <div v-else>
+  <div class="blip-container" v-else>
     <form novalidate v-on:submit.prevent class="bubble left">
       <div class="tabs">
         <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
