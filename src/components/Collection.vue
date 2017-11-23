@@ -84,7 +84,9 @@ export default {
       elementsWidth: 0,
       elementsLength: 0,
       items: this.document.items,
-      styleObject: {},
+      styleObject: {
+        'margin-top': '20px'
+      },
       newDocumentSelect: _.cloneDeep(newCollection)
     }
   },

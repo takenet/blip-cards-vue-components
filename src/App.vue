@@ -107,7 +107,7 @@ export default {
     return {
       documents: [],
       json: JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'text/plain', 'content': 'Seja bem-vindo ao nosso serviço! Como podemos te ajudar?'}),
-      width: 400,
+      width: 700,
       position: 'left',
       isSample: 'true',
       date: '08:32 PM',
