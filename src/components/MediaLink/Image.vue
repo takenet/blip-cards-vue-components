@@ -154,8 +154,9 @@ export default {
     }
 
     .form-check {
-      padding: 10px;
+      padding: 0 10px;
       color: $vue-cloud;
+      margin: 0;
 
       input[type="radio"] {
         position: absolute;

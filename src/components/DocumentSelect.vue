@@ -299,7 +299,10 @@ export default {
 
       this.showPayload = typeof this.selectedOption.value.type === 'string'
       this.headerTab = this.selectedOption.label.type === 'application/vnd.lime.web-link+json' ? 'weblink' : 'plainText'
-      if (this.headerTab === 'weblink') this.selectedOption.label.value.target = this.selectedOption.label.value.target || ''
+      this.selectedOption.LinkTarget = (this.selectedOption.label.value ? this.selectedOption.label.value.target : '') || ''
+      if (this.headerTab === 'weblink') {
+        this.selectedOption.label.value.target = this.selectedOption.label.value.target || ''
+      }
     },
     deleteOption: function (index) {
       this.options.splice(index, 1)
