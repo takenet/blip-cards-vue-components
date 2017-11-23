@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <div class="container select" v-else>
+  <div class="container select" v-else-if="!addOption">
     <form class="bubble left" novalidate v-on:submit.prevent>
       <div class="saveIco closeIco" @click="cancel()" >
         <img :src="closeSvg" />
@@ -75,40 +75,40 @@
         </div>
       </div>
     </form>
+  </div>
 
-    <div v-bind:style="styleObject" class="modal">
-      <form novalidate v-on:submit.prevent class="bubble left" style="float: none">
-        <div class="tabs">
-          <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
-        </div>
+  <div v-else>
+    <form novalidate v-on:submit.prevent class="bubble left">
+      <div class="tabs">
+        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
+      </div>
 
-        <div v-if="headerTab === 'plainText'">
-          <div class="form-group">
-            <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.text" placeholder="Text" />
-            <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
-          </div>
-
-          <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
-          <div class="line"></div>
-
-          <div v-show="showPayload">
-            <div class="form-group">
-              <input type="text" name="type" v-validate="showPayload ? 'required|mime' : ''"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
-              <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
-            </div>
-            <div class="form-group">
-              <textarea name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
-              <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
-            </div>
-          </div>
-        </div>
-
+      <div v-if="headerTab === 'plainText'">
         <div class="form-group">
-          <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
-          <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Save</button>
+          <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.text" placeholder="Text" />
+          <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
-      </form>
-    </div>
+
+        <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
+        <div class="line"></div>
+
+        <div v-show="showPayload">
+          <div class="form-group">
+            <input type="text" name="type" v-validate="showPayload ? 'required|mime' : ''"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
+            <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
+          </div>
+          <div class="form-group">
+            <textarea name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+            <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
+        <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Save</button>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -135,9 +135,7 @@ export default {
   },
   data: function () {
     return {
-      styleObject: {
-        display: 'none'
-      },
+      addOption: false,
       showPayload: false,
       headerTab: 'plainText',
       selectedOption: { value: {} },
@@ -156,9 +154,7 @@ export default {
   methods: {
     cancel: function () {
       this.isEditing = false
-      this.styleObject = {
-        display: 'none'
-      }
+      this.addOption = false
       this.showPayload = false
       this.headerTab = 'plainText'
       this.selectedOption = {}
@@ -183,11 +179,10 @@ export default {
       this.errors.clear()
       this.$validator.clean()
       this.selectedOption = {}
-      this.styleObject = {
-        display: 'none'
-      }
+      this.addOption = false
     },
     saveOption: function () {
+      this.addOption = false
       if (this.selectedOption.index === -1) {
         this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.push(this.selectedOption)
@@ -200,16 +195,10 @@ export default {
       this.errors.clear()
       this.$validator.clean()
 
-      this.styleObject = {
-        display: 'none'
-      }
+      this.addOption = false
     },
     editOption: function (item, index, $event) {
-      this.styleObject = {
-        top: $event.layerY + 'px',
-        left: $event.layerX + 'px',
-        width: '350px'
-      }
+      this.addOption = true
 
       this.selectedOption = _.clone(item)
 
@@ -225,9 +214,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.selectedOption = {}
-        this.styleObject = {
-          display: 'none'
-        }
+        this.addOption = false
 
         this.save({
           ...this.document,

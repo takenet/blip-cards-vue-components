@@ -19,8 +19,8 @@
         </div>
       </div>
 
-        <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
-        <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
+      <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
+      <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
     </div>
 
     <div :class="'notification ' + position" v-if="date">
@@ -152,19 +152,16 @@ export default {
 
     .collection {
     .slideshow-container {
-      position: relative;
       margin: auto;
 
       .slideshow-list {
-        position: relative;
-        display: block;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: -webkit-paged-x;
         margin: 0;
         padding: 0px 30px;
       }
 
       .slideshow-track {
-        position: relative;
         transition: all .8s ease;
         opacity: 1;
         width: 30000px;
