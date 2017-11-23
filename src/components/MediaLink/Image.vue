@@ -120,9 +120,9 @@ export default {
 
     var bubble = element.querySelector('.bubble')
 
-    if (width <= 400) {
+    if (width <= 500) {
       bubble.style.width = width + 'px'
-    } else if (width < 700) {
+    } else if (width < 800) {
       bubble.style.width = (width / 2) + 'px'
     } else {
       bubble.style.width = (width / 3) + 'px'

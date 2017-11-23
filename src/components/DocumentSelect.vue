@@ -353,6 +353,9 @@ export default {
    @import '../styles/variables.scss';
 
   .document-select {
+    .bubble {
+      width: $bubble-width;
+    }
 
     .header {
 
