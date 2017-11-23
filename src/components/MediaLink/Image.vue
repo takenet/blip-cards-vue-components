@@ -50,9 +50,7 @@
           </div>
           <div class="form-group">
             <input type="text" class="form-control" v-model="title" placeholder="Title" />
-          </div>
-          <div class="form-group">
-            <textarea v-model="text" class="form-control" placeholder="Text" />
+            <textarea v-model="text" class="form-control text" placeholder="Text" />
           </div>
         </form>
       </div>
@@ -150,13 +148,14 @@ export default {
     }
 
     .form {
-      padding: $bubble-padding;
+      .form-group .form-control.text {
+        margin-top: 10px;
+      }
     }
 
     .form-check {
+      padding: 10px;
       color: $vue-cloud;
-      margin-top: 10px;
-      margin-bottom: 12px;
 
       input[type="radio"] {
         position: absolute;
