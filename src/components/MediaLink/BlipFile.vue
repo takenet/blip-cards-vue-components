@@ -172,14 +172,9 @@ export default {
           }
         }
 
-        .big-text {
-          max-height: 38px;
-        }
-
         .small-text {
           font-size: 10px;
           font-weight: 100;
-          height: 19px;
         }
       }
     }

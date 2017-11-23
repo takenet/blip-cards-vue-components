@@ -3,12 +3,10 @@
     <div v-if="this.title || this.text" :class="'bubble ' + position">
       <span class="link web-link-wrapper" @click="handleWeblink()">
         <img v-if="this.title" class="preview" :src="this.imgPreview">
-        <div class="right-column">
-          <div class="link-description">
-            <span class="text big-text" v-text="this.title"></span>
-            <span class="text light-text" v-text="this.text"></span>
-          </div>
-          <span class="text small-text" v-text="this.uri"></span>
+        <div class="link-description-wrapper">
+          <span class="text big-text" :title="title" v-text="title"></span>
+          <span class="text light-text" :title="text">{{ text | limitContentFilter('60') }}</span>
+          <span class="text small-text" :title="uri" v-text="uri"></span>
         </div>
       </span>
     </div>
@@ -68,6 +66,19 @@ export default {
         this.onOpenLink(this.uri, this.target)
       }
     }
+  },
+  filters: {
+    limitContentFilter: function (content, charLimit) {
+      let data = content || ''
+
+      let input = (typeof data === 'object') ? JSON.stringify(data) : data
+
+      if (input && charLimit && input.length > charLimit) {
+        return input.slice(0, charLimit) + '...'
+      }
+
+      return input
+    }
   }
 }
 </script>
@@ -78,28 +89,11 @@ export default {
 
   .web-link .bubble {
     padding: 0;
-    height: 100px;
     overflow: hidden;
 
     &.text-link {
       padding: $bubble-padding;
       height: auto;
-
-      a {
-        word-break: break-all;
-      }
-    }
-
-    &.right .web-link-wrapper {
-      .text::after {
-        content: "";
-        background: linear-gradient(to right, rgba(255, 255, 255, 0), $vue-light-blip 50%);
-      }
-    }
-
-    a.web-link-wrapper {
-      color: inherit;
-      text-decoration: inherit;
     }
 
     .web-link-wrapper {
@@ -112,56 +106,39 @@ export default {
       }
 
       .preview {
-        height: 100px;
+        max-height: 100px;
         object-fit: contain;
+        align-self: center;
       }
 
-      .link-description {
+      .link-description-wrapper {
         display: flex;
         flex-direction: column;
-        flex-grow: 1;
-        max-height: 76px;
-      }
-
-      .text {
+        padding: 10px 16px;
         overflow: hidden;
-        position: relative;
-      }
-      .text::after {
-        content: "";
-        text-align: right;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 50px;
-        height: 19px;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0), $vue-white 50%);
-      }
+        min-height: 100px;
 
-      .big-text {
-        max-height: 38px;
-      }
+        .text {
+          overflow: hidden;
+          position: relative;
+          text-overflow: ellipsis;
+        }
 
-      .light-text {
-        font-size: 12px;
-        font-weight: 100;
-        max-height: 38px;
-      }
+        .big-text {
+          white-space: nowrap;
+        }
 
-      .small-text {
-        font-size: 10px;
-        font-weight: 100;
-        word-break: break-all;
-        height: 19px;
-      }
-      .small-text::after {
-        width: 25%;
-      }
+        .light-text {
+          font-size: 12px;
+          font-weight: 100;
+          flex-grow: 1;
+        }
 
-      .right-column {
-        display: flex;
-        flex-direction: column;
-        padding: 5px 10px 0 10px;
+        .small-text {
+          font-size: 10px;
+          font-weight: 100;
+          white-space: nowrap;
+        }
       }
     }
   }
