@@ -7,6 +7,8 @@ import DocumentSelect from './components/DocumentSelect'
 import MediaLink from './components/MediaLink'
 import Collection from './components/Collection'
 import WebLink from './components/WebLink'
+import Raw from './components/Raw'
+
 import Editable from './components/Editable'
 
 import JsonValidator from './validators/jsonValidator'
@@ -22,6 +24,8 @@ function install (Vue) {
   components.push(Vue.component(DocumentSelect.name, DocumentSelect))
   components.push(Vue.component(Collection.name, Collection))
   components.push(Vue.component(WebLink.name, WebLink))
+  components.push(Vue.component(Raw.name, Raw))
+
   Vue.component(Editable.name, Editable)
 
   Validator.extend('json', JsonValidator)
@@ -31,14 +35,13 @@ function install (Vue) {
   return components
 }
 
-export {
+export default {
   BlipCard,
   PlainText,
   BlipSelect,
   DocumentSelect,
   MediaLink,
   Collection,
+  Raw,
   install
 }
-
-export default install
