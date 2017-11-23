@@ -37,13 +37,13 @@
             </div>
             <div class="form-check-wrapper">
               <span class="form-check-container">
-                <input type="radio" name="aspect-selector" id="1-1" class="form-check-input" v-model="aspect" value="1-1"/>
-                <label class="form-check-label" for="1-1"><span class="radio">1:1</span></label>
+                <input type="radio" name="aspect-selector" :id="_uid+'1-1'" class="form-check-input" v-model="aspect" value="1-1"/>
+                <label class="form-check-label" :for="_uid+'1-1'"><span class="radio">1:1</span></label>
                 <div class="check"></div>
               </span>
               <span class="form-check-container">
-                <input type="radio" name="aspect-selector" id="2-1" class="form-check-input" v-model="aspect" value="2-1"/>
-                <label class="form-check-label" for="2-1"><span class="radio">2:1</span></label>
+                <input type="radio" name="aspect-selector" :id="_uid+'2-1'" class="form-check-input" v-model="aspect" value="2-1"/>
+                <label class="form-check-label" :for="_uid+'2-1'"><span class="radio">2:1</span></label>
                 <div class="check"></div>
               </span>
             </div>
@@ -120,9 +120,9 @@ export default {
 
     var bubble = element.querySelector('.bubble')
 
-    if (width <= 400) {
+    if (width <= 500) {
       bubble.style.width = width + 'px'
-    } else if (width < 700) {
+    } else if (width < 800) {
       bubble.style.width = (width / 2) + 'px'
     } else {
       bubble.style.width = (width / 3) + 'px'
@@ -154,8 +154,9 @@ export default {
     }
 
     .form-check {
-      padding: 10px;
+      padding: 0 10px;
       color: $vue-cloud;
+      margin: 0;
 
       input[type="radio"] {
         position: absolute;

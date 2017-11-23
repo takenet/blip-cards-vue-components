@@ -10,10 +10,11 @@
           </div>
           <div v-if="isEditing">
             <document-select :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
-              :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" />
+              :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :init-editing="true" />
           </div>
           <div v-if="editable" @click="isEditing = true">
             <div :class="'collection-editable slide-item'" :style="styleObject">
+              <img :src="plusSvg" style="position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; margin-top: -25px; margin-left: -25px" />
             </div>
           </div>
         </div>
@@ -150,6 +151,8 @@ export default {
    .collection-editable {
      height: 100%;
      border: 1px dashed $vue-time;
+     position:relative;
+     cursor: pointer;
    }
 
     .collection {

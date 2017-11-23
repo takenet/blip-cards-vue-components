@@ -10,7 +10,10 @@
 
     <blip-select v-else-if="document.type === 'application/vnd.lime.select+json'" :position="position" :document="editableDocument.content" :date="date" :on-selected="onSelected" :on-save="saveCard" :editable="editable" class="blip-card"/>
 
-    <web-link v-else-if="document.type === 'application/vnd.lime.web-link+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" :on-open-link="onOpenLink"class="blip-card"/>
+    <web-link v-else-if="document.type === 'application/vnd.lime.web-link+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" :on-open-link="onOpenLink" class="blip-card"/>
+
+    <blip-raw v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card"/>
+
   </transition>
 </template>
 
@@ -44,9 +47,20 @@ export default {
     }
   },
   methods: {
+    removeEmpty: function (obj) {
+      Object.keys(obj).forEach(key => {
+        if (obj[key] && typeof obj[key] === 'object') {
+          this.removeEmpty(obj[key])
+        } else if (obj[key] == null) {
+          delete obj[key]
+        }
+      })
+
+      return obj
+    },
     saveCard: function (document) {
       this.editableDocument.content = document
-      this.save(this.editableDocument)
+      this.save(this.removeEmpty(this.editableDocument))
     }
   }
 }

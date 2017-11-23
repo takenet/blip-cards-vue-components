@@ -4,10 +4,13 @@
 
 .blip-container {
   margin-bottom: 10px;
+  width: 100%;
   font-family: "Avenir Next";
+  position: relative;
 }
 
 .blip-card {
+  width: 100%;
   font-family: "Avenir Next";
 
   *, ::after, ::before {
@@ -25,6 +28,7 @@
       width: auto;
       height: 100%;
       max-width: 90%;
+      min-width: 160px;
       font-size: 14px;
       font-weight: 500;
       line-height: 19px;

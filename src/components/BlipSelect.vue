@@ -253,7 +253,8 @@ export default {
    @import '../styles/variables.scss';
 
     .select .bubble {
-      padding: $bubble-padding
+      padding: $bubble-padding;
+      min-width: auto;
     }
 
     .select .options ul {

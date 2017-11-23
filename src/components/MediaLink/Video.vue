@@ -325,7 +325,7 @@ export default {
   .media-link.video{
 
     .bubble {
-      width: 100%;
+      width: $bubble-width;
       padding: 0;
       color: $vue-london;
     }
