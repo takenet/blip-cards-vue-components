@@ -94,5 +94,6 @@ export default {
    .plain-text .bubble {
      padding: $bubble-padding;
      word-wrap: break-word;
+     min-width: auto;
    }
 </style>

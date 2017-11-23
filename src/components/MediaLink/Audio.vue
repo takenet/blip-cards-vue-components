@@ -158,11 +158,11 @@ export default {
 <style lang="scss">
    @import '../../styles/variables.scss';
 
-  .media-link.audio{
+  .media-link.audio {
 
     .bubble {
       padding: 0;
-      width: 100%;
+      width: $bubble-width;
       color: $vue-london;
     }
 
