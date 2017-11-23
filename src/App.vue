@@ -48,7 +48,7 @@
 
     <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px;'">
       <div v-for="(item, index) in documents" v-bind:key="index">
-        <blip-card :position="item.position" :date="item.date" :on-selected="teste" :hide-options="false" :document="item.document" :on-save="save" :editable="true" :on-open-link="teste"/>
+        <blip-card :position="item.position" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected"/>
       </div>
       <div style="clear: both"></div>
     </div>
@@ -111,11 +111,14 @@ export default {
       position: 'left',
       isSample: 'true',
       date: '08:32 PM',
-      teste: function (text, obj) {
-        console.log(text, obj)
+      selected: function (d) {
+        console.log('selected', d)
       },
       save: function (d) {
-        console.log(d)
+        console.log('save', d)
+      },
+      deleted: function (d) {
+        console.log('deleted', d)
       }
     }
   },

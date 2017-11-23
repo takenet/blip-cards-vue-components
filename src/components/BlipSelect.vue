@@ -2,6 +2,9 @@
   <div v-if="!isEditing" class="blip-container select">
    <div v-if="document.scope === 'immediate'">
       <div :class="'bubble ' + position">
+        <div v-if="editable" class="editIco trashIco" @click="trash(document)">
+          <img :src="trashSvg" />
+        </div>
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>
@@ -25,6 +28,9 @@
 
     <div v-else>
       <div :class="'bubble ' + position">
+        <div v-if="editable" class="editIco trashIco" @click="trash(document)">
+          <img :src="trashSvg" />
+        </div>
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>

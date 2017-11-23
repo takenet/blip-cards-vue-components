@@ -6,7 +6,7 @@
         <div class="slideshow-track">
           <div v-for="(item, index) in items" v-bind:key="index">
             <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item"
-            :editable="editable" :on-save="collectionSave" :style="styleObject" />
+            :editable="editable" :on-save="collectionSave" :style="styleObject" :on-deleted="deleteItem" />
           </div>
           <div v-if="isEditing">
             <document-select :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
@@ -115,6 +115,15 @@ export default {
     }
   },
   methods: {
+    deleteItem: function (document) {
+      let index = this.items.indexOf(document)
+      this.items.splice(index, 1)
+
+      this.save({
+        ...this.document,
+        items: this.items
+      })
+    },
     addToCollection: function (document) {
       this.items.push(document)
       this.newDocumentSelect = _.cloneDeep(newCollection)
@@ -125,7 +134,10 @@ export default {
       })
     },
     collectionSave: function (document) {
-      console.log(document)
+      this.save({
+        ...this.document,
+        items: this.items
+      })
     },
     plusSlides: function (n) {
       this.showSlides(this.slideIndex += n)

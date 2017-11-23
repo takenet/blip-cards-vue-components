@@ -219,6 +219,11 @@
     right: 17px;
   }
 
+  .trashIco {
+    right: 17px;
+    background-color: $vue-delete;
+  }
+
   .form-group {
     margin-bottom: 0.3rem;
     padding: $bubble-padding;

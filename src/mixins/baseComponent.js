@@ -2,6 +2,7 @@ import editSvg from '../assets/img/Edit.svg'
 import approveSvg from '../assets/img/Approve.svg'
 import closeSvg from '../assets/img/Close.svg'
 import plusSvg from '../assets/img/plus.svg'
+import trashSvg from '../assets/img/Trash.svg'
 
 // define um objeto mixin
 var baseComponent = {
@@ -20,6 +21,9 @@ var baseComponent = {
     onSave: {
       type: Function
     },
+    onDeleted: {
+      type: Function
+    },
     editable: {
       type: Boolean,
       default: false
@@ -31,12 +35,18 @@ var baseComponent = {
       editSvg: editSvg,
       approveSvg: approveSvg,
       closeSvg: closeSvg,
-      plusSvg: plusSvg
+      plusSvg: plusSvg,
+      trashSvg: trashSvg
     }
   },
   methods: {
     toggleEdit: function () {
       this.isEditing = !this.isEditing
+    },
+    trash: function (document) {
+      if (this.onDeleted) {
+        this.onDeleted(document)
+      }
     },
     save: function (document) {
       this.isEditing = false
