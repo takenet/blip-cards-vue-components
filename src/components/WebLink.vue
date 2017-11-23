@@ -1,5 +1,5 @@
 <template>
-  <div class="container web-link">
+  <div class="blip-container web-link">
     <div v-if="this.title || this.text" :class="'bubble ' + position">
       <span class="link web-link-wrapper" @click="handleWeblink()">
         <img v-if="this.title" class="preview" :src="this.imgPreview">

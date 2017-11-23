@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="container select">
+  <div v-if="!isEditing" class="blip-container select">
    <div v-if="document.scope === 'immediate'">
       <div :class="'bubble ' + position">
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <div class="container select" v-else-if="!addOption">
+  <div class="blip-container select" v-else-if="!addOption">
     <form class="bubble left" novalidate v-on:submit.prevent>
       <div class="saveIco closeIco" @click="cancel()" >
         <img :src="closeSvg" />

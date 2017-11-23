@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="container document-select">
+  <div v-if="!isEditing" class="blip-container document-select">
     <div :class="'bubble ' + position">
       <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
         <img :src="editSvg" />
@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <div v-else class="container document-select">
+  <div v-else class="blip-container document-select">
     <form class="editing bubble left" novalidate v-on:submit.prevent>
       <div class="saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />

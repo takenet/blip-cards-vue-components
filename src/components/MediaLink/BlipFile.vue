@@ -1,5 +1,5 @@
 <template>
-  <div class="container file">
+  <div class="blip-container file">
     <div :class="'bubble ' + position">
       <a :href="this.uri" class="file-wrapper">
         <div class="file-icon-wrapper">
@@ -115,7 +115,7 @@ export default {
    @import '../../styles/variables.scss';
 
   .media-link.application {
-    
+
     .bubble {
       padding: 0;
       height: 80px;
@@ -165,7 +165,7 @@ export default {
         padding-left: 10px;
         display: flex;
         flex-direction: column;
-        
+
         .link-description {
           display: flex;
           flex-direction: column;
@@ -176,7 +176,7 @@ export default {
             text-overflow: ellipsis;
           }
         }
-        
+
         .big-text {
           max-height: 38px;
         }

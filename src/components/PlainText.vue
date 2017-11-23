@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isEditing">
-    <div v-if="previewDocument.content != null && previewDocument.content.length > 0" class="container plain-text">
+    <div v-if="previewDocument.content != null && previewDocument.content.length > 0" class="blip-container plain-text">
       <div :class="'bubble ' + position">
         <div v-if="editable" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <div class="container plain-text" v-else>
+  <div class="blip-container plain-text" v-else>
    <div :class="'bubble ' + position">
       <div class="saveIco closeIco" @click="cancel()" >
         <img :src="closeSvg" />

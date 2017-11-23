@@ -1,5 +1,5 @@
 <template>
-  <div :class="'container collection'" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
+  <div :class="'blip-container collection'" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
 
     <div :class="'slideshow-container ' + position" :id="id">
       <div class="slideshow-list">

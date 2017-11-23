@@ -1,5 +1,5 @@
 <template>
-  <div :class="'container media-link ' + document.type.split('/')[0]">
+  <div :class="'blip-container media-link ' + document.type.split('/')[0]">
 
     <blip-image :document="document" :position="position" :date="date" v-if="document.type.indexOf('image') != -1" :editable="editable" :on-save="save" />
     <blip-audio :document="document" :position="position" :date="date" v-if="document.type.indexOf('audio') != -1" :editable="editable" :on-save="save" />
