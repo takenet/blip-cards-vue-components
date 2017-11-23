@@ -1,7 +1,7 @@
 <template>
   <div class="blip-container file">
     <div :class="'bubble ' + position">
-      <a :href="this.uri" class="file-wrapper">
+      <a :href="this.uri" target="_blank" class="file-wrapper">
         <div class="file-icon-wrapper">
           <img class="file-icon" :src="type | fileTypeFilter"/>
         </div>
@@ -155,6 +155,7 @@ export default {
       }
 
       .description-wrapper {
+        color: inherit;
         overflow: hidden;
         padding: 20px;
         padding-left: 10px;
