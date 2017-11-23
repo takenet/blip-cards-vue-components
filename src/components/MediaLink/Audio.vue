@@ -158,16 +158,11 @@ export default {
 <style lang="scss">
    @import '../../styles/variables.scss';
 
-  .media-link {
-
-    &.audio {
-      .bubble {
-        width: 100%;
-      }
-    }
+  .media-link.audio{
 
     .bubble {
-      padding: $bubble-padding;
+      padding: 0;
+      width: 100%;
       color: $vue-london;
     }
 
@@ -219,72 +214,73 @@ export default {
         font-size: 12px;
       }
     }
-  }
 
-  .audio-player-wrapper {
-    .audio-player-controls {
-      display: flex;
-      justify-content: space-around;
-      margin-top:5px;
-    }
+    .audio-player-wrapper {
+      padding: $bubble-padding;
+      .audio-player-controls {
+        display: flex;
+        justify-content: space-around;
+        margin-top:5px;
+      }
 
-    .audio-player-button {
-      flex-grow: 0;
-      width: 14px;
-      margin-right: 15px;
-      color: inherit;
-      cursor: pointer;
-    }
+      .audio-player-button {
+        flex-grow: 0;
+        width: 14px;
+        margin-right: 15px;
+        color: inherit;
+        cursor: pointer;
+      }
 
-    .audio-player-bar {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      margin-top: 8px;
-    }
+      .audio-player-bar {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        margin-top: 8px;
+      }
 
-    .audio-player-time {
-      display: flex;
-      justify-content: space-between;
-      font-family: "Avenir Next";
-      font-size: x-small;
-      line-height: 10px;
-      color: inherit;
-    }
-    .audio-player-range{
-      position: relative;
-      bottom: 10px;
-      opacity: 0;
-      margin: 0 0 -9px 0;
-      width: 100%;
-      padding: 0;
-      height: 16px;
-      cursor: pointer;
-    }
-    .slider {
-      border-radius: 1.5px;
-      height: 3px;
-      flex-grow: 1;
-      background-color: $vue-cotton;
-      position: relative;
+      .audio-player-time {
+        display: flex;
+        justify-content: space-between;
+        font-family: "Avenir Next";
+        font-size: x-small;
+        line-height: 10px;
+        color: inherit;
+      }
+      .audio-player-range{
+        position: relative;
+        bottom: 10px;
+        opacity: 0;
+        margin: 0 0 -9px 0;
+        width: 100%;
+        padding: 0;
+        height: 16px;
+        cursor: pointer;
+      }
+      .slider {
+        border-radius: 1.5px;
+        height: 3px;
+        flex-grow: 1;
+        background-color: $vue-cotton;
+        position: relative;
 
-      .progress {
-        width: 0;
-        height: 100%;
-        background-color: $vue-neon-blip;
-        border-radius: inherit;
-        position: absolute;
-        pointer-events: none;
-
-        .pin {
-          right: -8px;
-          top: -6px;
-          height: 14px;
-          width: 14px;
-          border-radius: 8px;
+        .progress {
+          width: 0;
+          height: 100%;
+          background-color: $vue-neon-blip;
+          border-radius: inherit;
           position: absolute;
-          pointer-events: all;
-          box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.32);
+          pointer-events: none;
+
+          .pin {
+            right: -8px;
+            top: -6px;
+            height: 14px;
+            width: 14px;
+            border-radius: 8px;
+            position: absolute;
+            pointer-events: all;
+            box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.32);
+          }
         }
       }
     }

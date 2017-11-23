@@ -322,221 +322,219 @@ export default {
    @import '../../styles/variables.scss';
    @import '../../styles/loading.scss';
 
-  .media-link {
+  .media-link.video{
 
-    &.video {
-      .bubble {
-        width: 100%;
-        padding: 0;
-        color: $vue-london;
-      }
-      .left {
-        .progress .pin {
-          background-color: $vue-neon-blip;
-        }
-        .video-player-button {
-          fill: $vue-london;
-        }
-      }
-      .right {
-        color: $vue-cotton;
-        .progress .pin{
-          background-color: $vue-white;
-        }
-        .video-player-button {
-          fill: $vue-white;
-        }
-      }
-
-      .notification {
-        color: $vue-london;
-      }
-    }
-  }
-
-  .video-player-wrapper {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-
-    .sk-circle-wrapper {
-      position: absolute;
-      left: 50%;
-      padding: 5px;
-      border-radius: 100%;
-      margin-left: -25px;
-      background-color: $vue-black-transparent-soft;
-
-      .sk-circle{
-        position: relative;
-        color: white;
-      }
-    }
-
-    .video-player {
-      height: 100%;
-      width: 100%;
-      display: flex;
-      align-self: top;
-      align-items: center;
-      justify-content: center;
-      border-radius: 13px 13px 13px 2px !important;
-    }
-
-    video {
-      height: 100%;
-      width: 100%;
-    }
-
-    .video-player-controls {
-      padding: $bubble-padding;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin-top:5px;
-    }
-
-    .volume-control {
-      height: 100%;
-      position: relative;
-    }
-
-    .volume-slider-wrapper {
-      background-color: $vue-black-transparent;
-      padding: 15px;
-      bottom: 90px;
-      left: -40px;
-      position: absolute;
-      border-radius: 10px;
-      -ms-transform: rotate(90deg); /* IE 9 */
-      -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
-      transform: rotate(-90deg);
-      transition: all 0.15s linear;
-    }
-    .volume-slider {
-      width: 100px;
-      position:relative;
-      margin: 0;
-    }
-
-    .hide {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .video-player-volume{
-      position: absolute;
-      width: 100%;
-      bottom: -11px;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    video::-webkit-media-controls-enclosure {
-      display:none;
-    }
-
-    .video-player-button {
-      flex-grow: 0;
-    }
-
-    .player-button {
-      cursor: pointer;
-    }
-    .player-button-left {
-      margin-right: 15px;
-      width: 14px;
-    }
-
-    .player-button-right {
-      margin-left: 15px;
-    }
-
-    .video-player-bar {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      margin-top: 10px;
-    }
-
-    .video-player-time {
-      display: flex;
-      justify-content: space-between;
-      font-family: "Avenir Next";
-      font-size: x-small;
-      line-height: 10px;
-      color: inherit;
-    }
-
-    .video-player-range{
-      position: relative;
-      bottom: 10px;
-      opacity: 0;
-      margin: 0 0 -9px 0;
+    .bubble {
       width: 100%;
       padding: 0;
-      height: 16px;
-      cursor: pointer;
+      color: $vue-london;
+    }
+    .left {
+      .progress .pin {
+        background-color: $vue-neon-blip;
+      }
+      .video-player-button {
+        fill: $vue-london;
+      }
+    }
+    .right {
+      color: $vue-cotton;
+      .progress .pin{
+        background-color: $vue-white;
+      }
+      .video-player-button {
+        fill: $vue-white;
+      }
     }
 
-    .slider {
-      border-radius: 1.5px;
-      height: 3px;
-      flex-grow: 1;
-      background-color: $vue-cotton;
+    .notification {
+      color: $vue-london;
+    }
+
+    .video-player-wrapper {
       position: relative;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
 
-      .progress {
-        width: 0;
-        height: 100%;
-        background-color: $vue-neon-blip;
-        border-radius: inherit;
+      .sk-circle-wrapper {
         position: absolute;
-        pointer-events: none;
+        left: 50%;
+        padding: 5px;
+        border-radius: 100%;
+        margin-left: -25px;
+        background-color: $vue-black-transparent-soft;
 
-        .pin {
-          right: -8px;
-          top: -6px;
-          height: 14px;
-          width: 14px;
-          border-radius: 8px;
+        .sk-circle{
+          position: relative;
+          color: white;
+        }
+      }
+
+      .video-player {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-self: top;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px 13px 13px 2px !important;
+      }
+
+      video {
+        height: 100%;
+        width: 100%;
+      }
+
+      .video-player-controls {
+        padding: $bubble-padding;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-top:5px;
+      }
+
+      .volume-control {
+        height: 100%;
+        position: relative;
+      }
+
+      .volume-slider-wrapper {
+        background-color: $vue-black-transparent;
+        padding: 15px;
+        bottom: 90px;
+        left: -40px;
+        position: absolute;
+        border-radius: 10px;
+        -ms-transform: rotate(90deg); /* IE 9 */
+        -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+        transform: rotate(-90deg);
+        transition: all 0.15s linear;
+      }
+      .volume-slider {
+        width: 100px;
+        position:relative;
+        margin: 0;
+      }
+
+      .hide {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .video-player-volume{
+        position: absolute;
+        width: 100%;
+        bottom: -11px;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      video::-webkit-media-controls-enclosure {
+        display:none;
+      }
+
+      .video-player-button {
+        flex-grow: 0;
+      }
+
+      .player-button {
+        cursor: pointer;
+      }
+      .player-button-left {
+        margin-right: 15px;
+        width: 14px;
+      }
+
+      .player-button-right {
+        margin-left: 15px;
+      }
+
+      .video-player-bar {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        margin-top: 10px;
+      }
+
+      .video-player-time {
+        display: flex;
+        justify-content: space-between;
+        font-family: "Avenir Next";
+        font-size: x-small;
+        line-height: 10px;
+        color: inherit;
+      }
+
+      .video-player-range{
+        position: relative;
+        bottom: 10px;
+        opacity: 0;
+        margin: 0 0 -9px 0;
+        width: 100%;
+        padding: 0;
+        height: 16px;
+        cursor: pointer;
+      }
+
+      .slider {
+        border-radius: 1.5px;
+        height: 3px;
+        flex-grow: 1;
+        background-color: $vue-cotton;
+        position: relative;
+
+        .progress {
+          width: 0;
+          height: 100%;
+          background-color: $vue-neon-blip;
+          border-radius: inherit;
           position: absolute;
-          pointer-events: all;
-          box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.32);
+          pointer-events: none;
+
+          .pin {
+            right: -8px;
+            top: -6px;
+            height: 14px;
+            width: 14px;
+            border-radius: 8px;
+            position: absolute;
+            pointer-events: all;
+            box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.32);
+          }
         }
       }
     }
-  }
 
-  .video-full-screen {
-    background-color: $vue-black;
-    display: flex;
-    width: 100%;
-    height: 100%;
-
-    .video-player-controls.hide-player {
-      bottom:-50px;
-      visibility: hidden;
-      opacity: 0;
-    }
-
-    .video-player-controls {
-      background-color: $vue-black-transparent;
-      margin: 0;
-      position: absolute;
+    .video-full-screen {
+      background-color: $vue-black;
+      display: flex;
       width: 100%;
-      bottom: 0;
-      left: 0;
-      transition: all 0.5s linear;
-      .player-button {
-        fill: $vue-london !important;
+      height: 100%;
+
+      .video-player-controls.hide-player {
+        bottom:-50px;
+        visibility: hidden;
+        opacity: 0;
       }
-      .video-player-time {
-        color: $vue-london !important;
-      }
-      .pin {
-        background-color: $vue-light-blip !important;
+
+      .video-player-controls {
+        background-color: $vue-black-transparent;
+        margin: 0;
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        transition: all 0.5s linear;
+        .player-button {
+          fill: $vue-london !important;
+        }
+        .video-player-time {
+          color: $vue-london !important;
+        }
+        .pin {
+          background-color: $vue-light-blip !important;
+        }
       }
     }
   }
