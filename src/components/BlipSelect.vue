@@ -104,9 +104,13 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <button @click="cancelOption()" class="btn btn-dashed delete-color w-49">Cancel</button>
-        <button @click="saveOption()" class="btn btn-dashed primary-color w-49" :class="{'is-disabled': errors.any() }">Save</button>
+      <div class="form-group blip-card-flex">
+        <div class="flex-item">
+          <button @click="cancelOption()" class="btn btn-dashed delete-color">Cancel</button>
+        </div>
+        <div class="flex-item">
+          <button @click="saveOption()" class="btn btn-dashed primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
+        </div>
       </div>
     </form>
   </div>
