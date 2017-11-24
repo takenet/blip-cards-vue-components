@@ -5,7 +5,10 @@
         <img v-if="this.title" class="preview" :src="this.imgPreview">
         <div class="link-description-wrapper">
           <span class="text big-text" :title="title" v-text="title"></span>
-          <span class="text light-text" :title="text">{{ text | limitContentFilter('60') }}</span>
+          <div class="text-wrapper">
+            <span class="text light-text" :title="text">{{ text }}</span>
+          </div>
+          <div class="space-between-text"></div>
           <span class="text small-text" :title="uri" v-text="uri"></span>
         </div>
       </span>
@@ -66,19 +69,6 @@ export default {
         this.onOpenLink(this.uri, this.target)
       }
     }
-  },
-  filters: {
-    limitContentFilter: function (content, charLimit) {
-      let data = content || ''
-
-      let input = (typeof data === 'object') ? JSON.stringify(data) : data
-
-      if (input && charLimit && input.length > charLimit) {
-        return input.slice(0, charLimit) + '...'
-      }
-
-      return input
-    }
   }
 }
 </script>
@@ -90,6 +80,11 @@ export default {
   .web-link .bubble {
     padding: 0;
     overflow: hidden;
+    color: $vue-city;
+
+    &.right .text-wrapper:after {
+      background: $vue-light-blip !important;
+    }
 
     &.text-link {
       padding: $bubble-padding;
@@ -128,16 +123,47 @@ export default {
           white-space: nowrap;
         }
 
+        .text-wrapper {
+          overflow: hidden;
+          position: relative;
+          line-height: 1.2em;
+          max-height: 2.4em;
+          text-align: justify;
+          margin-right: 3px;
+          padding-right: 13px;
+        }
+
         .light-text {
           font-size: 12px;
           font-weight: 100;
           flex-grow: 1;
         }
 
+        .text-wrapper:before {
+          content: ' ...';
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+
+        .text-wrapper:after {
+          content: '';
+          position: absolute;
+          right: 0;
+          width: 1em;
+          height: 1em;
+          margin-top: 0.2em;
+          background: $vue-white;
+        }
+
         .small-text {
           font-size: 10px;
           font-weight: 100;
           white-space: nowrap;
+        }
+
+        .space-between-text {
+          flex-grow: 1;
         }
       }
     }
