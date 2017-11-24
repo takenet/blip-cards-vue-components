@@ -11,7 +11,7 @@
         <img :src="editSvg" />
       </div>
 
-      <div v-html="json">
+      <div v-html="document">
       </div>
     </div>
 
@@ -26,7 +26,7 @@
     <div class="saveIco closeIco" @click="cancel()" >
       <img :src="closeSvg" />
     </div>
-    <div class="saveIco" @click="saveRaw(json)" :class="{'is-disabled': errors.any() }">
+    <div class="saveIco" @click="saveRaw()" :class="{'is-disabled': errors.any() }">
       <img :src="approveSvg" />
     </div>
     <div class="form-group">
@@ -57,10 +57,7 @@ export default {
       this.isEditing = false
     },
     saveRaw: function () {
-      this.save({
-        ...this.document,
-        content: JSON.parse(this.json)
-      })
+      this.save(JSON.parse(this.json))
     }
   }
 }

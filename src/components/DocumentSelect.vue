@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div :class="'ratio ratio' + aspect" :style="'background-image: url(' + previewUri + ')'">
+        <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + this.document.header.value.uri + ')'">
         </div>
 
         <div class="title" v-if="document.header.value.title || document.header.value.text">
@@ -198,30 +198,36 @@ export default {
       content: this.document.header.value.text,
       aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1',
       previewUri: this.document.header.value.uri,
-      selectedOption: { label: {}, value: {} },
-      options: this.document.options.map(function (x) {
+      selectedOption: { label: {}, value: {} }
+    }
+  },
+  computed: {
+    options: function () {
+      return this.document.options.map(function (x) {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
           value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
         }
+
         opts.previewText = getOptionContent(opts)
         return opts
       })
-    }
-  },
-  computed: {
+    },
+    aspectRatio: function () {
+      return this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
+    },
     type: function () {
-      return mime.lookup(this.previewUri)
+      return mime.lookup(this.document.header.value.uri)
     },
     previewContent: function () {
-      if (this.content && this.content.length > this.length) {
-        return linkify(this.content.substring(0, this.length)) + '...'
+      if (this.document.header.value.text && this.document.header.value.text.length > this.length) {
+        return linkify(this.document.header.value.text.substring(0, this.length)) + '...'
       }
-      return this.content ? linkify(this.content) : ''
+      return this.document.header.value.text ? linkify(this.document.header.value.text) : ''
     },
     hasPreview: function () {
-      return this.content && this.content.length > this.length
+      return this.document.header.value.text && this.document.header.value.text.length > this.length
     }
   },
   methods: {
@@ -258,6 +264,11 @@ export default {
       }
     },
     documentSelectCancel: function () {
+      if (this.initEditing) {
+        this.trash(this.document)
+        return
+      }
+
       this.selectedOption = {}
       this.title = this.document.header.value.title
       this.content = this.document.header.value.text
@@ -344,6 +355,7 @@ export default {
         this.selectedOption = { label: {}, value: {} }
         this.headerTab = null
         this.showOptionDialog = false
+        console.log(this.showOptionDialog)
       })
     },
     cancelOption: function (item) {

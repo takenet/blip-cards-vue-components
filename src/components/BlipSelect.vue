@@ -8,7 +8,7 @@
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>
-        <span v-html="text" v-if="text"></span>
+        <span v-html="computedText" v-if="computedText"></span>
       </div>
 
       <div :class="'notification ' + position" v-if="date">
@@ -34,7 +34,7 @@
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>
-        <span v-html="text"></span>
+        <span v-html="computedText"></span>
         <div class="fixed-options">
           <ul>
             <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
@@ -149,9 +149,16 @@ export default {
       showPayload: false,
       headerTab: 'plainText',
       selectedOption: { value: {} },
-      text: linkify(this.document.text),
       hide: this.hideOptions,
-      options: this.document.options.map(function (x) {
+      text: this.document.text
+    }
+  },
+  computed: {
+    computedText: function () {
+      return linkify(this.document.text)
+    },
+    options: function () {
+      return this.document.options.map(function (x) {
         let opts = {
           ...x,
           previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text,

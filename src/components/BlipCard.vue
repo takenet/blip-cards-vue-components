@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide-fade">
+  <div>
     <div v-if="editableDocument">
       <plain-text v-if="document.type === 'text/plain'" :length="length" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" />
 
@@ -15,13 +15,12 @@
 
       <blip-raw v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" />
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
 
 import { default as base } from '../mixins/baseComponent.js'
-import _ from 'lodash'
 
 export default {
   name: 'blip-card',
@@ -61,12 +60,13 @@ export default {
       return obj
     },
     deleteCard: function (document) {
-      this.trash(_.cloneDeep(this.editableDocument))
+      this.trash(this.editableDocument)
       this.editableDocument = null
     },
     saveCard: function (document) {
+      console.log(JSON.stringify(document))
       this.editableDocument.content = document
-      this.save(this.removeEmpty(this.editableDocument))
+      this.save(this.editableDocument)
     }
   }
 }

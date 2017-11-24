@@ -1,44 +1,43 @@
 <template>
-  <div :class="'blip-container collection'" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
-
-    <div :class="'slideshow-container ' + position" :id="id">
-      <div class="slideshow-list">
-        <div class="slideshow-track">
-          <div v-for="(item, index) in items" v-bind:key="index">
-            <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item"
-            :editable="editable" :on-save="collectionSave" :style="styleObject" :on-deleted="deleteItem" />
-          </div>
-          <div v-if="isEditing">
-            <document-select :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
-              :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :init-editing="true" />
-          </div>
-          <div v-if="editable" @click="isEditing = true">
-            <div :class="'collection-editable slide-item'" :style="styleObject">
-              <img :src="plusSvg" style="position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; margin-top: -25px; margin-left: -25px" />
+  <div>
+    <div :class="'blip-container collection'" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
+      <div :class="'slideshow-container ' + position" :id="id">
+        <div class="slideshow-list">
+          <div class="slideshow-track">
+            <div v-for="(item, index) in items" v-bind:key="index">
+              <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item"
+                :editable="editable" :on-save="collectionSave" :style="styleObject" :on-deleted="deleteItem" />
+            </div>
+            <div v-if="isEditing">
+              <document-select :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
+                :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :init-editing="true" :on-deleted="deleteItem" />
+            </div>
+            <div v-if="editable" @click="isEditing = true">
+              <div :class="'collection-editable slide-item'" :style="styleObject">
+                <img :src="plusSvg" style="position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; margin-top: -25px; margin-left: -25px" />
+              </div>
             </div>
           </div>
         </div>
+
+        <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
+        <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
       </div>
 
-      <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
-      <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
-    </div>
-
-    <div :class="'notification ' + position" v-if="date">
-      {{ date }}
-    </div>
-  </div>
-
-  <div v-else-if="document.itemType === 'application/vnd.lime.container+json'">
-    <div v-for="(item, index) in document.items" v-bind:key="index">
-        <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: item.type, content: item.value }" :editable="editable" />
+      <div :class="'notification ' + position" v-if="date">
+        {{ date }}
       </div>
     </div>
-  </div>
 
-  <div v-else>
-    <div v-for="(item, index) in document.items" v-bind:key="index">
-      <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: document.itemType, content: item }" :editable="editable" />
+    <div v-else-if="document.itemType === 'application/vnd.lime.container+json'">
+      <div v-for="(item, index) in document.items" v-bind:key="index">
+          <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: item.type, content: item.value }" :editable="editable" />
+      </div>
+    </div>
+    <div v-else>
+      <div v-for="(item, index) in document.items" v-bind:key="index">
+        <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: document.itemType, content: item }" :editable="editable" />
+      </div>
     </div>
   </div>
 </template>
@@ -116,13 +115,19 @@ export default {
   },
   methods: {
     deleteItem: function (document) {
-      let index = this.items.indexOf(document)
-      this.items.splice(index, 1)
+      this.items = this.items.filter(x => x !== document)
 
-      this.save({
-        ...this.document,
-        items: this.items
-      })
+      if (this.items.length === 0) {
+        this.trash({
+          ...this.document,
+          items: this.items
+        })
+      } else {
+        this.save({
+          ...this.document,
+          items: this.items
+        })
+      }
     },
     addToCollection: function (document) {
       this.items.push(document)
