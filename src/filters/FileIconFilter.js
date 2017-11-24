@@ -27,6 +27,7 @@ Vue.filter('fileIconFilter', function (type) {
       return fileIconCsv
     case 'doc':
     case 'docx':
+    case 'msword':
       return fileIconDoc
     case 'jpg':
       return fileIconJpg
@@ -40,6 +41,7 @@ Vue.filter('fileIconFilter', function (type) {
       return fileIconPng
     case 'ppt':
     case 'pptx':
+    case 'vnd.ms-powerpoint':
       return fileIconPpt
     case 'rar':
       return fileIconRar
@@ -47,6 +49,7 @@ Vue.filter('fileIconFilter', function (type) {
       return fileIconTxt
     case 'xls':
     case 'xlsx':
+    case 'vnd.ms-excel':
       return fileIconXls
     case 'zip':
       return fileIconZip
