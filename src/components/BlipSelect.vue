@@ -150,15 +150,8 @@ export default {
       headerTab: 'plainText',
       selectedOption: { value: {} },
       hide: this.hideOptions,
-      text: this.document.text
-    }
-  },
-  computed: {
-    computedText: function () {
-      return linkify(this.document.text)
-    },
-    options: function () {
-      return this.document.options.map(function (x) {
+      text: this.document.text,
+      options: this.document.options.map(function (x) {
         let opts = {
           ...x,
           previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text,
@@ -166,6 +159,11 @@ export default {
         }
         return opts
       })
+    }
+  },
+  computed: {
+    computedText: function () {
+      return linkify(this.document.text)
     }
   },
   methods: {
