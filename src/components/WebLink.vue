@@ -80,7 +80,6 @@ export default {
   .web-link .bubble {
     padding: 0;
     overflow: hidden;
-    color: $vue-city;
 
     &.right .text-wrapper:after {
       background: $vue-light-blip !important;

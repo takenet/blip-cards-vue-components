@@ -48,19 +48,6 @@ export default {
     }
   },
   filters: {
-    sizeInBytesFilter: function (size) {
-      var SIZES = ['B', 'KB', 'MB', 'GB']
-      console.log(SIZES)
-
-      if (!size) {
-        return ''
-      }
-
-      var log = Math.floor(Math.log(size) / Math.log(1024))
-      var number = log === 0 ? size : (size / (1024 * log)).toFixed(1)
-
-      return number + SIZES[log]
-    },
     fileTypeFilter: function (type) {
       if (!type) {
         return fileIconDefault
@@ -120,18 +107,24 @@ export default {
       overflow: hidden;
     }
 
+    .left {
+      .description-wrapper {
+        color: $vue-gray;
+      }
+    }
+
     .right {
       .file-icon-wrapper {
         background-color: $vue-white;
         padding-right: 20px !important;
       }
       .description-wrapper {
+        color: $vue-white;
         padding-left: 20px !important;
       }
     }
 
     .file-wrapper {
-      color: inherit;
       text-decoration: inherit;
       display: flex;
       flex-direction: row;
@@ -155,7 +148,6 @@ export default {
       }
 
       .description-wrapper {
-        color: inherit;
         overflow: hidden;
         padding: 20px;
         padding-left: 10px;
