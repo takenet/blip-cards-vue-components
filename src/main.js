@@ -3,6 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import blipCards from './index'
+import './filters/SizeInBytesFilter'
+import './filters/LimitContentFilter'
+import './filters/FileIconFilter'
 
 blipCards.install(Vue)
 
