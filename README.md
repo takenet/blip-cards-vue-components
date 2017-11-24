@@ -35,6 +35,7 @@ Then, reference the cards via <blip-card> tag as following
 | date |    Date that will be shown below the card (OPTIONAL)   |   String |
 | on-selected | callback function that will be called when the user interacts with the card (OPTIONAL) | Function |
 | on-save | callback function that will be called when the user saves the card after editing (OPTIONAL) | Function |
+| on-deleted | callback function that will be called when the user delete the card (OPTIONAL) | Function |
 | editable| make the card editable (OPTIONAL) | Boolean |
 | hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 
