@@ -198,12 +198,8 @@ export default {
       content: this.document.header.value.text,
       aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1',
       previewUri: this.document.header.value.uri,
-      selectedOption: { label: {}, value: {} }
-    }
-  },
-  computed: {
-    options: function () {
-      return this.document.options.map(function (x) {
+      selectedOption: { label: {}, value: {} },
+      options: this.document.options.map(function (x) {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
@@ -213,7 +209,9 @@ export default {
         opts.previewText = getOptionContent(opts)
         return opts
       })
-    },
+    }
+  },
+  computed: {
     aspectRatio: function () {
       return this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
     },
