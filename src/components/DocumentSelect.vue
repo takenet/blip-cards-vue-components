@@ -136,12 +136,12 @@
       </div>
 
       <div class="form-group blip-card-flex">
-        <div class="flex-item">
+        <span class="flex-item">
           <button @click="cancelOption()" class="btn btn-dashed delete-color">Cancel</button>
-        </div>
-        <div class="flex-item">
+        </span>
+        <span class="flex-item">
           <button @click="saveOption()" class="btn btn-dashed primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
-        </div>
+        </span>
       </div>
     </form>
   </div>
@@ -198,12 +198,8 @@ export default {
       content: this.document.header.value.text,
       aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1',
       previewUri: this.document.header.value.uri,
-      selectedOption: { label: {}, value: {} }
-    }
-  },
-  computed: {
-    options: function () {
-      return this.document.options.map(function (x) {
+      selectedOption: { label: {}, value: {} },
+      options: this.document.options.map(function (x) {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
@@ -213,7 +209,9 @@ export default {
         opts.previewText = getOptionContent(opts)
         return opts
       })
-    },
+    }
+  },
+  computed: {
     aspectRatio: function () {
       return this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
     },
