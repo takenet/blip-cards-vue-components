@@ -3,11 +3,12 @@
     <div :class="'bubble ' + position">
       <a :href="this.uri" target="_blank" class="file-wrapper">
         <div class="file-icon-wrapper">
-          <img class="file-icon" :src="type | fileTypeFilter"/>
+          <img class="file-icon" :src="type | fileIconFilter"/>
         </div>
         <div class="description-wrapper">
           <div class="link-description">
-            <span :title="title" class="text big-text">{{ title }}</span>
+            <span v-if="this.title" :title="title" class="text big-text">{{ title }}</span>
+            <span v-else :title="uri" class="text big-text">{{ uri }}</span>
           </div>
           <span class="text small-text">{{ size | sizeInBytesFilter }}</span>
         </div>
@@ -19,20 +20,6 @@
 <script>
 
 import { default as base } from '../../mixins/baseComponent.js'
-import fileIconDefault from '../../assets/img/ItemDefault.svg'
-import fileIconCss from '../../assets/img/ItemCSS.svg'
-import fileIconCsv from '../../assets/img/ItemCSV.svg'
-import fileIconDoc from '../../assets/img/ItemDoc.svg'
-import fileIconJpg from '../../assets/img/ItemJPG.svg'
-import fileIconJs from '../../assets/img/ItemJS.svg'
-import fileIconPdf from '../../assets/img/ItemPDF.svg'
-import fileIconPhp from '../../assets/img/ItemPHP.svg'
-import fileIconPng from '../../assets/img/ItemPNG.svg'
-import fileIconPpt from '../../assets/img/ItemPPT.svg'
-import fileIconRar from '../../assets/img/ItemRAR.svg'
-import fileIconTxt from '../../assets/img/ItemTXT.svg'
-import fileIconXls from '../../assets/img/ItemXLS.svg'
-import fileIconZip from '../../assets/img/ItemZIP.svg'
 
 export default {
   mixins: [
@@ -45,61 +32,6 @@ export default {
       uri: this.document.uri,
       type: this.document.type,
       size: this.document.size
-    }
-  },
-  filters: {
-    sizeInBytesFilter: function (size) {
-      var SIZES = ['B', 'KB', 'MB', 'GB']
-      console.log(SIZES)
-
-      if (!size) {
-        return ''
-      }
-
-      var log = Math.floor(Math.log(size) / Math.log(1024))
-      var number = log === 0 ? size : (size / (1024 * log)).toFixed(1)
-
-      return number + SIZES[log]
-    },
-    fileTypeFilter: function (type) {
-      if (!type) {
-        return fileIconDefault
-      }
-
-      var extension = type.substr(type.indexOf('/') + 1)
-      switch (extension) {
-        case 'css':
-          return fileIconCss
-        case 'csv':
-          return fileIconCsv
-        case 'doc':
-        case 'docx':
-          return fileIconDoc
-        case 'jpg':
-          return fileIconJpg
-        case 'js':
-          return fileIconJs
-        case 'pdf':
-          return fileIconPdf
-        case 'php':
-          return fileIconPhp
-        case 'png':
-          return fileIconPng
-        case 'ppt':
-        case 'pptx':
-          return fileIconPpt
-        case 'rar':
-          return fileIconRar
-        case 'txt':
-          return fileIconTxt
-        case 'xls':
-        case 'xlsx':
-          return fileIconXls
-        case 'zip':
-          return fileIconZip
-        default:
-          return fileIconDefault
-      }
     }
   }
 }
@@ -120,18 +52,24 @@ export default {
       overflow: hidden;
     }
 
+    .left {
+      .description-wrapper {
+        color: $vue-gray;
+      }
+    }
+
     .right {
       .file-icon-wrapper {
         background-color: $vue-white;
         padding-right: 20px !important;
       }
       .description-wrapper {
+        color: $vue-white;
         padding-left: 20px !important;
       }
     }
 
     .file-wrapper {
-      color: inherit;
       text-decoration: inherit;
       display: flex;
       flex-direction: row;
@@ -155,7 +93,6 @@ export default {
       }
 
       .description-wrapper {
-        color: inherit;
         overflow: hidden;
         padding: 20px;
         padding-left: 10px;
@@ -166,9 +103,10 @@ export default {
           display: flex;
           flex-direction: column;
           flex-grow: 1;
-          span {
+          .text {
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
 
