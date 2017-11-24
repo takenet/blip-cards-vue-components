@@ -7,7 +7,8 @@
         </div>
         <div class="description-wrapper">
           <div class="link-description">
-            <span :title="title" class="text big-text">{{ title }}</span>
+            <span v-if="this.title" :title="title" class="text big-text">{{ title }}</span>
+            <span v-else :title="uri" class="text big-text">{{ uri }}</span>
           </div>
           <span class="text small-text">{{ size | sizeInBytesFilter }}</span>
         </div>
@@ -102,9 +103,10 @@ export default {
           display: flex;
           flex-direction: column;
           flex-grow: 1;
-          span {
+          .text {
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
 
