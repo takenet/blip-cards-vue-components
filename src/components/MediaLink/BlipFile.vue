@@ -10,7 +10,7 @@
       <div v-if="!isEditing">
         <a :href="document.uri" target="_blank" class="file-wrapper">
           <div class="file-icon-wrapper">
-            <img class="file-icon" :src="document.type | fileIconFilter"/>
+            <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
           <div class="description-wrapper">
             <div class="link-description">
@@ -53,8 +53,17 @@ export default {
     return {
       title: this.document.title,
       uri: this.document.uri,
-      type: this.document.type,
+      type: this.document.type ? this.document.type : mime.lookup(this.uri),
       size: this.document.size
+    }
+  },
+  computed: {
+    mimeType: function () {
+      let extension = mime.extension(this.document.type)
+      if (extension) {
+        return this.document.type
+      }
+      return mime.lookup(this.document.uri)
     }
   },
   methods: {
