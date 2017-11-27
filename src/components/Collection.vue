@@ -177,8 +177,7 @@ export default {
       margin: auto;
 
       .slideshow-list {
-        overflow-x: hidden;
-        overflow-y: -webkit-paged-x;
+        overflow: hidden;
         margin: 0;
         padding: 0px 30px;
       }
