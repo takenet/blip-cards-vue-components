@@ -159,6 +159,9 @@ export default {
     }
 
     .form {
+      form {
+        width: auto;
+      }
       .form-group .form-control.text {
         margin-top: 10px;
       }
@@ -225,37 +228,5 @@ export default {
         background: $vue-light-blip;
       }
     }
-
-    .form-group {
-      color: $vue-london;
-      .input-error {
-        color: $vue-delete;
-      }
-      .help {
-        padding: 5px;
-        font-size: 11px;
-      }
-      .upload-intructions {
-        padding: 5px;
-        padding-bottom: 0px;
-        font-size: 12px;
-      }
-      ::-webkit-input-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      ::-moz-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      :-ms-input-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      :-moz-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-    }
-   }
+  }
 </style>

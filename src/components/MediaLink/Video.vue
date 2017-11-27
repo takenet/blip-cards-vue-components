@@ -94,7 +94,7 @@
           </div>
         </div>
       </div>
-      <div v-else>
+      <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
           <div class="saveIco closeIco" @click="videoCancel()" >
             <img :src="closeSvg" />
@@ -347,6 +347,12 @@ export default {
       }
       .video-player-button {
         fill: $vue-white;
+      }
+    }
+
+    .form {
+      form {
+        width: auto;
       }
     }
 
