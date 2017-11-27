@@ -145,10 +145,12 @@ export default {
       })
     },
     collectionSave: function (document) {
+      let tempEditing = this.isEditing
       this.save({
         ...this.document,
         items: this.items
       })
+      this.isEditing = tempEditing
     },
     plusSlides: function (n) {
       this.showSlides(this.slideIndex += n)
