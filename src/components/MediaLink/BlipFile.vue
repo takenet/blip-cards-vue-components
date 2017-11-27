@@ -32,7 +32,7 @@
           <div class="form-group">
             <input type="text" name="file" class="form-control uri" v-model="uri" placeholder="File URL" :class="{'input-error': errors.has('file') }" v-validate="'required|url'"/>
             <span v-if="errors.has('file')" class="help input-error">{{ errors.first('file') }}</span>
-            <input type="text" class="form-control tittle" v-model="title" placeholder="Title"/>
+            <input type="text" class="form-control title" v-model="title" placeholder="Title"/>
           </div>
         </form>
       </div>
@@ -162,7 +162,7 @@ export default {
 
     .form-group {
       min-width: auto;
-      .form-control.tittle {
+      .form-control.title {
         margin-top: 10px;
       }
     }

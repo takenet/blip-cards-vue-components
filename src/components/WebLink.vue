@@ -25,7 +25,7 @@
     </div>
   </div>
   <div v-else class="blip-container web-link">
-    <form class="editing bubble left" novalidate v-on:submit.prevent>
+    <form class="bubble left" novalidate v-on:submit.prevent>
       <div class="saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </div>
@@ -33,16 +33,11 @@
         <img :src="closeSvg" />
       </div>
       <div class="form-group">
-        <input type="text" name="webLinkUri" class="form-control" v-validate="'required|url'" v-model="uri" placeholder="Url" />
-        <span v-show="errors.has('webLinkUri')" class="help input-error">{{ errors.first('webLinkUri') }}</span>
-      </div>
-      <div class="form-group">
-        <input type="text" name="webLinkTitle" class="form-control" v-validate="'required'" v-model="title" placeholder="Title" />
-        <span v-show="errors.has('webLinkTitle')" class="help input-error">{{ errors.first('webLinkTitle') }}</span>
-      </div>
-      <div class="form-group">
-        <input type="text" name="webLinkText" class="form-control" v-model="text" placeholder="Description" />
-        <span v-show="errors.has('webLinkText')" class="help input-error">{{ errors.first('webLinkText') }}</span>
+        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" />
+        <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>
+        <input type="text" name="title" class="form-control title" :class="{'input-error': errors.has('title') }" v-validate="'required'" v-model="title" placeholder="Title" />
+        <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
+        <input type="text" name="webLinkText" class="form-control text" v-model="text" placeholder="Description" />
       </div>
     </form>
   </div>
@@ -124,12 +119,6 @@ export default {
    @import '../styles/variables.scss';
 
   .web-link .bubble {
-    padding: 0;
-
-    &.editing {
-      padding: inherit;
-    }
-
     &.right .text-wrapper:after {
       background: $vue-light-blip !important;
     }
@@ -137,6 +126,16 @@ export default {
     &.text-link {
       padding: $bubble-padding;
       height: auto;
+    }
+
+    .form-group {
+      min-width: auto;
+      .form-control.title {
+        margin-top: 10px;
+      }
+      .form-control.text {
+        margin-top: 10px;
+      }
     }
 
     .web-link-wrapper {
