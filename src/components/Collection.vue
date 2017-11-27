@@ -91,6 +91,11 @@ export default {
       newDocumentSelect: _.cloneDeep(newCollection)
     }
   },
+  watch: {
+    document: function () {
+      this.items = this.document.items
+    }
+  },
   mounted: function () {
     if (this.document.itemType === 'application/vnd.lime.document-select+json') {
       var element = this.$el

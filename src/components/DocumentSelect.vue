@@ -213,6 +213,10 @@ export default {
   },
   watch: {
     document: function () {
+      this.title = this.document.header.value.title
+      this.content = this.document.header.value.text
+      this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
+      this.previewUri = this.document.header.value.uri
       this.options = this.document.options.map(function (x) {
         let opts = {
           ...x,
