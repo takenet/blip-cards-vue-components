@@ -160,7 +160,7 @@ export default {
       if (n === 1) {
         trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
       } else {
-        let margin = this.elementsWidth === this.width ? 15 : -15
+        let margin = this.elementsWidth === this.width ? -10 : -15
         trackElement.style.transform = 'translate3d(' + (this.elementsWidth * (n - 1) - margin) * -1 + 'px, 0px, 0px)'
       }
     }
