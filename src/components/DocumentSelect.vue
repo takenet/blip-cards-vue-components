@@ -70,9 +70,9 @@
           </div>
         </div>
         <div class="form-group">
-          <input type="title" name="title" :class="{'input-error': errors.has('title') }" v-validate="'required'" class="form-control" v-model="title" />
+          <input type="title" name="title" :class="{'input-error': errors.has('title') }" v-validate="'required'" class="form-control" v-model="title" placeholder="Title" />
           <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
-          <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" />
+          <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" placeholder="Description" />
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
       </div>
@@ -89,7 +89,7 @@
         </div>
       </div>
     </form>
-    <form v-else novalidate v-on:submit.prevent class="editing bubble left" style="min-width: 250px">
+    <form v-else novalidate v-on:submit.prevent class="editing bubble left">
 
       <div class="tabs">
         <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
@@ -200,6 +200,24 @@ export default {
       previewUri: this.document.header.value.uri,
       selectedOption: { label: {}, value: {} },
       options: this.document.options.map(function (x) {
+        let opts = {
+          ...x,
+          isLink: x.label.type === 'application/vnd.lime.web-link+json',
+          value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
+        }
+
+        opts.previewText = getOptionContent(opts)
+        return opts
+      })
+    }
+  },
+  watch: {
+    document: function () {
+      this.title = this.document.header.value.title
+      this.content = this.document.header.value.text
+      this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
+      this.previewUri = this.document.header.value.uri
+      this.options = this.document.options.map(function (x) {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',

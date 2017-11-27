@@ -73,7 +73,8 @@ export default {
       return this.slideIndex !== 1
     },
     showNext: function () {
-      return this.slideIndex !== this.items.length
+      let length = this.editable ? this.items.length + 1 : this.items.length
+      return this.slideIndex !== length
     }
   },
   data: function () {
@@ -90,6 +91,11 @@ export default {
       newDocumentSelect: _.cloneDeep(newCollection)
     }
   },
+  watch: {
+    document: function () {
+      this.items = this.document.items
+    }
+  },
   mounted: function () {
     if (this.document.itemType === 'application/vnd.lime.document-select+json') {
       var element = this.$el
@@ -100,7 +106,7 @@ export default {
       this.elementsLength = elements.length
 
       for (let i = 0; i < this.elementsLength; i++) {
-        if (this.width < 350) {
+        if (this.width <= 400) {
           this.elementsWidth = this.width
           elements[i].style.width = this.width + 'px'
         } else {
@@ -154,7 +160,7 @@ export default {
       if (n === 1) {
         trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
       } else {
-        let margin = this.elementsWidth === this.width ? 15 : -15
+        let margin = this.elementsWidth === this.width ? -10 : -15
         trackElement.style.transform = 'translate3d(' + (this.elementsWidth * (n - 1) - margin) * -1 + 'px, 0px, 0px)'
       }
     }
@@ -177,8 +183,7 @@ export default {
       margin: auto;
 
       .slideshow-list {
-        overflow-x: hidden;
-        overflow-y: -webkit-paged-x;
+        overflow: hidden;
         margin: 0;
         padding: 0px 30px;
       }

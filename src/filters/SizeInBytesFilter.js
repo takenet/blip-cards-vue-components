@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 Vue.filter('sizeInBytesFilter', function (size) {
   var SIZES = ['B', 'KB', 'MB', 'GB']
-  console.log(SIZES)
 
   if (!size) {
     return ''
