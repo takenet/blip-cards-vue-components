@@ -73,7 +73,8 @@ export default {
       return this.slideIndex !== 1
     },
     showNext: function () {
-      return this.slideIndex !== this.items.length
+      let length = this.editable ? this.items.length + 1 : this.items.length
+      return this.slideIndex !== length
     }
   },
   data: function () {
@@ -100,7 +101,7 @@ export default {
       this.elementsLength = elements.length
 
       for (let i = 0; i < this.elementsLength; i++) {
-        if (this.width < 350) {
+        if (this.width <= 400) {
           this.elementsWidth = this.width
           elements[i].style.width = this.width + 'px'
         } else {

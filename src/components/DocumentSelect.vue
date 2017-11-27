@@ -89,7 +89,7 @@
         </div>
       </div>
     </form>
-    <form v-else novalidate v-on:submit.prevent class="editing bubble left" style="min-width: 250px">
+    <form v-else novalidate v-on:submit.prevent class="editing bubble left">
 
       <div class="tabs">
         <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
@@ -200,6 +200,20 @@ export default {
       previewUri: this.document.header.value.uri,
       selectedOption: { label: {}, value: {} },
       options: this.document.options.map(function (x) {
+        let opts = {
+          ...x,
+          isLink: x.label.type === 'application/vnd.lime.web-link+json',
+          value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
+        }
+
+        opts.previewText = getOptionContent(opts)
+        return opts
+      })
+    }
+  },
+  watch: {
+    document: function () {
+      this.options = this.document.options.map(function (x) {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
