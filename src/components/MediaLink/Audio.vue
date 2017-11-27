@@ -38,7 +38,7 @@
           </div>
         </div>
       </div>
-      <div v-else>
+      <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
           <div class="saveIco closeIco" @click="audioCancel()" >
             <img :src="closeSvg" />
@@ -191,30 +191,9 @@ export default {
       color: $vue-london;
     }
 
-    .form-group {
-      color: $vue-london;
-      .input-error {
-        color: $vue-delete;
-      }
-      .help {
-        padding: 5px;
-        font-size: 11px;
-      }
-      ::-webkit-input-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      ::-moz-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      :-ms-input-placeholder {
-        color: $vue-time;
-        font-size: 12px;
-      }
-      :-moz-placeholder {
-        color: $vue-time;
-        font-size: 12px;
+    .form {
+      form {
+        width: auto;
       }
     }
 

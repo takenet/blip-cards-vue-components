@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="application">
     <div :class="'bubble ' + position">
       <div v-if="editable" class="editIco trashIco" @click="trash(document)">
         <img :src="trashSvg" />
@@ -91,7 +91,7 @@ export default {
 <style lang="scss">
    @import '../../styles/variables.scss';
 
-  .media-link.application {
+  .media-link .application {
     .bubble {
       &.left {
         .description-wrapper {
@@ -161,6 +161,7 @@ export default {
     }
 
     .form-group {
+      min-width: auto;
       .form-control.tittle {
         margin-top: 10px;
       }

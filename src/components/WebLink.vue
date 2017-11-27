@@ -1,7 +1,13 @@
 <template>
-  <div class="blip-container web-link">
-    <div v-if="this.title || this.text" :class="'bubble ' + position">
-      <span class="link web-link-wrapper" @click="handleWeblink()">
+  <div v-if="!isEditing" class="blip-container web-link">
+    <div :class="'bubble ' + position + (this.title == null && this.text == null ? ' text-link': '' )">
+      <div v-if="editable" class="editIco trashIco" @click="trash(document)">
+        <img :src="trashSvg" />
+      </div>
+      <div v-if="editable" class="editIco" @click="toggleEdit">
+        <img :src="editSvg" />
+      </div>
+      <span v-if="this.title || this.text" class="link web-link-wrapper" @click="handleWeblink()">
         <img v-if="this.title" class="preview" :src="this.imgPreview">
         <div class="link-description-wrapper">
           <span class="text big-text" :title="title" v-text="title"></span>
@@ -12,13 +18,33 @@
           <span class="text small-text" :title="uri" v-text="uri"></span>
         </div>
       </span>
-    </div>
-    <div v-else :class="'bubble text-link ' + position">
-        <span v-html="this.textLink"></span>
+      <span v-else v-html="this.textLink"></span>
     </div>
     <div :class="'notification ' + position" v-if="date">
       {{ date }}
     </div>
+  </div>
+  <div v-else class="blip-container web-link">
+    <form class="editing bubble left" novalidate v-on:submit.prevent>
+      <div class="saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
+        <img :src="approveSvg" />
+      </div>
+      <div class="saveIco closeIco" @click="webLinkCancel()">
+        <img :src="closeSvg" />
+      </div>
+      <div class="form-group">
+        <input type="text" name="webLinkUri" class="form-control" v-validate="'required|url'" v-model="uri" placeholder="Url" />
+        <span v-show="errors.has('webLinkUri')" class="help input-error">{{ errors.first('webLinkUri') }}</span>
+      </div>
+      <div class="form-group">
+        <input type="text" name="webLinkTitle" class="form-control" v-validate="'required'" v-model="title" placeholder="Title" />
+        <span v-show="errors.has('webLinkTitle')" class="help input-error">{{ errors.first('webLinkTitle') }}</span>
+      </div>
+      <div class="form-group">
+        <input type="text" name="webLinkText" class="form-control" v-model="text" placeholder="Description" />
+        <span v-show="errors.has('webLinkText')" class="help input-error">{{ errors.first('webLinkText') }}</span>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -42,7 +68,9 @@ export default {
     return {
       imgPreview: this.document.previewUri,
       title: this.document.title,
+      metaTitle: null,
       text: this.document.text,
+      metaText: null,
       uri: this.document.uri,
       target: this.document.target || 'blank'
     }
@@ -53,10 +81,11 @@ export default {
     }
   },
   created: function () {
+    this.isEditing = this.initEditing
     var client = new MetaInspector(this.uri, { timeout: 5000 })
     client.on('fetch', () => {
-      if (!this.title && client.title) this.title = client.title
-      if (!this.text && client.description) this.text = client.description
+      if (!this.title && client.title) this.title = this.metaTitle = client.title
+      if (!this.text && client.description) this.text = this.metaText = client.description
       if (!this.imgPreview && client.image) this.imgPreview = client.image
     })
     client.fetch()
@@ -68,6 +97,23 @@ export default {
       } else {
         this.onOpenLink(this.uri, this.target)
       }
+    },
+    webLinkSave: function () {
+      this.$validator.validateAll().then((result) => {
+        if (!result) return
+        this.save({
+          ...this.document,
+          uri: this.uri,
+          title: this.title,
+          text: this.text
+        })
+      })
+    },
+    webLinkCancel: function () {
+      this.title = this.document.title || this.metaTitle
+      this.text = this.document.text || this.metaText
+      this.uri = this.document.uri
+      this.isEditing = false
     }
   }
 }
@@ -79,7 +125,10 @@ export default {
 
   .web-link .bubble {
     padding: 0;
-    overflow: hidden;
+
+    &.editing {
+      padding: inherit;
+    }
 
     &.right .text-wrapper:after {
       background: $vue-light-blip !important;
@@ -94,6 +143,8 @@ export default {
       display: flex;
       flex-direction: row;
       flex-grow: 1;
+      border-radius: inherit;
+      overflow: hidden;
 
       &.link {
         cursor: pointer;

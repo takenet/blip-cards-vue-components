@@ -28,18 +28,20 @@
     </div>
   </div>
 
-  <div class="blip-container plain-text" v-else>
-   <div :class="'bubble ' + position">
-      <div class="saveIco closeIco" @click="cancel()" >
-        <img :src="closeSvg" />
-      </div>
-      <div class="saveIco" @click="save(text)" :class="{'is-disabled': errors.any() }">
-        <img :src="approveSvg" />
-      </div>
-      <div class="form-group">
-        <textarea name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text" style="width: 100%; min-width: 300px"></textarea>
-        <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
-      </div>
+  <div class="blip-container" v-else>
+  <div :class="'bubble ' + position">
+      <form novalidate v-on:submit.prevent>
+        <div class="saveIco closeIco" @click="cancel()" >
+          <img :src="closeSvg" />
+        </div>
+        <div class="saveIco" @click="save(text)" :class="{'is-disabled': errors.any() }">
+          <img :src="approveSvg" />
+        </div>
+        <div class="form-group">
+          <textarea name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
+          <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -94,9 +96,9 @@ export default {
 <style lang="scss">
    @import '../styles/variables.scss';
 
-   .plain-text .bubble {
-     padding: $bubble-padding;
-     word-wrap: break-word;
-     min-width: auto;
+    .plain-text .bubble {
+      padding: $bubble-padding;
+      word-wrap: break-word;
+      min-width: auto;
    }
 </style>
