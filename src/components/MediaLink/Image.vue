@@ -9,13 +9,13 @@
       </div>
       <div class="header" :id="id" v-if="!isEditing">
         <a :href="document.uri" target="_blank">
-          <div :class="'ratio ratio' + aspect" :style="styleObject">
+          <div :class="'ratio ratio' + documentAspect" :style="styleObject">
           </div>
         </a>
 
-        <div class="title" v-if="title || text">
-            <strong v-if="title" v-html="title"></strong>
-            <span v-if="text" v-html="text"></span>
+        <div class="title" v-if="document.title || document.text">
+            <strong v-if="document.title" v-html="document.title"></strong>
+            <span v-if="document.text" v-html="document.text"></span>
         </div>
       </div>
 
@@ -80,12 +80,22 @@ export default {
       id: guid(),
       title: this.document.title,
       text: this.document.text,
-      preview: this.document.previewUri,
       image: this.document.uri,
       aspect: this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
     }
   },
+  watch: {
+    document: function () {
+      this.styleObject = {
+        'border-radius': this.document.title || this.document.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px',
+        'background-image': 'url(' + this.document.uri + ')'
+      }
+    }
+  },
   computed: {
+    documentAspect: function () {
+      return this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
+    },
     type: function () {
       return mime.lookup(this.image)
     }
@@ -101,7 +111,6 @@ export default {
           aspectRatio: this.aspect.replace('-', ':'),
           title: this.title,
           text: this.text,
-          previewUri: this.preview,
           uri: this.image,
           type: this.type
         })
@@ -111,7 +120,6 @@ export default {
       this.isEditing = false
       this.title = this.document.title
       this.text = this.document.text
-      this.preview = this.document.previewUri
       this.image = this.document.uri
       this.aspect = this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
     }
