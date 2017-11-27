@@ -14,6 +14,11 @@ import Editable from './components/Editable'
 import JsonValidator from './validators/jsonValidator'
 import MimeValidator from './validators/mimeValidator'
 
+import Bluebird from 'bluebird'
+
+global.Promise = Bluebird
+window.Promise = Bluebird
+
 function install (Vue) {
   let components = []
 
