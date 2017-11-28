@@ -131,6 +131,9 @@
   }
 
   .header {
+    overflow: hidden;
+    border-radius: inherit;
+
     .ratio {
       background-size: cover;
       background-position: center center;

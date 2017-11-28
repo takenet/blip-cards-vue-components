@@ -37,6 +37,7 @@
         <button class="button" @click="sendVideo">ENVIAR Video</button>
         <button class="button" @click="sendWebLink">ENVIAR WebLink</button>
         <button class="button" @click="sendFile">ENVIAR Documento</button>
+        <button class="button" @click="sendLocation">ENVIAR Location</button>
       </div>
 
       <div v-else>
@@ -100,6 +101,10 @@ export default {
     },
     sendFile: function () {
       this.json = JSON.stringify({'id': '1', 'to': '128271320123982@messenger.gw.msging.net', 'type': 'application/vnd.lime.media-link+json', 'content': {'uri': 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf', 'title': 'pdf_open_parameters.pdf', 'type': 'application/pdf', 'size': '5540'}})
+      this.send()
+    },
+    sendLocation: function () {
+      this.json = JSON.stringify({'id': '1', 'to': '1042221589186385@messenger.gw.msging.net', 'type': 'application/vnd.lime.location+json', 'content': {'latitude': -19.918899, 'longitude': -43.959275, 'altitude': 853, 'text': 'Takes place'}})
       this.send()
     }
   },
