@@ -47,7 +47,6 @@
 
 import { default as base } from '../mixins/baseComponent.js'
 import { linkify } from '../utils'
-import MetaInspector from 'node-metainspector'
 
 export default {
   name: 'web-link',
@@ -77,13 +76,6 @@ export default {
   },
   created: function () {
     this.isEditing = this.initEditing
-    var client = new MetaInspector(this.uri, { timeout: 5000 })
-    client.on('fetch', () => {
-      if (!this.title && client.title) this.title = this.metaTitle = client.title
-      if (!this.text && client.description) this.text = this.metaText = client.description
-      if (!this.imgPreview && client.image) this.imgPreview = client.image
-    })
-    client.fetch()
   },
   methods: {
     handleWeblink: function () {
