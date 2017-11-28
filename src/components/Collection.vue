@@ -156,7 +156,6 @@ export default {
       this.showSlides(this.slideIndex += n)
     },
     showSlides: function (n) {
-      console.log(this.width, this.elementsWidth, this.styleObject)
       var element = this.$el
       let trackElement = element.querySelector('.slideshow-track')
 
