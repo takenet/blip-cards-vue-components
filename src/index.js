@@ -8,6 +8,7 @@ import MediaLink from './components/MediaLink'
 import Collection from './components/Collection'
 import WebLink from './components/WebLink'
 import Location from './components/Location'
+import RequestLocation from './components/RequestLocation'
 import Raw from './components/Raw'
 
 import Editable from './components/Editable'
@@ -26,6 +27,7 @@ function install (Vue) {
   components.push(Vue.component(Collection.name, Collection))
   components.push(Vue.component(WebLink.name, WebLink))
   components.push(Vue.component(Location.name, Location))
+  components.push(Vue.component(RequestLocation.name, RequestLocation))
   components.push(Vue.component(Raw.name, Raw))
 
   Vue.component(Editable.name, Editable)
@@ -44,7 +46,9 @@ export default {
   DocumentSelect,
   MediaLink,
   Collection,
+  WebLink,
   Location,
+  RequestLocation,
   Raw,
   install
 }

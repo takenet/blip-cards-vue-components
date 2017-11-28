@@ -33,11 +33,12 @@
         <button class="button" @click="sendMultimediaMenu">ENVIAR Menu Multimídia</button>
         <button class="button" @click="sendCollection">ENVIAR Coleção</button>
         <button class="button" @click="sendImage">ENVIAR Imagem</button>
-        <button class="button"  @click="sendAudio">ENVIAR Audio</button>
+        <button class="button" @click="sendAudio">ENVIAR Audio</button>
         <button class="button" @click="sendVideo">ENVIAR Video</button>
         <button class="button" @click="sendWebLink">ENVIAR WebLink</button>
         <button class="button" @click="sendFile">ENVIAR Documento</button>
         <button class="button" @click="sendLocation">ENVIAR Location</button>
+        <button class="button" @click="sendRequestLocation">ENVIAR Pedido de Localização</button>
       </div>
 
       <div v-else>
@@ -105,6 +106,10 @@ export default {
     },
     sendLocation: function () {
       this.json = JSON.stringify({'id': '1', 'to': '1042221589186385@messenger.gw.msging.net', 'type': 'application/vnd.lime.location+json', 'content': {'latitude': -19.918899, 'longitude': -43.959275, 'altitude': 853, 'text': 'Takes place'}})
+      this.send()
+    },
+    sendRequestLocation: function () {
+      this.json = JSON.stringify({'id': '1', 'to': '1042221589186385@messenger.gw.msging.net', 'type': 'application/vnd.lime.input+json', 'content': {'label': {'type': 'text/plain', 'value': 'Send your location please!'}, 'validation': {'rule': 'type', 'type': 'application/vnd.lime.location+json'}}})
       this.send()
     }
   },
