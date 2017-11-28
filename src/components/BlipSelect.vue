@@ -255,7 +255,9 @@ export default {
         }
       }
 
-      this.hide = true
+      if (!this.isEditing) {
+        this.hide = true
+      }
     }
   }
 }
