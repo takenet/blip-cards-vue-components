@@ -122,6 +122,7 @@
     }
   },
   "dependencies": {
+    "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
     "mime-types": "^2.1.17",
     "net": "^1.0.2",
