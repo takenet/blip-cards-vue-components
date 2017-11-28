@@ -107,8 +107,8 @@ export default {
 
       for (let i = 0; i < this.elementsLength; i++) {
         if (this.width <= 400) {
-          this.elementsWidth = this.width
-          elements[i].style.width = this.width + 'px'
+          this.elementsWidth = this.width - 50
+          elements[i].style.width = this.width - 50 + 'px'
         } else {
           this.elementsWidth = this.width / this.initWith
           elements[i].style.width = this.elementsWidth + 'px'
@@ -156,13 +156,14 @@ export default {
       this.showSlides(this.slideIndex += n)
     },
     showSlides: function (n) {
+      console.log(this.width, this.elementsWidth, this.styleObject)
       var element = this.$el
       let trackElement = element.querySelector('.slideshow-track')
 
       if (n === 1) {
         trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
       } else {
-        let margin = this.elementsWidth === this.width ? -10 : -15
+        let margin = this.elementsWidth === this.width ? -10 : 10
         trackElement.style.transform = 'translate3d(' + (this.elementsWidth * (n - 1) - margin) * -1 + 'px, 0px, 0px)'
       }
     }
