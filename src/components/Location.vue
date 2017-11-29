@@ -32,16 +32,15 @@
         <img :src="closeSvg" />
       </div>
       <div class="form-group">
-        <input type="text" name="locationText" class="form-control" v-model="text" placeholder="Url" />
-        <span v-show="errors.has('locationText')" class="help input-error">{{ errors.first('locationText') }}</span>
+        <input type="text" name="text" class="form-control" v-model="text" placeholder="Text" />
       </div>
       <div class="form-group">
-        <input type="text" name="locationLat" class="form-control" v-validate="'required'" v-model="latitude" placeholder="Title" />
-        <span v-show="errors.has('locationLat')" class="help input-error">{{ errors.first('locationLat') }}</span>
+        <input type="text" name="latitude" class="form-control" v-validate="'required'" v-model="latitude" placeholder="Latitude" />
+        <span v-show="errors.has('latitude')" class="help input-error">{{ errors.first('latitude') }}</span>
       </div>
       <div class="form-group">
-        <input type="text" name="locationLong" class="form-control" v-validate="'required'" v-model="longitude" placeholder="Description" />
-        <span v-show="errors.has('locationLong')" class="help input-error">{{ errors.first('locationLong') }}</span>
+        <input type="text" name="longitude" class="form-control" v-validate="'required'" v-model="longitude" placeholder="Longitude" />
+        <span v-show="errors.has('longitude')" class="help input-error">{{ errors.first('longitude') }}</span>
       </div>
     </form>
   </div>
