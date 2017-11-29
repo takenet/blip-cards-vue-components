@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div :class="'ratio ratio' + aspectRatio" :style="'background-image: url(' + this.document.header.value.uri + ')'">
+        <div :class="'ratio ratio' + aspect" :style="'background-image: url(' + this.document.header.value.uri + ')'">
         </div>
 
         <div class="title" v-if="document.header.value.title || document.header.value.text">
@@ -230,9 +230,6 @@ export default {
     }
   },
   computed: {
-    aspectRatio: function () {
-      return this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
-    },
     type: function () {
       return mime.lookup(this.document.header.value.uri)
     },
@@ -303,33 +300,32 @@ export default {
       this.showOptionDialog = false
       this.isEditing = false
     },
-    documentSelectSave: function () {
-      this.$validator.validateAll().then((result) => {
-        if (!result) return
-        this.selectedOption = { label: {}, value: {} }
-        var newDocument =
-          {
-            ...this.document,
-            options: this.options.map(function (x) {
-              return {
-                label: {
-                  type: x.label.type,
-                  value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri, target: x.label.value.target }
-                },
-                value: x.value && x.value.value ? { type: x.value.type, value: JSON.parse(x.value.value) } : null
-              }
-            })
-          }
-        newDocument.header.value.title = this.title
-        newDocument.header.value.text = this.content
-        newDocument.header.value.type = this.type
-        newDocument.header.value.aspectRatio = this.aspect.replace('-', ':')
-        newDocument.header.value.uri = this.previewUri
+    documentSelectSave: async function () {
+      let result = await this.$validator.validateAll()
+      if (!result) return
+      this.selectedOption = { label: {}, value: {} }
+      var newDocument =
+        {
+          ...this.document,
+          options: this.options.map(function (x) {
+            return {
+              label: {
+                type: x.label.type,
+                value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri, target: x.label.value.target }
+              },
+              value: x.value && x.value.value ? { type: x.value.type, value: JSON.parse(x.value.value) } : null
+            }
+          })
+        }
+      newDocument.header.value.title = this.title
+      newDocument.header.value.text = this.content
+      newDocument.header.value.type = this.type
+      newDocument.header.value.aspectRatio = this.aspect.replace('-', ':')
+      newDocument.header.value.uri = this.previewUri
 
-        this.headerTab = null
-        this.showOptionDialog = false
-        this.save(newDocument)
-      })
+      this.headerTab = null
+      this.showOptionDialog = false
+      this.save(newDocument)
     },
     editOption: function (item, index, $event) {
       this.showOptionDialog = true
