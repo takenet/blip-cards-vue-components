@@ -34,7 +34,7 @@
         <div class="saveIco closeIco" @click="cancel()" >
           <img :src="closeSvg" />
         </div>
-        <div class="saveIco" @click="save(text)" :class="{'is-disabled': errors.any() }">
+        <div class="saveIco" @click="saveText()" :class="{'is-disabled': errors.any() }">
           <img :src="approveSvg" />
         </div>
         <div class="form-group">
@@ -70,9 +70,9 @@ export default {
     previewDocument: function () {
       return {
         ...this.document,
-        hasPreview: this.text.length > this.length,
-        previewContent: linkify(this.text.substring(0, this.length - 3) + '...'),
-        content: linkify(this.text)
+        hasPreview: this.document.length > this.length,
+        previewContent: linkify(this.document.substring(0, this.length - 3) + '...'),
+        content: linkify(this.document)
       }
     }
   },
@@ -83,6 +83,10 @@ export default {
     }
   },
   methods: {
+    saveText: function () {
+      this.showContent = false
+      this.save(this.text)
+    },
     cancel: function () {
       this.text = this.document
       this.showContent = false
