@@ -69,7 +69,6 @@ export default {
   computed: {
     previewDocument: function () {
       return {
-        ...this.document,
         hasPreview: this.document.length > this.length,
         previewContent: linkify(this.document.substring(0, this.length - 3) + '...'),
         content: linkify(this.document)

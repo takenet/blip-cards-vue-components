@@ -90,7 +90,6 @@ export default {
   computed: {
     previewDocument: function () {
       return {
-        ...this.document,
         hasPreview: this.document.label.value.length > this.length,
         previewContent: linkify(this.document.label.value.substring(0, this.length - 3) + '...'),
         content: linkify(this.document.label.value)
