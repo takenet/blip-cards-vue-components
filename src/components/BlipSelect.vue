@@ -255,7 +255,7 @@ export default {
         }
       }
 
-      if (!this.isEditing) {
+      if (!this.editable) {
         this.hide = true
       }
     }
