@@ -1,14 +1,26 @@
 <template>
   <div v-if="!isEditing" class="blip-container request-location">
     <div class="bubble left">
-      <!-- <div v-if="editable" class="editIco trashIco" @click="trash(document)">
+      <div v-if="editable" class="editIco trashIco" @click="trash(document)">
         <img :src="trashSvg" />
       </div>
       <div v-if="editable" class="editIco" @click="toggleEdit">
         <img :src="editSvg" />
-      </div> -->
-      <div class="label-wrappper">
-        <span>{{ document.label.value }}</span>
+      </div>
+
+      <div v-if="!previewDocument.hasPreview" class="label-wrappper">
+        <span>{{ previewDocument.content }}</span>
+      </div>
+      <div v-else class="label-wrapper">
+        <div v-show="!showContent">
+          <span>{{ previewDocument.previewContent }}</span>
+        </div>
+        <transition name="slide-fade">
+          <div v-show="showContent">
+            <span>{{ previewDocument.content }}</span>
+          </div>
+        </transition>
+        <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">Ver mais</a>
       </div>
     </div>
 
@@ -35,6 +47,18 @@
   </div>
   <div v-else>
     <div class="bubble left">
+      <form novalidate v-on:submit.prevent>
+        <div class="saveIco closeIco" @click="cancel()" >
+          <img :src="closeSvg" />
+        </div>
+        <div class="saveIco" @click="saveLocation()" :class="{'is-disabled': errors.any() }">
+          <img :src="approveSvg" />
+        </div>
+        <div class="form-group">
+          <textarea name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
+          <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -42,6 +66,7 @@
 
 <script>
 
+import { linkify } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
@@ -56,11 +81,27 @@ export default {
     },
     onSelected: {
       type: Function
+    },
+    length: {
+      type: Number,
+      default: 532
+    }
+  },
+  computed: {
+    previewDocument: function () {
+      return {
+        ...this.document,
+        hasPreview: this.document.label.value.length > this.length,
+        previewContent: linkify(this.document.label.value.substring(0, this.length - 3) + '...'),
+        content: linkify(this.document.label.value)
+      }
     }
   },
   data: function () {
     return {
-      hide: this.hideOptions
+      hide: this.hideOptions,
+      text: this.document.label.value,
+      showContent: false
     }
   },
   methods: {
@@ -69,7 +110,23 @@ export default {
         this.onSelected()
       }
 
-      this.hide = true
+      if (!this.isEditing) {
+        this.hide = true
+      }
+    },
+    cancel: function () {
+      this.text = this.document.label.value
+      this.showContent = false
+      this.isEditing = false
+    },
+    saveLocation: function () {
+      this.showContent = false
+      this.save({
+        ...this.document,
+        label: {
+          value: this.text
+        }
+      })
     }
   }
 }
