@@ -46,19 +46,21 @@
     </transition>
   </div>
   <div v-else>
-    <div class="bubble left">
-      <form novalidate v-on:submit.prevent>
-        <div class="saveIco closeIco" @click="cancel()" >
-          <img :src="closeSvg" />
-        </div>
-        <div class="saveIco" @click="saveLocation()" :class="{'is-disabled': errors.any() }">
-          <img :src="approveSvg" />
-        </div>
-        <div class="form-group">
-          <textarea name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
-          <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
-        </div>
-      </form>
+    <div class="blip-container">
+      <div class="bubble left">
+        <form novalidate v-on:submit.prevent>
+          <div class="saveIco closeIco" @click="cancel()" >
+            <img :src="closeSvg" />
+          </div>
+          <div class="saveIco" @click="saveLocation()" :class="{'is-disabled': errors.any() }">
+            <img :src="approveSvg" />
+          </div>
+          <div class="form-group">
+            <textarea name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
+            <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -109,7 +111,7 @@ export default {
         this.onSelected()
       }
 
-      if (!this.isEditing) {
+      if (!this.editable) {
         this.hide = true
       }
     },
