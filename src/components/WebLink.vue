@@ -33,7 +33,7 @@
         <img :src="closeSvg" />
       </div>
       <div class="form-group">
-        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetaData(uri)" />
+        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetaData" />
         <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>
         <input type="text" name="title" class="form-control title" :class="{'input-error': errors.has('title') }" v-validate="'required'" v-model="title" placeholder="Title" />
         <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
@@ -112,16 +112,26 @@ export default {
       this.imgPreview = this.document.previewUri
       this.isEditing = false
     },
-    fetchMetaData: async function (editingUri) {
-      var urlToFetch = editingUri || this.document.uri
-      if (urlToFetch && (this.document.title == null || this.document.text == null || this.document.previewUri == null)) {
-        var response = await fetch('http://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
-        var content = await response.text()
-        var metaData = JSON.parse(content)
-        this.title = this.title ? this.title : metaData.title
-        this.text = this.text ? this.text : metaData.description
-        this.imgPreview = this.imgPreview ? this.imgPreview : metaData.image
+    fetchMetaData: async function () {
+      var urlToFetch
+      if (this.isEditing && (!this.title || !this.text || !this.imgPreview)) {
+        urlToFetch = this.uri
+      } else if (!this.isEditing && (!this.document.title || !this.document.text || !this.document.previewUri)) {
+        urlToFetch = this.document.uri
+      } else {
+        return
       }
+      var response = await fetch('http://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
+      var content = await response.text()
+      var metaData = JSON.parse(content)
+      this.title = this.title ? this.title : this.decodeHtml(metaData.title)
+      this.text = this.text ? this.text : this.decodeHtml(metaData.description)
+      this.imgPreview = this.imgPreview ? this.imgPreview : metaData.image
+    },
+    decodeHtml: function (text) {
+      var txt = document.createElement('span')
+      txt.innerHTML = text
+      return txt.innerText
     }
   }
 }
