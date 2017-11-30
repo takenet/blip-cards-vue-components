@@ -7,12 +7,12 @@
       <div v-if="editable" class="editIco" @click="toggleEdit">
         <img :src="editSvg" />
       </div>
-      <span v-if="this.title || this.text" class="link web-link-wrapper" @click="handleWeblink()">
-        <img v-if="this.title" class="preview" :src="this.imgPreview">
+      <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper" @click="handleWeblink()">
+        <div v-if="this.previewImage" class="preview" :style="'background-image: url(' + this.previewImage + ')'"></div>
         <div class="link-description-wrapper">
-          <span class="text big-text" :title="title" v-text="title"></span>
+          <span class="text big-text" :title="previewTitle" v-text="this.previewTitle"></span>
           <div class="text-wrapper">
-            <span class="text light-text" :title="text">{{ text }}</span>
+            <span class="text light-text" :title="previewText" v-text="this.previewText"></span>
           </div>
           <div class="space-between-text"></div>
           <span class="text small-text" :title="uri" v-text="uri"></span>
@@ -33,7 +33,7 @@
         <img :src="closeSvg" />
       </div>
       <div class="form-group">
-        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" />
+        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetaData(uri)" />
         <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>
         <input type="text" name="title" class="form-control title" :class="{'input-error': errors.has('title') }" v-validate="'required'" v-model="title" placeholder="Title" />
         <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
@@ -60,11 +60,9 @@ export default {
   },
   data: function () {
     return {
-      imgPreview: this.document.previewUri,
       title: this.document.title,
-      metaTitle: null,
       text: this.document.text,
-      metaText: null,
+      imgPreview: this.document.previewUri,
       uri: this.document.uri,
       target: this.document.target || 'blank'
     }
@@ -72,10 +70,20 @@ export default {
   computed: {
     textLink: function () {
       return linkify(this.document.uri)
+    },
+    previewTitle: function () {
+      return this.document.title ? this.document.title : this.title
+    },
+    previewText: function () {
+      return this.document.text ? this.document.text : this.text
+    },
+    previewImage: function () {
+      return this.document.previewUri ? this.document.previewUri : this.imgPreview
     }
   },
   created: function () {
     this.isEditing = this.initEditing
+    this.fetchMetaData()
   },
   methods: {
     handleWeblink: function () {
@@ -92,15 +100,28 @@ export default {
           ...this.document,
           uri: this.uri,
           title: this.title,
-          text: this.text
+          text: this.text,
+          previewUri: this.imgPreview
         })
       })
     },
     webLinkCancel: function () {
-      this.title = this.document.title || this.metaTitle
-      this.text = this.document.text || this.metaText
+      this.title = this.document.title
+      this.text = this.document.text
       this.uri = this.document.uri
+      this.imgPreview = this.document.previewUri
       this.isEditing = false
+    },
+    fetchMetaData: async function (editingUri) {
+      var urlToFetch = editingUri || this.document.uri
+      if (urlToFetch && (this.document.title == null || this.document.text == null || this.document.previewUri == null)) {
+        var response = await fetch('http://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
+        var content = await response.text()
+        var metaData = JSON.parse(content)
+        this.title = this.title ? this.title : metaData.title
+        this.text = this.text ? this.text : metaData.description
+        this.imgPreview = this.imgPreview ? this.imgPreview : metaData.image
+      }
     }
   }
 }
@@ -142,9 +163,11 @@ export default {
       }
 
       .preview {
-        max-height: 100px;
-        object-fit: contain;
-        align-self: center;
+        height: 100px;
+        width: 100px;
+        min-width: 100px;
+        background-position: center;
+        background-size: cover;
       }
 
       .link-description-wrapper {
