@@ -10,6 +10,7 @@ import WebLink from './components/WebLink'
 import Location from './components/Location'
 import RequestLocation from './components/RequestLocation'
 import Raw from './components/Raw'
+import BlipBubble from './components/BlipBubble'
 
 import Editable from './components/Editable'
 
@@ -29,6 +30,7 @@ function install (Vue) {
   components.push(Vue.component(Location.name, Location))
   components.push(Vue.component(RequestLocation.name, RequestLocation))
   components.push(Vue.component(Raw.name, Raw))
+  components.push(Vue.component(BlipBubble.name, BlipBubble))
 
   Vue.component(Editable.name, Editable)
 

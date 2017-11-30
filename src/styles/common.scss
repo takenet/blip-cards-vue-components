@@ -8,7 +8,6 @@
   font-family: "Avenir Next";
   position: relative;
 }
-
 .blip-card {
   width: 100%;
   font-family: "Avenir Next";
@@ -459,4 +458,8 @@
   visibility: hidden;
   line-height: 0;
   height: 0;
+}
+
+.blip-bubble .blip-card:first-child .bubble.left {
+  background-color: black;
 }
