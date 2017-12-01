@@ -126,7 +126,7 @@ export default {
       var metaData = JSON.parse(content)
       this.title = this.title ? this.title : this.decodeHtml(metaData.title)
       this.text = this.text ? this.text : this.decodeHtml(metaData.description)
-      this.imgPreview = this.imgPreview ? this.imgPreview : metaData.image
+      this.imgPreview = metaData.image
     },
     decodeHtml: function (text) {
       var txt = document.createElement('span')
