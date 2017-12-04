@@ -4,7 +4,7 @@
   <div v-if="!isEditing">
   <div class="blip-container raw">
     <div :class="'bubble ' + position">
-      <div v-if="editable" class="editIco trashIco" @click="trash(document)">
+      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
         <img :src="trashSvg" />
       </div>
       <div v-if="editable" class="editIco" @click="toggleEdit">

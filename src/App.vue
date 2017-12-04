@@ -51,7 +51,7 @@
     <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px;'">
 
       <div v-for="(item, index) in documents" v-bind:key="index">
-        <blip-card :position="item.position" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected"/>
+        <blip-card :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected"/>
       </div>
 
       <!-- <blip-bubble position="left" date="8:35 PM" :on-selected="selected" :hide-options="false" :documents="docs" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected"/> -->

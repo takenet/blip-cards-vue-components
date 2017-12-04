@@ -27,6 +27,10 @@ var baseComponent = {
     editable: {
       type: Boolean,
       default: false
+    },
+    deletable: {
+      type: Boolean,
+      default: false
     }
   },
   data: function () {

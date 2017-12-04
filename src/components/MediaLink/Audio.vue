@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :class="'bubble ' + position">
-      <div v-if="editable" class="editIco trashIco" @click="trash(document)">
+      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
         <img :src="trashSvg" />
       </div>
       <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
