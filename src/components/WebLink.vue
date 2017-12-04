@@ -33,7 +33,7 @@
         <img :src="closeSvg" />
       </div>
       <div class="form-group">
-        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetaData" />
+        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetaData(true)" />
         <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>
         <input type="text" name="title" class="form-control title" :class="{'input-error': errors.has('title') }" v-validate="'required'" v-model="title" placeholder="Title" />
         <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
@@ -83,7 +83,7 @@ export default {
   },
   created: function () {
     this.isEditing = this.initEditing
-    this.fetchMetaData()
+    this.fetchMetaData(false)
   },
   methods: {
     handleWeblink: function () {
@@ -112,9 +112,9 @@ export default {
       this.imgPreview = this.document.previewUri
       this.isEditing = false
     },
-    fetchMetaData: async function () {
+    fetchMetaData: async function (isEditing) {
       var urlToFetch
-      if (this.isEditing && (!this.title || !this.text || !this.imgPreview)) {
+      if (this.isEditing) {
         urlToFetch = this.uri
       } else if (!this.isEditing && (!this.document.title || !this.document.text || !this.document.previewUri)) {
         urlToFetch = this.document.uri
@@ -123,10 +123,12 @@ export default {
       }
       var response = await fetch('http://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
       var content = await response.text()
-      var metaData = JSON.parse(content)
-      this.title = this.title ? this.title : this.decodeHtml(metaData.title)
-      this.text = this.text ? this.text : this.decodeHtml(metaData.description)
-      this.imgPreview = metaData.image
+      if (isEditing === this.isEditing) {
+        var metaData = JSON.parse(content)
+        this.title = this.title ? this.title : this.decodeHtml(metaData.title)
+        this.text = this.text ? this.text : this.decodeHtml(metaData.description)
+        this.imgPreview = metaData.image
+      }
     },
     decodeHtml: function (text) {
       var txt = document.createElement('span')
