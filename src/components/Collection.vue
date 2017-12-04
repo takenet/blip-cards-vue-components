@@ -5,7 +5,7 @@
         <div class="slideshow-list">
           <div class="slideshow-track">
             <div v-for="(item, index) in items" v-bind:key="index">
-              <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item"
+              <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :deletable="deletable"
                 :editable="editable" :on-save="collectionSave" :style="styleObject" :on-deleted="deleteItem" />
             </div>
             <div v-if="isEditing">
