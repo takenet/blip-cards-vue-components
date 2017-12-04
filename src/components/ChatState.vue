@@ -8,7 +8,11 @@
         <div v-if="editable" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>
-        ...
+        <div class="typing">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -62,12 +66,48 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
    @import '../styles/variables.scss';
 
     .chat-state .bubble {
       padding: $bubble-padding;
       word-wrap: break-word;
       min-width: auto;
+
+      .typing {
+        display: inline-block;
+        }
+        .typing .typing-dot {
+            float: left;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin: 2px;
+            background: #929292;
+            animation-name: bounce;
+            animation-duration: 0.8s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+        }
+
+        .typing .typing-dot:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        .typing .typing-dot:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0px);
+            }
+            30% {
+                transform: translateY(-6px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
    }
+
 </style>
