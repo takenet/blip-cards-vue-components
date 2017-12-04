@@ -84,7 +84,12 @@ export default {
       width: 0,
       elementsWidth: 0,
       elementsLength: 0,
-      items: this.document.items,
+      items: this.document.items.map(function (x, i) {
+        return {
+          ...x,
+          'id': i
+        }
+      }),
       styleObject: {
         'margin-top': '20px'
       },
@@ -145,10 +150,13 @@ export default {
       })
     },
     collectionSave: function (document) {
+      let items = this.items.filter(x => x.id !== document.id)
+      items.splice(document.id, 0, document)
+
       let tempEditing = this.isEditing
       this.save({
         ...this.document,
-        items: this.items
+        items: items
       })
       this.isEditing = tempEditing
     },
