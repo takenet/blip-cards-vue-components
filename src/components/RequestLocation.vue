@@ -34,7 +34,7 @@
           <li @click="select()">
             <div class="wrapper">
               <div class="locationIcon">
-                <img :src="editSvg"/>
+                <img src="../assets/img/Local.svg"/>
               </div>
               <div class="text">
                 <span>Send location</span>
@@ -171,12 +171,9 @@ export default {
 
           .locationIcon {
             justify-content: center;
-            background-color: $vue-light-blip;
-            padding: 5px;
             border-radius: 50%;
             width: 25px;
             height: 25px;
-            text-align: center;
           }
           .text {
             margin: 0px 10px;
