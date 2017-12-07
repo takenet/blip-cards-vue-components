@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import fileIconDefault from '../assets/img/ItemDefault.svg'
 import fileIconCss from '../assets/img/ItemCSS.svg'
 import fileIconCsv from '../assets/img/ItemCSV.svg'
@@ -14,46 +13,48 @@ import fileIconTxt from '../assets/img/ItemTXT.svg'
 import fileIconXls from '../assets/img/ItemXLS.svg'
 import fileIconZip from '../assets/img/ItemZIP.svg'
 
-Vue.filter('fileIconFilter', function (type) {
-  if (!type) {
-    return fileIconDefault
-  }
-
-  var extension = type.substr(type.indexOf('/') + 1)
-  switch (extension) {
-    case 'css':
-      return fileIconCss
-    case 'csv':
-      return fileIconCsv
-    case 'doc':
-    case 'docx':
-    case 'msword':
-      return fileIconDoc
-    case 'jpg':
-      return fileIconJpg
-    case 'js':
-      return fileIconJs
-    case 'pdf':
-      return fileIconPdf
-    case 'php':
-      return fileIconPhp
-    case 'png':
-      return fileIconPng
-    case 'ppt':
-    case 'pptx':
-    case 'vnd.ms-powerpoint':
-      return fileIconPpt
-    case 'rar':
-      return fileIconRar
-    case 'txt':
-      return fileIconTxt
-    case 'xls':
-    case 'xlsx':
-    case 'vnd.ms-excel':
-      return fileIconXls
-    case 'zip':
-      return fileIconZip
-    default:
+export default {
+  filter: function (type) {
+    if (!type) {
       return fileIconDefault
+    }
+
+    var extension = type.substr(type.indexOf('/') + 1)
+    switch (extension) {
+      case 'css':
+        return fileIconCss
+      case 'csv':
+        return fileIconCsv
+      case 'doc':
+      case 'docx':
+      case 'msword':
+        return fileIconDoc
+      case 'jpg':
+        return fileIconJpg
+      case 'js':
+        return fileIconJs
+      case 'pdf':
+        return fileIconPdf
+      case 'php':
+        return fileIconPhp
+      case 'png':
+        return fileIconPng
+      case 'ppt':
+      case 'pptx':
+      case 'vnd.ms-powerpoint':
+        return fileIconPpt
+      case 'rar':
+        return fileIconRar
+      case 'txt':
+        return fileIconTxt
+      case 'xls':
+      case 'xlsx':
+      case 'vnd.ms-excel':
+        return fileIconXls
+      case 'zip':
+        return fileIconZip
+      default:
+        return fileIconDefault
+    }
   }
-})
+}

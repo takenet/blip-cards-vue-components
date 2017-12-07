@@ -18,9 +18,9 @@ import Editable from './components/Editable'
 import JsonValidator from './validators/jsonValidator'
 import MimeValidator from './validators/mimeValidator'
 
-import './filters/SizeInBytesFilter'
-import './filters/LimitContentFilter'
-import './filters/FileIconFilter'
+import SizeInBytesFilter from './filters/SizeInBytesFilter'
+import LimitContentFilter from './filters/LimitContentFilter'
+import FileIconFilter from './filters/FileIconFilter'
 
 function install (Vue) {
   let components = []
@@ -42,6 +42,10 @@ function install (Vue) {
 
   Validator.extend('json', JsonValidator)
   Validator.extend('mime', MimeValidator)
+
+  Vue.filter('sizeInBytesFilter', SizeInBytesFilter.filter)
+  Vue.filter('limitContentFilter', LimitContentFilter.filter)
+  Vue.filter('fileIconFilter', FileIconFilter.filter)
 
   Vue.use(VeeValidate)
   return components
