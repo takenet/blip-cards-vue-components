@@ -18,6 +18,10 @@ import Editable from './components/Editable'
 import JsonValidator from './validators/jsonValidator'
 import MimeValidator from './validators/mimeValidator'
 
+import './filters/SizeInBytesFilter'
+import './filters/LimitContentFilter'
+import './filters/FileIconFilter'
+
 function install (Vue) {
   let components = []
 
