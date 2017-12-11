@@ -129,7 +129,7 @@
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <textarea type="text" name="value" v-validate="'required'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
