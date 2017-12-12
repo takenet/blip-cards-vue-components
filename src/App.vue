@@ -132,6 +132,7 @@ export default {
       isSample: 'true',
       date: '08:32 PM',
       selected: function (d) {
+
         console.log('selected', d)
       },
       save: function (d) {
