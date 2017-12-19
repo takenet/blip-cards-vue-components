@@ -38,7 +38,7 @@
           <img :src="approveSvg" />
         </div>
         <div class="form-group">
-          <textarea name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
+          <textarea name="text" v-auto-expand class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
       </form>

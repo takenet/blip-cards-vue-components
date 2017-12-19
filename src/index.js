@@ -1,5 +1,6 @@
 import VeeValidate, { Validator } from 'vee-validate'
 
+// Components
 import BlipCard from './components/BlipCard'
 import PlainText from './components/PlainText'
 import BlipSelect from './components/BlipSelect'
@@ -12,15 +13,19 @@ import RequestLocation from './components/RequestLocation'
 import Raw from './components/Raw'
 import ChatState from './components/ChatState'
 import BlipBubble from './components/BlipBubble'
-
 import Editable from './components/Editable'
 
+// Validators
 import JsonValidator from './validators/jsonValidator'
 import MimeValidator from './validators/mimeValidator'
 
+// Filters
 import SizeInBytesFilter from './filters/SizeInBytesFilter'
 import LimitContentFilter from './filters/LimitContentFilter'
 import FileIconFilter from './filters/FileIconFilter'
+
+// Directives
+import AutoExpandDirective from './directives/AutoExpandDirective'
 
 function install (Vue) {
   let components = []
@@ -46,6 +51,8 @@ function install (Vue) {
   Vue.filter('sizeInBytesFilter', SizeInBytesFilter.filter)
   Vue.filter('limitContentFilter', LimitContentFilter.filter)
   Vue.filter('fileIconFilter', FileIconFilter.filter)
+
+  Vue.directive('autoExpand', AutoExpandDirective)
 
   Vue.use(VeeValidate)
   return components
