@@ -1,6 +1,7 @@
 import editSvg from '../assets/img/Edit.svg'
 import approveSvg from '../assets/img/Approve.svg'
 import closeSvg from '../assets/img/Close.svg'
+import closeBlueSvg from '../assets/img/CloseBlue.svg'
 import plusSvg from '../assets/img/plus.svg'
 import trashSvg from '../assets/img/Trash.svg'
 
@@ -36,11 +37,12 @@ var baseComponent = {
   data: function () {
     return {
       isEditing: false,
-      editSvg: editSvg,
-      approveSvg: approveSvg,
-      closeSvg: closeSvg,
-      plusSvg: plusSvg,
-      trashSvg: trashSvg
+      editSvg,
+      approveSvg,
+      closeSvg,
+      closeBlueSvg,
+      plusSvg,
+      trashSvg
     }
   },
   methods: {

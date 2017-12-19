@@ -59,7 +59,7 @@
         <img :src="approveSvg" />
       </div>
       <div class="form-group">
-        <input type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-model="text" />
+        <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-model="text" />
         <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
       </div>
 
@@ -67,7 +67,7 @@
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index">
             <span @click="editOption(item, index, $event)" v-html="item.text"></span>
-            <span @click="deleteOption(index)">X</span>
+            <span @click="deleteOption(index)" class="remove-option"><img :src="closeBlueSvg"></span>
           </li>
           <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
             <span>Add option</span>
@@ -280,7 +280,8 @@ export default {
 
    .select .options li {
      cursor: pointer;
-     display: inline-block;
+     display: inline-flex;
+     align-items: end;
      background-color: #DAF2F4;
      border: 1px solid #0CC8CC;
      box-shadow: 0 -1px 12px 0 #EEEEEE;
@@ -291,6 +292,16 @@ export default {
      font-size: 14px;
      font-weight: 500;
      min-width: 70px;
+
+     span { line-height: 1; }
+
+     .remove-option {
+       margin-left: 8px;
+
+       img {
+         width: 12px; height: 14px;
+       }
+     }
    }
 
   .select .fixed-options li:last-child {
