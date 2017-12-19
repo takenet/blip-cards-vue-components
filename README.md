@@ -50,7 +50,7 @@ However, please do not feel bad if your pull requests or contributions do not ge
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:8081
 npm run dev
 
 # build for production with minification
