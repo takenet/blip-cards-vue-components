@@ -68,7 +68,6 @@ export default {
       this.editableDocument = null
     },
     saveCard: function (document) {
-      console.log(JSON.stringify(document))
       this.editableDocument.content = document
       this.save(this.editableDocument)
     }
