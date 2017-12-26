@@ -129,7 +129,8 @@
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea type="text" name="value" v-validate="'required'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <textarea v-if="selectedOption.value.type && selectedOption.value.type.includes('json')" type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <textarea v-else type="text" name="value" v-validate="'required'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
@@ -203,7 +204,7 @@ export default {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
+          value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
         }
 
         opts.previewText = getOptionContent(opts)
@@ -221,7 +222,7 @@ export default {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
+          value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
         }
 
         opts.previewText = getOptionContent(opts)
@@ -291,7 +292,7 @@ export default {
         let opts = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          value: x.value ? {type: x.value.type, value: JSON.stringify(x.value.value)} : {}
+          value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
         }
         opts.previewText = getOptionContent(opts)
         return opts
@@ -308,12 +309,24 @@ export default {
         {
           ...this.document,
           options: this.options.map(function (x) {
+            let value
+
+            if (x.value && x.value.value) {
+              if (x.value.type.includes('json')) {
+                value = { type: x.value.type, value: JSON.parse(x.value.value) }
+              } else {
+                value = { type: x.value.type, value: x.value.value }
+              }
+            } else {
+              value = null
+            }
+
             return {
               label: {
                 type: x.label.type,
                 value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri, target: x.label.value.target }
               },
-              value: x.value && x.value.value ? { type: x.value.type, value: JSON.parse(x.value.value) } : null
+              value
             }
           })
         }
@@ -367,7 +380,6 @@ export default {
         this.selectedOption = { label: {}, value: {} }
         this.headerTab = null
         this.showOptionDialog = false
-        console.log(this.showOptionDialog)
       })
     },
     cancelOption: function (item) {

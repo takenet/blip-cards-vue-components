@@ -101,7 +101,7 @@
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea v-if="selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+            <textarea v-if="selectedOption.type && selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
             <textarea v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
@@ -150,11 +150,23 @@ export default {
       hide: this.hideOptions,
       text: this.document.text,
       options: this.document.options.map(function (x) {
+        let value
+        if (x.value) {
+          if (x.type && x.type.includes('json')) {
+            value = JSON.stringify(x.value)
+          } else {
+            value = x.value
+          }
+        } else {
+          value = ''
+        }
+
         let opts = {
           ...x,
           previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text,
-          value: x.value ? JSON.stringify(x.value) : ''
+          value
         }
+
         return opts
       })
     }
@@ -174,11 +186,23 @@ export default {
       this.text = linkify(this.document.text)
       this.hide = this.hideOptions
       this.options = this.document.options.map(function (x) {
+        let value
+        if (x.value) {
+          if (x.type && x.type.includes('json')) {
+            value = JSON.stringify(x.value)
+          } else {
+            value = x.value
+          }
+        } else {
+          value = ''
+        }
+
         let opts = {
           ...x,
           previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text,
-          value: x.value ? JSON.stringify(x.value) : ''
+          value
         }
+
         return opts
       })
     },
