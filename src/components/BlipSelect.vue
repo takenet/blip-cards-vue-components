@@ -101,7 +101,8 @@
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+            <textarea v-if="selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+            <textarea v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
@@ -232,9 +233,20 @@ export default {
           ...this.document,
           text: this.text,
           options: this.options.map(function (x) {
+            let value
+            if (x.value) {
+              if (x.type.includes('json')) {
+                value = JSON.parse(x.value)
+              } else {
+                value = x.value
+              }
+            } else {
+              value = null
+            }
+
             return {
               ...x,
-              value: x.value ? JSON.parse(x.value) : null
+              value
             }
           })
         })
