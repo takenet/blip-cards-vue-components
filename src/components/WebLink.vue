@@ -202,8 +202,8 @@ export default {
         .text-wrapper {
           overflow: hidden;
           position: relative;
-          line-height: 1.2em;
-          max-height: 2.4em;
+          line-height: 1.2em !important;
+          max-height: 2.4em !important;
           text-align: justify;
           margin-right: 3px;
           padding-right: 13px;
