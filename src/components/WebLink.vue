@@ -202,13 +202,14 @@ export default {
         .text-wrapper {
           overflow: hidden;
           position: relative;
-          span {
-            line-height: 1.2em;
-          }
+          line-height: 1.2em;
           max-height: 2.4em;
           text-align: justify;
           margin-right: 3px;
           padding-right: 13px;
+          span {
+            line-height: 1.2em;
+          }
         }
 
         .light-text {
