@@ -64,7 +64,7 @@ export default {
       latitude: this.document.latitude,
       longitude: this.document.longitude,
       bubbleWidth: '500px',
-      apiKey: 'AIzaSyCVc6560o7sy8DVhmL7lRMcMxzI0ToftFU'
+      apiKey: 'AIzaSyC2BjLFJiNXFTOWeyss8cPTx7csKBBrRBY'
     }
   },
   computed: {
