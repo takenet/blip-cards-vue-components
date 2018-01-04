@@ -121,7 +121,7 @@ export default {
       } else {
         return
       }
-      var response = await fetch('http://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
+      var response = await fetch('https://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
       var content = await response.text()
       if (isEditing === this.isEditing) {
         var metaData = JSON.parse(content)
