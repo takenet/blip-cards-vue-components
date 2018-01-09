@@ -3,7 +3,7 @@
 
     <blip-image :document="document" :position="position" :date="date" v-if="document.type.indexOf('image') != -1" :editable="editable" :on-save="save" :on-deleted="onDeleted" :deletable="deletable"/>
     <blip-audio :document="document" :position="position" :date="date" v-else-if="document.type.indexOf('audio') != -1" :editable="editable" :on-save="save" :on-deleted="onDeleted" :deletable="deletable"/>
-    <blip-video :document="document" :position="position" :date="date" v-else-if="document.type.indexOf('video') != -1" :editable="editable" :on-save="save" :on-deleted="onDeleted" :deletable="deletable"/>
+    <blip-video :document="document" :position="position" :date="date" @updated="emitUpdate" v-else-if="document.type.indexOf('video') != -1" :editable="editable" :on-save="save" :on-deleted="onDeleted" :deletable="deletable"/>
     <blip-file :document="document" :position="position" :date="date" v-else :editable="editable" :on-save="save" :on-deleted="onDeleted" :deletable="deletable"/>
 
     <div :class="'notification ' + position" v-if="date">
@@ -30,6 +30,11 @@ export default {
     BlipAudio,
     BlipVideo,
     BlipFile
+  },
+  methods: {
+    emitUpdate () {
+      this.$emit('updated')
+    }
   }
 }
 </script>

@@ -248,6 +248,7 @@ export default {
     },
     videoLoaded: function () {
       this.totalTime = this.video.duration
+      this.$emit('updated')
     },
     setVideoPosition: function (event) {
       // srcElement is no supported in FF, but needed if working with IE6-8
