@@ -24,6 +24,7 @@
 
       <input type="radio" value="true" v-model="isSample" > Samples
       <input type="radio" value="false" v-model="isSample" > JSON
+      <input type="checkbox" value="false" v-model="photo" > Show Photo
 
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
@@ -51,7 +52,7 @@
     <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px;'">
 
       <div v-for="(item, index) in documents" v-bind:key="index">
-        <blip-card :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected"/>
+        <blip-card :photo="photoUri" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected"/>
       </div>
 
       <!-- <blip-bubble position="left" date="8:35 PM" :on-selected="selected" :hide-options="false" :documents="docs" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected"/> -->
@@ -68,6 +69,9 @@ export default {
       return this.documents.map(x => {
         return x.document
       })
+    },
+    photoUri () {
+      return this.photo ? 'http://placehold.it/25x25' : false
     }
   },
   methods: {
@@ -131,6 +135,7 @@ export default {
       position: 'left',
       isSample: 'true',
       date: '08:32 PM',
+      photo: false,
       selected: function (d) {
         console.log('selected', d)
       },
