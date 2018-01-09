@@ -12,6 +12,8 @@ import Location from './components/Location'
 import RequestLocation from './components/RequestLocation'
 import Raw from './components/Raw'
 import ChatState from './components/ChatState'
+import Redirect from './components/Redirect'
+import Ticket from './components/Ticket'
 import BlipBubble from './components/BlipBubble'
 import Editable from './components/Editable'
 
@@ -27,10 +29,12 @@ import FileIconFilter from './filters/FileIconFilter'
 // Directives
 import AutoExpandDirective from './directives/AutoExpandDirective'
 
-function install (Vue) {
+function install(Vue) {
   let components = []
 
   components.push(Vue.component(BlipCard.name, BlipCard))
+  components.push(Vue.component(Ticket.name, Ticket))
+  components.push(Vue.component(Redirect.name, Redirect))
   components.push(Vue.component(PlainText.name, PlainText))
   components.push(Vue.component(MediaLink.name, MediaLink))
   components.push(Vue.component(BlipSelect.name, BlipSelect))

@@ -22,9 +22,12 @@
 
       <chat-state v-else-if="document.type === 'application/vnd.lime.chatstate+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
 
+      <blip-redirect v-else-if="document.type === 'application/vnd.lime.redirect+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
+
+      <ticket v-else-if="document.type === 'application/vnd.iris.ticket+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
+
       <blip-raw v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
     </div>
-    <div class="blip-clearfix"></div>
   </div>
 </template>
 
@@ -33,9 +36,7 @@ import { default as base } from '../mixins/baseComponent.js'
 
 export default {
   name: 'blip-card',
-  mixins: [
-    base
-  ],
+  mixins: [base],
   props: {
     length: {
       type: Number

@@ -63,7 +63,8 @@ export default {
       text: this.document.text,
       latitude: this.document.latitude,
       longitude: this.document.longitude,
-      bubbleWidth: '500px'
+      bubbleWidth: '500px',
+      apiKey: 'AIzaSyC2BjLFJiNXFTOWeyss8cPTx7csKBBrRBY'
     }
   },
   computed: {
@@ -71,10 +72,9 @@ export default {
       return 'http://www.google.com/maps/place/' + this.document.latitude + ',' + this.document.longitude
     },
     previewUrl: function () {
-      return 'https://maps.googleapis.com/maps/api/staticmap?center=' +
+      return 'https://maps.googleapis.com/maps/api/staticmap?&size=400x300&markers=' +
           this.document.latitude + ',' + this.document.longitude +
-          '&zoom=14&size=400x300&sensor=false&markers=color:red|label:P|' +
-          this.document.latitude + ',' + this.document.longitude
+          '&key=' + this.apiKey
     },
     styleObject: function () {
       var coordinatesRegex = new RegExp(new RegExp(/^-?1?\d{1,2}\.\d{1,10}$/))
