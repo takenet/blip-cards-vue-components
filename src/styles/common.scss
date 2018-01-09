@@ -1,12 +1,21 @@
 @import 'variables';
 @import 'fonts';
 @import 'animations';
+@import 'utils';
 
 .blip-container {
   margin-bottom: 10px;
   width: 100%;
   font-family: "Avenir Next";
   position: relative;
+}
+.blip-card-photo {
+  margin-right: 10px;
+
+  img { border-radius: 50% }
+}
+.blip-card-container {
+  width: 100%;
 }
 .blip-card {
   width: 100%;

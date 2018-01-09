@@ -1,5 +1,5 @@
 <template>
-  <div v-if="editableDocument" class="flex">
+  <div v-if="editableDocument" class="blip-flex">
     <div class="blip-card-photo" v-if="photo" :style="{ marginTop: photoMargin + 'px' }">
       <img :src="photo" alt="">
     </div>
@@ -24,7 +24,7 @@
 
       <blip-raw v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
     </div>
-    <div class="clearfix"></div>
+    <div class="blip-clearfix"></div>
   </div>
 </template>
 
