@@ -18,19 +18,20 @@
 
     <chat-state v-else-if="document.type === 'application/vnd.lime.chatstate+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
 
+    <blip-redirect v-else-if="document.type === 'application/vnd.lime.redirect+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
+
+    <ticket v-else-if="document.type === 'application/vnd.iris.ticket+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
+
     <blip-raw v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
   </div>
 </template>
 
 <script>
-
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
   name: 'blip-card',
-  mixins: [
-    base
-  ],
+  mixins: [base],
   props: {
     length: {
       type: Number
@@ -46,13 +47,13 @@ export default {
       type: Function
     }
   },
-  data: function () {
+  data: function() {
     return {
       editableDocument: this.document
     }
   },
   methods: {
-    removeEmpty: function (obj) {
+    removeEmpty: function(obj) {
       Object.keys(obj).forEach(key => {
         if (obj[key] && typeof obj[key] === 'object') {
           this.removeEmpty(obj[key])
@@ -63,11 +64,11 @@ export default {
 
       return obj
     },
-    deleteCard: function (document) {
+    deleteCard: function(document) {
       this.trash(this.editableDocument)
       this.editableDocument = null
     },
-    saveCard: function (document) {
+    saveCard: function(document) {
       this.editableDocument.content = document
       this.save(this.editableDocument)
     }
@@ -76,7 +77,6 @@ export default {
 </script>
 
 <style lang="scss">
-   @import '../styles/common.scss';
-   @import '../styles/variables.scss';
-
+@import '../styles/common.scss';
+@import '../styles/variables.scss';
 </style>

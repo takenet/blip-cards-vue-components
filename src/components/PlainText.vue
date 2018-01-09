@@ -29,7 +29,7 @@
   </div>
 
   <div class="blip-container" v-else>
-  <div :class="'bubble ' + position">
+    <div :class="'bubble ' + position">
       <form novalidate v-on:submit.prevent>
         <div class="saveIco closeIco" @click="cancel()" >
           <img :src="closeSvg" />
@@ -47,15 +47,12 @@
 </template>
 
 <script>
-
 import { linkify } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
   name: 'plain-text',
-  mixins: [
-    base
-  ],
+  mixins: [base],
   props: {
     document: {
       type: String,
@@ -67,26 +64,28 @@ export default {
     }
   },
   computed: {
-    previewDocument: function () {
+    previewDocument: function() {
       return {
         hasPreview: this.document.length > this.length,
-        previewContent: linkify(this.document.substring(0, this.length - 3) + '...'),
+        previewContent: linkify(
+          this.document.substring(0, this.length - 3) + '...'
+        ),
         content: linkify(this.document)
       }
     }
   },
-  data: function () {
+  data: function() {
     return {
       text: this.document,
       showContent: false
     }
   },
   methods: {
-    saveText: function () {
+    saveText: function() {
       this.showContent = false
       this.save(this.text)
     },
-    cancel: function () {
+    cancel: function() {
       this.text = this.document
       this.showContent = false
       this.isEditing = false
@@ -97,11 +96,11 @@ export default {
 
 
 <style lang="scss">
-   @import '../styles/variables.scss';
+@import '../styles/variables.scss';
 
-    .plain-text .bubble {
-      padding: $bubble-padding;
-      word-wrap: break-word;
-      min-width: auto;
-   }
+.plain-text .bubble {
+  padding: $bubble-padding;
+  word-wrap: break-word;
+  min-width: auto;
+}
 </style>
