@@ -281,7 +281,7 @@ export default {
         if (item.value) {
           this.onSelected(item.text, {
             type: item.type,
-            content: JSON.parse(item.value)
+            content: (item.type.indexOf('json') !== -1) ? JSON.parse(item.value) : item.value
           })
         } else {
           this.onSelected(item.text, {
