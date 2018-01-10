@@ -100,6 +100,12 @@
   .right a:hover {color: $vue-white;}  /* mouse over link */
   .right a:active {color: $vue-white;}  /* selected link */
 
+  form {
+    .fixed-options {
+      li span { margin-left: 17px }
+    }
+  }
+
   .fixed-options {
     a {
       text-decoration: none;
@@ -120,6 +126,24 @@
       margin: 2px;
       font-size: 14px;
       font-weight: 500;
+      word-break: break-word;
+      display: flex;
+
+      span {
+        width: 100%;
+        text-align: center;
+      }
+
+      .remove-option {
+        width: 17px;
+        text-align: right;
+        margin-left: 0;
+        visibility: hidden;
+      }
+
+      &:hover {
+        .remove-option { visibility: visible; }
+      }
     }
 
     ul {
@@ -189,6 +213,9 @@
     }
   }
 
+  .saveIco,
+  .editIco { cursor: pointer; }
+
   .editIco {
     background-color: $vue-light-blip;
     padding: 3px;
@@ -201,6 +228,8 @@
     top: -17px;
     right: -17px;
     z-index: 1;
+
+    &:hover { background-color: darken($vue-light-blip, 9%) }
   }
 
   .saveIco {
@@ -214,6 +243,8 @@
     position: absolute;
     top: -17px;
     right: -17px;
+
+    &:hover { background-color: darken($vue-light-blip, 9%) }
   }
 
   .saveIco img {
@@ -233,6 +264,8 @@
   .trashIco {
     right: 17px;
     background-color: $vue-delete;
+
+    &:hover { background-color: darken($vue-delete, 9%) }
   }
 
   .form-group {
@@ -339,14 +372,21 @@
     color: $vue-delete;
   }
 
+  .color-gray {
+    color: $vue-city;
+  }
 
   .btn {
     padding: 5px;
+    border: 0;
     cursor: pointer;
   }
 
-  .btn-dashed {
+  .btn-white {
     background-color: $vue-white !important;
+  }
+
+  .btn-dashed {
     border: 1px dashed $vue-light-gray !important;
   }
 

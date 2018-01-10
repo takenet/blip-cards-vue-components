@@ -81,7 +81,7 @@
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index">
             <span @click="editOption(item, index, $event)" v-html="item.previewText"></span>
-            <span @click="deleteOption(index)">X</span>
+            <span @click="deleteOption(index)" class="remove-option"><img :src="closeBlueSvg"></span>
           </li>
         </ul>
         <div @click="editOption({label: {}, value: {}}, -1, $event, true)" class="add-button">
@@ -138,10 +138,10 @@
 
       <div class="form-group blip-card-flex">
         <span class="flex-item">
-          <button @click="cancelOption()" class="btn btn-dashed delete-color">Cancel</button>
+          <button @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
         </span>
         <span class="flex-item">
-          <button @click="saveOption()" class="btn btn-dashed primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
+          <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
         </span>
       </div>
     </form>

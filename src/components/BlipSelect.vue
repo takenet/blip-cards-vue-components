@@ -110,10 +110,10 @@
 
       <div class="form-group blip-card-flex">
         <div class="flex-item">
-          <button @click="cancelOption()" class="btn btn-dashed delete-color">Cancel</button>
+          <button @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
         </div>
         <div class="flex-item">
-          <button @click="saveOption()" class="btn btn-dashed primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
+          <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
         </div>
       </div>
     </form>

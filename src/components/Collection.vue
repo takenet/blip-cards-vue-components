@@ -184,16 +184,16 @@ export default {
 </script>
 
 <style lang="scss">
-   @import '../styles/variables.scss';
+  @import '../styles/variables.scss';
 
-   .collection-editable {
-     height: 100%;
-     border: 1px dashed $vue-time;
-     position:relative;
-     cursor: pointer;
-   }
+  .collection-editable {
+    height: 100%;
+    border: 1px dashed $vue-time;
+    position: relative;
+    cursor: pointer;
+  }
 
-    .collection {
+  .collection {
     .slideshow-container {
       margin: auto;
 
@@ -228,23 +228,19 @@ export default {
       }
     }
 
-    .slide-item {
-        // display: none;
-    }
-
     .prev, .next {
       cursor: pointer;
       position: absolute;
       top: 50%;
       width: auto;
       margin-top: -22px;
-      padding: 16px;
+      padding: 8px 16px;
       color: $vue-light-blip;
       font-weight: bold;
       font-size: 18px;
       transition: 0.6s ease;
       border-radius: 5px 0 0 5px;
-      box-shadow: -8px 3px 12px 0 #D3D3D3;
+      box-shadow: -2px 2px 20px 0 rgba(51, 60, 74, 0.4);
       background-color: #FFFFFF;
     }
 
