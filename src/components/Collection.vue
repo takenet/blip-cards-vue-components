@@ -244,6 +244,10 @@ export default {
       background-color: #FFFFFF;
     }
 
+    .prev {
+      left: 0;
+    }
+
     /* Position the "next button" to the right */
     .next {
       right: 0;
