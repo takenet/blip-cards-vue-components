@@ -125,6 +125,7 @@ export default {
       this.save({
         ...this.document,
         label: {
+          ...this.document.label,
           value: this.text
         }
       })
