@@ -311,7 +311,10 @@ export default {
           ...this.document,
           header: {
             ...this.document.header,
-            type: this.type
+            value: {
+              ...this.document.header.value,
+              type: this.type
+            }
           },
           options: this.options.map(function (x) {
             let value
