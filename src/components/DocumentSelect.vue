@@ -232,7 +232,7 @@ export default {
   },
   computed: {
     type: function () {
-      return mime.lookup(this.previewUri)
+      return mime.lookup(this.previewUri) ? mime.lookup(this.previewUri) : 'image/jpeg'
     },
     previewContent: function () {
       if (this.document.header.value.text && this.document.header.value.text.length > this.length) {
