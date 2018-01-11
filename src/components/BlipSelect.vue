@@ -176,6 +176,11 @@ export default {
       return linkify(this.document.text)
     }
   },
+  watch: {
+    hideOptions: function() {
+      this.hide = this.hideOptions
+    }
+  },
   methods: {
     cancel: function () {
       this.isEditing = false
