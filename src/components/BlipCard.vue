@@ -55,20 +55,20 @@ export default {
       type: String
     }
   },
-  data () {
+  data() {
     return {
       editableDocument: this.document,
       photoMargin: 0
     }
   },
-  updated () {
+  updated() {
     this.updatedPhotoMargin()
   },
-  mounted () {
+  mounted() {
     this.updatedPhotoMargin()
   },
   methods: {
-    removeEmpty (obj) {
+    removeEmpty(obj) {
       Object.keys(obj).forEach(key => {
         if (obj[key] && typeof obj[key] === 'object') {
           this.removeEmpty(obj[key])
@@ -79,20 +79,22 @@ export default {
 
       return obj
     },
-    deleteCard (document) {
+    deleteCard(document) {
       this.trash(this.editableDocument)
       this.editableDocument = null
     },
-    saveCard (document) {
+    saveCard(document) {
       this.editableDocument.content = document
       this.save(this.editableDocument)
     },
-    updatedPhotoMargin () {
+    updatedPhotoMargin() {
       this.photoMargin = this.getPhotoMargin()
     },
-    getPhotoMargin () {
+    getPhotoMargin() {
       const element = this.$el
-      const bubbleHeight = element.querySelector('.bubble').offsetHeight
+      const bubbleHeight = element.querySelector('.bubble')
+        ? element.querySelector('.bubble').offsetHeight
+        : 0
       const photoHeight = 25
 
       return bubbleHeight - photoHeight
@@ -102,6 +104,6 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../styles/common.scss';
-  @import '../styles/variables.scss';
+@import '../styles/common.scss';
+@import '../styles/variables.scss';
 </style>
