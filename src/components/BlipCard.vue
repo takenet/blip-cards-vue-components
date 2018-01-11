@@ -99,8 +99,6 @@ export default {
       if (!this.editableDocument) return
       const element = this.$el
 
-      console.log(element)
-
       const bubbleHeight = element.querySelector('.bubble')
         ? element.querySelector('.bubble').offsetHeight
         : 0
