@@ -232,7 +232,7 @@ export default {
   },
   computed: {
     type: function () {
-      return mime.lookup(this.document.header.value.uri)
+      return mime.lookup(this.previewUri)
     },
     previewContent: function () {
       if (this.document.header.value.text && this.document.header.value.text.length > this.length) {
@@ -305,9 +305,14 @@ export default {
       let result = await this.$validator.validateAll()
       if (!result) return
       this.selectedOption = { label: {}, value: {} }
+
       var newDocument =
         {
           ...this.document,
+          header: {
+            ...this.document.header,
+            type: this.type
+          },
           options: this.options.map(function (x) {
             let value
 
@@ -338,6 +343,7 @@ export default {
 
       this.headerTab = null
       this.showOptionDialog = false
+
       this.save(newDocument)
     },
     editOption: function (item, index, $event) {
