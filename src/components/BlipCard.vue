@@ -61,6 +61,11 @@ export default {
       photoMargin: 0
     }
   },
+  watch: {
+    document: function() {
+      this.editableDocument = this.document
+    }
+  },
   updated() {
     this.updatedPhotoMargin()
   },
