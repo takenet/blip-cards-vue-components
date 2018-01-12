@@ -103,7 +103,7 @@ export default {
         this.save({
           ...this.document,
           uri: this.audioUri,
-          type: mime.lookup(this.audioUri)
+          type: mime.lookup(this.audioUri) ? mime.lookup(this.audioUri) : 'audio/mp3'
         })
       })
     },

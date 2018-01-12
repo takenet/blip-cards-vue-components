@@ -137,13 +137,13 @@ export default {
       date: '08:32 PM',
       photo: false,
       selected: function (d) {
-        console.log('selected', d)
+
       },
       save: function (d) {
-        console.log('save', d)
+
       },
       deleted: function (d) {
-        console.log('deleted', d)
+
       }
     }
   },

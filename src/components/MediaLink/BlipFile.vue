@@ -75,7 +75,7 @@ export default {
         ...this.document,
         title: this.title,
         uri: this.uri,
-        type: mime.lookup(this.uri)
+        type: mime.lookup(this.uri) ? mime.lookup(this.uri) : 'application/pdf'
       })
     },
     fileCancel: function () {

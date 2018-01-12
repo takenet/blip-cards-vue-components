@@ -202,7 +202,7 @@ export default {
         this.save({
           ...this.document,
           uri: this.videoUri,
-          type: mime.lookup(this.videoUri)
+          type: mime.lookup(this.videoUri) ? mime.lookup(this.videoUri) : 'video/mp4'
         })
       })
     },

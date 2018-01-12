@@ -97,7 +97,7 @@ export default {
       return this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
     },
     type: function () {
-      return mime.lookup(this.image)
+      return mime.lookup(this.image) ? mime.lookup(this.image) : 'image/jpeg'
     }
   },
   methods: {
