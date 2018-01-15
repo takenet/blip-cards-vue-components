@@ -1,6 +1,6 @@
 <template>
   <div v-if="editableDocument" class="blip-flex">
-    <div class="blip-card-photo" v-if="photo" :style="{ marginTop: photoMargin + 'px' }">
+    <div :class="'blip-card-photo ' + position" v-if="photo && position === 'left'" :style="{ marginTop: photoMargin + 'px' }">
       <img :src="photo" width="25" height="25" alt="">
     </div>
     <div class="blip-card-container">
@@ -27,6 +27,9 @@
       <ticket v-else-if="document.type === 'application/vnd.iris.ticket+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
 
       <blip-raw v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
+    </div>
+    <div :class="'blip-card-photo ' + position" v-if="photo && position === 'right'" :style="{ marginTop: photoMargin + 'px' }">
+      <img :src="photo" width="25" height="25" alt="">
     </div>
   </div>
 </template>
@@ -74,7 +77,7 @@ export default {
   },
   methods: {
     removeEmpty(obj) {
-      Object.keys(obj).forEach(key => {
+      Object.keys(obj).forEach((key) => {
         if (obj[key] && typeof obj[key] === 'object') {
           this.removeEmpty(obj[key])
         } else if (obj[key] == null) {
@@ -113,4 +116,18 @@ export default {
 <style lang="scss">
 @import '../styles/common.scss';
 @import '../styles/variables.scss';
+
+.blip-card-photo {
+  &.left {
+    margin-right: 10px;
+  }
+
+  &.right {
+    margin-left: 10px;
+  }
+
+  img {
+    border-radius: 50%;
+  }
+}
 </style>
