@@ -1,7 +1,7 @@
 <template>
   <div v-if="editableDocument" class="blip-flex">
     <div class="blip-card-photo" v-if="photo" :style="{ marginTop: photoMargin + 'px' }">
-      <img :src="photo" alt="">
+      <img :src="photo" width="25" height="25" alt="">
     </div>
     <div class="blip-card-container">
       <plain-text v-if="document.type === 'text/plain'" :length="length" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
