@@ -4,7 +4,10 @@
       <img :src="photo" width="25" height="25" alt="">
     </div>
     <div class="blip-card-container">
-      <plain-text v-if="document.type === 'text/plain'" :length="length" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
+
+      <plain-text v-if="document.metadata && document.metadata['#blip.payload.text']" :length="length" :position="position" :document="document.metadata['#blip.payload.text']" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
+
+      <plain-text v-else-if="document.type === 'text/plain'" :length="length" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
 
       <media-link @updated="updatedPhotoMargin" v-else-if="document.type === 'application/vnd.lime.media-link+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
 
