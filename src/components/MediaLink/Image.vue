@@ -9,7 +9,7 @@
       </div>
       <div class="header" :id="id" v-if="!isEditing">
         <a :href="document.uri" target="_blank">
-          <div :class="'ratio ratio' + documentAspect" :style="styleObject">
+          <div :class="'img-border ratio ratio' + documentAspect" :style="styleObject">
           </div>
         </a>
 
@@ -155,6 +155,9 @@ export default {
       img {
         width: 100%;
         display: block;
+      }
+      .img-border {
+        border-radius: inherit!important;
       }
     }
 
