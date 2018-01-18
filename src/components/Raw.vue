@@ -1,40 +1,7 @@
 
 
 <template>
-  <div v-if="!isEditing">
-  <div class="blip-container raw">
-    <div :class="'bubble ' + position">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
-      </div>
-      <div v-if="editable" class="editIco" @click="toggleEdit">
-        <img :src="editSvg" />
-      </div>
-
-      <div v-html="document">
-      </div>
-    </div>
-
-    <div :class="'notification ' + position" v-if="date">
-      {{ date }}
-    </div>
-  </div>
-</div>
-
-<div class="blip-container plain-text" v-else>
-  <div :class="'bubble ' + position">
-    <div class="saveIco closeIco" @click="cancel()" >
-      <img :src="closeSvg" />
-    </div>
-    <div class="saveIco" @click="saveRaw()" :class="{'is-disabled': errors.any() }">
-      <img :src="approveSvg" />
-    </div>
-    <div class="form-group">
-      <textarea name="json" class="form-control" v-validate="'required|json'" :class="{'input-error': errors.has('json') }" v-model="json" style="width: 100%; min-width: 300px"></textarea>
-      <span v-show="errors.has('json')" class="help input-error">{{ errors.first('json') }}</span>
-    </div>
-  </div>
-</div>
+ <div></div>
 </template>
 
 <script>
@@ -59,6 +26,10 @@ export default {
     saveRaw: function () {
       this.save(JSON.parse(this.json))
     }
+  },
+  mounted () {
+    this.$emit('unsupportedType', this.document)
+    this.onDeleted(this.document)
   }
 }
 </script>

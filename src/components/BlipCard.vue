@@ -29,7 +29,7 @@
 
       <ticket v-else-if="document.type === 'application/vnd.iris.ticket+json'" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
 
-      <blip-raw v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
+      <blip-raw @unsupportedType="unsupportedType" v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable"/>
     </div>
     <div :class="'blip-card-photo ' + position" v-if="photo && position === 'right'" :style="{ marginTop: photoMargin + 'px' }">
       <img :src="photo" width="25" height="25" alt="">
@@ -59,6 +59,9 @@ export default {
     },
     photo: {
       type: String
+    },
+    onUnsupportedType: {
+      type: Function
     }
   },
   data() {
@@ -111,6 +114,11 @@ export default {
       const photoHeight = 25
 
       return bubbleHeight - photoHeight
+    },
+    unsupportedType (document) {
+      if (this.onUnsupportedType) {
+        this.onUnsupportedType(this.editableDocument)
+      }
     }
   }
 }

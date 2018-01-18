@@ -52,7 +52,7 @@
     <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px;'">
 
       <div v-for="(item, index) in documents" v-bind:key="index">
-        <blip-card :photo="photoUri" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected"/>
+        <blip-card :photo="photoUri" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType"/>
       </div>
 
       <!-- <blip-bubble position="left" date="8:35 PM" :on-selected="selected" :hide-options="false" :documents="docs" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected"/> -->
@@ -125,6 +125,8 @@ export default {
     sendRequestLocation: function () {
       this.json = JSON.stringify({'id': '1', 'to': '1042221589186385@messenger.gw.msging.net', 'type': 'application/vnd.lime.input+json', 'content': {'label': {'type': 'text/plain', 'value': 'Send your location please!'}, 'validation': {'rule': 'type', 'type': 'application/vnd.lime.location+json'}}})
       this.send()
+    },
+    onUnsupportedType: function (document) {
     }
   },
   data: function () {
