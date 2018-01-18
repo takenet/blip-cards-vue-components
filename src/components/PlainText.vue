@@ -102,5 +102,6 @@ export default {
   padding: $bubble-padding;
   word-wrap: break-word;
   min-width: auto;
+  text-align: left;
 }
 </style>
