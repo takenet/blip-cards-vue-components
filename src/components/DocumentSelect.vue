@@ -8,14 +8,14 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div :class="'ratio ratio' + aspect" :style="'background-image: url(' + this.document.header.value.uri + ')'">
+        <div v-if="this.document.header.value.uri" :class="'ratio ratio' + aspect" :style="'background-image: url(' + this.document.header.value.uri + ')'">
         </div>
 
-        <div class="title" v-if="document.header.value.title || document.header.value.text">
+        <div class="title" v-if="document.header.value.title || document.header.value.text || document.header.value">
           <strong class="hide-overflow" v-if="document.header.value.title" v-html="document.header.value.title"></strong>
           <span class="hide-overflow" v-if="previewContent && !showContent" v-html="previewContent"></span>
           <transition name="slide-fade">
-            <div v-if="showContent && hasPreview" v-html="document.header.value.text">
+            <div v-if="showContent && hasPreview" v-html="document.header.value.text || document.header.value">
             </div>
           </transition>
           <a style="display: block;" v-if="!showContent && hasPreview" @click="showContent = true">Ver mais</a>
@@ -157,7 +157,7 @@ import mime from 'mime-types'
 const optionSize = 34
 
 let getOptionContent = function (item) {
-  let text = item.label.type === item.label.value.title || item.label.value.text || item.label.value.uri || item.label.value
+  let text = item.label.type === item.label.value.title || item.label.value.text || item.label.value.title || item.label.value.uri || item.label.value
   if (text.length > optionSize) {
     return text.substring(0, optionSize) + '...'
   } else {
@@ -235,13 +235,25 @@ export default {
       return mime.lookup(this.previewUri) ? mime.lookup(this.previewUri) : 'image/jpeg'
     },
     previewContent: function () {
-      if (this.document.header.value.text && this.document.header.value.text.length > this.length) {
-        return linkify(this.document.header.value.text.substring(0, this.length)) + '...'
+      if (this.document.header.value.text) {
+        if (this.document.header.value.text.length > this.length) {
+          return linkify(this.document.header.value.text.substring(0, this.length)) + '...'
+        }
+        return linkify(this.document.header.value.text)
       }
-      return this.document.header.value.text ? linkify(this.document.header.value.text) : ''
+
+      if (this.document.header.value) {
+        if (this.document.header.value.length > this.length) {
+          return linkify(this.document.header.value.substring(0, this.length)) + '...'
+        }
+        return this.document.header.value ? linkify(this.document.header.value) : ''
+      }
+
+      return ''
     },
     hasPreview: function () {
-      return this.document.header.value.text && this.document.header.value.text.length > this.length
+      return (this.document.header.value.text && this.document.header.value.text.length > this.length) ||
+        (this.document.header.value && this.document.header.value.length > this.length)
     }
   },
   methods: {
