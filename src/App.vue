@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px; height: 400px;'" v-chat-scroll>
+    <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px; height: 400px;'" v-chat-scroll="{scrollToTop: false}">
       <div>
         <div v-for="(item, index) in documents" v-bind:key="index">
           <blip-card :photo="photoUri" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType"/>
@@ -71,6 +71,11 @@ export default {
     photoUri() {
       return this.photo ? 'http://placehold.it/25x25' : false
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.send()
+    }, 500)
   },
   methods: {
     send: function() {

@@ -171,11 +171,12 @@ const vChatScroll = {
     }).observe(contentScroll, { childList: true, subtree: true })
   },
   inserted: (el, binding) => {
+    let contentScroll = el.querySelector('.ss-content')
     let config = binding.value || {}
     if (config.scrollToTop) {
-      scrollToTop(el)
+      scrollToTop(contentScroll)
     } else {
-      scrollToBottom(el)
+      scrollToBottom(contentScroll)
     }
   }
 }
