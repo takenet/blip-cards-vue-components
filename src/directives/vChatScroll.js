@@ -137,6 +137,10 @@ const scrollToBottom = (el) => {
   el.scrollTop = el.scrollHeight
 }
 
+const scrollToTop = (el) => {
+  el.scrollTop = 0
+}
+
 const vChatScroll = {
   bind: (el, binding) => {
     window.SimpleScrollbar.initEl(el)
@@ -152,10 +156,6 @@ const vChatScroll = {
         scrolled =
           contentScroll.scrollTop + contentScroll.clientHeight + 1 <
           contentScroll.scrollHeight
-
-        if (contentScroll.scrollTop === 0 && config.infiniteScroll) {
-          config.infiniteScroll()
-        }
       }, 200)
     })
 
@@ -165,8 +165,13 @@ const vChatScroll = {
       scrollToBottom(contentScroll)
     }).observe(contentScroll, { childList: true, subtree: true })
   },
-  inserted: (el) => {
-    scrollToBottom(el)
+  inserted: (el, binding) => {
+    let config = binding.value || {}
+    if (config.scrollToTop) {
+      scrollToTop(el)
+    } else {
+      scrollToBottom(el)
+    }
   }
 }
 
