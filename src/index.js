@@ -28,9 +28,12 @@ import FileIconFilter from './filters/FileIconFilter'
 
 // Directives
 import AutoExpandDirective from './directives/AutoExpandDirective'
+import vChatScroll from './directives/vChatScroll'
 
 function install(Vue) {
   let components = []
+
+  Vue.config.productionTip = false
 
   components.push(Vue.component(BlipCard.name, BlipCard))
   components.push(Vue.component(Ticket.name, Ticket))
@@ -57,6 +60,7 @@ function install(Vue) {
   Vue.filter('fileIconFilter', FileIconFilter.filter)
 
   Vue.directive('autoExpand', AutoExpandDirective)
+  Vue.directive('chat-scroll', vChatScroll)
 
   Vue.use(VeeValidate)
   return components
