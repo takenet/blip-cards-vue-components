@@ -46,7 +46,7 @@
       </div>
       <div class="header">
         <div class="form-group">
-          <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="previewUri" placeholder="Image Uri" />
+          <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'url'" class="form-control" v-model="previewUri" placeholder="Image Uri" />
           <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
           <div class="upload-intructions">
             <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
@@ -70,7 +70,7 @@
           </div>
         </div>
         <div class="form-group">
-          <input type="title" name="title" :class="{'input-error': errors.has('title') }" v-validate="'required'" class="form-control" v-model="title" placeholder="Title" />
+          <input type="title" name="title" :class="{'input-error': errors.has('title') }" class="form-control" v-model="title" placeholder="Title" />
           <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
           <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" placeholder="Description" />
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
