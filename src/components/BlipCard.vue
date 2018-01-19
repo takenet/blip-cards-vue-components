@@ -57,9 +57,7 @@ export default {
     onOpenLink: {
       type: Function
     },
-    photo: {
-      type: String
-    },
+    photo: {},
     onUnsupportedType: {
       type: Function
     }
@@ -115,7 +113,7 @@ export default {
 
       return bubbleHeight - photoHeight
     },
-    unsupportedType (document) {
+    unsupportedType(document) {
       if (this.onUnsupportedType) {
         this.onUnsupportedType(this.editableDocument)
       }
