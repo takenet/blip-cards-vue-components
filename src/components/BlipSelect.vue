@@ -34,7 +34,9 @@
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>
-        <span v-html="computedText"></span>
+        <div class="text-left">
+          <span v-html="computedText"></span>
+        </div>
         <div class="fixed-options">
           <ul>
             <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
