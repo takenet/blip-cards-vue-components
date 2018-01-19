@@ -162,7 +162,12 @@ const vChatScroll = {
     new MutationObserver((e) => {
       if (config.always === true) scrollToBottom(contentScroll)
       if (scrolled || e[e.length - 1].addedNodes.length !== 1) return
-      scrollToBottom(contentScroll)
+
+      if (config.scrollToTop) {
+        scrollToTop(contentScroll)
+      } else {
+        scrollToBottom(contentScroll)
+      }
     }).observe(contentScroll, { childList: true, subtree: true })
   },
   inserted: (el, binding) => {
