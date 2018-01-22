@@ -101,7 +101,7 @@ export default {
 .plain-text .bubble {
   padding: $bubble-padding;
   word-wrap: break-word;
-  min-width: auto;
+  min-width: auto!important;
   text-align: left;
 }
 </style>
