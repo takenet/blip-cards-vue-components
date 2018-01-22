@@ -134,7 +134,9 @@
 })(window, document)
 
 const scrollToBottom = (el) => {
-  el.scrollTop = el.scrollHeight
+  setTimeout(() => {
+    el.scrollTop = el.scrollHeight
+  }, 200)
 }
 
 const scrollToTop = (el) => {

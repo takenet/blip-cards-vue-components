@@ -112,16 +112,15 @@
   </div>
 </template>
 
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js">
+</script>
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 
 export default {
-  mixins: [
-    base
-  ],
-  data: function () {
+  mixins: [base],
+  data: function() {
     return {
       videoUri: this.document.uri,
       isPlaying: false,
@@ -138,18 +137,18 @@ export default {
       animation: null
     }
   },
-  mounted: function () {
+  mounted: function() {
     this.initVideo()
     document.addEventListener('fullscreenchange', this.fullScreenChange)
     document.addEventListener('webkitfullscreenchange', this.fullScreenChange)
     document.addEventListener('mozfullscreenchange', this.fullScreenChange)
     document.addEventListener('MSFullscreenChange', this.fullScreenChange)
   },
-  updated: function () {
+  updated: function() {
     this.initVideo()
   },
   methods: {
-    initVideo: function () {
+    initVideo: function() {
       if (!this.video) {
         this.video = this.$el.querySelector('#blipVideo')
       }
@@ -157,16 +156,22 @@ export default {
         this.progress = this.$el.querySelector('#videoProgress')
       }
       if (!this.videoPlayerControls) {
-        this.videoPlayerControls = this.$el.querySelector('#videoPlayerControls')
+        this.videoPlayerControls = this.$el.querySelector(
+          '#videoPlayerControls'
+        )
       }
       if (!this.volumeProgress) {
         this.volumeProgress = this.$el.querySelector('#volumeProgress')
       }
       if (!this.volumeSliderWrapper) {
-        this.volumeSliderWrapper = this.$el.querySelector('#volumeSliderWrapper')
+        this.volumeSliderWrapper = this.$el.querySelector(
+          '#volumeSliderWrapper'
+        )
       }
       if (!this.videoPlayerWrapper) {
-        this.videoPlayerWrapper = this.$el.querySelector('#blipVideoPlayerWrapper')
+        this.videoPlayerWrapper = this.$el.querySelector(
+          '#blipVideoPlayerWrapper'
+        )
       }
       if (!this.animation) {
         this.animation = this.$el.querySelector('#animation')
@@ -182,14 +187,14 @@ export default {
       this.video.addEventListener('canplay', this.readyToPlay)
       this.video.addEventListener('ended', this.resetPlay)
     },
-    toggleEdit: function () {
+    toggleEdit: function() {
       this.isEditing = !this.isEditing
       this.isPlaying = false
       this.video.pause()
       this.video.src = ''
       this.video.load()
     },
-    videoSave: function () {
+    videoSave: function() {
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.video = null
@@ -202,11 +207,13 @@ export default {
         this.save({
           ...this.document,
           uri: this.videoUri,
-          type: mime.lookup(this.videoUri) ? mime.lookup(this.videoUri) : 'video/mp4'
+          type: mime.lookup(this.videoUri)
+            ? mime.lookup(this.videoUri)
+            : 'video/mp4'
         })
       })
     },
-    videoCancel: function () {
+    videoCancel: function() {
       this.video = null
       this.progress = null
       this.videoPlayerControls = null
@@ -217,7 +224,7 @@ export default {
       this.videoUri = this.document.uri
       this.isEditing = false
     },
-    togglePlay: function () {
+    togglePlay: function() {
       this.isPlaying = !this.isPlaying
       if (this.isPlaying) {
         this.video.play()
@@ -225,51 +232,55 @@ export default {
         this.video.pause()
       }
     },
-    resetPlay: function () {
+    resetPlay: function() {
       if (this.isPlaying && (this.video.currentTime = this.totalTime)) {
         this.isPlaying = false
         this.video.pause()
         this.video.currentTime = 0
       }
     },
-    readyToPlay: function (event) {
+    readyToPlay: function(event) {
       if (event.type === 'seeked' || event.type === 'canplay') {
         this.animation.classList.add('hide')
       } else {
         this.animation.classList.remove('hide')
       }
     },
-    videoTimeUpdated: function () {
+    videoTimeUpdated: function() {
       var current = this.video.currentTime
-      var percent = (current / this.totalTime) * 100
+      var percent = current / this.totalTime * 100
       this.progress.style.width = percent + '%'
 
       this.currentTime = this.video.currentTime
     },
-    videoLoaded: function () {
+    videoLoaded: function() {
       this.totalTime = this.video.duration
       this.$emit('updated')
     },
-    setVideoPosition: function (event) {
+    setVideoPosition: function(event) {
       // srcElement is no supported in FF, but needed if working with IE6-8
       this.video.currentTime = (event.target || event.srcElement).value
     },
-    setVolume: function (event) {
+    setVolume: function(event) {
       // srcElement is no supported in FF, but needed if working with IE6-8
       this.video.volume = (event.target || event.srcElement).value / 100
 
       var percent = this.video.volume * 100
       this.volumeProgress.style.width = percent + '%'
     },
-    toggleVolumeControl: function () {
+    toggleVolumeControl: function() {
       if (this.volumeSliderWrapper.classList.contains('hide')) {
         this.volumeSliderWrapper.classList.remove('hide')
       } else {
         this.volumeSliderWrapper.classList.add('hide')
       }
     },
-    toggleFullScreen: function () {
-      if (document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen) {
+    toggleFullScreen: function() {
+      if (
+        document.fullScreen ||
+        document.mozFullScreen ||
+        document.webkitIsFullScreen
+      ) {
         if (document.exitFullscreen) {
           document.exitFullscreen()
         } else if (document.mozCancelFullScreen) {
@@ -291,20 +302,29 @@ export default {
         }
       }
     },
-    fullScreenChange: function () {
-      this.isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen
+    fullScreenChange: function() {
+      this.isFullScreen =
+        document.fullScreen ||
+        document.mozFullScreen ||
+        document.webkitIsFullScreen
       if (this.isFullScreen) {
         this.videoPlayerWrapper.classList.add('video-full-screen')
-        this.videoPlayerWrapper.addEventListener('mousemove', this.showPlayerControls)
+        this.videoPlayerWrapper.addEventListener(
+          'mousemove',
+          this.showPlayerControls
+        )
         this.showPlayerControls()
       } else {
-        this.videoPlayerWrapper.removeEventListener('mousemove', this.showPlayerControls)
+        this.videoPlayerWrapper.removeEventListener(
+          'mousemove',
+          this.showPlayerControls
+        )
         clearTimeout(this.inactivityTimeout)
         this.videoPlayerControls.classList.remove('hide-player')
         this.videoPlayerWrapper.classList.remove('video-full-screen')
       }
     },
-    showPlayerControls: function () {
+    showPlayerControls: function() {
       clearTimeout(this.inactivityTimeout)
       this.videoPlayerControls.classList.remove('hide-player')
       this.inactivityTimeout = setTimeout(() => {
@@ -312,10 +332,14 @@ export default {
         this.volumeSliderWrapper.classList.add('hide')
       }, 3000)
     },
-    getTimeFromSeconds: function (seconds) {
+    getTimeFromSeconds: function(seconds) {
       var timeMin = Math.floor(seconds / 60)
       var timeSec = Math.floor(seconds % 60)
-      return (timeMin < 10 ? '0' + timeMin : timeMin) + ':' + (timeSec < 10 ? '0' + timeSec : timeSec)
+      return (
+        (timeMin < 10 ? '0' + timeMin : timeMin) +
+        ':' +
+        (timeSec < 10 ? '0' + timeSec : timeSec)
+      )
     }
   }
 }
@@ -323,229 +347,232 @@ export default {
 
 
 <style lang="scss">
-   @import '../../styles/variables.scss';
-   @import '../../styles/loading.scss';
+@import '../../styles/variables.scss';
+@import '../../styles/loading.scss';
 
-  .media-link.video{
+#blipVideo {
+  max-height: 300px;
+}
 
-    .bubble {
-      width: $bubble-width;
-      padding: 0;
-      color: $vue-london;
+.media-link.video {
+  .bubble {
+    width: $bubble-width;
+    padding: 0;
+    color: $vue-london;
+  }
+  .left {
+    .progress .pin {
+      background-color: $vue-neon-blip;
     }
-    .left {
-      .progress .pin {
-        background-color: $vue-neon-blip;
-      }
-      .video-player-button {
-        fill: $vue-london;
-      }
+    .video-player-button {
+      fill: $vue-london;
     }
-    .right {
-      color: $vue-cotton;
-      .progress .pin{
-        background-color: $vue-white;
-      }
-      .video-player-button {
-        fill: $vue-white;
-      }
+  }
+  .right {
+    color: $vue-cotton;
+    .progress .pin {
+      background-color: $vue-white;
     }
-
-    .form {
-      form {
-        width: auto;
-      }
+    .video-player-button {
+      fill: $vue-white;
     }
+  }
 
-    .notification {
-      color: $vue-london;
+  .form {
+    form {
+      width: auto;
     }
+  }
 
-    .video-player-wrapper {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
+  .notification {
+    color: $vue-london;
+  }
 
-      .sk-circle-wrapper {
-        position: absolute;
-        left: 50%;
-        padding: 5px;
-        border-radius: 100%;
-        margin-left: -25px;
-        background-color: $vue-black-transparent-soft;
+  .video-player-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 
-        .sk-circle{
-          position: relative;
-          color: white;
-        }
-      }
+    .sk-circle-wrapper {
+      position: absolute;
+      left: 50%;
+      padding: 5px;
+      border-radius: 100%;
+      margin-left: -25px;
+      background-color: $vue-black-transparent-soft;
 
-      .video-player {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-self: top;
-        align-items: center;
-        justify-content: center;
-        border-radius: 13px 13px 13px 2px !important;
-      }
-
-      video {
-        height: 100%;
-        width: 100%;
-      }
-
-      .video-player-controls {
-        padding: $bubble-padding;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        margin-top:5px;
-      }
-
-      .volume-control {
-        height: 100%;
+      .sk-circle {
         position: relative;
-      }
-
-      .volume-slider-wrapper {
-        background-color: $vue-black-transparent;
-        padding: 15px;
-        bottom: 90px;
-        left: -40px;
-        position: absolute;
-        border-radius: 10px;
-        -ms-transform: rotate(90deg); /* IE 9 */
-        -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
-        transform: rotate(-90deg);
-        transition: all 0.15s linear;
-      }
-      .volume-slider {
-        width: 100px;
-        position:relative;
-        margin: 0;
-      }
-
-      .hide {
-        opacity: 0;
-        visibility: hidden;
-      }
-
-      .video-player-volume{
-        position: absolute;
-        width: 100%;
-        bottom: -11px;
-        opacity: 0;
-        cursor: pointer;
-      }
-
-      video::-webkit-media-controls-enclosure {
-        display:none;
-      }
-
-      .video-player-button {
-        flex-grow: 0;
-      }
-
-      .player-button {
-        cursor: pointer;
-      }
-      .player-button-left {
-        margin-right: 15px;
-        width: 14px;
-      }
-
-      .player-button-right {
-        margin-left: 15px;
-      }
-
-      .video-player-bar {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        margin-top: 10px;
-      }
-
-      .video-player-time {
-        display: flex;
-        justify-content: space-between;
-        font-family: "Avenir Next";
-        font-size: x-small;
-        line-height: 10px;
-        color: inherit;
-      }
-
-      .video-player-range{
-        position: relative;
-        bottom: 10px;
-        opacity: 0;
-        margin: 0 0 -9px 0;
-        width: 100%;
-        padding: 0;
-        height: 16px;
-        cursor: pointer;
-      }
-
-      .slider {
-        border-radius: 1.5px;
-        height: 3px;
-        flex-grow: 1;
-        background-color: $vue-cotton;
-        position: relative;
-
-        .progress {
-          width: 0;
-          height: 100%;
-          background-color: $vue-neon-blip;
-          border-radius: inherit;
-          position: absolute;
-          pointer-events: none;
-
-          .pin {
-            right: -8px;
-            top: -6px;
-            height: 14px;
-            width: 14px;
-            border-radius: 8px;
-            position: absolute;
-            pointer-events: all;
-            box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.32);
-          }
-        }
+        color: white;
       }
     }
 
-    .video-full-screen {
-      background-color: $vue-black;
-      display: flex;
-      width: 100%;
+    .video-player {
       height: 100%;
+      width: 100%;
+      display: flex;
+      align-self: top;
+      align-items: center;
+      justify-content: center;
+      border-radius: 13px 13px 13px 2px !important;
+    }
 
-      .video-player-controls.hide-player {
-        bottom:-50px;
-        visibility: hidden;
-        opacity: 0;
-      }
+    video {
+      height: 100%;
+      width: 100%;
+    }
 
-      .video-player-controls {
-        background-color: $vue-black-transparent;
-        margin: 0;
+    .video-player-controls {
+      padding: $bubble-padding;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 5px;
+    }
+
+    .volume-control {
+      height: 100%;
+      position: relative;
+    }
+
+    .volume-slider-wrapper {
+      background-color: $vue-black-transparent;
+      padding: 15px;
+      bottom: 90px;
+      left: -40px;
+      position: absolute;
+      border-radius: 10px;
+      -ms-transform: rotate(90deg); /* IE 9 */
+      -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+      transform: rotate(-90deg);
+      transition: all 0.15s linear;
+    }
+    .volume-slider {
+      width: 100px;
+      position: relative;
+      margin: 0;
+    }
+
+    .hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .video-player-volume {
+      position: absolute;
+      width: 100%;
+      bottom: -11px;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    video::-webkit-media-controls-enclosure {
+      display: none;
+    }
+
+    .video-player-button {
+      flex-grow: 0;
+    }
+
+    .player-button {
+      cursor: pointer;
+    }
+    .player-button-left {
+      margin-right: 15px;
+      width: 14px;
+    }
+
+    .player-button-right {
+      margin-left: 15px;
+    }
+
+    .video-player-bar {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      margin-top: 10px;
+    }
+
+    .video-player-time {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Avenir Next';
+      font-size: x-small;
+      line-height: 10px;
+      color: inherit;
+    }
+
+    .video-player-range {
+      position: relative;
+      bottom: 10px;
+      opacity: 0;
+      margin: 0 0 -9px 0;
+      width: 100%;
+      padding: 0;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .slider {
+      border-radius: 1.5px;
+      height: 3px;
+      flex-grow: 1;
+      background-color: $vue-cotton;
+      position: relative;
+
+      .progress {
+        width: 0;
+        height: 100%;
+        background-color: $vue-neon-blip;
+        border-radius: inherit;
         position: absolute;
-        width: 100%;
-        bottom: 0;
-        left: 0;
-        transition: all 0.5s linear;
-        .player-button {
-          fill: $vue-london !important;
-        }
-        .video-player-time {
-          color: $vue-london !important;
-        }
+        pointer-events: none;
+
         .pin {
-          background-color: $vue-light-blip !important;
+          right: -8px;
+          top: -6px;
+          height: 14px;
+          width: 14px;
+          border-radius: 8px;
+          position: absolute;
+          pointer-events: all;
+          box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);
         }
       }
     }
   }
+
+  .video-full-screen {
+    background-color: $vue-black;
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .video-player-controls.hide-player {
+      bottom: -50px;
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .video-player-controls {
+      background-color: $vue-black-transparent;
+      margin: 0;
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      transition: all 0.5s linear;
+      .player-button {
+        fill: $vue-london !important;
+      }
+      .video-player-time {
+        color: $vue-london !important;
+      }
+      .pin {
+        background-color: $vue-light-blip !important;
+      }
+    }
+  }
+}
 </style>
