@@ -166,25 +166,28 @@ const vChatScroll = {
     let contentScroll = el.querySelector('.ss-content')
     let timeout
 
+    let config = binding.value || {}
+
     contentScroll.addEventListener('scroll', (e) => {
       if (timeout) window.clearTimeout(timeout)
       timeout = window.setTimeout(function() {
-        scrolled =
-          contentScroll.scrollTop + contentScroll.clientHeight + 1 <
-          contentScroll.scrollHeight
+        if (config.scrollToTop) {
+          scrolled = contentScroll.scrollTop > 0
+        } else {
+          scrolled =
+            contentScroll.scrollTop + contentScroll.clientHeight + 1 <
+            contentScroll.scrollHeight
+        }
       }, 200)
     })
 
     new MutationObserver((e) => {
-      if (scrolled || e[e.length - 1].addedNodes.length !== 1) return
-
+      if (e[e.length - 1].addedNodes.length !== 1) return
       scroll(el, binding)
     }).observe(contentScroll, { childList: true, subtree: true })
   },
   inserted: (el, binding) => {
-    scroll(el, binding)
-  },
-  update: (el, binding) => {
+    scrolled = false
     scroll(el, binding)
   }
 }
