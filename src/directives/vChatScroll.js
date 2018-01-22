@@ -143,14 +143,28 @@ const scrollToTop = (el) => {
   el.scrollTop = 0
 }
 
+const scroll = (el, binding) => {
+  let config = binding.value || {}
+  if (config.always !== true && scrolled) {
+    return
+  }
+
+  let contentScroll = el.querySelector('.ss-content')
+  if (config.scrollToTop) {
+    scrollToTop(contentScroll)
+  } else {
+    scrollToBottom(contentScroll)
+  }
+}
+
+let scrolled = false
+
 const vChatScroll = {
   bind: (el, binding) => {
     window.SimpleScrollbar.initEl(el)
 
     let contentScroll = el.querySelector('.ss-content')
     let timeout
-    let scrolled = false
-    let config = binding.value || {}
 
     contentScroll.addEventListener('scroll', (e) => {
       if (timeout) window.clearTimeout(timeout)
@@ -162,24 +176,16 @@ const vChatScroll = {
     })
 
     new MutationObserver((e) => {
-      if (config.always === true) scrollToBottom(contentScroll)
       if (scrolled || e[e.length - 1].addedNodes.length !== 1) return
 
-      if (config.scrollToTop) {
-        scrollToTop(contentScroll)
-      } else {
-        scrollToBottom(contentScroll)
-      }
+      scroll(el, binding)
     }).observe(contentScroll, { childList: true, subtree: true })
   },
   inserted: (el, binding) => {
-    let contentScroll = el.querySelector('.ss-content')
-    let config = binding.value || {}
-    if (config.scrollToTop) {
-      scrollToTop(contentScroll)
-    } else {
-      scrollToBottom(contentScroll)
-    }
+    scroll(el, binding)
+  },
+  update: (el, binding) => {
+    scroll(el, binding)
   }
 }
 
