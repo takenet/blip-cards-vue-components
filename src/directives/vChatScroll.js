@@ -183,7 +183,17 @@ const vChatScroll = {
 
     new MutationObserver((e) => {
       if (e[e.length - 1].addedNodes.length !== 1) return
-      scroll(el, binding)
+
+      // Infinite scroll, new elements are added so we haveto keep the scroll in the same position
+      if (config.scrollToTop !== true && contentScroll.scrollTop === 0) {
+        let addedHeight = 0
+        for (let item of e) {
+          addedHeight += item.addedNodes[0].scrollHeight
+        }
+        contentScroll.scrollTop = addedHeight
+      } else {
+        scroll(el, binding)
+      }
     }).observe(contentScroll, { childList: true, subtree: true })
   },
   inserted: (el, binding) => {
