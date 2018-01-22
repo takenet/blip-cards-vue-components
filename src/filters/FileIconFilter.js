@@ -28,6 +28,7 @@ export default {
       case 'doc':
       case 'docx':
       case 'msword':
+      case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
         return fileIconDoc
       case 'jpg':
         return fileIconJpg
@@ -42,14 +43,17 @@ export default {
       case 'ppt':
       case 'pptx':
       case 'vnd.ms-powerpoint':
+      case 'vnd.openxmlformats-officedocument.presentationml.presentation':
         return fileIconPpt
       case 'rar':
         return fileIconRar
       case 'txt':
+      case 'plain':
         return fileIconTxt
       case 'xls':
       case 'xlsx':
       case 'vnd.ms-excel':
+      case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
         return fileIconXls
       case 'zip':
         return fileIconZip
