@@ -131,12 +131,12 @@ export default {
 
     var bubble = element.querySelector('.bubble')
 
-    if (width <= 500) {
+    if (width <= 400) {
       bubble.style.width = width + 'px'
     } else if (width < 800) {
-      bubble.style.width = (width / 2) + 'px'
-    } else {
       bubble.style.width = (width / 3) + 'px'
+    } else {
+      bubble.style.width = (width / 4) + 'px'
     }
   }
 }
@@ -149,6 +149,7 @@ export default {
 
     .bubble {
       padding: 0;
+      max-width: 350px;
     }
 
     .header {
