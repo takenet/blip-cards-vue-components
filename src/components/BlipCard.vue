@@ -127,6 +127,7 @@ export default {
 @import '../styles/variables.scss';
 
 .blip-container--with-photo {
+  background-size: 100%;
 
   &.left {
     margin-left: 35px;
