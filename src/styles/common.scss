@@ -27,7 +27,7 @@
   input, textarea, label {
     font-family: "Avenir Next";
   }
-min
+
   .bubble {
       font-family: "Avenir Next";
       position: relative;
@@ -40,6 +40,8 @@ min
       font-weight: 500;
       line-height: 19px;
       white-space: pre-line;
+
+      &:first-line { line-height: 0 }
   }
 
   .bubble.left {

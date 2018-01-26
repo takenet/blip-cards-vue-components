@@ -8,7 +8,7 @@
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>
-        <span v-html="computedText" v-if="computedText"></span>
+        <div v-html="computedText" v-if="computedText"></div>
       </div>
 
       <div :class="'notification ' + position" v-if="date">
@@ -19,7 +19,7 @@
         <div class="options" v-if="!hide">
           <ul>
             <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
-              <span v-html="item.previewText"></span>
+              <div v-html="item.previewText"></div>
             </li>
           </ul>
         </div>
@@ -34,13 +34,11 @@
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>
-        <div class="text-left">
-          <span v-html="computedText"></span>
-        </div>
+        <div class="text-left" v-html="computedText"></div>
         <div class="fixed-options">
           <ul>
             <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
-              <span v-html="item.text"></span>
+              <div v-html="item.text"></div>
             </li>
           </ul>
         </div>
