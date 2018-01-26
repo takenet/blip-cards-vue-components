@@ -221,12 +221,14 @@ export default {
 
       .bubble {
         width: 100%;
+        height: 100%;
       }
 
       .slide-item {
         float: left;
         height: 100%;
         min-height: 1px;
+        margin-right: 10px;
       }
 
       a {

@@ -9,7 +9,7 @@
       </div>
       <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper" @click="handleWeblink()">
         <div v-if="this.previewImage" class="preview" :style="'background-image: url(' + this.previewImage + ')'"></div>
-        <div class="link-description-wrapper">
+        <div class="link-description-wrapper text-left">
           <span class="text big-text" :title="previewTitle" v-text="this.previewTitle"></span>
           <div class="text-wrapper">
             <span class="text light-text" :title="previewText" v-text="this.previewText"></span>
