@@ -28,7 +28,7 @@
             <img :src="approveSvg" />
           </div>
           <div class="form-group">
-            <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required|url'" class="form-control" v-model="image" placeholder="Image Uri" />
+            <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required'" class="form-control" v-model="image" placeholder="Image Uri" />
             <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
             <div class="upload-intructions">
               <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
