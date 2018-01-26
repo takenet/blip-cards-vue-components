@@ -123,6 +123,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "vee-validate": "^2.0.0-rc.21"
+    "vee-validate": "^2.0.0-rc.21",
+    "vue2-touch-events": "^1.0.0"
   }
 }

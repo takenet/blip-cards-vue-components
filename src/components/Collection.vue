@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="'blip-container collection'" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
+    <div :class="'blip-container collection'" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
       <div :class="'slideshow-container ' + position" :id="id">
         <div class="slideshow-list">
           <div class="slideshow-track">
@@ -130,6 +130,12 @@ export default {
     }
   },
   methods: {
+    swipeLeftHandler: function() {
+      this.plusSlides(1)
+    },
+    swipeRightHandler: function() {
+      this.plusSlides(-1)
+    },
     deleteItem: function (document) {
       this.items = this.items.filter(x => x !== document)
 
