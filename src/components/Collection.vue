@@ -131,10 +131,14 @@ export default {
   },
   methods: {
     swipeLeftHandler: function() {
-      this.plusSlides(1)
+      if (this.showNext) {
+        this.plusSlides(1)
+      }
     },
     swipeRightHandler: function() {
-      this.plusSlides(-1)
+      if (this.showPrev) {
+        this.plusSlides(-1)
+      }
     },
     deleteItem: function (document) {
       this.items = this.items.filter(x => x !== document)

@@ -1,4 +1,5 @@
 import VeeValidate, { Validator } from 'vee-validate'
+import Vue2TouchEvents from 'vue2-touch-events'
 
 // Components
 import BlipCard from './components/BlipCard'
@@ -63,6 +64,7 @@ function install(Vue) {
   Vue.directive('chat-scroll', vChatScroll)
 
   Vue.use(VeeValidate)
+  Vue.use(Vue2TouchEvents)
   return components
 }
 

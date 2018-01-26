@@ -4,9 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import blipCards from './index'
 
-import Vue2TouchEvents from 'vue2-touch-events'
-Vue.use(Vue2TouchEvents)
-
 blipCards.install(Vue)
 
 Vue.config.productionTip = false
