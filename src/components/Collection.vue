@@ -186,7 +186,10 @@ export default {
         trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
       } else {
         let margin = this.elementsWidth === this.width ? -10 : 10
-        trackElement.style.transform = 'translate3d(' + (this.elementsWidth * (n - 1) - margin) * -1 + 'px, 0px, 0px)'
+        console.log(margin, this.elementsWidth)
+        const data = 'translate3d(' + ((this.elementsWidth + 10) * (n - 1) - margin) * -1 + 'px, 0px, 0px)'
+        console.log(data)
+        trackElement.style.transform = data
       }
     }
   }
@@ -262,7 +265,7 @@ export default {
 
     /* Position the "next button" to the right */
     .next {
-      right: 0;
+      right: 18px;
       border-radius: 3px 0 0 3px;
     }
 
