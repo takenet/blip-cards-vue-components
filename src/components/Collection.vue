@@ -252,6 +252,11 @@ export default {
 
     a {
       text-decoration: none;
+      opacity: 0.3;
+
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 
@@ -263,7 +268,7 @@ export default {
     width: auto;
     margin-top: -22px;
     padding: 8px 16px;
-    opacity: 0.3;
+    // opacity: 0.3;
     color: $vue-light-blip;
     font-weight: bold;
     font-size: 18px;
@@ -286,7 +291,7 @@ export default {
   /* On hover, add a black background color with a little bit see-through */
   .prev:hover,
   .next:hover {
-    opacity: 1;
+    // opacity: 1;
   }
 
   .fade {
