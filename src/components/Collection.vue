@@ -252,11 +252,6 @@ export default {
 
     a {
       text-decoration: none;
-      opacity: 0.3;
-
-      &:hover {
-        opacity: 1;
-      }
     }
   }
 
@@ -268,9 +263,10 @@ export default {
     width: auto;
     margin-top: -22px;
     padding: 8px 16px;
-    // opacity: 0.3;
+    opacity: 0.3;
     color: $vue-light-blip;
     font-weight: bold;
+    opacity: 0.3;
     font-size: 18px;
     transition: 0.6s ease;
     border-radius: 5px 0 0 5px;
@@ -280,6 +276,7 @@ export default {
 
   .prev {
     left: 0;
+
   }
 
   /* Position the "next button" to the right */
@@ -291,7 +288,7 @@ export default {
   /* On hover, add a black background color with a little bit see-through */
   .prev:hover,
   .next:hover {
-    // opacity: 1;
+    opacity: 1;
   }
 
   .fade {
