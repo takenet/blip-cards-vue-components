@@ -196,16 +196,10 @@ export default {
         trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
       } else {
         let margin = this.elementsWidth === this.width ? -10 : 10
-        console.log('YEEYYYYYY', this.elementsWidth)
-        console.log(
-          'calc',
-          ((this.elementsWidth + 10) * (n - 1) - margin) * -1 - 15
-        )
         const data =
           'translate3d(' +
           (((this.elementsWidth + 10) * (n - 1) - margin) * -1 + 10) +
           'px, 0px, 0px)'
-        console.log(data)
         trackElement.style.transform = data
       }
     }
