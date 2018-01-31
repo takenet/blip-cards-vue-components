@@ -147,7 +147,7 @@ const scrollToTop = (el) => {
 const scroll = _.debounce((el, binding) => {
   let config = binding.value || {}
   let contentScroll = el.querySelector('.ss-content')
-  scrolled = contentScroll.scrollTop === contentScroll.scrollHeight
+  let scrolled = contentScroll.scrollTop === contentScroll.scrollHeight
   if (config.always !== true && scrolled) {
     return
   }
@@ -159,29 +159,12 @@ const scroll = _.debounce((el, binding) => {
   }
 }, 100)
 
-let scrolled = false
-
 const vChatScroll = {
   bind: (el, binding) => {
     window.SimpleScrollbar.initEl(el)
 
     let contentScroll = el.querySelector('.ss-content')
-    let timeout
-
     let config = binding.value || {}
-
-    contentScroll.addEventListener('scroll', (e) => {
-      if (timeout) window.clearTimeout(timeout)
-      timeout = window.setTimeout(function() {
-        if (config.scrollToTop) {
-          scrolled = contentScroll.scrollTop > 0
-        } else {
-          scrolled =
-            contentScroll.scrollTop + contentScroll.clientHeight + 1 <
-            contentScroll.scrollHeight
-        }
-      }, 200)
-    })
 
     new MutationObserver((e) => {
       if (e[e.length - 1].addedNodes.length !== 1) return
@@ -199,7 +182,6 @@ const vChatScroll = {
     }).observe(contentScroll, { childList: true, subtree: true })
   },
   inserted: (el, binding) => {
-    scrolled = false
     scroll(el, binding)
   }
 }
