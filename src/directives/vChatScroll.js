@@ -135,9 +135,7 @@ import _ from 'lodash'
 })(window, document)
 
 const scrollToBottom = (el) => {
-  setTimeout(() => {
-    el.scrollTop = el.scrollHeight
-  }, 200)
+  el.scrollTop = el.scrollHeight
 }
 
 const scrollToTop = (el) => {
