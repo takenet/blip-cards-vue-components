@@ -146,11 +146,12 @@ const scrollToTop = (el) => {
 
 const scroll = _.debounce((el, binding) => {
   let config = binding.value || {}
+  let contentScroll = el.querySelector('.ss-content')
+  scrolled = contentScroll.scrollTop === contentScroll.scrollHeight
   if (config.always !== true && scrolled) {
     return
   }
 
-  let contentScroll = el.querySelector('.ss-content')
   if (config.scrollToTop) {
     scrollToTop(contentScroll)
   } else {

@@ -43,18 +43,21 @@
 </template>
 
 <script>
-
 import { guid } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
 import _ from 'lodash'
 
-let newCollection = {'header': {'type': 'application/vnd.lime.media-link+json', 'value': {'title': '', 'text': '', 'type': '', 'uri': '', 'aspectRatio': ''}}, 'options': []}
+let newCollection = {
+  header: {
+    type: 'application/vnd.lime.media-link+json',
+    value: { title: '', text: '', type: '', uri: '', aspectRatio: '' }
+  },
+  options: []
+}
 
 export default {
   name: 'collection',
-  mixins: [
-    base
-  ],
+  mixins: [base],
   props: {
     length: {
       type: Number,
@@ -69,25 +72,25 @@ export default {
     }
   },
   computed: {
-    showPrev: function () {
+    showPrev: function() {
       return this.slideIndex !== 1
     },
-    showNext: function () {
+    showNext: function() {
       let length = this.editable ? this.items.length + 1 : this.items.length
       return this.slideIndex !== length
     }
   },
-  data: function () {
+  data: function() {
     return {
       id: guid(),
       slideIndex: 1,
       width: 0,
       elementsWidth: 0,
       elementsLength: 0,
-      items: this.document.items.map(function (x, i) {
+      items: this.document.items.map(function(x, i) {
         return {
           ...x,
-          'id': i
+          id: i
         }
       }),
       styleObject: {
@@ -97,20 +100,27 @@ export default {
     }
   },
   watch: {
-    document: function () {
-      this.items = this.document.items.map(function (x, i) {
+    document: function() {
+      this.items = this.document.items.map(function(x, i) {
         return {
           ...x,
-          'id': i
+          id: i
         }
       })
     }
   },
-  mounted: function () {
-    if (this.document.itemType === 'application/vnd.lime.document-select+json') {
+  mounted: function() {
+    if (
+      this.document.itemType === 'application/vnd.lime.document-select+json'
+    ) {
       var element = this.$el
       let listElement = element.querySelector('.slideshow-list')
-      this.width = parseInt(window.getComputedStyle(listElement).width.toString().replace('px', ''))
+      this.width = parseInt(
+        window
+          .getComputedStyle(listElement)
+          .width.toString()
+          .replace('px', '')
+      )
 
       let elements = element.querySelectorAll('.slide-item')
       this.elementsLength = elements.length
@@ -140,8 +150,8 @@ export default {
         this.plusSlides(-1)
       }
     },
-    deleteItem: function (document) {
-      this.items = this.items.filter(x => x !== document)
+    deleteItem: function(document) {
+      this.items = this.items.filter((x) => x !== document)
 
       if (this.items.length === 0) {
         this.trash({
@@ -155,7 +165,7 @@ export default {
         })
       }
     },
-    addToCollection: function (document) {
+    addToCollection: function(document) {
       this.items.push(document)
       this.newDocumentSelect = _.cloneDeep(newCollection)
 
@@ -164,8 +174,8 @@ export default {
         items: this.items
       })
     },
-    collectionSave: function (document) {
-      let items = this.items.filter(x => x.id !== document.id)
+    collectionSave: function(document) {
+      let items = this.items.filter((x) => x.id !== document.id)
       items.splice(document.id, 0, document)
 
       let tempEditing = this.isEditing
@@ -175,10 +185,10 @@ export default {
       })
       this.isEditing = tempEditing
     },
-    plusSlides: function (n) {
-      this.showSlides(this.slideIndex += n)
+    plusSlides: function(n) {
+      this.showSlides((this.slideIndex += n))
     },
-    showSlides: function (n) {
+    showSlides: function(n) {
       var element = this.$el
       let trackElement = element.querySelector('.slideshow-track')
 
@@ -186,7 +196,11 @@ export default {
         trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
       } else {
         let margin = this.elementsWidth === this.width ? -10 : 10
-        trackElement.style.transform = 'translate3d(' + (this.elementsWidth * (n - 1) - margin) * -1 + 'px, 0px, 0px)'
+        const data =
+          'translate3d(' +
+          (((this.elementsWidth + 10) * (n - 1) - margin) * -1 + 10) +
+          'px, 0px, 0px)'
+        trackElement.style.transform = data
       }
     }
   }
@@ -194,98 +208,112 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../styles/variables.scss';
+@import '../styles/variables.scss';
 
-  .collection-editable {
-    height: 100%;
-    border: 1px dashed $vue-time;
-    position: relative;
-    cursor: pointer;
-  }
+.collection-editable {
+  height: 100%;
+  border: 1px dashed $vue-time;
+  position: relative;
+  cursor: pointer;
+}
 
-  .collection {
-    .slideshow-container {
-      margin: auto;
+.collection {
+  .slideshow-container {
+    margin: auto;
 
-      .slideshow-list {
-        overflow: hidden;
-        margin: 0;
-        padding: 0px 30px;
-      }
-
-      .slideshow-track {
-        transition: all .8s ease;
-        opacity: 1;
-        width: 30000px;
-        transform: translate3d(0px, 0px, 0px);
-        display: flex;
-        top: 0;
-        left: 0;
-      }
-
-      .bubble {
-        width: 100%;
-        height: 100%;
-      }
-
-      .slide-item {
-        float: left;
-        height: 100%;
-        min-height: 1px;
-        margin-right: 10px;
-      }
-
-      a {
-        text-decoration: none;
-      }
+    .slideshow-list {
+      overflow: hidden;
+      margin: 0;
+      padding: 0px 30px;
     }
 
-    .prev, .next {
-      cursor: pointer;
-      position: absolute;
-      top: 50%;
-      width: auto;
-      margin-top: -22px;
-      padding: 8px 16px;
-      color: $vue-light-blip;
-      font-weight: bold;
-      font-size: 18px;
-      transition: 0.6s ease;
-      border-radius: 5px 0 0 5px;
-      box-shadow: -2px 2px 20px 0 rgba(51, 60, 74, 0.4);
-      background-color: #FFFFFF;
-    }
-
-    .prev {
+    .slideshow-track {
+      transition: all 0.8s ease;
+      opacity: 1;
+      width: 30000px;
+      transform: translate3d(0px, 0px, 0px);
+      display: flex;
+      top: 0;
       left: 0;
     }
 
-    /* Position the "next button" to the right */
-    .next {
-      right: 0;
-      border-radius: 3px 0 0 3px;
+    .bubble {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
     }
 
-    /* On hover, add a black background color with a little bit see-through */
-    .prev:hover, .next:hover {
-      background-color: rgba(0,0,0,0.8);
+    .slide-item {
+      float: left;
+      height: 100%;
+      min-height: 1px;
+      margin-right: 10px;
     }
 
-    .fade {
-      -webkit-animation-name: fade;
-      -webkit-animation-duration: 1.5s;
-      animation-name: fade;
-      animation-duration: 1.5s;
-    }
-
-    @-webkit-keyframes fade {
-      from {opacity: .4}
-      to {opacity: 1}
-    }
-
-    @keyframes fade {
-      from {opacity: .4}
-      to {opacity: 1}
+    a {
+      text-decoration: none;
     }
   }
+
+  .prev,
+  .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 8px 16px;
+    opacity: 0.3;
+    color: $vue-light-blip;
+    font-weight: bold;
+    opacity: 0.3;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 5px 0 0 5px;
+    box-shadow: -2px 2px 20px 0 rgba(51, 60, 74, 0.4);
+    background-color: #ffffff;
+  }
+
+  .prev {
+    left: 0;
+
+  }
+
+  /* Position the "next button" to the right */
+  .next {
+    right: 18px;
+    border-radius: 3px 0 0 3px;
+  }
+
+  /* On hover, add a black background color with a little bit see-through */
+  .prev:hover,
+  .next:hover {
+    opacity: 1;
+  }
+
+  .fade {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+
+  @-webkit-keyframes fade {
+    from {
+      opacity: 0.4;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0.4;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
 </style>
