@@ -1,10 +1,11 @@
+import _ from 'lodash'
+
 /**
  * @name VueJS vChatScroll (vue-chat-scroll)
  * @description Monitors an element and scrolls to the bottom if a new child is added
  * @author Theodore Messinezis <theo@theomessin.com>
  * @file v-chat-scroll  directive definition
  */
-
 ;(function(w, d) {
   var raf =
     w.requestAnimationFrame ||
@@ -143,7 +144,7 @@ const scrollToTop = (el) => {
   el.scrollTop = 0
 }
 
-const scroll = (el, binding) => {
+const scroll = _.debounce((el, binding) => {
   let config = binding.value || {}
   if (config.always !== true && scrolled) {
     return
@@ -155,7 +156,7 @@ const scroll = (el, binding) => {
   } else {
     scrollToBottom(contentScroll)
   }
-}
+}, 100)
 
 let scrolled = false
 
@@ -184,7 +185,7 @@ const vChatScroll = {
     new MutationObserver((e) => {
       if (e[e.length - 1].addedNodes.length !== 1) return
 
-      // Infinite scroll, new elements are added so we haveto keep the scroll in the same position
+      // Infinite scroll, new elements are added so we have to keep the scroll in the same position
       if (config.scrollToTop !== true && contentScroll.scrollTop === 0) {
         let addedHeight = 0
         for (let item of e) {
