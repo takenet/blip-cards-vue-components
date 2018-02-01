@@ -6,12 +6,11 @@ import _ from 'lodash'
  * @author Theodore Messinezis <theo@theomessin.com>
  * @file v-chat-scroll  directive definition
  */
-;
-(function (w, d) {
+;(function(w, d) {
   var raf =
     w.requestAnimationFrame ||
     w.setImmediate ||
-    function (c) {
+    function(c) {
       return setTimeout(c, 0)
     }
 
@@ -27,7 +26,7 @@ import _ from 'lodash'
   function dragDealer(el, context) {
     var lastPageY
 
-    el.addEventListener('mousedown', function (e) {
+    el.addEventListener('mousedown', function(e) {
       lastPageY = e.pageY
       el.classList.add('ss-grabbed')
       d.body.classList.add('ss-grabbed')
@@ -42,7 +41,7 @@ import _ from 'lodash'
       var delta = e.pageY - lastPageY
       lastPageY = e.pageY
 
-      raf(function () {
+      raf(function() {
         context.el.scrollTop += delta / context.scrollRatio
       })
     }
@@ -99,7 +98,7 @@ import _ from 'lodash'
   }
 
   Ss.prototype = {
-    moveBar: function (e) {
+    moveBar: function(e) {
       var totalHeight = this.el.scrollHeight
       var ownHeight = this.el.clientHeight
       var _this = this
@@ -107,11 +106,11 @@ import _ from 'lodash'
       this.scrollRatio = ownHeight / totalHeight
 
       var isRtl = _this.direction === 'rtl'
-      var right = isRtl ?
-        _this.target.clientWidth - _this.bar.clientWidth + 18 :
-        (_this.target.clientWidth - _this.bar.clientWidth) * -1
+      var right = isRtl
+        ? _this.target.clientWidth - _this.bar.clientWidth + 18
+        : (_this.target.clientWidth - _this.bar.clientWidth) * -1
 
-      raf(function () {
+      raf(function() {
         // Hide scrollbar if no scrolling is possible
         if (_this.scrollRatio >= 1) {
           _this.bar.classList.add('ss-hidden')
@@ -145,7 +144,6 @@ const scrollToTop = (el) => {
 
 const scroll = _.debounce((el, binding) => {
   let config = binding.value || {}
-  let scrolled = config.scrollToTop ? el.scrollTop !== 0 : el.scrollTop === el.scrollHeight
   if (config.always !== true && scrolled) {
     return
   }
@@ -157,15 +155,35 @@ const scroll = _.debounce((el, binding) => {
   }
 }, 100)
 
+let scrolled = false
+
 const vChatScroll = {
   bind: (el, binding) => {
     window.SimpleScrollbar.initEl(el)
 
     let contentScroll = el.querySelector('.ss-content')
     let config = binding.value || {}
+    let timeout
+
+    contentScroll.addEventListener('force-scroll', (e) => {
+      scroll(contentScroll, binding)
+    })
+
+    contentScroll.addEventListener('scroll', (e) => {
+      if (timeout) window.clearTimeout(timeout)
+      timeout = window.setTimeout(function() {
+        if (config.scrollToTop) {
+          scrolled = contentScroll.scrollTop > 0
+        } else {
+          scrolled =
+            contentScroll.scrollTop + contentScroll.clientHeight + 1 <
+            contentScroll.scrollHeight
+        }
+      }, 200)
+    })
 
     new MutationObserver((e) => {
-      if (!e.find(x => x.addedNodes.length > 0)) return
+      if (!e.find((x) => x.addedNodes.length > 0)) return
 
       // Infinite scroll, new elements are added so we have to keep the scroll in the same position
       if (config.scrollToTop !== true && contentScroll.scrollTop === 0) {
@@ -177,12 +195,10 @@ const vChatScroll = {
       } else {
         scroll(contentScroll, binding)
       }
-    }).observe(contentScroll, {
-      childList: true,
-      subtree: true
-    })
+    }).observe(contentScroll, { childList: true, subtree: true })
   },
   inserted: (el, binding) => {
+    scrolled = false
     let contentScroll = el.querySelector('.ss-content')
     scroll(contentScroll, binding)
   }
