@@ -6,11 +6,12 @@ import _ from 'lodash'
  * @author Theodore Messinezis <theo@theomessin.com>
  * @file v-chat-scroll  directive definition
  */
-;(function(w, d) {
+;
+(function (w, d) {
   var raf =
     w.requestAnimationFrame ||
     w.setImmediate ||
-    function(c) {
+    function (c) {
       return setTimeout(c, 0)
     }
 
@@ -26,7 +27,7 @@ import _ from 'lodash'
   function dragDealer(el, context) {
     var lastPageY
 
-    el.addEventListener('mousedown', function(e) {
+    el.addEventListener('mousedown', function (e) {
       lastPageY = e.pageY
       el.classList.add('ss-grabbed')
       d.body.classList.add('ss-grabbed')
@@ -41,7 +42,7 @@ import _ from 'lodash'
       var delta = e.pageY - lastPageY
       lastPageY = e.pageY
 
-      raf(function() {
+      raf(function () {
         context.el.scrollTop += delta / context.scrollRatio
       })
     }
@@ -98,7 +99,7 @@ import _ from 'lodash'
   }
 
   Ss.prototype = {
-    moveBar: function(e) {
+    moveBar: function (e) {
       var totalHeight = this.el.scrollHeight
       var ownHeight = this.el.clientHeight
       var _this = this
@@ -106,11 +107,11 @@ import _ from 'lodash'
       this.scrollRatio = ownHeight / totalHeight
 
       var isRtl = _this.direction === 'rtl'
-      var right = isRtl
-        ? _this.target.clientWidth - _this.bar.clientWidth + 18
-        : (_this.target.clientWidth - _this.bar.clientWidth) * -1
+      var right = isRtl ?
+        _this.target.clientWidth - _this.bar.clientWidth + 18 :
+        (_this.target.clientWidth - _this.bar.clientWidth) * -1
 
-      raf(function() {
+      raf(function () {
         // Hide scrollbar if no scrolling is possible
         if (_this.scrollRatio >= 1) {
           _this.bar.classList.add('ss-hidden')
@@ -144,16 +145,15 @@ const scrollToTop = (el) => {
 
 const scroll = _.debounce((el, binding) => {
   let config = binding.value || {}
-  let contentScroll = el.querySelector('.ss-content')
-  let scrolled = config.scrollToTop ? contentScroll.scrollTop !== 0 : contentScroll.scrollTop === contentScroll.scrollHeight
+  let scrolled = config.scrollToTop ? el.scrollTop !== 0 : el.scrollTop === el.scrollHeight
   if (config.always !== true && scrolled) {
     return
   }
 
   if (config.scrollToTop) {
-    scrollToTop(contentScroll)
+    scrollToTop(el)
   } else {
-    scrollToBottom(contentScroll)
+    scrollToBottom(el)
   }
 }, 100)
 
@@ -175,12 +175,16 @@ const vChatScroll = {
         }
         contentScroll.scrollTop = addedHeight
       } else {
-        scroll(el, binding)
+        scroll(contentScroll, binding)
       }
-    }).observe(contentScroll, { childList: true, subtree: true })
+    }).observe(contentScroll, {
+      childList: true,
+      subtree: true
+    })
   },
   inserted: (el, binding) => {
-    scroll(el, binding)
+    let contentScroll = el.querySelector('.ss-content')
+    scroll(contentScroll, binding)
   }
 }
 
