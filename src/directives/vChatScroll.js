@@ -107,9 +107,7 @@ import _ from 'lodash'
       this.scrollRatio = ownHeight / totalHeight
 
       var isRtl = _this.direction === 'rtl'
-      var right = isRtl ?
-        _this.target.clientWidth - _this.bar.clientWidth + 18 :
-        (_this.target.clientWidth - _this.bar.clientWidth) * -1
+      var right = isRtl ? _this.target.clientWidth - _this.bar.clientWidth + 18 : (_this.target.clientWidth - _this.bar.clientWidth) * -1
 
       raf(function () {
         // Hide scrollbar if no scrolling is possible
