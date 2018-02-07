@@ -44,7 +44,7 @@
 
   .bubble.left {
       border-radius: 13px 13px 13px 2px;
-      box-shadow: 0 -1px 12px 0 #EEEEEE;
+      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.32156862745);
       background-color: $vue-white;
       color: $vue-gray;
       float: left;
@@ -56,7 +56,7 @@
 
   .bubble.right {
       border-radius: 13px 2px 13px 13px;
-      box-shadow: 0 -1px 12px 0 #EEEEEE;
+      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.32156862745);
       background-color: $vue-light-blip;
       color: $vue-white;
       float: right;
