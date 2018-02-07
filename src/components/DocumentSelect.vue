@@ -46,8 +46,7 @@
       </div>
       <div class="header">
         <div class="form-group">
-          <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'url'" class="form-control" v-model="previewUri" placeholder="Image Uri" />
-          <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
+          <input type="text" name="image" :class="{'input-error': errors.has('image') }" class="form-control" v-model="previewUri" placeholder="Image Uri" />
           <div class="upload-intructions">
             <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
           </div>
