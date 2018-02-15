@@ -157,7 +157,6 @@ const scroll = (el, binding) => {
 }
 
 let scrolled = false
-let firstScroll = true
 
 const vChatScroll = {
   bind: (el, binding) => {
@@ -172,12 +171,6 @@ const vChatScroll = {
     })
 
     let scrollEvent = _.debounce(() => {
-      if (firstScroll) {
-        scrolled = false
-        firstScroll = false
-        return
-      }
-
       if (config.scrollToTop) {
         scrolled = contentScroll.scrollTop > 0
       } else {
