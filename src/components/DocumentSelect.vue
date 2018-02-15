@@ -241,7 +241,7 @@ export default {
         return linkify(this.document.header.value.text)
       }
 
-      if (this.document.header.value) {
+      if (this.document.header.value && this.document.header.type === 'text/plain') {
         if (this.document.header.value.length > this.length) {
           return linkify(this.document.header.value.substring(0, this.length)) + '...'
         }
