@@ -100,7 +100,7 @@
         <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
-        <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.label.value.uri" placeholder="Uri" />
+        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" />
         <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
