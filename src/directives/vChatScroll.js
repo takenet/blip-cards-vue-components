@@ -57,7 +57,6 @@ import _ from 'lodash'
   // Constructor
   function Ss(el) {
     this.target = el
-
     this.direction = w.getComputedStyle(this.target).direction
 
     this.bar = '<div class="ss-scroll">'
@@ -191,7 +190,13 @@ const vChatScroll = {
       if (config.scrollToTop !== true && contentScroll.scrollTop === 0) {
         let addedHeight = 0
         for (let item of e) {
-          addedHeight += item.addedNodes[0].scrollHeight
+          addedHeight += item.addedNodes[0]
+          ? item.addedNodes[0].scrollHeight
+          : 0
+        }
+
+        if (contentScroll.scrollHeight > contentScroll.clientHeight) {
+          setTimeout(() => scroll(contentScroll, binding), 100)
         }
         contentScroll.scrollTop = addedHeight
       } else {
