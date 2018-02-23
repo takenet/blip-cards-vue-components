@@ -32,11 +32,19 @@ var baseComponent = {
     deletable: {
       type: Boolean,
       default: false
+    },
+    editing: {
+      type: Boolean
     }
   },
-  data: function () {
+  watch: {
+    editing: function() {
+      this.isEditing = this.editing
+    }
+  },
+  data: function() {
     return {
-      isEditing: false,
+      isEditing: this.editing || false,
       editSvg,
       approveSvg,
       closeSvg,
@@ -46,15 +54,15 @@ var baseComponent = {
     }
   },
   methods: {
-    toggleEdit: function () {
+    toggleEdit: function() {
       this.isEditing = !this.isEditing
     },
-    trash: function (document) {
+    trash: function(document) {
       if (this.onDeleted) {
         this.onDeleted(document)
       }
     },
-    save: function (document) {
+    save: function(document) {
       this.isEditing = false
 
       if (this.onSave) {
