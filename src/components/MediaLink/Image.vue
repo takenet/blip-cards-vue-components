@@ -14,19 +14,19 @@
         </a>
 
         <div class="title" v-if="document.title || document.text">
-            <strong v-if="document.title" v-html="document.title"></strong>
-            <span v-if="document.text" v-html="document.text"></span>
+          <strong v-if="document.title" v-html="document.title"></strong>
+          <span v-if="document.text" v-html="document.text"></span>
         </div>
       </div>
 
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <div class="saveIco closeIco" @click="imgCancel()" >
+          <button type="button" class="btn saveIco closeIco" @click="imgCancel()" >
             <img :src="closeSvg" />
-          </div>
-          <div class="saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
+          </button>
+          <button class="btn saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
-          </div>
+          </button>
           <div class="form-group">
             <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required'" class="form-control" v-model="image" placeholder="Image Uri" />
             <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
@@ -53,7 +53,7 @@
           </div>
           <div class="form-group">
             <input type="text" class="form-control" v-model="title" placeholder="Title" />
-            <textarea v-model="text" class="form-control text" placeholder="Text" />
+            <textarea @keydown.enter="imgSave($event)" v-model="text" class="form-control text" placeholder="Text" />
           </div>
         </form>
       </div>
@@ -101,7 +101,15 @@ export default {
     }
   },
   methods: {
-    imgSave: function () {
+    imgSave: function ($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.styleObject['border-radius'] = this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'

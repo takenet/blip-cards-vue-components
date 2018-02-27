@@ -38,7 +38,7 @@
           <img :src="approveSvg" />
         </div>
         <div class="form-group">
-          <textarea name="text" v-auto-expand class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
+          <textarea @keydown.enter="saveText($event)" name="text" v-auto-expand class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
       </form>
@@ -81,7 +81,15 @@ export default {
     }
   },
   methods: {
-    saveText: function() {
+    saveText: function($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       this.showContent = false
       this.save(this.text)
     },

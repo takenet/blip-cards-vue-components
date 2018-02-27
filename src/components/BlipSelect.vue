@@ -59,7 +59,7 @@
         <img :src="approveSvg" />
       </div>
       <div class="form-group">
-        <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="text" />
+        <textarea @keydown.enter="selectSave(text, $event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="text" />
         <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
       </div>
 
@@ -101,8 +101,8 @@
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea v-if="selectedOption.type && selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
-            <textarea v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption($event)" v-if="selectedOption.type && selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption($event)" v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
@@ -110,7 +110,7 @@
 
       <div class="form-group blip-card-flex">
         <div class="flex-item">
-          <button @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
+          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
         </div>
         <div class="flex-item">
           <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
@@ -223,13 +223,20 @@ export default {
       this.selectedOption = {}
       this.addOption = false
     },
-    saveOption: function () {
+    saveOption: function ($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       this.addOption = false
+      this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
       if (this.selectedOption.index === -1) {
-        this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.push(this.selectedOption)
       } else {
-        this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.splice(this.selectedOption.index, 1, this.selectedOption)
       }
 
@@ -252,7 +259,15 @@ export default {
 
       this.selectedOption.index = index
     },
-    selectSave: function () {
+    selectSave: function (text, $event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.selectedOption = {}

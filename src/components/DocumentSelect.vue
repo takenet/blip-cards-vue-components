@@ -38,12 +38,12 @@
 
   <div v-else class="blip-container document-select">
     <form v-if="!showOptionDialog" class="editing bubble left" novalidate v-on:submit.prevent>
-      <div class="saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
+      <button class="btn saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
-      </div>
-      <div class="saveIco closeIco" @click="documentSelectCancel()">
+      </button>
+      <button type="button" class="btn saveIco closeIco" @click="documentSelectCancel()">
         <img :src="closeSvg" />
-      </div>
+      </button>
       <div class="header">
         <div class="form-group">
           <input type="text" name="image" :class="{'input-error': errors.has('image') }" class="form-control" v-model="previewUri" placeholder="Image Uri" />
@@ -71,7 +71,7 @@
         <div class="form-group">
           <input type="title" name="title" :class="{'input-error': errors.has('title') }" class="form-control" v-model="title" placeholder="Title" />
           <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
-          <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" placeholder="Description" />
+          <textarea @keydown.enter="documentSelectSave($event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" placeholder="Description" />
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
       </div>
@@ -128,8 +128,8 @@
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea v-if="selectedOption.value.type && selectedOption.value.type.includes('json')" type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
-            <textarea v-else type="text" name="value" v-validate="'required'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption($event)" v-if="selectedOption.value.type && selectedOption.value.type.includes('json')" type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption($event)" v-else type="text" name="value" v-validate="'required'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
@@ -137,7 +137,7 @@
 
       <div class="form-group blip-card-flex">
         <span class="flex-item">
-          <button @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
+          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
         </span>
         <span class="flex-item">
           <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
@@ -312,7 +312,15 @@ export default {
       this.showOptionDialog = false
       this.isEditing = false
     },
-    documentSelectSave: async function () {
+    documentSelectSave: async function ($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       let result = await this.$validator.validateAll()
       if (!result) return
       this.selectedOption = { label: {}, value: {} }
@@ -376,7 +384,15 @@ export default {
     deleteOption: function (index) {
       this.options.splice(index, 1)
     },
-    saveOption: function () {
+    saveOption: function ($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       this.$validator.validateAll().then((result) => {
         if (!result) return
         if (this.headerTab === 'weblink') {

@@ -26,12 +26,12 @@
   </div>
   <div v-else class="blip-container web-link">
     <form class="bubble left" novalidate v-on:submit.prevent>
-      <div class="saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
+      <button class="btn saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
-      </div>
-      <div class="saveIco closeIco" @click="webLinkCancel()">
+      </button>
+      <button type="button" class="btn saveIco closeIco" @click="webLinkCancel()">
         <img :src="closeSvg" />
-      </div>
+      </button>
       <div class="form-group">
         <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetaData(true)" />
         <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>

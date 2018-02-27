@@ -25,12 +25,12 @@
   </div>
   <div v-else class="blip-container location">
     <form class="editing bubble left" novalidate v-on:submit.prevent>
-      <div class="saveIco" @click="locationSave()" :class="{'is-disabled': errors.any() }">
+      <button class="btn saveIco" @click="locationSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
-      </div>
-      <div class="saveIco closeIco" @click="locationCancel()">
+      </button>
+      <button type="button" class="btn saveIco closeIco" @click="locationCancel()">
         <img :src="closeSvg" />
-      </div>
+      </button>
       <div class="form-group">
         <input type="text" name="text" class="form-control" v-model="text" placeholder="Text" />
       </div>

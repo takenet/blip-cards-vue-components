@@ -23,12 +23,12 @@
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
-          <div class="saveIco closeIco" @click="fileCancel()" >
+          <button type="button" class="btn saveIco closeIco" @click="fileCancel()" >
             <img :src="closeSvg" />
-          </div>
-          <div class="saveIco" @click="fileSave()" :class="{'is-disabled': errors.any() }">
+          </button>
+          <button class="btn saveIco" @click="fileSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
-          </div>
+          </button>
           <div class="form-group">
             <input type="text" name="file" class="form-control uri" v-model="uri" placeholder="File URL" :class="{'input-error': errors.has('file') }" v-validate="'required|url'"/>
             <span v-if="errors.has('file')" class="help input-error">{{ errors.first('file') }}</span>
