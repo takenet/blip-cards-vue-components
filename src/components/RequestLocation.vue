@@ -49,12 +49,12 @@
     <div class="blip-container">
       <div class="bubble left">
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="cancel()">
+          <div class="btn saveIco closeIco" @click="cancel()">
             <img :src="closeSvg" />
-          </button>
-          <button class="btn saveIco" @click="saveLocation()" :class="{'is-disabled': errors.any() }">
+          </div>
+          <div class="btn saveIco" @click="saveLocation()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
-          </button>
+          </div>
           <div class="form-group">
             <textarea @keydown.enter="saveLocation($event)" name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
             <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
