@@ -234,6 +234,9 @@ export default {
 
       this.addOption = false
       this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
+      if (!this.showPayload) {
+        this.selectedOption.value = this.selectedOption.type = null
+      }
       if (this.selectedOption.index === -1) {
         this.options.push(this.selectedOption)
       } else {
