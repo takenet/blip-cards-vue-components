@@ -38,12 +38,12 @@
 
   <div v-else class="blip-container document-select">
     <form v-if="!showOptionDialog" class="editing bubble left" novalidate v-on:submit.prevent>
-      <button class="btn saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
+      <div class="btn saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
-      </button>
-      <button type="button" class="btn saveIco closeIco" @click="documentSelectCancel()">
+      </div>
+      <div class="btn saveIco closeIco" @click="documentSelectCancel()">
         <img :src="closeSvg" />
-      </button>
+      </div>
       <div class="header">
         <div class="form-group">
           <input type="text" name="image" :class="{'input-error': errors.has('image') }" class="form-control" v-model="previewUri" placeholder="Image Uri" />
