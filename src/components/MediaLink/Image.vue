@@ -75,7 +75,7 @@ export default {
     return {
       styleObject: {
         'border-radius': this.document.title || this.document.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px',
-        'background-image': 'url(' + this.document.uri + ')'
+        'background-image': 'url("' + this.document.uri + '")'
       },
       id: guid(),
       title: this.document.title,
@@ -88,7 +88,7 @@ export default {
     document: function () {
       this.styleObject = {
         'border-radius': this.document.title || this.document.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px',
-        'background-image': 'url(' + this.document.uri + ')'
+        'background-image': 'url("' + this.document.uri + '")'
       }
     }
   },

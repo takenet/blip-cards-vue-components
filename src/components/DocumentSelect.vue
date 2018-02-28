@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div v-if="this.document.header.value.uri" :class="'ratio ratio' + aspect" :style="'background-image: url(' + this.document.header.value.uri + ')'">
+        <div v-if="this.document.header.value.uri" :class="'ratio ratio' + aspect" :style="'background-image: url(&quot;' + this.document.header.value.uri + '&quot;)'">
         </div>
 
         <div class="title" v-if="document.header.value.title || document.header.value.text || document.header.value">

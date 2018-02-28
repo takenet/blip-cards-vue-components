@@ -1,6 +1,6 @@
 <template>
   <div v-if="editableDocument" class="blip-relative" @dblclick="editCard">
-    <div :class="'blip-card-photo ' + position" v-if="photo && position === 'left'" :style="{ top: photoMargin + 'px', width: '25px', height: '25px', 'background-image': 'url(' + photo + ')' }">
+    <div :class="'blip-card-photo ' + position" v-if="photo && position === 'left'" :style="{ top: photoMargin + 'px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
     </div>
     <div :class="{'blip-container--with-photo': photo, [position]: true}">
       <div class="blip-card-container">
@@ -31,7 +31,7 @@
 
         <blip-raw @unsupportedType="unsupportedType" v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing"/>
       </div>
-      <div :class="'blip-card-photo ' + position" v-if="photo && position === 'right'" :style="{ top: photoMargin + 'px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(' + photo + ')' }">
+      <div :class="'blip-card-photo ' + position" v-if="photo && position === 'right'" :style="{ top: photoMargin + 'px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
       </div>
     </div>
   </div>
