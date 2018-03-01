@@ -56,6 +56,10 @@ export default {
   props: {
     onOpenLink: {
       type: Function
+    },
+    initEditing: {
+      type: Boolean,
+      default: false
     }
   },
   data: function () {
@@ -90,7 +94,12 @@ export default {
       if (this.target === 'blank') {
         window.open(this.uri, '_blank')
       } else {
-        this.onOpenLink(this.uri, this.target)
+        this.onOpenLink({
+          uri: this.uri,
+          target: this.target,
+          title: this.previewTitle,
+          image: this.previewImage
+        })
       }
     },
     webLinkSave: function () {
@@ -141,110 +150,110 @@ export default {
 
 
 <style lang="scss">
-   @import '../styles/variables.scss';
+@import '../styles/variables.scss';
 
-  .web-link .bubble {
-    &.right .text-wrapper:after {
-      background: $vue-light-blip !important;
+.web-link .bubble {
+  &.right .text-wrapper:after {
+    background: $vue-light-blip !important;
+  }
+
+  &.text-link {
+    padding: $bubble-padding;
+    height: auto;
+  }
+
+  .form-group {
+    min-width: auto;
+    .form-control.title {
+      margin-top: 10px;
+    }
+    .form-control.text {
+      margin-top: 10px;
+    }
+  }
+
+  .web-link-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    border-radius: inherit;
+    overflow: hidden;
+
+    &.link {
+      cursor: pointer;
     }
 
-    &.text-link {
-      padding: $bubble-padding;
-      height: auto;
+    .preview {
+      height: 100px;
+      width: 100px;
+      min-width: 100px;
+      background-position: center;
+      background-size: cover;
     }
 
-    .form-group {
-      min-width: auto;
-      .form-control.title {
-        margin-top: 10px;
-      }
-      .form-control.text {
-        margin-top: 10px;
-      }
-    }
-
-    .web-link-wrapper {
+    .link-description-wrapper {
       display: flex;
-      flex-direction: row;
-      flex-grow: 1;
-      border-radius: inherit;
+      flex-direction: column;
+      padding: 10px 16px;
       overflow: hidden;
+      min-height: 100px;
 
-      &.link {
-        cursor: pointer;
-      }
-
-      .preview {
-        height: 100px;
-        width: 100px;
-        min-width: 100px;
-        background-position: center;
-        background-size: cover;
-      }
-
-      .link-description-wrapper {
-        display: flex;
-        flex-direction: column;
-        padding: 10px 16px;
+      .text {
         overflow: hidden;
-        min-height: 100px;
+        position: relative;
+        text-overflow: ellipsis;
+      }
 
-        .text {
-          overflow: hidden;
-          position: relative;
-          text-overflow: ellipsis;
-        }
+      .big-text {
+        white-space: nowrap;
+      }
 
-        .big-text {
-          white-space: nowrap;
-        }
-
-        .text-wrapper {
-          overflow: hidden;
-          position: relative;
+      .text-wrapper {
+        overflow: hidden;
+        position: relative;
+        line-height: 1.2em;
+        max-height: 2.4em;
+        text-align: justify;
+        margin-right: 3px;
+        padding-right: 13px;
+        span {
           line-height: 1.2em;
-          max-height: 2.4em;
-          text-align: justify;
-          margin-right: 3px;
-          padding-right: 13px;
-          span {
-            line-height: 1.2em;
-          }
         }
+      }
 
-        .light-text {
-          font-size: 12px;
-          font-weight: 100;
-          flex-grow: 1;
-        }
+      .light-text {
+        font-size: 12px;
+        font-weight: 100;
+        flex-grow: 1;
+      }
 
-        .text-wrapper:before {
-          content: ' ...';
-          position: absolute;
-          right: 0;
-          bottom: 0;
-        }
+      .text-wrapper:before {
+        content: ' ...';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
 
-        .text-wrapper:after {
-          content: '';
-          position: absolute;
-          right: 0;
-          width: 1em;
-          height: 1em;
-          margin-top: 0.2em;
-          background: $vue-white;
-        }
+      .text-wrapper:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 1em;
+        height: 1em;
+        margin-top: 0.2em;
+        background: $vue-white;
+      }
 
-        .small-text {
-          font-size: 10px;
-          font-weight: 100;
-          white-space: nowrap;
-        }
+      .small-text {
+        font-size: 10px;
+        font-weight: 100;
+        white-space: nowrap;
+      }
 
-        .space-between-text {
-          flex-grow: 1;
-        }
+      .space-between-text {
+        flex-grow: 1;
       }
     }
   }
+}
 </style>
