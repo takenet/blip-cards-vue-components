@@ -76,13 +76,19 @@ export default {
   },
   data: function() {
     return {
-      text: this.document,
-      showContent: false
+      text: undefined,
+      showContent: undefined
     }
   },
   methods: {
+    init: function() {
+      this.text = this.document
+      this.showContent = false
+    },
     saveText: function($event) {
-      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+      if (this.errors.any() || ($event && $event.shiftKey)) {
+        return
+      }
 
       if ($event) {
         $event.stopPropagation()
@@ -92,11 +98,6 @@ export default {
 
       this.showContent = false
       this.save(this.text)
-    },
-    cancel: function() {
-      this.text = this.document
-      this.showContent = false
-      this.isEditing = false
     }
   }
 }
@@ -109,7 +110,7 @@ export default {
 .plain-text .bubble {
   padding: $bubble-padding;
   word-wrap: break-word;
-  min-width: auto!important;
+  min-width: auto !important;
   text-align: left;
 }
 </style>

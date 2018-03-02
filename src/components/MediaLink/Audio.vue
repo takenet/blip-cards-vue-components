@@ -40,7 +40,7 @@
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="audioCancel()" >
+          <button type="button" class="btn saveIco closeIco" @click="cancel()" >
             <img :src="closeSvg" />
           </button>
           <button class="btn saveIco" @click="audioSave()" :class="{'is-disabled': errors.any() }">
@@ -61,33 +61,40 @@ import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 
 export default {
-  mixins: [
-    base
-  ],
-  data: function () {
+  mixins: [base],
+  data: function() {
     return {
-      audioUri: this.document.uri,
-      isPlaying: false,
-      audio: Audio,
-      currentTime: 0,
-      totalTime: 0,
-      progress: null,
-      slider: null
+      audioUri: undefined,
+      isPlaying: undefined,
+      audio: undefined,
+      currentTime: undefined,
+      totalTime: undefined,
+      progress: undefined,
+      slider: undefined
     }
   },
-  mounted: function () {
+  mounted: function() {
     this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
   methods: {
-    initAudio: function (uri) {
+    init: function() {
+      this.audioUri = this.document.uri
+      this.isPlaying = false
+      this.audio = Audio
+      this.currentTime = 0
+      this.totalTime = 0
+      this.progress = undefined
+      this.slider = undefined
+    },
+    initAudio: function(uri) {
       this.audio = new Audio(uri)
 
       this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
       this.audio.addEventListener('loadedmetadata', this.audioLoaded)
       this.audio.addEventListener('ended', this.resetPlay)
     },
-    toggleEdit: function () {
+    toggleEdit: function() {
       this.isEditing = !this.isEditing
 
       this.isPlaying = false
@@ -95,7 +102,7 @@ export default {
       this.audio.src = ''
       this.audio.load()
     },
-    audioSave: function () {
+    audioSave: function() {
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.progress = null
@@ -103,17 +110,13 @@ export default {
         this.save({
           ...this.document,
           uri: this.audioUri,
-          type: mime.lookup(this.audioUri) ? mime.lookup(this.audioUri) : 'audio/mp3'
+          type: mime.lookup(this.audioUri)
+            ? mime.lookup(this.audioUri)
+            : 'audio/mp3'
         })
       })
     },
-    audioCancel: function () {
-      this.progress = null
-      this.audioUri = this.document.uri
-      this.initAudio(this.audioUri)
-      this.isEditing = false
-    },
-    togglePlay: function () {
+    togglePlay: function() {
       this.isPlaying = !this.isPlaying
       if (this.isPlaying) {
         this.audio.play()
@@ -121,37 +124,41 @@ export default {
         this.audio.pause()
       }
     },
-    resetPlay: function () {
+    resetPlay: function() {
       if (this.isPlaying && (this.audio.currentTime = this.totalTime)) {
         this.isPlaying = false
         this.audio.pause()
         this.audio.currentTime = 0
       }
     },
-    audioTimeUpdated: function () {
+    audioTimeUpdated: function() {
       if (!this.progress) {
         this.progress = this.$el.querySelector('.progress')
       }
 
       try {
         var current = this.audio.currentTime
-        var percent = (current / this.totalTime) * 100
+        var percent = current / this.totalTime * 100
         this.progress.style.width = percent + '%'
 
         this.currentTime = this.audio.currentTime
       } catch (e) {}
     },
-    audioLoaded: function () {
+    audioLoaded: function() {
       this.totalTime = this.audio.duration
     },
-    setAudioPosition: function (event) {
+    setAudioPosition: function(event) {
       // srcElement is no supported in FF, but needed if working with IE6-8
       this.audio.currentTime = (event.target || event.srcElement).value
     },
-    getTimeFromSeconds: function (seconds) {
+    getTimeFromSeconds: function(seconds) {
       var timeMin = Math.floor(seconds / 60)
       var timeSec = Math.floor(seconds % 60)
-      return (timeMin < 10 ? '0' + timeMin : timeMin) + ':' + (timeSec < 10 ? '0' + timeSec : timeSec)
+      return (
+        (timeMin < 10 ? '0' + timeMin : timeMin) +
+        ':' +
+        (timeSec < 10 ? '0' + timeSec : timeSec)
+      )
     }
   }
 }
@@ -159,112 +166,111 @@ export default {
 
 
 <style lang="scss">
-   @import '../../styles/variables.scss';
+@import '../../styles/variables.scss';
 
-  .media-link.audio {
+.media-link.audio {
+  .bubble {
+    padding: 0;
+    width: $bubble-width;
+    color: $vue-london;
+  }
 
-    .bubble {
+  .left {
+    .progress .pin {
+      background-color: $vue-neon-blip;
+    }
+    .audio-player-button {
+      fill: $vue-london;
+    }
+  }
+  .right {
+    color: $vue-cotton;
+    .progress .pin {
+      background-color: $vue-white;
+    }
+    .audio-player-button {
+      fill: $vue-white;
+    }
+  }
+
+  .notification {
+    color: $vue-london;
+  }
+
+  .form {
+    form {
+      width: auto;
+    }
+  }
+
+  .audio-player-wrapper {
+    padding: $bubble-padding;
+    .audio-player-controls {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 5px;
+    }
+
+    .audio-player-button {
+      flex-grow: 0;
+      width: 14px;
+      margin-right: 15px;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .audio-player-bar {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      margin-top: 8px;
+    }
+
+    .audio-player-time {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Avenir Next';
+      font-size: x-small;
+      line-height: 10px;
+      color: inherit;
+    }
+    .audio-player-range {
+      position: relative;
+      bottom: 10px;
+      opacity: 0;
+      margin: 0 0 -9px 0;
+      width: 100%;
       padding: 0;
-      width: $bubble-width;
-      color: $vue-london;
+      height: 16px;
+      cursor: pointer;
     }
+    .slider {
+      border-radius: 1.5px;
+      height: 3px;
+      flex-grow: 1;
+      background-color: $vue-cotton;
+      position: relative;
 
-    .left {
-      .progress .pin {
+      .progress {
+        width: 0;
+        height: 100%;
         background-color: $vue-neon-blip;
-      }
-      .audio-player-button {
-        fill: $vue-london;
-      }
-    }
-    .right {
-      color: $vue-cotton;
-      .progress .pin{
-        background-color: $vue-white;
-      }
-      .audio-player-button {
-        fill: $vue-white;
-      }
-    }
+        border-radius: inherit;
+        position: absolute;
+        pointer-events: none;
 
-    .notification {
-      color: $vue-london;
-    }
-
-    .form {
-      form {
-        width: auto;
-      }
-    }
-
-    .audio-player-wrapper {
-      padding: $bubble-padding;
-      .audio-player-controls {
-        display: flex;
-        justify-content: space-around;
-        margin-top:5px;
-      }
-
-      .audio-player-button {
-        flex-grow: 0;
-        width: 14px;
-        margin-right: 15px;
-        color: inherit;
-        cursor: pointer;
-      }
-
-      .audio-player-bar {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        margin-top: 8px;
-      }
-
-      .audio-player-time {
-        display: flex;
-        justify-content: space-between;
-        font-family: "Avenir Next";
-        font-size: x-small;
-        line-height: 10px;
-        color: inherit;
-      }
-      .audio-player-range{
-        position: relative;
-        bottom: 10px;
-        opacity: 0;
-        margin: 0 0 -9px 0;
-        width: 100%;
-        padding: 0;
-        height: 16px;
-        cursor: pointer;
-      }
-      .slider {
-        border-radius: 1.5px;
-        height: 3px;
-        flex-grow: 1;
-        background-color: $vue-cotton;
-        position: relative;
-
-        .progress {
-          width: 0;
-          height: 100%;
-          background-color: $vue-neon-blip;
-          border-radius: inherit;
+        .pin {
+          right: -8px;
+          top: -6px;
+          height: 14px;
+          width: 14px;
+          border-radius: 8px;
           position: absolute;
-          pointer-events: none;
-
-          .pin {
-            right: -8px;
-            top: -6px;
-            height: 14px;
-            width: 14px;
-            border-radius: 8px;
-            position: absolute;
-            pointer-events: all;
-            box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.32);
-          }
+          pointer-events: all;
+          box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);
         }
       }
     }
   }
+}
 </style>

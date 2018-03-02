@@ -29,7 +29,9 @@ export default {
   },
   mounted () {
     this.$emit('unsupportedType', this.document)
-    this.onDeleted(this.document)
+    if (this.onDeleted) {
+      this.onDeleted(this.document)
+    }
   }
 }
 </script>

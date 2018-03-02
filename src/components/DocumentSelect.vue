@@ -41,7 +41,7 @@
       <button class="btn saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </button>
-      <button type="button" class="btn saveIco closeIco" @click="documentSelectCancel()">
+      <button type="button" class="btn saveIco closeIco" @click="cancel()">
         <img :src="closeSvg" />
       </button>
       <div class="header">
@@ -179,36 +179,20 @@ export default {
     },
     onOpenLink: {
       type: Function
-    },
-    initEditing: {
-      type: Boolean,
-      default: false
     }
-  },
-  created: function () {
-    this.isEditing = this.initEditing
   },
   data: function () {
     return {
-      showOptionDialog: false,
-      headerTab: null,
-      showPayload: false,
-      showContent: false,
-      title: this.document.header.value.title,
-      content: this.document.header.value.text,
-      aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1',
-      previewUri: this.document.header.value.uri,
-      selectedOption: { label: {}, value: {} },
-      options: this.document.options.map(function (x) {
-        let opts = {
-          ...x,
-          isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
-        }
-
-        opts.previewText = getOptionContent(opts)
-        return opts
-      })
+      showOptionDialog: undefined,
+      headerTab: undefined,
+      showPayload: undefined,
+      showContent: undefined,
+      title: undefined,
+      content: undefined,
+      aspect: undefined,
+      previewUri: undefined,
+      selectedOption: undefined,
+      options: undefined
     }
   },
   watch: {
@@ -256,6 +240,27 @@ export default {
     }
   },
   methods: {
+    init: function() {
+      this.showOptionDialog = false
+      this.headerTab = null
+      this.showPayload = false
+      this.showContent = false
+      this.title = this.document.header.value.title
+      this.content = this.document.header.value.text
+      this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
+      this.previewUri = this.document.header.value.uri
+      this.selectedOption = { label: {}, value: {} }
+      this.options = this.document.options.map(function (x) {
+        let opts = {
+          ...x,
+          isLink: x.label.type === 'application/vnd.lime.web-link+json',
+          value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
+        }
+
+        opts.previewText = getOptionContent(opts)
+        return opts
+      })
+    },
     setTab: function (name) {
       this.headerTab = name
       if (this.headerTab === 'weblink' && typeof this.selectedOption.label.value !== 'object') {
@@ -287,30 +292,6 @@ export default {
           content: item.value.value || item.label.value
         })
       }
-    },
-    documentSelectCancel: function () {
-      if (this.initEditing) {
-        this.trash(this.document)
-        return
-      }
-
-      this.selectedOption = {}
-      this.title = this.document.header.value.title
-      this.content = this.document.header.value.text
-      this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
-      this.previewUri = this.document.header.value.uri
-      this.options = this.document.options.map(function (x) {
-        let opts = {
-          ...x,
-          isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
-        }
-        opts.previewText = getOptionContent(opts)
-        return opts
-      })
-      this.headerTab = null
-      this.showOptionDialog = false
-      this.isEditing = false
     },
     documentSelectSave: async function ($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) { return }

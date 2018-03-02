@@ -15,7 +15,6 @@ import Raw from './components/Raw'
 import ChatState from './components/ChatState'
 import Redirect from './components/Redirect'
 import Ticket from './components/Ticket'
-import BlipBubble from './components/BlipBubble'
 import Editable from './components/Editable'
 
 // Validators
@@ -49,7 +48,6 @@ function install(Vue) {
   components.push(Vue.component(RequestLocation.name, RequestLocation))
   components.push(Vue.component(Raw.name, Raw))
   components.push(Vue.component(ChatState.name, ChatState))
-  components.push(Vue.component(BlipBubble.name, BlipBubble))
 
   Vue.component(Editable.name, Editable)
 

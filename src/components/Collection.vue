@@ -4,15 +4,15 @@
       <div :class="'slideshow-container ' + position" :id="id">
         <div class="slideshow-list">
           <div class="slideshow-track">
-            <div v-for="(item, index) in items" v-bind:key="index">
-              <document-select :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :deletable="deletable"
+            <div v-for="(item, index) in items" v-bind:key="index" @dblclick="editCard(item)">
+              <document-select :on-cancel="cancel" :editing="item.editing" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :deletable="deletable"
                 :editable="editable" :on-save="collectionSave" :style="styleObject" :on-deleted="deleteItem" />
             </div>
-            <div v-if="isEditing">
-              <document-select :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
-                :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :init-editing="true" :on-deleted="deleteItem" />
+            <div v-if="newDocumentSelect.editing">
+              <document-select :on-cancel="cancel" :editing="newDocumentSelect.editing" :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
+                :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :on-deleted="deleteItem" />
             </div>
-            <div v-if="editable" @click="isEditing = true">
+            <div v-if="editable" @click="newDocumentSelect.editing = true">
               <div :class="'collection-editable slide-item'" :style="styleObject">
                 <img :src="plusSvg" style="position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; margin-top: -25px; margin-left: -25px" />
               </div>
@@ -52,7 +52,8 @@ let newCollection = {
     type: 'application/vnd.lime.media-link+json',
     value: { title: '', text: '', type: '', uri: '', aspectRatio: '' }
   },
-  options: []
+  options: [],
+  editing: false
 }
 
 export default {
@@ -82,21 +83,14 @@ export default {
   },
   data: function() {
     return {
-      id: guid(),
-      slideIndex: 1,
-      width: 0,
-      elementsWidth: 0,
-      elementsLength: 0,
-      items: this.document.items.map(function(x, i) {
-        return {
-          ...x,
-          id: i
-        }
-      }),
-      styleObject: {
-        'margin-top': '20px'
-      },
-      newDocumentSelect: _.cloneDeep(newCollection)
+      id: undefined,
+      slideIndex: undefined,
+      width: undefined,
+      elementsWidth: undefined,
+      elementsLength: undefined,
+      items: undefined,
+      styleObject: undefined,
+      newDocumentSelect: undefined
     }
   },
   watch: {
@@ -110,36 +104,63 @@ export default {
     }
   },
   mounted: function() {
-    if (
-      this.document.itemType === 'application/vnd.lime.document-select+json'
-    ) {
-      var element = this.$el
-      let listElement = element.querySelector('.slideshow-list')
-      this.width = parseInt(
-        window
-          .getComputedStyle(listElement)
-          .width.toString()
-          .replace('px', '')
-      )
-
-      let elements = element.querySelectorAll('.slide-item')
-      this.elementsLength = elements.length
-
-      for (let i = 0; i < this.elementsLength; i++) {
-        if (this.width <= 400) {
-          this.elementsWidth = this.width - 50
-          elements[i].style.width = this.width - 50 + 'px'
-        } else {
-          this.elementsWidth = this.width / this.initWith
-          elements[i].style.width = this.elementsWidth + 'px'
-        }
-      }
-
-      this.styleObject['width'] = this.elementsWidth + 'px'
-      this.showSlides(this.slideIndex)
-    }
+    this.mounted()
   },
   methods: {
+    editCard: function(item) {
+      item.editing = true
+    },
+    mounted: function() {
+      if (
+        this.document.itemType === 'application/vnd.lime.document-select+json'
+      ) {
+        let element = this.$el
+        if (!element) return
+
+        let listElement = element.querySelector('.slideshow-list')
+        this.width = parseInt(
+          window
+            .getComputedStyle(listElement)
+            .width.toString()
+            .replace('px', '')
+        )
+
+        let elements = element.querySelectorAll('.slide-item')
+        this.elementsLength = elements.length
+
+        for (let i = 0; i < this.elementsLength; i++) {
+          if (this.width <= 400) {
+            this.elementsWidth = this.width - 50
+            elements[i].style.width = this.width - 50 + 'px'
+          } else {
+            this.elementsWidth = this.width / this.initWith
+            elements[i].style.width = this.elementsWidth + 'px'
+          }
+        }
+
+        this.styleObject['width'] = this.elementsWidth + 'px'
+        this.showSlides(this.slideIndex)
+      }
+    },
+    init: function() {
+      this.id = guid()
+      this.slideIndex = 1
+      this.width = 0
+      this.elementsWidth = 0
+      this.elementsLength = 0
+      this.items = this.document.items.map(function(x, i) {
+        return {
+          ...x,
+          id: i,
+          editing: false
+        }
+      })
+      this.styleObject = {
+        'margin-top': '20px'
+      }
+      this.newDocumentSelect = _.cloneDeep(newCollection)
+      this.mounted()
+    },
     swipeLeftHandler: function() {
       if (this.showNext) {
         this.plusSlides(1)
@@ -276,7 +297,6 @@ export default {
 
   .prev {
     left: 0;
-
   }
 
   /* Position the "next button" to the right */

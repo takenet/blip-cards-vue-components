@@ -21,7 +21,7 @@
 
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="imgCancel()" >
+          <button type="button" class="btn saveIco closeIco" @click="cancel()" >
             <img :src="closeSvg" />
           </button>
           <button class="btn saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
@@ -62,47 +62,64 @@
 </template>
 
 <script>
-
 import { guid } from '../../utils'
 import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 
 export default {
-  mixins: [
-    base
-  ],
-  data: function () {
+  mixins: [base],
+  data: function() {
     return {
-      styleObject: {
-        'border-radius': this.document.title || this.document.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px',
-        'background-image': 'url(' + this.document.uri + ')'
-      },
-      id: guid(),
-      title: this.document.title,
-      text: this.document.text,
-      image: this.document.uri,
-      aspect: this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
+      styleObject: undefined,
+      id: undefined,
+      title: undefined,
+      text: undefined,
+      image: undefined,
+      aspect: undefined
     }
   },
   watch: {
-    document: function () {
+    document: function() {
       this.styleObject = {
-        'border-radius': this.document.title || this.document.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px',
+        'border-radius':
+          this.document.title || this.document.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px',
         'background-image': 'url(' + this.document.uri + ')'
       }
     }
   },
   computed: {
-    documentAspect: function () {
-      return this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
+    documentAspect: function() {
+      return this.document.aspectRatio
+        ? this.document.aspectRatio.replace(':', '-')
+        : '1-1'
     },
-    type: function () {
+    type: function() {
       return mime.lookup(this.image) ? mime.lookup(this.image) : 'image/jpeg'
     }
   },
   methods: {
-    imgSave: function ($event) {
-      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+    init: function() {
+      this.styleObject = {
+        'border-radius':
+          this.document.title || this.document.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px',
+        'background-image': 'url(' + this.document.uri + ')'
+      }
+      this.id = guid()
+      this.title = this.document.title
+      this.text = this.document.text
+      this.image = this.document.uri
+      this.aspect = this.document.aspectRatio
+        ? this.document.aspectRatio.replace(':', '-')
+        : '1-1'
+    },
+    imgSave: function($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) {
+        return
+      }
 
       if ($event) {
         $event.stopPropagation()
@@ -112,7 +129,8 @@ export default {
 
       this.$validator.validateAll().then((result) => {
         if (!result) return
-        this.styleObject['border-radius'] = this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'
+        this.styleObject['border-radius'] =
+          this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'
 
         this.save({
           ...this.document,
@@ -123,122 +141,119 @@ export default {
           type: this.type
         })
       })
-    },
-    imgCancel: function () {
-      this.isEditing = false
-      this.title = this.document.title
-      this.text = this.document.text
-      this.image = this.document.uri
-      this.aspect = this.document.aspectRatio ? this.document.aspectRatio.replace(':', '-') : '1-1'
     }
   },
-  mounted: function () {
+  mounted: function() {
     let element = this.$el
     let container = element.parentNode
-    let width = parseInt(window.getComputedStyle(container).width.toString().replace('px', ''))
+    let width = parseInt(
+      window
+        .getComputedStyle(container)
+        .width.toString()
+        .replace('px', '')
+    )
 
     var bubble = element.querySelector('.bubble')
 
     if (width <= 400) {
       bubble.style.width = width + 'px'
     } else if (width < 800) {
-      bubble.style.width = (width / 3) + 'px'
+      bubble.style.width = width / 3 + 'px'
     } else {
-      bubble.style.width = (width / 4) + 'px'
+      bubble.style.width = width / 4 + 'px'
     }
   }
 }
 </script>
 
 <style lang="scss">
-   @import '../../styles/variables.scss';
+@import '../../styles/variables.scss';
 
-   .media-link.image {
+.media-link.image {
+  .bubble {
+    padding: 0;
+    max-width: 350px;
+  }
 
-    .bubble {
-      padding: 0;
-      max-width: 350px;
+  .header {
+    img {
+      width: 100%;
+      display: block;
     }
-
-    .header {
-      img {
-        width: 100%;
-        display: block;
-      }
-      .img-border {
-        border-radius: inherit!important;
-      }
-    }
-
-    .form {
-      form {
-        width: auto;
-      }
-      .form-group .form-control.text {
-        margin-top: 10px;
-      }
-    }
-
-    .form-check {
-      padding: 0 10px;
-      color: $vue-cloud;
-      margin: 0;
-
-      input[type="radio"] {
-        position: absolute;
-        visibility: hidden;
-      }
-
-      .form-check-container {
-        margin-left: 5px;
-        margin-top: 8px;
-        position: relative;
-        width: 40px;
-        height: 20px;
-        display: inline-block;
-      }
-
-      label{
-        position: absolute;
-        z-index: 1;
-        cursor: pointer;
-      }
-      .check{
-        display: block;
-        position: absolute;
-        border: 1px solid $vue-time;
-        border-radius: 100%;
-        height: 16px;
-        width: 16px;
-        top: 0px;
-        left: 0px;
-        transition: border .25s linear;
-        -webkit-transition: border .25s linear;
-        -moz-transition: border .25s linear;
-        -ms-transition: border .25s linear;
-      }
-      .check::before {
-        display: block;
-        position: absolute;
-        content: '';
-        border-radius: 100%;
-        height: 8px;
-        width: 8px;
-        top: 3px;
-        left: 3px;
-        margin: auto;
-        transition: background 0.25s linear;
-        -webkit-transition: background 0.25s linear;
-        -moz-transition: background 0.25s linear;
-        -ms-transition: background 0.25s linear;
-      }
-      input[type=radio]:checked ~ .check {
-        border: 1px solid $vue-light-blip;
-      }
-
-      input[type=radio]:checked ~ .check::before{
-        background: $vue-light-blip;
-      }
+    .img-border {
+      border-radius: inherit !important;
     }
   }
+
+  .form {
+    form {
+      width: auto;
+    }
+    .form-group .form-control.text {
+      margin-top: 10px;
+    }
+  }
+
+  .form-check {
+    padding: 0 10px;
+    color: $vue-cloud;
+    margin: 0;
+
+    input[type='radio'] {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .form-check-container {
+      margin-left: 5px;
+      margin-top: 8px;
+      position: relative;
+      width: 40px;
+      height: 20px;
+      display: inline-block;
+    }
+
+    label {
+      position: absolute;
+      z-index: 1;
+      cursor: pointer;
+    }
+    .check {
+      display: block;
+      position: absolute;
+      border: 1px solid $vue-time;
+      border-radius: 100%;
+      height: 16px;
+      width: 16px;
+      top: 0px;
+      left: 0px;
+      transition: border 0.25s linear;
+      -webkit-transition: border 0.25s linear;
+      -moz-transition: border 0.25s linear;
+      -ms-transition: border 0.25s linear;
+    }
+    .check::before {
+      display: block;
+      position: absolute;
+      content: '';
+      border-radius: 100%;
+      height: 8px;
+      width: 8px;
+      top: 3px;
+      left: 3px;
+      margin: auto;
+      transition: background 0.25s linear;
+      -webkit-transition: background 0.25s linear;
+      -moz-transition: background 0.25s linear;
+      -ms-transition: background 0.25s linear;
+    }
+    input[type='radio']:checked ~ .check {
+      border: 1px solid $vue-light-blip;
+    }
+
+    input[type='radio']:checked ~ .check::before {
+      background: $vue-light-blip;
+    }
+  }
+}
 </style>

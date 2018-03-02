@@ -143,32 +143,13 @@ export default {
   },
   data: function () {
     return {
-      addOption: false,
-      showPayload: false,
-      headerTab: 'plainText',
-      selectedOption: { value: {} },
-      hide: this.hideOptions,
-      text: this.document.text,
-      options: this.document.options.map(function (x) {
-        let value
-        if (x.value) {
-          if (x.type && x.type.includes('json')) {
-            value = JSON.stringify(x.value)
-          } else {
-            value = x.value
-          }
-        } else {
-          value = ''
-        }
-
-        let opts = {
-          ...x,
-          previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text,
-          value
-        }
-
-        return opts
-      })
+      addOption: undefined,
+      showPayload: undefined,
+      headerTab: undefined,
+      selectedOption: undefined,
+      hide: undefined,
+      text: undefined,
+      options: undefined
     }
   },
   computed: {
@@ -182,14 +163,13 @@ export default {
     }
   },
   methods: {
-    cancel: function () {
-      this.isEditing = false
+    init: function() {
       this.addOption = false
       this.showPayload = false
       this.headerTab = 'plainText'
-      this.selectedOption = {}
-      this.text = linkify(this.document.text)
+      this.selectedOption = { value: {} }
       this.hide = this.hideOptions
+      this.text = this.document.text
       this.options = this.document.options.map(function (x) {
         let value
         if (x.value) {

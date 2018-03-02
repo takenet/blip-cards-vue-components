@@ -25,6 +25,9 @@ var baseComponent = {
     onDeleted: {
       type: Function
     },
+    onCancel: {
+      type: Function
+    },
     editable: {
       type: Boolean,
       default: false
@@ -53,6 +56,11 @@ var baseComponent = {
       trashSvg
     }
   },
+  created() {
+    if (this.init) {
+      this.init()
+    }
+  },
   methods: {
     toggleEdit: function() {
       this.isEditing = !this.isEditing
@@ -60,6 +68,17 @@ var baseComponent = {
     trash: function(document) {
       if (this.onDeleted) {
         this.onDeleted(document)
+      }
+    },
+    cancel() {
+      this.isEditing = false
+
+      if (this.init) {
+        this.init()
+      }
+
+      if (this.onCancel) {
+        this.onCancel()
       }
     },
     save: function(document) {

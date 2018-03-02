@@ -96,7 +96,7 @@
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="videoCancel()">
+          <button type="button" class="btn saveIco closeIco" @click="cancel()">
             <img :src="closeSvg" />
           </button>
           <button class="btn saveIco" @click="videoSave()" :class="{'is-disabled': errors.any() }">
@@ -122,19 +122,19 @@ export default {
   mixins: [base],
   data: function() {
     return {
-      videoUri: this.document.uri,
-      isPlaying: false,
-      isFullScreen: false,
-      video: null,
-      currentTime: 0,
-      totalTime: 0,
-      progress: null,
-      videoPlayerControls: null,
-      volumeProgress: null,
-      volumeSliderWrapper: null,
-      videoPlayerWrapper: null,
-      inactivityTimeout: null,
-      animation: null
+      videoUri: undefined,
+      isPlaying: undefined,
+      isFullScreen: undefined,
+      video: undefined,
+      currentTime: undefined,
+      totalTime: undefined,
+      progress: undefined,
+      videoPlayerControls: undefined,
+      volumeProgress: undefined,
+      volumeSliderWrapper: undefined,
+      videoPlayerWrapper: undefined,
+      inactivityTimeout: undefined,
+      animation: undefined
     }
   },
   mounted: function() {
@@ -148,6 +148,21 @@ export default {
     this.initVideo()
   },
   methods: {
+    init: function() {
+      this.videoUri = this.document.uri
+      this.isPlaying = false
+      this.isFullScreen = false
+      this.video = undefined
+      this.currentTime = 0
+      this.totalTime = 0
+      this.progress = undefined
+      this.videoPlayerControls = undefined
+      this.volumeProgress = undefined
+      this.volumeSliderWrapper = undefined
+      this.videoPlayerWrapper = undefined
+      this.inactivityTimeout = undefined
+      this.animation = undefined
+    },
     initVideo: function() {
       if (!this.video) {
         this.video = this.$el.querySelector('#blipVideo')
@@ -212,17 +227,6 @@ export default {
             : 'video/mp4'
         })
       })
-    },
-    videoCancel: function() {
-      this.video = null
-      this.progress = null
-      this.videoPlayerControls = null
-      this.volumeProgress = null
-      this.volumeSliderWrapper = null
-      this.videoPlayerWrapper = null
-      this.animation = null
-      this.videoUri = this.document.uri
-      this.isEditing = false
     },
     togglePlay: function() {
       this.isPlaying = !this.isPlaying
