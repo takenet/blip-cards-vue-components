@@ -189,6 +189,7 @@ export default {
     addToCollection: function(document) {
       this.items.push(document)
       this.newDocumentSelect = _.cloneDeep(newCollection)
+      document.editing = false
 
       this.save({
         ...this.document,
@@ -198,13 +199,13 @@ export default {
     collectionSave: function(document) {
       let items = this.items.filter((x) => x.id !== document.id)
       items.splice(document.id, 0, document)
+      document.editing = false
 
-      let tempEditing = this.isEditing
       this.save({
         ...this.document,
         items: items
       })
-      this.isEditing = tempEditing
+      this.isEditing = true
     },
     plusSlides: function(n) {
       this.showSlides((this.slideIndex += n))

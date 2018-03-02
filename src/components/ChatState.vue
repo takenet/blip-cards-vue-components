@@ -47,19 +47,18 @@ export default {
   ],
   data: function () {
     return {
-      interval: this.document.interval ? this.document.interval : null
+      interval: undefined
     }
   },
   methods: {
+    init: function() {
+      this.interval = this.document.interval ? this.document.interval : undefined
+    },
     saveState: function () {
       this.save({
         ...this.document,
         interval: this.interval
       })
-    },
-    cancel: function () {
-      this.interval = this.document.interval ? this.document.interval : null
-      this.isEditing = false
     }
   }
 }

@@ -40,12 +40,12 @@
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="cancel()" >
+          <div class="btn saveIco closeIco" @click="cancel()" >
             <img :src="closeSvg" />
-          </button>
-          <button class="btn saveIco" @click="audioSave()" :class="{'is-disabled': errors.any() }">
+          </div>
+          <div class="btn saveIco" @click="audioSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
-          </button>
+          </div>
           <div class="form-group">
             <input type="text" name="audio" class="form-control" v-model="audioUri" placeholder="File URL" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
             <span v-if="errors.has('audio')" class="help input-error">{{ errors.first('audio') }}</span>

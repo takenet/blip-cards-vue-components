@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div v-if="this.document.header.value.uri" :class="'ratio ratio' + aspect" :style="'background-image: url(' + this.document.header.value.uri + ')'">
+        <div v-if="this.document.header.value.uri" :class="'ratio ratio' + aspect" :style="'background-image: url(&quot;' + this.document.header.value.uri + '&quot;)'">
         </div>
 
         <div class="title" v-if="document.header.value.title || document.header.value.text || document.header.value">
@@ -38,12 +38,12 @@
 
   <div v-else class="blip-container document-select">
     <form v-if="!showOptionDialog" class="editing bubble left" novalidate v-on:submit.prevent>
-      <button class="btn saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
+      <div class="btn saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
-      </button>
-      <button type="button" class="btn saveIco closeIco" @click="cancel()">
+      </div>
+      <div class="btn saveIco closeIco" @click="cancel()">
         <img :src="closeSvg" />
-      </button>
+      </div>
       <div class="header">
         <div class="form-group">
           <input type="text" name="image" :class="{'input-error': errors.has('image') }" class="form-control" v-model="previewUri" placeholder="Image Uri" />

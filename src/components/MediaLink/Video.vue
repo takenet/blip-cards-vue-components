@@ -96,12 +96,12 @@
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="cancel()">
+          <div class="btn saveIco closeIco" @click="cancel()">
             <img :src="closeSvg" />
-          </button>
-          <button class="btn saveIco" @click="videoSave()" :class="{'is-disabled': errors.any() }">
+          </div>
+          <div class="btn saveIco" @click="videoSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
-          </button>
+          </div>
           <div class="form-group">
             <input type="text" name="video" class="form-control" v-model="videoUri" placeholder="Video Uri" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
             <span v-if="errors.has('video')" class="help input-error">{{ errors.first('video') }}</span>

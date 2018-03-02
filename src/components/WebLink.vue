@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper" @click="handleWeblink()">
-        <div v-if="this.previewImage" class="preview" :style="'background-image: url(' + this.previewImage + ')'"></div>
+        <div v-if="this.previewImage" class="preview" :style="'background-image: url(&quot;' + this.previewImage + '&quot;)'"></div>
         <div class="link-description-wrapper text-left">
           <span class="text big-text" :title="previewTitle" v-text="this.previewTitle"></span>
           <div class="text-wrapper">
@@ -26,12 +26,12 @@
   </div>
   <div v-else class="blip-container web-link">
     <form class="bubble left" novalidate v-on:submit.prevent>
-      <button class="btn saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
+      <div class="btn saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
-      </button>
-      <button type="button" class="btn saveIco closeIco" @click="webLinkCancel()">
+      </div>
+      <div class="btn saveIco closeIco" @click="cancel()">
         <img :src="closeSvg" />
-      </button>
+      </div>
       <div class="form-group">
         <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetaData(true)" />
         <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>
@@ -56,6 +56,10 @@ export default {
   props: {
     onOpenLink: {
       type: Function
+    },
+    initEditing: {
+      type: Boolean,
+      default: false
     }
   },
   data: function () {
@@ -81,16 +85,26 @@ export default {
       return this.document.previewUri ? this.document.previewUri : this.imgPreview
     }
   },
-  created: function () {
-    this.isEditing = this.initEditing
-    this.fetchMetaData(false)
-  },
   methods: {
+    init: function() {
+      this.title = this.document.title
+      this.text = this.document.text
+      this.imgPreview = this.document.previewUri
+      this.uri = this.document.uri
+      this.target = this.document.target || 'blank'
+
+      this.fetchMetaData(false)
+    },
     handleWeblink: function () {
       if (this.target === 'blank') {
         window.open(this.uri, '_blank')
       } else {
-        this.onOpenLink(this.uri, this.target)
+        this.onOpenLink({
+          uri: this.uri,
+          target: this.target,
+          title: this.previewTitle,
+          image: this.previewImage
+        })
       }
     },
     webLinkSave: function () {
@@ -104,13 +118,6 @@ export default {
           previewUri: this.imgPreview
         })
       })
-    },
-    webLinkCancel: function () {
-      this.title = this.document.title
-      this.text = this.document.text
-      this.uri = this.document.uri
-      this.imgPreview = this.document.previewUri
-      this.isEditing = false
     },
     fetchMetaData: async function (isEditing) {
       var urlToFetch
@@ -141,110 +148,110 @@ export default {
 
 
 <style lang="scss">
-   @import '../styles/variables.scss';
+@import '../styles/variables.scss';
 
-  .web-link .bubble {
-    &.right .text-wrapper:after {
-      background: $vue-light-blip !important;
+.web-link .bubble {
+  &.right .text-wrapper:after {
+    background: $vue-light-blip !important;
+  }
+
+  &.text-link {
+    padding: $bubble-padding;
+    height: auto;
+  }
+
+  .form-group {
+    min-width: auto;
+    .form-control.title {
+      margin-top: 10px;
+    }
+    .form-control.text {
+      margin-top: 10px;
+    }
+  }
+
+  .web-link-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    border-radius: inherit;
+    overflow: hidden;
+
+    &.link {
+      cursor: pointer;
     }
 
-    &.text-link {
-      padding: $bubble-padding;
-      height: auto;
+    .preview {
+      height: 100px;
+      width: 100px;
+      min-width: 100px;
+      background-position: center;
+      background-size: cover;
     }
 
-    .form-group {
-      min-width: auto;
-      .form-control.title {
-        margin-top: 10px;
-      }
-      .form-control.text {
-        margin-top: 10px;
-      }
-    }
-
-    .web-link-wrapper {
+    .link-description-wrapper {
       display: flex;
-      flex-direction: row;
-      flex-grow: 1;
-      border-radius: inherit;
+      flex-direction: column;
+      padding: 10px 16px;
       overflow: hidden;
+      min-height: 100px;
 
-      &.link {
-        cursor: pointer;
-      }
-
-      .preview {
-        height: 100px;
-        width: 100px;
-        min-width: 100px;
-        background-position: center;
-        background-size: cover;
-      }
-
-      .link-description-wrapper {
-        display: flex;
-        flex-direction: column;
-        padding: 10px 16px;
+      .text {
         overflow: hidden;
-        min-height: 100px;
+        position: relative;
+        text-overflow: ellipsis;
+      }
 
-        .text {
-          overflow: hidden;
-          position: relative;
-          text-overflow: ellipsis;
-        }
+      .big-text {
+        white-space: nowrap;
+      }
 
-        .big-text {
-          white-space: nowrap;
-        }
-
-        .text-wrapper {
-          overflow: hidden;
-          position: relative;
+      .text-wrapper {
+        overflow: hidden;
+        position: relative;
+        line-height: 1.2em;
+        max-height: 2.4em;
+        text-align: justify;
+        margin-right: 3px;
+        padding-right: 13px;
+        span {
           line-height: 1.2em;
-          max-height: 2.4em;
-          text-align: justify;
-          margin-right: 3px;
-          padding-right: 13px;
-          span {
-            line-height: 1.2em;
-          }
         }
+      }
 
-        .light-text {
-          font-size: 12px;
-          font-weight: 100;
-          flex-grow: 1;
-        }
+      .light-text {
+        font-size: 12px;
+        font-weight: 100;
+        flex-grow: 1;
+      }
 
-        .text-wrapper:before {
-          content: ' ...';
-          position: absolute;
-          right: 0;
-          bottom: 0;
-        }
+      .text-wrapper:before {
+        content: ' ...';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
 
-        .text-wrapper:after {
-          content: '';
-          position: absolute;
-          right: 0;
-          width: 1em;
-          height: 1em;
-          margin-top: 0.2em;
-          background: $vue-white;
-        }
+      .text-wrapper:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 1em;
+        height: 1em;
+        margin-top: 0.2em;
+        background: $vue-white;
+      }
 
-        .small-text {
-          font-size: 10px;
-          font-weight: 100;
-          white-space: nowrap;
-        }
+      .small-text {
+        font-size: 10px;
+        font-weight: 100;
+        white-space: nowrap;
+      }
 
-        .space-between-text {
-          flex-grow: 1;
-        }
+      .space-between-text {
+        flex-grow: 1;
       }
     }
   }
+}
 </style>
