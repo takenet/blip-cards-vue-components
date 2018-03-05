@@ -108,7 +108,9 @@ export default {
   },
   methods: {
     editCard: function(item) {
-      item.editing = true
+      if (this.editable) {
+        item.editing = true
+      }
     },
     mounted: function() {
       if (
