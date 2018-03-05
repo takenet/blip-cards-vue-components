@@ -21,12 +21,12 @@
 
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <div class="btn saveIco closeIco" @click="cancel()">
+          <button class="btn saveIco closeIco" @click="cancel()">
             <img :src="closeSvg" />
-          </div>
-          <div class="btn saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
+          </button>
+          <button class="btn saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
-          </div>
+          </button>
           <div class="form-group">
             <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required'" class="form-control" v-model="image" placeholder="Image Uri" />
             <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>

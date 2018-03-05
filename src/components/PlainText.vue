@@ -31,12 +31,12 @@
   <div class="blip-container" v-else>
     <div :class="'bubble ' + position">
       <form novalidate v-on:submit.prevent>
-        <div class="saveIco closeIco" @click="cancel()" >
+        <button class="btn saveIco closeIco" @click="cancel()" >
           <img :src="closeSvg" />
-        </div>
-        <div class="saveIco" @click="saveText()" :class="{'is-disabled': errors.any() }">
+        </button>
+        <button type="submit" class="btn saveIco" @click="saveText()" :class="{'is-disabled': errors.any() }">
           <img :src="approveSvg" />
-        </div>
+        </button>
         <div class="form-group">
           <textarea @keydown.enter="saveText($event)" name="text" v-auto-expand class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>

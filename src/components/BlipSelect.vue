@@ -52,12 +52,12 @@
 
   <div class="blip-container select" v-else-if="!addOption">
     <form class="bubble left" novalidate v-on:submit.prevent>
-      <div class="saveIco closeIco" @click="cancel()" >
+      <button class="btn saveIco closeIco" @click="cancel()" >
         <img :src="closeSvg" />
-      </div>
-      <div class="saveIco" :class="{'is-disabled': errors.any() }" @click="selectSave(text)">
+      </button>
+      <button class="btn saveIco" :class="{'is-disabled': errors.any() }" @click="selectSave(text)">
         <img :src="approveSvg" />
-      </div>
+      </button>
       <div class="form-group">
         <textarea @keydown.enter="selectSave(text, $event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="text" />
         <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>

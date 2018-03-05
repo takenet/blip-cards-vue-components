@@ -40,6 +40,8 @@
         <button class="button" @click="sendFile">ENVIAR Documento</button>
         <button class="button" @click="sendLocation">ENVIAR Location</button>
         <button class="button" @click="sendRequestLocation">ENVIAR Pedido de Localização</button>
+        <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
+        <button class="button" @click="sendRaw">ENVIAR Raw Content</button>
       </div>
 
       <div v-else>
@@ -352,6 +354,28 @@ export default {
             rule: 'type',
             type: 'application/vnd.lime.location+json'
           }
+        }
+      })
+      this.send()
+    },
+    sendChatState: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.lime.chatstate+json',
+        content: {
+          'state': 'composing'
+        }
+      })
+      this.send()
+    },
+    sendRaw: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.lime.chatstate+json',
+        content: {
+          'state': 'composing'
         }
       })
       this.send()

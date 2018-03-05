@@ -20,12 +20,12 @@
   <div class="blip-container" v-else>
   <div :class="'bubble ' + position">
       <form novalidate v-on:submit.prevent>
-        <div class="saveIco closeIco" @click="cancel()" >
+        <button class="btn saveIco closeIco" @click="cancel()" >
           <img :src="closeSvg" />
-        </div>
-        <div class="saveIco" @click="saveState()" :class="{'is-disabled': errors.any() }">
+        </button>
+        <button class="btn saveIco" @click="saveState()" :class="{'is-disabled': errors.any() }">
           <img :src="approveSvg" />
-        </div>
+        </button>
         <div class="form-group">
           <input type="text" name="interval" class="form-control" v-validate="'required|numeric'"
             :class="{'input-error': errors.has('interval') }" v-model="interval" placeholder="Milliseconds to wait"></input>
