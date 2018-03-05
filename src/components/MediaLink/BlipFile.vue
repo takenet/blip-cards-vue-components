@@ -23,10 +23,10 @@
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
-          <button class="btn saveIco closeIco" @click="cancel()" >
+          <button type="button" class="btn saveIco closeIco" @click="cancel()" >
             <img :src="closeSvg" />
           </button>
-          <button class="btn saveIco" @click="fileSave()" :class="{'is-disabled': errors.any() }">
+          <button type="submit" class="btn saveIco" @click="fileSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
           </button>
           <div class="form-group">
