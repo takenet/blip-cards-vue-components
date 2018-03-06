@@ -276,15 +276,15 @@ export default {
       this.showPayload = !this.showPayload
     },
     select: function (item) {
-      if (item.isLink) {
-        if (item.label.value.target === 'blank' || item.label.value.target === '' || item.label.value.target === undefined) {
-          let win = window.open(item.label.value.uri, '_blank')
-          win.focus()
-        } else if (this.onOpenLink) {
-          this.onOpenLink(item.label.value.uri, item.label.value.target)
-        }
-        return
-      }
+      // if (item.isLink) {
+      //   if (item.label.value.target === 'blank' || item.label.value.target === '' || item.label.value.target === undefined) {
+      //     let win = window.open(item.label.value.uri, '_blank')
+      //     win.focus()
+      //   } else if (this.onOpenLink) {
+      //     this.onOpenLink(item.label.value.uri, item.label.value.target)
+      //   }
+      //   return
+      // }
 
       if (this.onSelected) {
         this.onSelected(item.label.value, {
