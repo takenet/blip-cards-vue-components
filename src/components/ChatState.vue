@@ -20,7 +20,7 @@
   <div class="blip-container" v-else>
   <div :class="'bubble ' + position">
       <form novalidate v-on:submit.prevent>
-        <button class="btn saveIco closeIco" @click="cancel()" >
+        <button type="button" class="btn saveIco closeIco" @click="cancel()" >
           <img :src="closeSvg" />
         </button>
         <button class="btn saveIco" @click="saveState()" :class="{'is-disabled': errors.any() }">
