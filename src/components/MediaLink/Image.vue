@@ -8,10 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header" :id="id" v-if="!isEditing">
-        <a :href="document.uri" target="_blank">
-          <div :class="'img-border ratio ratio' + documentAspect" :style="styleObject">
-          </div>
-        </a>
+        <div :class="'img-border ratio ratio' + documentAspect" :style="styleObject"></div>
 
         <div class="title" v-if="document.title || document.text">
           <strong v-if="document.title" v-html="document.title"></strong>
@@ -21,7 +18,7 @@
 
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button class="btn saveIco closeIco" @click="cancel()">
+          <button type="button" class="btn saveIco closeIco" @click="cancel()">
             <img :src="closeSvg" />
           </button>
           <button class="btn saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">

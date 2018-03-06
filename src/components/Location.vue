@@ -8,13 +8,9 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <a :href="mapUrl" target="_blank">
-          <div class="ratio ratio1-1" :style="styleObject">
-          </div>
-        </a>
-
+        <div class="ratio ratio1-1" :style="styleObject"></div>
         <div class="title" v-if="document.text">
-            <span v-if="document.text" v-html="document.text"></span>
+          <span v-if="document.text" v-html="document.text"></span>
         </div>
       </div>
     </div>
@@ -28,7 +24,7 @@
       <button class="btn saveIco" @click="locationSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </button>
-      <button class="btn saveIco closeIco" @click="locationCancel()">
+      <button class="btn saveIco closeIco" @click="cancel()">
         <img :src="closeSvg" />
       </button>
       <div class="form-group">
@@ -60,11 +56,11 @@ export default {
   },
   data: function () {
     return {
-      text: this.document.text,
-      latitude: this.document.latitude,
-      longitude: this.document.longitude,
-      bubbleWidth: '500px',
-      apiKey: 'AIzaSyC2BjLFJiNXFTOWeyss8cPTx7csKBBrRBY'
+      text: undefined,
+      latitude: undefined,
+      longitude: undefined,
+      bubbleWidth: undefined,
+      apiKey: undefined
     }
   },
   computed: {
@@ -86,19 +82,33 @@ export default {
     }
   },
   mounted: function () {
-    let element = this.$el
-    let container = element.parentNode
-    let width = parseInt(window.getComputedStyle(container).width.toString().replace('px', ''))
-
-    if (width <= 500) {
-      this.bubbleWidth = width + 'px'
-    } else if (width < 800) {
-      this.bubbleWidth = (width / 2) + 'px'
-    } else {
-      this.bubbleWidth = (width / 3) + 'px'
-    }
+    this.mounted()
   },
   methods: {
+    mounted: function() {
+      let element = this.$el
+      let container = element.parentNode
+      let width = parseInt(window.getComputedStyle(container).width.toString().replace('px', ''))
+
+      if (width <= 500) {
+        this.bubbleWidth = width + 'px'
+      } else if (width < 800) {
+        this.bubbleWidth = (width / 2) + 'px'
+      } else {
+        this.bubbleWidth = (width / 3) + 'px'
+      }
+    },
+    init: function() {
+      this.text = this.document.text
+      this.latitude = this.document.latitude
+      this.longitude = this.document.longitude
+      this.bubbleWidth = '500px'
+      this.apiKey = 'AIzaSyC2BjLFJiNXFTOWeyss8cPTx7csKBBrRBY'
+
+      if (this.$el) {
+        this.mounted()
+      }
+    },
     locationSave: async function () {
       let result = await this.$validator.validateAll()
       if (!result) return
@@ -109,12 +119,6 @@ export default {
         latitude: this.latitude,
         longitude: this.longitude
       })
-    },
-    locationCancel: function () {
-      this.text = this.document.text
-      this.latitude = this.document.latitude
-      this.longitude = this.document.longitude
-      this.isEditing = false
     }
   }
 }

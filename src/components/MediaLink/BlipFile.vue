@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div v-if="!isEditing">
-        <a :href="document.uri" target="_blank" class="file-wrapper">
+        <div class="file-wrapper">
           <div class="file-icon-wrapper">
             <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
@@ -19,7 +19,7 @@
             </div>
             <span v-if="document.size" class="text small-text">{{ document.size | sizeInBytesFilter }}</span>
           </div>
-        </a>
+        </div>
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
