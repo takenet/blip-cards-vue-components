@@ -1,5 +1,6 @@
 <template>
   <div v-if="!isEditing" class="blip-container web-link">
+    <h1>oi</h1>
     <div :class="'bubble ' + position + (this.title == null && this.text == null ? ' text-link': '' )">
       <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
         <img :src="trashSvg" />
@@ -7,7 +8,7 @@
       <div v-if="editable" class="editIco" @click="toggleEdit">
         <img :src="editSvg" />
       </div>
-      <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper" @click="handleWeblink()">
+      <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper">
         <div v-if="this.previewImage" class="preview" :style="'background-image: url(&quot;' + this.previewImage + '&quot;)'"></div>
         <div class="link-description-wrapper text-left">
           <span class="text big-text" :title="previewTitle" v-text="this.previewTitle"></span>
