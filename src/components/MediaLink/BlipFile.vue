@@ -153,7 +153,7 @@ export default {
         }
 
         .small-text {
-          font-size: 10px;
+          font-size: 1rem;
           font-weight: 100;
         }
       }
