@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div class="ratio ratio1-1" :style="styleObject"></div>
+        <div class="ratio ratio1-1" :style="styleObject" @click="(editable ? null : handleLocationLink())"></div>
         <div class="title" v-if="document.text">
           <span v-if="document.text" v-html="document.text"></span>
         </div>
@@ -119,6 +119,9 @@ export default {
         latitude: this.latitude,
         longitude: this.longitude
       })
+    },
+    handleLocationLink: function () {
+      window.open(this.mapUrl, '_blank')
     }
   }
 }

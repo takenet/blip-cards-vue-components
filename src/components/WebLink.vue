@@ -7,7 +7,7 @@
       <div v-if="editable" class="editIco" @click="toggleEdit">
         <img :src="editSvg" />
       </div>
-      <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper">
+      <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper" @click="(editable ? null : handleWeblink())">
         <div v-if="this.previewImage" class="preview" :style="'background-image: url(&quot;' + this.previewImage + '&quot;)'"></div>
         <div class="link-description-wrapper text-left">
           <span class="text big-text" :title="previewTitle" v-text="this.previewTitle"></span>

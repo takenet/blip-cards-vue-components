@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div v-if="!isEditing">
-        <div class="file-wrapper">
+        <div class="file-wrapper" @click="(editable ? null : handleFileLink())">
           <div class="file-icon-wrapper">
             <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
@@ -82,6 +82,9 @@ export default {
         uri: this.uri,
         type: mime.lookup(this.uri) ? mime.lookup(this.uri) : 'application/pdf'
       })
+    },
+    handleFileLink: function () {
+      window.open(this.document.uri, '_blank')
     }
   }
 }
