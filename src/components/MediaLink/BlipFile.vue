@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div v-if="!isEditing">
-        <div class="file-wrapper" @click="(editable ? null : handleFileLink())">
+        <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
           <div class="file-icon-wrapper">
             <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>

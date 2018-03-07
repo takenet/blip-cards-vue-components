@@ -24,7 +24,7 @@
 
       <div class="fixed-options" v-if="options">
         <ul>
-          <li v-for="(item, index) in options" v-bind:key="index" @click="(editable ? null :select(item))">
+          <li v-for="(item, index) in options" v-bind:key="index" @click="(editable ? null :select(item))" :class="editable ? '' : ' pointer'">
             <span v-html="item.previewText"></span>
           </li>
         </ul>

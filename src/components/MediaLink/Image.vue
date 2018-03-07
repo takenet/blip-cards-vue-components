@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header" :id="id" v-if="!isEditing">
-        <div :class="'img-border ratio ratio' + documentAspect" :style="styleObject" @click="(editable ? null : handleImageLink())"></div>
+        <div :class="'img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')" :style="styleObject" @click="(editable ? null : handleImageLink())"></div>
 
         <div class="title" v-if="document.title || document.text">
           <strong v-if="document.title" v-html="document.title"></strong>

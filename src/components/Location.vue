@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div class="ratio ratio1-1" :style="styleObject" @click="(editable ? null : handleLocationLink())"></div>
+        <div class="ratio ratio1-1" :style="styleObject" @click="(editable ? null : handleLocationLink())" :class="editable ? '' : ' pointer'"></div>
         <div class="title" v-if="document.text">
           <span v-if="document.text" v-html="document.text"></span>
         </div>
