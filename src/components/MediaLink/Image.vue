@@ -82,7 +82,7 @@ export default {
           this.document.title || this.document.text
             ? '13px 13px 0px 0px'
             : '13px 13px 13px 0px',
-        'background-image': 'url(' + this.document.uri + ')'
+        'background-image': 'url("' + this.document.uri + '")'
       }
     }
   },
@@ -103,7 +103,7 @@ export default {
           this.document.title || this.document.text
             ? '13px 13px 0px 0px'
             : '13px 13px 13px 0px',
-        'background-image': 'url(' + this.document.uri + ')'
+        'background-image': 'url("' + this.document.uri + '")'
       }
       this.id = guid()
       this.title = this.document.title
