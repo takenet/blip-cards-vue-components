@@ -442,7 +442,7 @@ export default {
       text-align: center;
       padding: 5px;
       margin: 2px;
-      font-size: 1.4rem;
+      font-size: 0.875rem;
       font-weight: 500;
       color: $vue-light-blip;
       background-color: $vue-white !important;

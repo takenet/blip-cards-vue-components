@@ -220,7 +220,7 @@ export default {
       }
 
       .light-text {
-        font-size: 1.2rem;
+        font-size: 0.75rem;
         font-weight: 100;
         flex-grow: 1;
       }
@@ -243,7 +243,7 @@ export default {
       }
 
       .small-text {
-        font-size: 1rem;
+        font-size: 0.625rem;
         font-weight: 100;
         white-space: nowrap;
       }
