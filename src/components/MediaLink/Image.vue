@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header" :id="id" v-if="!isEditing">
-        <div :class="'img-border ratio ratio' + documentAspect" :style="styleObject"></div>
+        <div :class="'img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')" :style="styleObject" @click="(editable ? null : handleImageLink())"></div>
 
         <div class="title" v-if="document.title || document.text">
           <strong v-if="document.title" v-html="document.title"></strong>
@@ -82,7 +82,7 @@ export default {
           this.document.title || this.document.text
             ? '13px 13px 0px 0px'
             : '13px 13px 13px 0px',
-        'background-image': 'url(' + this.document.uri + ')'
+        'background-image': 'url("' + this.document.uri + '")'
       }
     }
   },
@@ -103,7 +103,7 @@ export default {
           this.document.title || this.document.text
             ? '13px 13px 0px 0px'
             : '13px 13px 13px 0px',
-        'background-image': 'url(' + this.document.uri + ')'
+        'background-image': 'url("' + this.document.uri + '")'
       }
       this.id = guid()
       this.title = this.document.title
@@ -138,6 +138,9 @@ export default {
           type: this.type
         })
       })
+    },
+    handleImageLink: function () {
+      window.open(this.document.uri, '_blank')
     }
   },
   mounted: function() {

@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div v-if="!isEditing">
-        <div class="file-wrapper">
+        <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
           <div class="file-icon-wrapper">
             <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
@@ -82,6 +82,9 @@ export default {
         uri: this.uri,
         type: mime.lookup(this.uri) ? mime.lookup(this.uri) : 'application/pdf'
       })
+    },
+    handleFileLink: function () {
+      window.open(this.document.uri, '_blank')
     }
   }
 }
@@ -153,7 +156,7 @@ export default {
         }
 
         .small-text {
-          font-size: 10px;
+          font-size: 0.625rem;
           font-weight: 100;
         }
       }

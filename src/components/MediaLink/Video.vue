@@ -112,9 +112,9 @@
   </div>
 </template>
 
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js">
-</script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 <script>
+
 import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 

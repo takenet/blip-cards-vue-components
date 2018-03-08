@@ -12,7 +12,7 @@
 
 .blip-card-container {
   width: 100%;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .blip-card {
@@ -35,15 +35,15 @@
       height: 100%;
       max-width: 90%;
       min-width: 160px;
-      font-size: 15px;
-      font-weight: 500;
+      font-size: 0.875rem;
+      font-weight: 300;
       line-height: 20px;
       white-space: pre-line;
   }
 
   .bubble.left {
       border-radius: 13px 13px 13px 2px;
-      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
       background-color: $vue-white;
       color: $vue-gray;
       float: left;
@@ -55,14 +55,14 @@
 
   .bubble.right {
       border-radius: 13px 2px 13px 13px;
-      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
       background-color: $vue-light-blip;
       color: $vue-white;
       float: right;
   }
 
   .notification {
-    font-size: 10px;
+    font-size: 0.625rem;
     color: $vue-light-gray;
     line-height: 14px;
     clear: both;
@@ -122,7 +122,7 @@
       text-align: center;
       padding: 10px;
       margin: 2px;
-      font-size: 14px;
+      font-size: 0.875rem;
       font-weight: 500;
       word-break: break-word;
       display: flex;
@@ -276,23 +276,23 @@
     }
     .help {
       padding: 5px;
-      font-size: 11px;
+      font-size: 0.6875rem;
     }
     ::-webkit-input-placeholder {
       color: $vue-time;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
     ::-moz-placeholder {
       color: $vue-time;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
     :-ms-input-placeholder {
       color: $vue-time;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
     :-moz-placeholder {
       color: $vue-time;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
   }
 
@@ -446,23 +446,23 @@
     .upload-intructions {
       padding: 5px;
       padding-bottom: 0px;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
     ::-webkit-input-placeholder {
       color: $vue-time;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
     ::-moz-placeholder {
       color: $vue-time;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
     :-ms-input-placeholder {
       color: $vue-time;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
     :-moz-placeholder {
       color: $vue-time;
-      font-size: 12px;
+      font-size: 0.75rem;
     }
   }
 
@@ -515,4 +515,8 @@
 
 .blip-bubble .blip-card:first-child .bubble.left {
   background-color: black;
+}
+
+.pointer {
+  cursor: pointer;
 }

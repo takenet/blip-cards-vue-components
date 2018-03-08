@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div class="ratio ratio1-1" :style="styleObject"></div>
+        <div class="ratio ratio1-1" :style="styleObject" @click="(editable ? null : handleLocationLink())" :class="editable ? '' : ' pointer'"></div>
         <div class="title" v-if="document.text">
           <span v-if="document.text" v-html="document.text"></span>
         </div>
@@ -119,6 +119,9 @@ export default {
         latitude: this.latitude,
         longitude: this.longitude
       })
+    },
+    handleLocationLink: function () {
+      window.open(this.mapUrl, '_blank')
     }
   }
 }
@@ -151,12 +154,12 @@ export default {
      display: inline-block;
      background-color: #DAF2F4;
      border: 1px solid #0CC8CC;
-     box-shadow: 0 -1px 12px 0 #EEEEEE;
+     box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, .1);
      border-radius: 19px;
      padding: 10px 16px;
      margin: 2px;
      color: #0CC8CC;
-     font-size: 14px;
+     font-size: 0.875rem;
      font-weight: 500;
      min-width: 70px;
    }
