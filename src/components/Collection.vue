@@ -45,7 +45,7 @@
 <script>
 import { guid } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 
 let newCollection = {
   header: {
@@ -160,7 +160,7 @@ export default {
       this.styleObject = {
         'margin-top': '20px'
       }
-      this.newDocumentSelect = _.cloneDeep(newCollection)
+      this.newDocumentSelect = cloneDeep(newCollection)
       this.mounted()
     },
     swipeLeftHandler: function() {
@@ -190,7 +190,7 @@ export default {
     },
     addToCollection: function(document) {
       this.items.push(document)
-      this.newDocumentSelect = _.cloneDeep(newCollection)
+      this.newDocumentSelect = cloneDeep(newCollection)
       document.editing = false
 
       this.save({

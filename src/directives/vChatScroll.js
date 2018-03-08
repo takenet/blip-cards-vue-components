@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 
 /**
  * @name VueJS vChatScroll (vue-chat-scroll)
@@ -169,7 +169,7 @@ const vChatScroll = {
       scroll(contentScroll, binding)
     })
 
-    let scrollEvent = _.debounce(() => {
+    let scrollEvent = debounce(() => {
       if (config.scrollToTop) {
         scrolled = contentScroll.scrollTop > 0
       } else {

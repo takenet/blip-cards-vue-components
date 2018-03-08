@@ -150,7 +150,7 @@
 <script>
 
 import { linkify } from '../utils'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { default as base } from '../mixins/baseComponent.js'
 import mime from 'mime-types'
 const optionSize = 34
@@ -352,7 +352,7 @@ export default {
     editOption: function (item, index, $event) {
       this.showOptionDialog = true
 
-      this.selectedOption = _.cloneDeep(item)
+      this.selectedOption = cloneDeep(item)
       this.selectedOption.index = index
 
       this.showPayload = typeof this.selectedOption.value.type === 'string'

@@ -123,7 +123,6 @@
 <script>
 
 import { linkify } from '../utils'
-import _ from 'lodash'
 import { default as base } from '../mixins/baseComponent.js'
 const optionSize = 34
 
@@ -232,7 +231,7 @@ export default {
     editOption: function (item, index, $event) {
       this.addOption = true
 
-      this.selectedOption = _.clone(item)
+      this.selectedOption = { ...item }
 
       if (!this.selectedOption.value || !this.selectedOption.type) {
         this.showPayload = false
