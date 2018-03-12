@@ -268,7 +268,7 @@ export default {
       }
       if (this.headerTab === 'plainText' && typeof this.selectedOption.label.value !== 'string') {
         this.selectedOption.LinkUri = this.selectedOption.label.value.uri
-        this.selectedOption.LinkTarget = this.selectedOption.label.value.target || ''
+        this.selectedOption.LinkTarget = this.selectedOption.label.value.target || 'blank'
         this.selectedOption.label.value = this.selectedOption.label.value.text
       }
     },
@@ -281,7 +281,7 @@ export default {
           let win = window.open(item.label.value.uri, '_blank')
           win.focus()
         } else if (this.onOpenLink) {
-          this.onOpenLink(item.label.value.uri, item.label.value.target)
+          this.onOpenLink({ uri: item.label.value.uri, target: item.label.value.target })
         }
         return
       }
@@ -359,7 +359,7 @@ export default {
       this.headerTab = this.selectedOption.label.type === 'application/vnd.lime.web-link+json' ? 'weblink' : 'plainText'
       this.selectedOption.LinkTarget = (this.selectedOption.label.value ? this.selectedOption.label.value.target : '') || ''
       if (this.headerTab === 'weblink') {
-        this.selectedOption.label.value.target = this.selectedOption.label.value.target || ''
+        this.selectedOption.label.value.target = this.selectedOption.label.value.target || 'blank'
       }
     },
     deleteOption: function (index) {
