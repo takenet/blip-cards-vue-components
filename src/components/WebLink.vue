@@ -38,6 +38,13 @@
         <input type="text" name="title" class="form-control title" :class="{'input-error': errors.has('title') }" v-validate="'required'" v-model="title" placeholder="Title" />
         <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
         <input type="text" name="webLinkText" class="form-control text" v-model="text" placeholder="Description" />
+        <select v-model="target" class="form-control text">
+          <option disabled value="">Target</option>
+          <option value='blank'>Blank</option>
+          <option value='self'>Self</option>
+          <option value='selfCompact'>SelfCompact</option>
+          <option value='selfTall'>SelfTall</option>
+        </select>
       </div>
     </form>
   </div>
