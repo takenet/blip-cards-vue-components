@@ -168,7 +168,7 @@ export default {
         color: #0CC8CC;
         text-align: center;
         align-self: center;
-        font-size: 0.875rem;
+        font-size: 14px;
         font-weight: 500;
         min-width: 70px;
 

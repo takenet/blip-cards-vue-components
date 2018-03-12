@@ -159,7 +159,7 @@ export default {
      padding: 10px 16px;
      margin: 2px;
      color: #0CC8CC;
-     font-size: 0.875rem;
+     font-size: 14px;
      font-weight: 500;
      min-width: 70px;
    }

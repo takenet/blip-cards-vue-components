@@ -291,7 +291,7 @@ export default {
     color: $vue-light-blip;
     font-weight: bold;
     opacity: 0.3;
-    font-size: 1.125rem;
+    font-size: 18px;
     transition: 0.6s ease;
     border-radius: 5px 0 0 5px;
     box-shadow: -2px 2px 20px 0 rgba(51, 60, 74, 0.4);
