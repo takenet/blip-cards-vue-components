@@ -217,14 +217,14 @@ export default {
       let trackElement = element.querySelector('.slideshow-track')
 
       if (n === 1) {
-        trackElement.style.transform = 'translate3d(0px, 0px, 0px)'
+        trackElement.setAttribute('style', 'transform: translate3d(0px, 0px, 0px); -webkit-transform: translate3d(0px, 0px, 0px);')
       } else {
         let margin = this.elementsWidth === this.width ? -10 : 10
         const data =
           'translate3d(' +
           (((this.elementsWidth + 10) * (n - 1) - margin) * -1 + 10) +
           'px, 0px, 0px)'
-        trackElement.style.transform = data
+        trackElement.setAttribute('style', `transform: ${data}; -webkit-transform: ${data};`)
       }
     }
   }
