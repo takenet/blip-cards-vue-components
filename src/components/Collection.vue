@@ -5,11 +5,11 @@
         <div class="slideshow-list">
           <div class="slideshow-track">
             <div v-for="(item, index) in items" v-bind:key="index" @dblclick="editCard(item)">
-              <document-select :on-cancel="cancel" :editing="item.editing" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :document="item" :deletable="deletable"
+              <document-select :on-cancel="cancel" :editing="item.editing" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
                 :editable="editable" :on-save="collectionSave" :style="styleObject" :on-deleted="deleteItem" />
             </div>
             <div v-if="newDocumentSelect.editing">
-              <document-select :on-cancel="cancel" :editing="newDocumentSelect.editing" :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected"
+              <document-select :on-cancel="cancel" :editing="newDocumentSelect.editing" :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink"
                 :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :on-deleted="deleteItem" />
             </div>
             <div v-if="editable" @click="newDocumentSelect.editing = true">
@@ -31,12 +31,12 @@
 
     <div v-else-if="document.itemType === 'application/vnd.lime.container+json'">
       <div v-for="(item, index) in document.items" v-bind:key="index">
-          <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: item.type, content: item.value }" :editable="editable" />
+          <blip-card :position="position" :date="date" :on-selected="onSelected" :on-open-link="onOpenLink" :document="{ type: item.type, content: item.value }" :editable="editable" />
       </div>
     </div>
     <div v-else>
       <div v-for="(item, index) in document.items" v-bind:key="index">
-        <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: document.itemType, content: item }" :editable="editable" />
+        <blip-card :position="position" :date="date" :on-selected="onSelected" :on-open-link="onOpenLink" :document="{ type: document.itemType, content: item }" :editable="editable" />
       </div>
     </div>
   </div>
@@ -69,6 +69,9 @@ export default {
       default: 2
     },
     onSelected: {
+      type: Function
+    },
+    onOpenLink: {
       type: Function
     }
   },

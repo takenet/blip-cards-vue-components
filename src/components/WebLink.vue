@@ -122,7 +122,8 @@ export default {
           uri: this.uri,
           title: this.title,
           text: this.text,
-          previewUri: this.imgPreview
+          previewUri: this.imgPreview,
+          target: this.target
         })
       })
     },
