@@ -127,6 +127,14 @@ export default {
         })
       })
     },
+    async parseMetadata(content, isEditing) {
+      if (isEditing === this.isEditing) {
+        var metaData = JSON.parse(content)
+        this.title = this.title ? this.title : this.decodeHtml(metaData.title)
+        this.text = this.text ? this.text : this.decodeHtml(metaData.description)
+        this.imgPreview = metaData.image
+      }
+    },
     fetchMetaData: async function (isEditing) {
       var urlToFetch
       if (this.isEditing) {
@@ -136,13 +144,18 @@ export default {
       } else {
         return
       }
-      var response = await fetch('https://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
-      var content = await response.text()
-      if (isEditing === this.isEditing) {
-        var metaData = JSON.parse(content)
-        this.title = this.title ? this.title : this.decodeHtml(metaData.title)
-        this.text = this.text ? this.text : this.decodeHtml(metaData.description)
-        this.imgPreview = metaData.image
+      if (self.fetch) {
+        var response = await fetch(`https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, { method: 'GET' })
+        this.parseMetadata(await response.text(), isEditing)
+      } else {
+        var xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = async () => {
+          if (xhttp.readyState === 4 && xhttp.status === 200) {
+            this.parseMetadata(xhttp.responseText, isEditing)
+          }
+        }
+        xhttp.open('GET', `https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, true)
+        xhttp.send()
       }
     },
     decodeHtml: function (text) {
