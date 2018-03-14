@@ -67,15 +67,12 @@
 
 
 <script>
-
 import { linkify } from '../utils'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
   name: 'request-location',
-  mixins: [
-    base
-  ],
+  mixins: [base],
   props: {
     hideOptions: {
       type: Boolean,
@@ -90,15 +87,17 @@ export default {
     }
   },
   computed: {
-    previewDocument: function () {
+    previewDocument: function() {
       return {
         hasPreview: this.document.label.value.length > this.length,
-        previewContent: linkify(this.document.label.value.substring(0, this.length - 3) + '...'),
+        previewContent: linkify(
+          this.document.label.value.substring(0, this.length - 3) + '...'
+        ),
         content: linkify(this.document.label.value)
       }
     }
   },
-  data: function () {
+  data: function() {
     return {
       hide: undefined,
       text: undefined,
@@ -111,17 +110,33 @@ export default {
       this.text = this.document.label.value
       this.showContent = false
     },
-    select: function () {
-      if (this.onSelected) {
-        this.onSelected()
+    select: function() {
+      if (!navigator.geolocation) {
+        return
       }
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { latitude, longitude } }) => {
+          if (this.onSelected) {
+            console.log(latitude, longitude)
+            this.onSelected(null, {
+              type: 'application/vnd.lime.location+json',
+              content: { latitude, longitude }
+            })
+          }
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
 
       if (!this.editable) {
         this.hide = true
       }
     },
-    saveLocation: function ($event) {
-      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+    saveLocation: function($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) {
+        return
+      }
 
       if ($event) {
         $event.stopPropagation()
@@ -143,18 +158,18 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../styles/variables.scss';
-  .request-location{
-    .bubble {
-      padding: $bubble-padding;
+@import '../styles/variables.scss';
+.request-location {
+  .bubble {
+    padding: $bubble-padding;
+  }
+  .options {
+    ul {
+      list-style-type: none;
+      clear: both;
+      margin: 0;
+      padding: 10px;
     }
-    .options {
-      ul {
-        list-style-type: none;
-        clear: both;
-        margin: 0;
-        padding: 10px;
-      }
 
       li {
         cursor: pointer;
@@ -172,23 +187,23 @@ export default {
         font-weight: 500;
         min-width: 70px;
 
-        .wrapper {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
+      .wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
 
-          .locationIcon {
-            justify-content: center;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-          }
-          .text {
-            margin: 0px 10px;
-          }
+        .locationIcon {
+          justify-content: center;
+          border-radius: 50%;
+          width: 25px;
+          height: 25px;
+        }
+        .text {
+          margin: 0px 10px;
         }
       }
     }
   }
+}
 </style>
