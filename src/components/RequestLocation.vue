@@ -180,16 +180,15 @@ export default {
 
       li {
         cursor: pointer;
-        display: inline-block;
+        display: inline-flex;
+        align-items: end;
         background-color: #DAF2F4;
         border: 1px solid #0CC8CC;
-        box-shadow: 0 -1px 12px 0 #EEEEEE;
+        box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, .1);
         border-radius: 20px;
         padding: 7px 10px;
         margin: 2px;
         color: #0CC8CC;
-        text-align: center;
-        align-self: center;
         font-size: 16px;
         font-weight: 500;
         min-width: 70px;
