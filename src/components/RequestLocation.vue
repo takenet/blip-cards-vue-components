@@ -84,6 +84,9 @@ export default {
     length: {
       type: Number,
       default: 532
+    },
+    onLocationError: {
+      type: Function
     }
   },
   computed: {
@@ -117,7 +120,6 @@ export default {
       navigator.geolocation.getCurrentPosition(
         ({ coords: { latitude, longitude } }) => {
           if (this.onSelected) {
-            console.log(latitude, longitude)
             this.onSelected(null, {
               type: 'application/vnd.lime.location+json',
               content: { latitude, longitude }
@@ -125,7 +127,12 @@ export default {
           }
         },
         (error) => {
-          console.log(error)
+          if (this.onLocationError) {
+            this.onLocationError(error)
+          }
+        },
+        {
+          timeout: 5000
         }
       )
 
