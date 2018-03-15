@@ -107,6 +107,11 @@ export default {
       showContent: undefined
     }
   },
+  watch: {
+    hideOptions: function() {
+      this.hide = this.hideOptions
+    }
+  },
   methods: {
     init: function() {
       this.hide = this.hideOptions
