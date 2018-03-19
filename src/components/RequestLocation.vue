@@ -140,6 +140,7 @@ export default {
         (error) => {
           if (this.onLocationError) {
             this.onLocationError(error)
+            this.hide = this.hideOptions
           }
         },
         {
