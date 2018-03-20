@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isEditing">
-    <div class="blip-container chat-state">
+    <div v-if="this.document.state === 'composing'" class="blip-container chat-state">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
@@ -28,7 +28,7 @@
         </button>
         <div class="form-group">
           <input type="text" name="interval" class="form-control" v-validate="'required|numeric'"
-            :class="{'input-error': errors.has('interval') }" v-model="interval" placeholder="Milliseconds to wait"></input>
+            :class="{'input-error': errors.has('interval') }" v-model="interval" placeholder="Milliseconds to wait"/>
           <span v-show="errors.has('interval')" class="help input-error">{{ errors.first('interval') }}</span>
         </div>
       </form>
