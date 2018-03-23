@@ -229,7 +229,7 @@ export default {
     .audio-player-time {
       display: flex;
       justify-content: space-between;
-      font-family: 'Muli', sans-serif;
+      font-family: 'Nunito', sans-serif;
       font-size: x-small;
       line-height: 10px;
       color: inherit;

@@ -73,7 +73,7 @@ export default {
           '&key=' + this.apiKey
     },
     styleObject: function () {
-      var coordinatesRegex = new RegExp(new RegExp(/^-?1?\d{1,2}\.\d{1,10}$/))
+      var coordinatesRegex = new RegExp(new RegExp(/^-?1?\d{1,2}\.\d{1,}$/))
       if (coordinatesRegex.test(this.document.latitude) && coordinatesRegex.test(this.document.longitude)) {
         return { 'background-image': 'url("' + this.previewUrl + '")' }
       } else {
@@ -159,7 +159,7 @@ export default {
      padding: 10px 16px;
      margin: 2px;
      color: #0CC8CC;
-     font-size: 0.875rem;
+     font-size: 16px;
      font-weight: 500;
      min-width: 70px;
    }

@@ -6,36 +6,36 @@
 .blip-container {
   margin-bottom: 10px;
   width: 100%;
-  font-family: 'Muli', sans-serif;
+  font-family: 'Nunito', sans-serif;
   position: relative;
 }
 
 .blip-card-container {
   width: 100%;
-  font-size: 0.875rem;
+  font-size: 16px;
 }
 
 .blip-card {
   width: 100%;
-  font-family: 'Muli', sans-serif;
+  font-family: 'Nunito', sans-serif;
 
   *, ::after, ::before {
     box-sizing: border-box;
   }
 
   input, textarea, label {
-    font-family: 'Muli', sans-serif;
+    font-family: 'Nunito', sans-serif;
   }
 
   .bubble {
-      font-family: 'Muli', sans-serif;
+      font-family: 'Nunito', sans-serif;
       position: relative;
       margin-bottom: 5px;
       width: auto;
       height: 100%;
       max-width: 90%;
       min-width: 160px;
-      font-size: 0.875rem;
+      font-size: 16px;
       font-weight: 300;
       line-height: 20px;
       white-space: pre-line;
@@ -62,7 +62,7 @@
   }
 
   .notification {
-    font-size: 0.625rem;
+    font-size: 10px;
     color: $vue-light-gray;
     line-height: 14px;
     clear: both;
@@ -122,7 +122,7 @@
       text-align: center;
       padding: 10px;
       margin: 2px;
-      font-size: 0.875rem;
+      font-size: 16px;
       font-weight: 500;
       word-break: break-word;
       display: flex;
@@ -276,23 +276,23 @@
     }
     .help {
       padding: 5px;
-      font-size: 0.6875rem;
+      font-size: 11px;
     }
     ::-webkit-input-placeholder {
       color: $vue-time;
-      font-size: 0.75rem;
+      font-size: 12px;
     }
     ::-moz-placeholder {
       color: $vue-time;
-      font-size: 0.75rem;
+      font-size: 12px;
     }
     :-ms-input-placeholder {
       color: $vue-time;
-      font-size: 0.75rem;
+      font-size: 12px;
     }
     :-moz-placeholder {
       color: $vue-time;
-      font-size: 0.75rem;
+      font-size: 12px;
     }
   }
 
@@ -446,23 +446,23 @@
     .upload-intructions {
       padding: 5px;
       padding-bottom: 0px;
-      font-size: 0.75rem;
+      font-size: 12px;
     }
     ::-webkit-input-placeholder {
       color: $vue-time;
-      font-size: 0.75rem;
+      font-size: 12px;
     }
     ::-moz-placeholder {
       color: $vue-time;
-      font-size: 0.75rem;
+      font-size: 12px;
     }
     :-ms-input-placeholder {
       color: $vue-time;
-      font-size: 0.75rem;
+      font-size: 12px;
     }
     :-moz-placeholder {
       color: $vue-time;
-      font-size: 0.75rem;
+      font-size: 12px;
     }
   }
 

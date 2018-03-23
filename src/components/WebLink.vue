@@ -38,6 +38,13 @@
         <input type="text" name="title" class="form-control title" :class="{'input-error': errors.has('title') }" v-validate="'required'" v-model="title" placeholder="Title" />
         <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
         <input type="text" name="webLinkText" class="form-control text" v-model="text" placeholder="Description" />
+        <select v-model="target" class="form-control text">
+          <option disabled value="">Target</option>
+          <option value='blank'>Blank</option>
+          <option value='self'>Self</option>
+          <option value='selfCompact'>SelfCompact</option>
+          <option value='selfTall'>SelfTall</option>
+        </select>
       </div>
     </form>
   </div>
@@ -115,9 +122,18 @@ export default {
           uri: this.uri,
           title: this.title,
           text: this.text,
-          previewUri: this.imgPreview
+          previewUri: this.imgPreview,
+          target: this.target
         })
       })
+    },
+    async parseMetadata(content, isEditing) {
+      if (isEditing === this.isEditing) {
+        var metaData = JSON.parse(content)
+        this.title = this.title ? this.title : this.decodeHtml(metaData.title)
+        this.text = this.text ? this.text : this.decodeHtml(metaData.description)
+        this.imgPreview = metaData.image
+      }
     },
     fetchMetaData: async function (isEditing) {
       var urlToFetch
@@ -128,13 +144,18 @@ export default {
       } else {
         return
       }
-      var response = await fetch('https://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
-      var content = await response.text()
-      if (isEditing === this.isEditing) {
-        var metaData = JSON.parse(content)
-        this.title = this.title ? this.title : this.decodeHtml(metaData.title)
-        this.text = this.text ? this.text : this.decodeHtml(metaData.description)
-        this.imgPreview = metaData.image
+      if (self.fetch) {
+        var response = await fetch(`https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, { method: 'GET' })
+        this.parseMetadata(await response.text(), isEditing)
+      } else {
+        var xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = async () => {
+          if (xhttp.readyState === 4 && xhttp.status === 200) {
+            this.parseMetadata(xhttp.responseText, isEditing)
+          }
+        }
+        xhttp.open('GET', `https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, true)
+        xhttp.send()
       }
     },
     decodeHtml: function (text) {
@@ -220,7 +241,7 @@ export default {
       }
 
       .light-text {
-        font-size: 0.75rem;
+        font-size: 12px;
         font-weight: 100;
         flex-grow: 1;
       }
@@ -243,7 +264,7 @@ export default {
       }
 
       .small-text {
-        font-size: 0.625rem;
+        font-size: 10px;
         font-weight: 100;
         white-space: nowrap;
       }

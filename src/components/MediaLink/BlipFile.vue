@@ -156,7 +156,7 @@ export default {
         }
 
         .small-text {
-          font-size: 0.625rem;
+          font-size: 10px;
           font-weight: 100;
         }
       }

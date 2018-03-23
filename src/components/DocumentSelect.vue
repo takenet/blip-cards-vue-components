@@ -268,7 +268,7 @@ export default {
       }
       if (this.headerTab === 'plainText' && typeof this.selectedOption.label.value !== 'string') {
         this.selectedOption.LinkUri = this.selectedOption.label.value.uri
-        this.selectedOption.LinkTarget = this.selectedOption.label.value.target || ''
+        this.selectedOption.LinkTarget = this.selectedOption.label.value.target || 'blank'
         this.selectedOption.label.value = this.selectedOption.label.value.text
       }
     },
@@ -364,7 +364,7 @@ export default {
       this.headerTab = this.selectedOption.label.type === 'application/vnd.lime.web-link+json' ? 'weblink' : 'plainText'
       this.selectedOption.LinkTarget = (this.selectedOption.label.value ? this.selectedOption.label.value.target : '') || ''
       if (this.headerTab === 'weblink') {
-        this.selectedOption.label.value.target = this.selectedOption.label.value.target || ''
+        this.selectedOption.label.value.target = this.selectedOption.label.value.target || 'blank'
       }
     },
     deleteOption: function (index) {
@@ -447,7 +447,7 @@ export default {
       text-align: center;
       padding: 5px;
       margin: 2px;
-      font-size: 0.875rem;
+      font-size: 16px;
       font-weight: 500;
       color: $vue-light-blip;
       background-color: $vue-white !important;
