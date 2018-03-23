@@ -281,7 +281,12 @@ export default {
           let win = window.open(item.label.value.uri, '_blank')
           win.focus()
         } else if (this.onOpenLink) {
-          this.onOpenLink(item.label.value.uri, item.label.value.target)
+          this.onOpenLink({
+            uri: item.label.value.uri,
+            target: item.label.value.target,
+            title: item.label.value.title,
+            image: item.label.value.previewUri
+          })
         }
         return
       }
