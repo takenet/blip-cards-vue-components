@@ -100,7 +100,7 @@
         <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
-        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" @blur="fetchMetaData(true)"/>
+        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" @blur="fetchMetada(true)"/>
         <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
@@ -152,6 +152,7 @@
 import { linkify } from '../utils'
 import cloneDeep from 'lodash/cloneDeep'
 import { default as base } from '../mixins/baseComponent.js'
+import { MetadataService } from '../metadataService.js'
 import mime from 'mime-types'
 const optionSize = 34
 
@@ -192,7 +193,8 @@ export default {
       aspect: undefined,
       previewUri: undefined,
       selectedOption: undefined,
-      options: undefined
+      options: undefined,
+      MetadataService: new MetadataService()
     }
   },
   watch: {
@@ -202,14 +204,14 @@ export default {
       this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
       this.previewUri = this.document.header.value.uri
       this.options = this.document.options.map(function (x) {
-        let opts = {
+        let opt = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
           value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
         }
 
-        opts.previewText = getOptionContent(opts)
-        return opts
+        opt.previewText = getOptionContent(opt)
+        return opt
       })
     }
   },
@@ -251,17 +253,23 @@ export default {
       this.previewUri = this.document.header.value.uri
       this.selectedOption = { label: {}, value: {} }
       this.options = this.document.options.map(function (x) {
-        let opts = {
+        const isLink = x.label.type === 'application/vnd.lime.web-link+json'
+        let opt = {
           ...x,
-          isLink: x.label.type === 'application/vnd.lime.web-link+json',
+          isLink,
           value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
         }
 
-        opts.previewText = getOptionContent(opts)
-        return opts
-      })
+        if (isLink) {
+          const fetchResult = this.MetadataService.fetchMetada(opt, false)
+          opt.label.value.title = opt.label.value.title || fetchResult.title
+          opt.label.value.text = opt.label.value.text || fetchResult.text
+          opt.label.value.imgPreview = fetchResult.imgPreview
+        }
 
-      this.fetchMetaData(false)
+        opt.previewText = getOptionContent(opt)
+        return opt
+      })
     },
     setTab: function (name) {
       this.headerTab = name
@@ -412,137 +420,131 @@ export default {
       this.headerTab = null
       this.showOptionDialog = false
     },
-    fetchMetaData: async function (option, isEditing) {
+    fetchMetada: async function (option) {
+      const weblink = this.selectedOption.label.value
+
       // Only fetch metadata if editing or missing one of options properties
-      if (!this.isEditing && option.previewUri && (option.title || option.text)) {
+      if (!this.isEditing && weblink.previewUri && (weblink.title || weblink.text)) {
         return
       }
 
-      var weblink = option
-      var urlToFetch = option.uri
+      console.log('Option to be fetched', weblink)
 
-      var response = await fetch('https://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
-      var content = await response.text()
-      if (isEditing === this.isEditing) {
-        var metaData = JSON.parse(content)
-        weblink.title = this.title ? this.title : this.decodeHtml(metaData.title)
-        weblink.text = this.text ? this.text : this.decodeHtml(metaData.description)
-        weblink.imgPreview = metaData.image
-        this.selectedOption.label.value = weblink
+      const fetchResult = await this.MetadataService.fetchMetadata(weblink)
+
+      console.log('Fetch result', fetchResult)
+
+      if (this.isEditing) {
+        this.selectedOption.label.value.title = this.selectedOption.label.value.title || fetchResult.title
+        this.selectedOption.label.value.text = this.selectedOption.label.value.text || fetchResult.text
+        this.selectedOption.label.value.imgPreview = fetchResult.imgPreview
       }
-      return weblink
-    },
-    decodeHtml: function (text) {
-      var txt = document.createElement('span')
-      txt.innerHTML = text
-      return txt.innerText
+
+      return fetchResult
     }
   }
 }
 </script>
 
 <style lang="scss">
-   @import '../styles/variables.scss';
+@import '../styles/variables.scss';
 
-  .document-select {
-    .bubble {
-      width: $bubble-width;
-    }
+.document-select {
+  .bubble {
+    width: $bubble-width;
+  }
 
-    .header {
-
-      .title {
-        margin: 0;
-        padding: 10px 20px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-    }
-    .hide-overflow {
+  .header {
+    .title {
+      margin: 0;
+      padding: 10px 20px;
       text-overflow: ellipsis;
       overflow: hidden;
     }
-    .fixed-options ul {
-      margin:  0px;
-    }
-    .editing .fixed-options ul {
-      margin:  0px -10px;
-    }
-
-    .add-button {
-      cursor: pointer;
-      text-align: center;
-      padding: 5px;
-      margin: 2px;
-      font-size: 16px;
-      font-weight: 500;
-      color: $vue-light-blip;
-      background-color: $vue-white !important;
-      border: 1px dashed $vue-london !important;
-    }
-
-    .form-check {
-      padding: 0px 10px;
-      color: $vue-cloud;
-      margin: 0;
-
-      input[type="radio"] {
-        position: absolute;
-        visibility: hidden;
-      }
-
-      .form-check-container {
-        margin-left: 5px;
-        margin-top: 8px;
-        position: relative;
-        width: 40px;
-        height: 20px;
-        display: inline-block;
-      }
-
-      label{
-        position: absolute;
-        z-index: 1;
-        cursor: pointer;
-      }
-      .check{
-        display: block;
-        position: absolute;
-        border: 1px solid $vue-time;
-        border-radius: 100%;
-        height: 16px;
-        width: 16px;
-        top: 0px;
-        left: 0px;
-        transition: border .25s linear;
-        -webkit-transition: border .25s linear;
-        -moz-transition: border .25s linear;
-        -ms-transition: border .25s linear;
-      }
-      .check::before {
-        display: block;
-        position: absolute;
-        content: '';
-        border-radius: 100%;
-        height: 8px;
-        width: 8px;
-        top: 3px;
-        left: 3px;
-        margin: auto;
-        transition: background 0.25s linear;
-        -webkit-transition: background 0.25s linear;
-        -moz-transition: background 0.25s linear;
-        -ms-transition: background 0.25s linear;
-      }
-      input[type=radio]:checked ~ .check {
-        border: 1px solid $vue-light-blip;
-      }
-
-      input[type=radio]:checked ~ .check::before{
-        background: $vue-light-blip;
-      }
-    }
-
+  }
+  .hide-overflow {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .fixed-options ul {
+    margin: 0px;
+  }
+  .editing .fixed-options ul {
+    margin: 0px -10px;
   }
 
+  .add-button {
+    cursor: pointer;
+    text-align: center;
+    padding: 5px;
+    margin: 2px;
+    font-size: 16px;
+    font-weight: 500;
+    color: $vue-light-blip;
+    background-color: $vue-white !important;
+    border: 1px dashed $vue-london !important;
+  }
+
+  .form-check {
+    padding: 0px 10px;
+    color: $vue-cloud;
+    margin: 0;
+
+    input[type='radio'] {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .form-check-container {
+      margin-left: 5px;
+      margin-top: 8px;
+      position: relative;
+      width: 40px;
+      height: 20px;
+      display: inline-block;
+    }
+
+    label {
+      position: absolute;
+      z-index: 1;
+      cursor: pointer;
+    }
+    .check {
+      display: block;
+      position: absolute;
+      border: 1px solid $vue-time;
+      border-radius: 100%;
+      height: 16px;
+      width: 16px;
+      top: 0px;
+      left: 0px;
+      transition: border 0.25s linear;
+      -webkit-transition: border 0.25s linear;
+      -moz-transition: border 0.25s linear;
+      -ms-transition: border 0.25s linear;
+    }
+    .check::before {
+      display: block;
+      position: absolute;
+      content: '';
+      border-radius: 100%;
+      height: 8px;
+      width: 8px;
+      top: 3px;
+      left: 3px;
+      margin: auto;
+      transition: background 0.25s linear;
+      -webkit-transition: background 0.25s linear;
+      -moz-transition: background 0.25s linear;
+      -ms-transition: background 0.25s linear;
+    }
+    input[type='radio']:checked ~ .check {
+      border: 1px solid $vue-light-blip;
+    }
+
+    input[type='radio']:checked ~ .check::before {
+      background: $vue-light-blip;
+    }
+  }
+}
 </style>
