@@ -100,7 +100,7 @@
         <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
-        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" />
+        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" @blur="fetchMetaData(true)"/>
         <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
@@ -260,6 +260,8 @@ export default {
         opts.previewText = getOptionContent(opts)
         return opts
       })
+
+      this.fetchMetaData(false)
     },
     setTab: function (name) {
       this.headerTab = name
@@ -409,6 +411,31 @@ export default {
       this.selectedOption = { label: {}, value: {} }
       this.headerTab = null
       this.showOptionDialog = false
+    },
+    fetchMetaData: async function (option, isEditing) {
+      // Only fetch metadata if editing or missing one of options properties
+      if (!this.isEditing && option.previewUri && (option.title || option.text)) {
+        return
+      }
+
+      var weblink = option
+      var urlToFetch = option.uri
+
+      var response = await fetch('https://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
+      var content = await response.text()
+      if (isEditing === this.isEditing) {
+        var metaData = JSON.parse(content)
+        weblink.title = this.title ? this.title : this.decodeHtml(metaData.title)
+        weblink.text = this.text ? this.text : this.decodeHtml(metaData.description)
+        weblink.imgPreview = metaData.image
+        this.selectedOption.label.value = weblink
+      }
+      return weblink
+    },
+    decodeHtml: function (text) {
+      var txt = document.createElement('span')
+      txt.innerHTML = text
+      return txt.innerText
     }
   }
 }

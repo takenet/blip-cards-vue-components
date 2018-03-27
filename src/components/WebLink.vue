@@ -33,7 +33,7 @@
         <img :src="closeSvg" />
       </button>
       <div class="form-group">
-        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetaData(true)" />
+        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetadata(true)" />
         <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>
         <input type="text" name="title" class="form-control title" :class="{'input-error': errors.has('title') }" v-validate="'required'" v-model="title" placeholder="Title" />
         <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
@@ -51,15 +51,13 @@
 </template>
 
 <script>
-
 import { default as base } from '../mixins/baseComponent.js'
 import { linkify } from '../utils'
+import { MetadataService } from '../metadataService.js'
 
 export default {
   name: 'web-link',
-  mixins: [
-    base
-  ],
+  mixins: [base],
   props: {
     onOpenLink: {
       type: Function
@@ -69,27 +67,30 @@ export default {
       default: false
     }
   },
-  data: function () {
+  data: function() {
     return {
       title: this.document.title,
       text: this.document.text,
       imgPreview: this.document.previewUri,
       uri: this.document.uri,
-      target: this.document.target || 'blank'
+      target: this.document.target || 'blank',
+      MetadataService: new MetadataService()
     }
   },
   computed: {
-    textLink: function () {
+    textLink: function() {
       return linkify(this.document.uri)
     },
-    previewTitle: function () {
+    previewTitle: function() {
       return this.document.title ? this.document.title : this.title
     },
-    previewText: function () {
+    previewText: function() {
       return this.document.text ? this.document.text : this.text
     },
-    previewImage: function () {
-      return this.document.previewUri ? this.document.previewUri : this.imgPreview
+    previewImage: function() {
+      return this.document.previewUri
+        ? this.document.previewUri
+        : this.imgPreview
     }
   },
   methods: {
@@ -100,9 +101,9 @@ export default {
       this.uri = this.document.uri
       this.target = this.document.target || 'blank'
 
-      this.fetchMetaData(false)
+      this.fetchMetadata(false)
     },
-    handleWeblink: function () {
+    handleWeblink: function() {
       if (this.target === 'blank') {
         window.open(this.uri, '_blank')
       } else {
@@ -114,7 +115,7 @@ export default {
         })
       }
     },
-    webLinkSave: function () {
+    webLinkSave: function() {
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.save({
@@ -127,42 +128,62 @@ export default {
         })
       })
     },
-    async parseMetadata(content, isEditing) {
-      if (isEditing === this.isEditing) {
-        var metaData = JSON.parse(content)
-        this.title = this.title ? this.title : this.decodeHtml(metaData.title)
-        this.text = this.text ? this.text : this.decodeHtml(metaData.description)
-        this.imgPreview = metaData.image
-      }
-    },
-    fetchMetaData: async function (isEditing) {
-      var urlToFetch
-      if (this.isEditing) {
-        urlToFetch = this.uri
-      } else if (!this.isEditing && (!this.document.title || !this.document.text || !this.document.previewUri)) {
-        urlToFetch = this.document.uri
-      } else {
+    fetchMetadata: async function(isEditing) {
+      // Only fetch metadata if editing or missing one of weblink properties
+      if (!this.isEditing && this.document.previewUri && this.document.title && this.document.text) {
         return
       }
-      if (self.fetch) {
-        var response = await fetch(`https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, { method: 'GET' })
-        this.parseMetadata(await response.text(), isEditing)
-      } else {
-        var xhttp = new XMLHttpRequest()
-        xhttp.onreadystatechange = async () => {
-          if (xhttp.readyState === 4 && xhttp.status === 200) {
-            this.parseMetadata(xhttp.responseText, isEditing)
-          }
-        }
-        xhttp.open('GET', `https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, true)
-        xhttp.send()
+
+      const weblink = this.isEditing ? { uri: this.uri } : this.document
+
+      console.log('Document to be fetched', weblink)
+
+      const fetchResult = await this.MetadataService.fetchMetadata(weblink)
+
+      console.log('Fetch result', fetchResult)
+
+      if (isEditing === this.isEditing) {
+        this.title = this.title ? this.title : fetchResult.title
+        this.text = this.text ? this.text : fetchResult.text
+        this.imgPreview = fetchResult.imgPreview
       }
-    },
-    decodeHtml: function (text) {
-      var txt = document.createElement('span')
-      txt.innerHTML = text
-      return txt.innerText
     }
+    // async parseMetadata(content, isEditing) {
+    //   if (isEditing === this.isEditing) {
+    //     var metaData = JSON.parse(content)
+    //     this.title = this.title ? this.title : this.decodeHtml(metaData.title)
+    //     this.text = this.text ? this.text : this.decodeHtml(metaData.description)
+    //     this.imgPreview = metaData.image
+    //   }
+    // },
+    // fetchMetaData: async function (isEditing) {
+    //   var urlToFetch
+    //   if (this.isEditing) {
+    //     urlToFetch = this.uri
+    //   } else if (!this.isEditing && (!this.document.title || !this.document.text || !this.document.previewUri)) {
+    //     urlToFetch = this.document.uri
+    //   } else {
+    //     return
+    //   }
+    //   if (self.fetch) { //Check if browser has fetch function support
+    //     var response = await fetch(`https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, { method: 'GET' })
+    //     this.parseMetadata(await response.text(), isEditing)
+    //   } else {
+    //     var xhttp = new XMLHttpRequest()
+    //     xhttp.onreadystatechange = async () => {
+    //       if (xhttp.readyState === 4 && xhttp.status === 200) {
+    //         this.parseMetadata(xhttp.responseText, isEditing)
+    //       }
+    //     }
+    //     xhttp.open('GET', `https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, true)
+    //     xhttp.send()
+    //   }
+    // },
+    // decodeHtml: function (text) {
+    //   var txt = document.createElement('span')
+    //   txt.innerHTML = text
+    //   return txt.innerText
+    // }
   }
 }
 </script>
