@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { guid } from '../utils'
+import { guid } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 import cloneDeep from 'lodash/cloneDeep'
 

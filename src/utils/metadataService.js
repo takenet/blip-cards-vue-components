@@ -33,8 +33,8 @@ export class MetadataService {
   }
 
   async parseMetadata(content) {
+    console.log('content', content)
     const metadata = JSON.parse(content)
-    console.log('metadata json parse', metadata)
 
     const title = this.decodeHtml(metadata.title)
     const text = this.decodeHtml(metadata.description)
@@ -47,11 +47,11 @@ export class MetadataService {
     }
   }
 
-  decodeHtml(text) {
-    var txt = document.createElement('span')
-    txt.innerHTML = text
-    console.log('txt html component', txt)
-
-    return txt.innerText
+  decodeHtml(encodedText) {
+    let textarea = document.createElement('textarea')
+    textarea.innerHTML = encodedText
+    let decodedText = textarea.value
+    decodedText = decodeURIComponent(decodedText.trim())
+    return decodedText
   }
 }

@@ -149,10 +149,10 @@
 
 <script>
 
-import { linkify } from '../utils'
+import { linkify } from '../utils/misc'
 import cloneDeep from 'lodash/cloneDeep'
 import { default as base } from '../mixins/baseComponent.js'
-import { MetadataService } from '../metadataService.js'
+import { MetadataService } from '../utils/metadataService.js'
 import mime from 'mime-types'
 const optionSize = 34
 
@@ -353,6 +353,8 @@ export default {
       this.headerTab = null
       this.showOptionDialog = false
 
+      console.log('newDocument', newDocument)
+
       this.save(newDocument)
     },
     editOption: function (item, index, $event) {
@@ -421,10 +423,10 @@ export default {
 
       const fetchResult = await this.MetadataService.fetchMetadata(weblink)
 
-      if (this.isEditing && fetchResult) {
+      if (fetchResult) {
         this.selectedOption.label.value.title = this.selectedOption.label.value.title || fetchResult.title
         this.selectedOption.label.value.text = this.selectedOption.label.value.text || fetchResult.text
-        this.selectedOption.label.value.imgPreview = fetchResult.imgPreview
+        this.selectedOption.label.value.previewUri = fetchResult.imgPreview
       }
     }
   }

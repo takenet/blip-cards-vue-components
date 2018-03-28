@@ -73,7 +73,7 @@
 
 
 <script>
-import { linkify } from '../utils'
+import { linkify } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {

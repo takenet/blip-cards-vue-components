@@ -52,8 +52,8 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
-import { linkify } from '../utils'
-import { MetadataService } from '../metadataService.js'
+import { linkify } from '../utils/misc'
+import { MetadataService } from '../utils//metadataService.js'
 
 export default {
   name: 'web-link',
@@ -138,7 +138,7 @@ export default {
 
       const fetchResult = await this.MetadataService.fetchMetadata(weblink)
 
-      if (isEditing === this.isEditing) {
+      if (fetchResult) {
         this.title = this.title ? this.title : fetchResult.title
         this.text = this.text ? this.text : fetchResult.text
         this.imgPreview = fetchResult.imgPreview
