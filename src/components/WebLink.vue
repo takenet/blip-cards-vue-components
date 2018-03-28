@@ -136,11 +136,7 @@ export default {
 
       const weblink = this.isEditing ? { uri: this.uri } : this.document
 
-      console.log('Document to be fetched', weblink)
-
       const fetchResult = await this.MetadataService.fetchMetadata(weblink)
-
-      console.log('Fetch result', fetchResult)
 
       if (isEditing === this.isEditing) {
         this.title = this.title ? this.title : fetchResult.title
@@ -148,42 +144,6 @@ export default {
         this.imgPreview = fetchResult.imgPreview
       }
     }
-    // async parseMetadata(content, isEditing) {
-    //   if (isEditing === this.isEditing) {
-    //     var metaData = JSON.parse(content)
-    //     this.title = this.title ? this.title : this.decodeHtml(metaData.title)
-    //     this.text = this.text ? this.text : this.decodeHtml(metaData.description)
-    //     this.imgPreview = metaData.image
-    //   }
-    // },
-    // fetchMetaData: async function (isEditing) {
-    //   var urlToFetch
-    //   if (this.isEditing) {
-    //     urlToFetch = this.uri
-    //   } else if (!this.isEditing && (!this.document.title || !this.document.text || !this.document.previewUri)) {
-    //     urlToFetch = this.document.uri
-    //   } else {
-    //     return
-    //   }
-    //   if (self.fetch) { //Check if browser has fetch function support
-    //     var response = await fetch(`https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, { method: 'GET' })
-    //     this.parseMetadata(await response.text(), isEditing)
-    //   } else {
-    //     var xhttp = new XMLHttpRequest()
-    //     xhttp.onreadystatechange = async () => {
-    //       if (xhttp.readyState === 4 && xhttp.status === 200) {
-    //         this.parseMetadata(xhttp.responseText, isEditing)
-    //       }
-    //     }
-    //     xhttp.open('GET', `https://parsemetadata.azurewebsites.net/?url=${urlToFetch}`, true)
-    //     xhttp.send()
-    //   }
-    // },
-    // decodeHtml: function (text) {
-    //   var txt = document.createElement('span')
-    //   txt.innerHTML = text
-    //   return txt.innerText
-    // }
   }
 }
 </script>

@@ -100,7 +100,7 @@
         <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
-        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" @blur="fetchMetada(true)"/>
+        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" @blur="fetchMetadaSelectedOption()"/>
         <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
@@ -252,21 +252,12 @@ export default {
       this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
       this.previewUri = this.document.header.value.uri
       this.selectedOption = { label: {}, value: {} }
-      this.options = this.document.options.map(function (x) {
-        const isLink = x.label.type === 'application/vnd.lime.web-link+json'
+      this.options = this.document.options.map((x) => {
         let opt = {
           ...x,
-          isLink,
+          isLink: x.label.type === 'application/vnd.lime.web-link+json',
           value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
         }
-
-        if (isLink) {
-          const fetchResult = this.MetadataService.fetchMetada(opt, false)
-          opt.label.value.title = opt.label.value.title || fetchResult.title
-          opt.label.value.text = opt.label.value.text || fetchResult.text
-          opt.label.value.imgPreview = fetchResult.imgPreview
-        }
-
         opt.previewText = getOptionContent(opt)
         return opt
       })
@@ -347,7 +338,7 @@ export default {
             return {
               label: {
                 type: x.label.type,
-                value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri, target: x.label.value.target }
+                value: x.label.value
               },
               value
             }
@@ -420,27 +411,21 @@ export default {
       this.headerTab = null
       this.showOptionDialog = false
     },
-    fetchMetada: async function (option) {
+    fetchMetadaSelectedOption: async function () {
       const weblink = this.selectedOption.label.value
 
       // Only fetch metadata if editing or missing one of options properties
-      if (!this.isEditing && weblink.previewUri && (weblink.title || weblink.text)) {
+      if ((!this.isEditing && weblink.previewUri && (weblink.title || weblink.text))) {
         return
       }
 
-      console.log('Option to be fetched', weblink)
-
       const fetchResult = await this.MetadataService.fetchMetadata(weblink)
 
-      console.log('Fetch result', fetchResult)
-
-      if (this.isEditing) {
+      if (this.isEditing && fetchResult) {
         this.selectedOption.label.value.title = this.selectedOption.label.value.title || fetchResult.title
         this.selectedOption.label.value.text = this.selectedOption.label.value.text || fetchResult.text
         this.selectedOption.label.value.imgPreview = fetchResult.imgPreview
       }
-
-      return fetchResult
     }
   }
 }
