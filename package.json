@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "commit": "./node_modules/.bin/git-cz",
-    "dev": "node build/dev-server.js",
+    "dev": "node build/dev-server.js --host 0.0.0.0",
     "start": "npm run dev",
     "bundle:min": "cross-env MINIFY=true webpack --progress --config build/webpack.build.config.js",
     "lint": "eslint --ext .js,.vue src test/unit/specs",

@@ -124,6 +124,7 @@
 
 import { linkify } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
+import debounce from 'lodash/debounce'
 const optionSize = 34
 
 export default {
@@ -278,25 +279,29 @@ export default {
         })
       })
     },
-    select: function (item) {
-      if (this.onSelected) {
-        if (item.value) {
-          this.onSelected(item.text, {
-            type: item.type,
-            content: (item.type.indexOf('json') !== -1) ? JSON.parse(item.value) : item.value
-          })
-        } else {
-          this.onSelected(item.text, {
-            content: item.order ? item.order.toString() : item.text,
-            type: 'text/plain'
-          })
+    select: debounce(
+      function (item) {
+        if (!this.editable) {
+          this.hide = true
         }
-      }
 
-      if (!this.editable) {
-        this.hide = true
-      }
-    }
+        if (this.onSelected) {
+          if (item.value) {
+            this.onSelected(item.text, {
+              type: item.type,
+              content: (item.type.indexOf('json') !== -1) ? JSON.parse(item.value) : item.value
+            })
+          } else {
+            this.onSelected(item.text, {
+              content: item.order ? item.order.toString() : item.text,
+              type: 'text/plain'
+            })
+          }
+        }
+      },
+      500,
+      { leading: true, trailing: false }
+    )
   }
 }
 </script>
