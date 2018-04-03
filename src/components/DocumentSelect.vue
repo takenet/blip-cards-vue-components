@@ -353,8 +353,6 @@ export default {
       this.headerTab = null
       this.showOptionDialog = false
 
-      console.log('newDocument', newDocument)
-
       this.save(newDocument)
     },
     editOption: function (item, index, $event) {
