@@ -122,8 +122,8 @@
 
 <script>
 
-import { linkify } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
+import { linkify } from '../utils/misc'
 import debounce from 'lodash/debounce'
 const optionSize = 34
 
