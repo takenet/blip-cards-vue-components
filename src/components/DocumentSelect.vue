@@ -100,7 +100,7 @@
         <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
-        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" @blur="fetchMetadaSelectedOption()"/>
+        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri"/>
         <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
@@ -352,7 +352,6 @@ export default {
 
       this.headerTab = null
       this.showOptionDialog = false
-
       this.save(newDocument)
     },
     editOption: function (item, index, $event) {
@@ -400,6 +399,10 @@ export default {
           this.options.splice(this.selectedOption.index, 1, this.selectedOption)
         }
 
+        if (this.headerTab === 'weblink') {
+          this.fetchMetadaForOption(this.selectedOption)
+        }
+
         this.selectedOption = { label: {}, value: {} }
         this.headerTab = null
         this.showOptionDialog = false
@@ -411,8 +414,9 @@ export default {
       this.headerTab = null
       this.showOptionDialog = false
     },
-    fetchMetadaSelectedOption: async function () {
-      const weblink = this.selectedOption.label.value
+    fetchMetadaForOption: async function (option) {
+      let weblink = option.label.value
+      const index = option.index
 
       // Only fetch metadata if editing or missing one of options properties
       if ((!this.isEditing && weblink.previewUri && (weblink.title || weblink.text))) {
@@ -422,9 +426,17 @@ export default {
       const fetchResult = await this.MetadataService.fetchMetadata(weblink)
 
       if (fetchResult) {
-        this.selectedOption.label.value.title = this.selectedOption.label.value.title || fetchResult.title
-        this.selectedOption.label.value.text = this.selectedOption.label.value.text || fetchResult.text
-        this.selectedOption.label.value.previewUri = fetchResult.imgPreview
+        let currentOption = this.options[index]
+
+        currentOption.label.value.title = fetchResult.title || currentOption.label.value.title
+        currentOption.label.value.text = currentOption.label.value.text || fetchResult.text
+        currentOption.label.value.previewUri = fetchResult.imgPreview
+
+        if (index === -1) {
+          this.options.push(currentOption)
+        } else {
+          this.options.splice(index, 1, currentOption)
+        }
       }
     }
   }
