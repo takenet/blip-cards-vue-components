@@ -427,8 +427,12 @@ export default {
         currentOption.label.value.text = currentOption.label.value.text || fetchResult.text
         currentOption.label.value.previewUri = fetchResult.imgPreview
         this.selectedOption = currentOption
-        this.headerTab = 'weblink'
-        this.saveOption()
+        // When fetch metadata is done after option is saved should update option
+        if (!this.selectedOption.label.value) {
+          this.headerTab = 'weblink'
+          this.selectedOption.index = this.options.length - 1
+          this.saveOption()
+        }
       }
     }
   }
