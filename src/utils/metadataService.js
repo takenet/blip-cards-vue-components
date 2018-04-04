@@ -3,6 +3,10 @@ export class MetadataService {
     let filledDocument
     const urlToFetch = document.uri
 
+    if (!urlToFetch) {
+      return
+    }
+
     try {
       if (self.fetch) {
         // Check if browser supports fetch function

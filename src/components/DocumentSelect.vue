@@ -100,7 +100,7 @@
         <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
-        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri"/>
+        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" @blur="fetchMetadaForSelectedOption()"/>
         <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
@@ -128,8 +128,8 @@
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea @keydown.enter="saveOption($event)" v-if="selectedOption.value.type && selectedOption.value.type.includes('json')" type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
-            <textarea @keydown.enter="saveOption($event)" v-else type="text" name="value" v-validate="'required'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption(true, $event)" v-if="selectedOption.value.type && selectedOption.value.type.includes('json')" type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption(true, $event)" v-else type="text" name="value" v-validate="'required'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
@@ -140,7 +140,7 @@
           <button type="button" @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
         </span>
         <span class="flex-item">
-          <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
+          <button @click="saveOption(true)" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
         </span>
       </div>
     </form>
@@ -370,7 +370,7 @@ export default {
     deleteOption: function (index) {
       this.options.splice(index, 1)
     },
-    saveOption: function ($event) {
+    saveOption: function (reset, $event) {
       if (this.errors.any() || ($event && $event.shiftKey)) { return }
 
       if ($event) {
@@ -399,13 +399,11 @@ export default {
           this.options.splice(this.selectedOption.index, 1, this.selectedOption)
         }
 
-        if (this.headerTab === 'weblink') {
-          this.fetchMetadaForOption(this.selectedOption)
+        if (reset) {
+          this.selectedOption = { label: {}, value: {} }
+          this.headerTab = null
+          this.showOptionDialog = false
         }
-
-        this.selectedOption = { label: {}, value: {} }
-        this.headerTab = null
-        this.showOptionDialog = false
       })
     },
     cancelOption: function (item) {
@@ -414,29 +412,22 @@ export default {
       this.headerTab = null
       this.showOptionDialog = false
     },
-    fetchMetadaForOption: async function (option) {
-      let weblink = option.label.value
-      const index = option.index
+    fetchMetadaForSelectedOption: async function () {
+      let currentOption = this.selectedOption
 
       // Only fetch metadata if editing or missing one of options properties
-      if ((!this.isEditing && weblink.previewUri && (weblink.title || weblink.text))) {
+      if ((!this.isEditing && currentOption.label.value.previewUri && (currentOption.label.value.title || currentOption.label.value.text))) {
         return
       }
 
-      const fetchResult = await this.MetadataService.fetchMetadata(weblink)
+      const fetchResult = await this.MetadataService.fetchMetadata(currentOption.label.value)
 
       if (fetchResult) {
-        let currentOption = this.options[index]
-
         currentOption.label.value.title = fetchResult.title || currentOption.label.value.title
         currentOption.label.value.text = currentOption.label.value.text || fetchResult.text
         currentOption.label.value.previewUri = fetchResult.imgPreview
-
-        if (index === -1) {
-          this.options.push(currentOption)
-        } else {
-          this.options.splice(index, 1, currentOption)
-        }
+        this.selectedOption = currentOption
+        this.saveOption()
       }
     }
   }
