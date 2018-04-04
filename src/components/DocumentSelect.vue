@@ -285,7 +285,7 @@ export default {
           this.onOpenLink({
             uri: item.label.value.uri,
             target: item.label.value.target,
-            title: item.label.value.title,
+            title: item.label.value.title || item.label.value.text,
             image: item.label.value.previewUri
           })
         }

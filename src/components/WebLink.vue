@@ -110,7 +110,7 @@ export default {
         this.onOpenLink({
           uri: this.uri,
           target: this.target,
-          title: this.previewTitle,
+          title: this.previewTitle || this.previewText,
           image: this.previewImage
         })
       }
