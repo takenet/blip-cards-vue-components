@@ -427,6 +427,7 @@ export default {
         currentOption.label.value.text = currentOption.label.value.text || fetchResult.text
         currentOption.label.value.previewUri = fetchResult.imgPreview
         this.selectedOption = currentOption
+        this.headerTab = 'weblink'
         this.saveOption()
       }
     }
