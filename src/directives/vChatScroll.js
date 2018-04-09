@@ -84,6 +84,14 @@ import debounce from 'lodash/debounce'
     dragDealer(this.bar, this)
     this.moveBar()
 
+    // Stay at bottom if element is at bottom during resize
+    w.addEventListener('resize', () => {
+      if (this.el.scrollTop + this.currentHeigth >= this.el.scrollHeight) {
+        scrollToBottom(this.el)
+      }
+      this.currentHeigth = this.el.clientHeight
+    })
+
     w.addEventListener('resize', this.moveBar.bind(this))
     this.el.addEventListener('scroll', this.moveBar.bind(this))
     this.el.addEventListener('mouseenter', this.moveBar.bind(this))
@@ -101,6 +109,7 @@ import debounce from 'lodash/debounce'
       var totalHeight = this.el.scrollHeight
       var ownHeight = this.el.clientHeight
       var _this = this
+      this.currentHeigth = this.el.clientHeight
 
       this.scrollRatio = ownHeight / totalHeight
 
