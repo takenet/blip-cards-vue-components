@@ -43,7 +43,7 @@
               </svg>
               </div>
               <div class="text">
-                <span>Send location</span>
+                <span v-text="previewDocument.buttonLabel"></span>
               </div>
             </div>
           </li>
@@ -102,6 +102,10 @@ export default {
         previewContent: linkify(
           this.document.label.value.substring(0, this.length - 3) + '...'
         ),
+        buttonLabel:
+          navigator.language === 'pt-BR'
+            ? 'Enviar Localização'
+            : 'Send Location',
         content: linkify(this.document.label.value)
       }
     }
@@ -190,20 +194,20 @@ export default {
       padding: 10px;
     }
 
-      li {
-        cursor: pointer;
-        display: inline-flex;
-        align-items: end;
-        background-color: #DAF2F4;
-        border: 1px solid #0CC8CC;
-        box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, .1);
-        border-radius: 20px;
-        padding: 7px 10px;
-        margin: 2px;
-        color: #0CC8CC;
-        font-size: 16px;
-        font-weight: 500;
-        min-width: 70px;
+    li {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: end;
+      background-color: #daf2f4;
+      border: 1px solid #0cc8cc;
+      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      padding: 7px 10px;
+      margin: 2px;
+      color: #0cc8cc;
+      font-size: 16px;
+      font-weight: 500;
+      min-width: 70px;
 
       .wrapper {
         display: flex;
@@ -224,7 +228,7 @@ export default {
     }
   }
   #pinIcon {
-    fill: #0CC8CC;
+    fill: #0cc8cc;
   }
 }
 </style>
