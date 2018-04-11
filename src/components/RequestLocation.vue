@@ -103,7 +103,7 @@ export default {
           this.document.label.value.substring(0, this.length - 3) + '...'
         ),
         buttonLabel:
-          navigator.language === 'pt-BR'
+          navigator.language.toLowerCase().startsWith('pt')
             ? 'Enviar Localização'
             : 'Send Location',
         content: linkify(this.document.label.value)
