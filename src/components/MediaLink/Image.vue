@@ -77,13 +77,7 @@ export default {
   },
   watch: {
     document: function() {
-      this.styleObject = {
-        'border-radius':
-          this.document.title || this.document.text
-            ? '13px 13px 0px 0px'
-            : '13px 13px 13px 0px',
-        'background-image': 'url("' + this.document.uri + '")'
-      }
+      this.checkImage(this.document.uri)
     }
   },
   computed: {
@@ -98,13 +92,7 @@ export default {
   },
   methods: {
     init: function() {
-      this.styleObject = {
-        'border-radius':
-          this.document.title || this.document.text
-            ? '13px 13px 0px 0px'
-            : '13px 13px 13px 0px',
-        'background-image': 'url("' + this.document.uri + '")'
-      }
+      this.checkImage(this.document.uri)
       this.id = guid()
       this.title = this.document.title
       this.text = this.document.text
@@ -141,6 +129,28 @@ export default {
     },
     handleImageLink: function () {
       window.open(this.document.uri, '_blank')
+    },
+    checkImage(url) {
+      var img = new Image()
+      img.onload = () => {
+        this.styleObject = {
+          'border-radius':
+            this.document.title || this.document.text
+              ? '13px 13px 0px 0px'
+              : '13px 13px 13px 0px',
+          'background-image': `url("${this.document.uri}")`
+        }
+      }
+      img.onerror = () => {
+        this.styleObject = {
+          'border-radius':
+            this.document.title || this.document.text
+              ? '13px 13px 0px 0px'
+              : '13px 13px 13px 0px',
+          'background-image': `url("https://ih1.redbubble.net/image.485923661.1240/flat,800x800,075,f.u1.jpg")`
+        }
+      }
+      img.src = url
     }
   },
   mounted: function() {
