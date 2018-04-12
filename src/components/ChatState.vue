@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isEditing">
-    <div v-if="this.document.state === 'composing'" class="blip-container chat-state">
+    <div v-if="this.document.state === 'composing' && this.shouldShow" class="blip-container chat-state">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
@@ -47,12 +47,18 @@ export default {
   ],
   data: function () {
     return {
-      interval: undefined
+      interval: undefined,
+      shouldShow: true
     }
   },
   methods: {
     init: function() {
       this.interval = this.document.interval ? this.document.interval : undefined
+      if (!this.editable && this.interval) {
+        setTimeout(() => {
+          this.shouldShow = false
+        }, this.interval)
+      }
     },
     saveState: function () {
       this.save({
