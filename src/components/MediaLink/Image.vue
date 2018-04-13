@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header" :id="id" v-if="!isEditing">
-        <div :class="'img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')" :style="styleObject" @click="(editable ? null : handleImageLink())"></div>
+        <div :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')" :style="styleObject" @click="(editable ? null : handleImageLink())"></div>
 
         <div class="title" v-if="document.title || document.text">
           <strong v-if="document.title" v-html="document.title"></strong>
@@ -62,6 +62,7 @@
 import { guid } from '../../utils/misc'
 import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
+import BrokenWhite from '@/assets/img/BrokenWhite.svg'
 
 export default {
   mixins: [base],
@@ -138,7 +139,7 @@ export default {
             this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
-          'background-image': `url("${this.document.uri}")`
+          'background-image': `url("${url}")`
         }
       }
       img.onerror = () => {
@@ -147,7 +148,8 @@ export default {
             this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
-          'background-image': `url("https://ih1.redbubble.net/image.485923661.1240/flat,800x800,075,f.u1.jpg")`
+          'background-image': `url("${BrokenWhite}")`,
+          'background-size': '125px'
         }
       }
       img.src = url
@@ -192,6 +194,10 @@ export default {
     }
     .img-border {
       border-radius: inherit !important;
+    }
+    .background {
+      background-position: center;
+      background-repeat: no-repeat;
     }
   }
 
