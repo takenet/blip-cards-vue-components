@@ -9,7 +9,7 @@
       </div>
       <div class="header" :id="id" v-if="!isEditing">
         <div :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')" :style="styleObject" @click="(editable ? null : handleImageLink())"></div>
-
+        
         <div class="title" v-if="document.title || document.text">
           <strong v-if="document.title" v-html="document.title"></strong>
           <span v-if="document.text" v-html="document.text"></span>
@@ -63,6 +63,7 @@ import { guid } from '../../utils/misc'
 import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 import BrokenWhite from '@/assets/img/BrokenWhite.svg'
+import Broken from '@/assets/img/Broken.svg'
 
 export default {
   mixins: [base],
@@ -148,7 +149,7 @@ export default {
             this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
-          'background-image': `url("${BrokenWhite}")`,
+          'background-image': `url("${this.position === 'left' ? Broken : BrokenWhite}")`,
           'background-size': '125px'
         }
       }
