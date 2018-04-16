@@ -149,9 +149,7 @@ export default {
             this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
-          'background-image': `url("${
-            this.position === 'left' ? Broken : BrokenWhite
-          }")`,
+          'background-image': `url("${this.position === 'left' ? Broken : BrokenWhite}")`,
           'background-size': '125px',
           opacity: '0.6'
         }
