@@ -129,7 +129,7 @@ export default {
         })
       })
     },
-    handleImageLink: function () {
+    handleImageLink: function() {
       window.open(this.document.uri, '_blank')
     },
     checkImage(url) {
@@ -149,9 +149,11 @@ export default {
             this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
-          'background-image': `url("${this.position === 'left' ? Broken : BrokenWhite}")`,
+          'background-image': `url("${
+            this.position === 'left' ? Broken : BrokenWhite
+          }")`,
           'background-size': '125px',
-          'opacity': '0.6'
+          opacity: '0.6'
         }
       }
       img.src = url
