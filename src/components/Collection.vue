@@ -268,13 +268,25 @@ export default {
       width: 100%;
       height: 100%;
       max-width: 100%;
+      border-radius: 13px;
+      display: flex;
+      flex-wrap: wrap;
+
+      .header {
+        width: 100%;
+      }
+
+      .fixed-options {
+        width: 100%;
+        align-self: flex-end;
+      }
     }
 
     .slide-item {
-      float: left;
-      height: 100%;
+      float: left;      
       min-height: 1px;
       margin-right: 10px;
+      height: calc(100% - 35px);
     }
 
     a {
@@ -290,10 +302,9 @@ export default {
     width: auto;
     margin-top: -22px;
     padding: 8px 16px;
-    opacity: 0.3;
+    opacity: 0.8;
     color: $vue-light-blip;
-    font-weight: bold;
-    opacity: 0.3;
+    font-weight: bold;    
     font-size: 18px;
     transition: 0.6s ease;
     border-radius: 5px 0 0 5px;
@@ -303,6 +314,7 @@ export default {
 
   .prev {
     left: 0;
+    border-radius: 0 5px 5px 0;
   }
 
   /* Position the "next button" to the right */
