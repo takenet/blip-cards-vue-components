@@ -462,6 +462,9 @@ export default {
   .fixed-options ul {
     margin: 0px;
   }
+  .editing {
+    flex-direction: column;
+  }
   .editing .fixed-options ul {
     margin: 0px -10px;
   }
