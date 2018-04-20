@@ -1,7 +1,7 @@
 
 
 <template>
-  <div class="blip-container ticket">
+  <div class="blip-container ticket" v-if="document.status === 'Waiting' || document.status.indexOf('Closed') !== -1 ">
     <p class="subtitle fancy" v-if="document.status === 'Waiting'"><span>Chatbot {{identity}} encaminhou a conversa para atendimento</span></p>
     <p class="subtitle fancy" v-else-if="document.status.indexOf('Closed') !== -1"><span>Atendente {{agentIdentity}} encerrou o atendimento</span></p>
     <h1>Ticket #{{document.sequentialId}}</h1>
