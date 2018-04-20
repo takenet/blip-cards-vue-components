@@ -7,8 +7,8 @@
       <div v-if="editable" class="editIco" @click="toggleEdit">
         <img :src="editSvg" />
       </div>
-      <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper" @click="handleWeblink()">
-        <div v-if="this.previewImage" class="preview" :style="'background-image: url(' + this.previewImage + ')'"></div>
+      <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper" @click="(editable ? null : handleWeblink())">
+        <div v-if="this.previewImage" class="preview" :style="'background-image: url(&quot;' + this.previewImage + '&quot;)'"></div>
         <div class="link-description-wrapper text-left">
           <span class="text big-text" :title="previewTitle" v-text="this.previewTitle"></span>
           <div class="text-wrapper">
@@ -26,74 +26,96 @@
   </div>
   <div v-else class="blip-container web-link">
     <form class="bubble left" novalidate v-on:submit.prevent>
-      <div class="saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
+      <button class="btn saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
-      </div>
-      <div class="saveIco closeIco" @click="webLinkCancel()">
+      </button>
+      <button class="btn saveIco closeIco" @click="cancel()">
         <img :src="closeSvg" />
-      </div>
+      </button>
       <div class="form-group">
-        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetaData(true)" />
+        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetadata(true)" />
         <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>
         <input type="text" name="title" class="form-control title" :class="{'input-error': errors.has('title') }" v-validate="'required'" v-model="title" placeholder="Title" />
         <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
         <input type="text" name="webLinkText" class="form-control text" v-model="text" placeholder="Description" />
+        <select v-model="target" class="form-control text">
+          <option disabled value="">Target</option>
+          <option value='blank'>Blank</option>
+          <option value='self'>Self</option>
+          <option value='selfCompact'>SelfCompact</option>
+          <option value='selfTall'>SelfTall</option>
+        </select>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-
 import { default as base } from '../mixins/baseComponent.js'
-import { linkify } from '../utils'
+import { linkify } from '../utils/misc'
+import { MetadataService } from '../utils//metadataService.js'
 
 export default {
   name: 'web-link',
-  mixins: [
-    base
-  ],
+  mixins: [base],
   props: {
     onOpenLink: {
       type: Function
+    },
+    initEditing: {
+      type: Boolean,
+      default: false
     }
   },
-  data: function () {
+  data: function() {
     return {
       title: this.document.title,
       text: this.document.text,
       imgPreview: this.document.previewUri,
       uri: this.document.uri,
-      target: this.document.target || 'blank'
+      target: this.document.target || 'blank',
+      MetadataService: new MetadataService()
     }
   },
   computed: {
-    textLink: function () {
+    textLink: function() {
       return linkify(this.document.uri)
     },
-    previewTitle: function () {
+    previewTitle: function() {
       return this.document.title ? this.document.title : this.title
     },
-    previewText: function () {
+    previewText: function() {
       return this.document.text ? this.document.text : this.text
     },
-    previewImage: function () {
-      return this.document.previewUri ? this.document.previewUri : this.imgPreview
+    previewImage: function() {
+      return this.document.previewUri
+        ? this.document.previewUri
+        : this.imgPreview
     }
   },
-  created: function () {
-    this.isEditing = this.initEditing
-    this.fetchMetaData(false)
-  },
   methods: {
-    handleWeblink: function () {
+    init: function() {
+      this.title = this.document.title
+      this.text = this.document.text
+      this.imgPreview = this.document.previewUri
+      this.uri = this.document.uri
+      this.target = this.document.target || 'blank'
+
+      this.fetchMetadata(false)
+    },
+    handleWeblink: function() {
       if (this.target === 'blank') {
         window.open(this.uri, '_blank')
       } else {
-        this.onOpenLink(this.uri, this.target)
+        this.onOpenLink({
+          uri: this.uri,
+          target: this.target,
+          title: this.previewTitle || this.previewText,
+          image: this.previewImage
+        })
       }
     },
-    webLinkSave: function () {
+    webLinkSave: function() {
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.save({
@@ -101,39 +123,26 @@ export default {
           uri: this.uri,
           title: this.title,
           text: this.text,
-          previewUri: this.imgPreview
+          previewUri: this.imgPreview,
+          target: this.target
         })
       })
     },
-    webLinkCancel: function () {
-      this.title = this.document.title
-      this.text = this.document.text
-      this.uri = this.document.uri
-      this.imgPreview = this.document.previewUri
-      this.isEditing = false
-    },
-    fetchMetaData: async function (isEditing) {
-      var urlToFetch
-      if (this.isEditing) {
-        urlToFetch = this.uri
-      } else if (!this.isEditing && (!this.document.title || !this.document.text || !this.document.previewUri)) {
-        urlToFetch = this.document.uri
-      } else {
+    fetchMetadata: async function(isEditing) {
+      // Only fetch metadata if editing or missing one of weblink properties
+      if (!this.isEditing && this.document.previewUri && this.document.title && this.document.text) {
         return
       }
-      var response = await fetch('https://parsemetadata.azurewebsites.net/?url=' + urlToFetch, { method: 'GET' })
-      var content = await response.text()
-      if (isEditing === this.isEditing) {
-        var metaData = JSON.parse(content)
-        this.title = this.title ? this.title : this.decodeHtml(metaData.title)
-        this.text = this.text ? this.text : this.decodeHtml(metaData.description)
-        this.imgPreview = metaData.image
+
+      const weblink = this.isEditing ? { uri: this.uri } : this.document
+
+      const fetchResult = await this.MetadataService.fetchMetadata(weblink)
+
+      if (fetchResult) {
+        this.title = this.title ? this.title : fetchResult.title
+        this.text = this.text ? this.text : fetchResult.text
+        this.imgPreview = fetchResult.imgPreview
       }
-    },
-    decodeHtml: function (text) {
-      var txt = document.createElement('span')
-      txt.innerHTML = text
-      return txt.innerText
     }
   }
 }
@@ -141,110 +150,110 @@ export default {
 
 
 <style lang="scss">
-   @import '../styles/variables.scss';
+@import '../styles/variables.scss';
 
-  .web-link .bubble {
-    &.right .text-wrapper:after {
-      background: $vue-light-blip !important;
+.web-link .bubble {
+  &.right .text-wrapper:after {
+    background: $vue-light-blip !important;
+  }
+
+  &.text-link {
+    padding: $bubble-padding;
+    height: auto;
+  }
+
+  .form-group {
+    min-width: auto;
+    .form-control.title {
+      margin-top: 10px;
+    }
+    .form-control.text {
+      margin-top: 10px;
+    }
+  }
+
+  .web-link-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    border-radius: inherit;
+    overflow: hidden;
+
+    &.link {
+      cursor: pointer;
     }
 
-    &.text-link {
-      padding: $bubble-padding;
-      height: auto;
+    .preview {
+      height: 100px;
+      width: 100px;
+      min-width: 100px;
+      background-position: center;
+      background-size: cover;
     }
 
-    .form-group {
-      min-width: auto;
-      .form-control.title {
-        margin-top: 10px;
-      }
-      .form-control.text {
-        margin-top: 10px;
-      }
-    }
-
-    .web-link-wrapper {
+    .link-description-wrapper {
       display: flex;
-      flex-direction: row;
-      flex-grow: 1;
-      border-radius: inherit;
+      flex-direction: column;
+      padding: 10px 16px;
       overflow: hidden;
+      min-height: 100px;
 
-      &.link {
-        cursor: pointer;
-      }
-
-      .preview {
-        height: 100px;
-        width: 100px;
-        min-width: 100px;
-        background-position: center;
-        background-size: cover;
-      }
-
-      .link-description-wrapper {
-        display: flex;
-        flex-direction: column;
-        padding: 10px 16px;
+      .text {
         overflow: hidden;
-        min-height: 100px;
+        position: relative;
+        text-overflow: ellipsis;
+      }
 
-        .text {
-          overflow: hidden;
-          position: relative;
-          text-overflow: ellipsis;
-        }
+      .big-text {
+        white-space: nowrap;
+      }
 
-        .big-text {
-          white-space: nowrap;
-        }
-
-        .text-wrapper {
-          overflow: hidden;
-          position: relative;
+      .text-wrapper {
+        overflow: hidden;
+        position: relative;
+        line-height: 1.2em;
+        max-height: 2.4em;
+        text-align: justify;
+        margin-right: 3px;
+        padding-right: 13px;
+        span {
           line-height: 1.2em;
-          max-height: 2.4em;
-          text-align: justify;
-          margin-right: 3px;
-          padding-right: 13px;
-          span {
-            line-height: 1.2em;
-          }
         }
+      }
 
-        .light-text {
-          font-size: 12px;
-          font-weight: 100;
-          flex-grow: 1;
-        }
+      .light-text {
+        font-size: 12px;
+        font-weight: 100;
+        flex-grow: 1;
+      }
 
-        .text-wrapper:before {
-          content: ' ...';
-          position: absolute;
-          right: 0;
-          bottom: 0;
-        }
+      .text-wrapper:before {
+        content: ' ...';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
 
-        .text-wrapper:after {
-          content: '';
-          position: absolute;
-          right: 0;
-          width: 1em;
-          height: 1em;
-          margin-top: 0.2em;
-          background: $vue-white;
-        }
+      .text-wrapper:after {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 1em;
+        height: 1em;
+        margin-top: 0.2em;
+        background: $vue-white;
+      }
 
-        .small-text {
-          font-size: 10px;
-          font-weight: 100;
-          white-space: nowrap;
-        }
+      .small-text {
+        font-size: 10px;
+        font-weight: 100;
+        white-space: nowrap;
+      }
 
-        .space-between-text {
-          flex-grow: 1;
-        }
+      .space-between-text {
+        flex-grow: 1;
       }
     }
   }
+}
 </style>

@@ -34,10 +34,16 @@
           <li @click="select()">
             <div class="wrapper">
               <div class="locationIcon">
-                <img src="../assets/img/Local.svg"/>
+                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="pinIcon">
+                        <path d="M0,12 C0,5.372583 5.37112582,0 12,0 C18.627417,0 24,5.37112582 24,12 C24,18.627417 18.6288742,24 12,24 C5.372583,24 0,18.6288742 0,12 Z M12,12 C10.8956,12 10,11.1044 10,10 C10,8.8952 10.8956,8 12,8 C13.1044,8 14,8.8952 14,10 C14,11.1044 13.1044,12 12,12 Z M7,10.0017561 C7,10.9978049 7.327,11.9392195 7.82066667,12.7099024 C8.83966667,14.3000976 12,19 12,19 C12,19 15.1603333,14.3000976 16.1793333,12.7099024 C16.673,11.9392195 17,10.9978049 17,10.0017561 C17,7.24443902 14.768,5 12,5 C9.232,5 7,7.24443902 7,10.0017561 Z" id="Combined-Shape"></path>
+                    </g>
+                  </g>
+              </svg>
               </div>
               <div class="text">
-                <span>Send location</span>
+                <span v-text="previewDocument.buttonLabel"></span>
               </div>
             </div>
           </li>
@@ -49,14 +55,14 @@
     <div class="blip-container">
       <div class="bubble left">
         <form novalidate v-on:submit.prevent>
-          <div class="saveIco closeIco" @click="cancel()" >
+          <button class="btn saveIco closeIco" @click="cancel()">
             <img :src="closeSvg" />
-          </div>
-          <div class="saveIco" @click="saveLocation()" :class="{'is-disabled': errors.any() }">
+          </button>
+          <button class="btn saveIco" @click="saveLocation()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
-          </div>
+          </button>
           <div class="form-group">
-            <textarea name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
+            <textarea @keydown.enter="saveLocation($event)" name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
             <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
           </div>
         </form>
@@ -67,15 +73,12 @@
 
 
 <script>
-
-import { linkify } from '../utils'
+import { linkify } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
   name: 'request-location',
-  mixins: [
-    base
-  ],
+  mixins: [base],
   props: {
     hideOptions: {
       type: Boolean,
@@ -87,40 +90,83 @@ export default {
     length: {
       type: Number,
       default: 532
+    },
+    onLocationError: {
+      type: Function
     }
   },
   computed: {
-    previewDocument: function () {
+    previewDocument: function() {
       return {
         hasPreview: this.document.label.value.length > this.length,
-        previewContent: linkify(this.document.label.value.substring(0, this.length - 3) + '...'),
+        previewContent: linkify(
+          this.document.label.value.substring(0, this.length - 3) + '...'
+        ),
+        buttonLabel:
+          navigator.language.toLowerCase().startsWith('pt')
+            ? 'Enviar Localização'
+            : 'Send Location',
         content: linkify(this.document.label.value)
       }
     }
   },
-  data: function () {
+  data: function() {
     return {
-      hide: this.hideOptions,
-      text: this.document.label.value,
-      showContent: false
+      hide: undefined,
+      text: undefined,
+      showContent: undefined
+    }
+  },
+  watch: {
+    hideOptions: function() {
+      this.hide = this.hideOptions
     }
   },
   methods: {
-    select: function () {
-      if (this.onSelected) {
-        this.onSelected()
+    init: function() {
+      this.hide = this.hideOptions
+      this.text = this.document.label.value
+      this.showContent = false
+    },
+    select: function() {
+      if (!navigator.geolocation) {
+        return
       }
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { latitude, longitude } }) => {
+          if (this.onSelected) {
+            this.onSelected(null, {
+              type: 'application/vnd.lime.location+json',
+              content: { latitude, longitude }
+            })
+          }
+        },
+        (error) => {
+          if (this.onLocationError) {
+            this.onLocationError(error)
+            this.hide = this.hideOptions
+          }
+        },
+        {
+          timeout: 5000
+        }
+      )
 
       if (!this.editable) {
         this.hide = true
       }
     },
-    cancel: function () {
-      this.text = this.document.label.value
-      this.showContent = false
-      this.isEditing = false
-    },
-    saveLocation: function () {
+    saveLocation: function($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) {
+        return
+      }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       this.showContent = false
       this.save({
         ...this.document,
@@ -135,52 +181,54 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../styles/variables.scss';
-  .request-location{
-    .bubble {
-      padding: $bubble-padding;
+@import '../styles/variables.scss';
+.request-location {
+  .bubble {
+    padding: $bubble-padding;
+  }
+  .options {
+    ul {
+      list-style-type: none;
+      clear: both;
+      margin: 0;
+      padding: 10px;
     }
-    .options {
-      ul {
-        list-style-type: none;
-        clear: both;
-        margin: 0;
-        padding: 10px;
-      }
 
-      li {
-        cursor: pointer;
-        display: inline-block;
-        background-color: #DAF2F4;
-        border: 1px solid #0CC8CC;
-        box-shadow: 0 -1px 12px 0 #EEEEEE;
-        border-radius: 20px;
-        padding: 7px 10px;
-        margin: 2px;
-        color: #0CC8CC;
-        text-align: center;
-        align-self: center;
-        font-size: 14px;
-        font-weight: 500;
-        min-width: 70px;
+    li {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: end;
+      background-color: #daf2f4;
+      border: 1px solid #0cc8cc;
+      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      padding: 7px 10px;
+      margin: 2px;
+      color: #0cc8cc;
+      font-size: 16px;
+      font-weight: 500;
+      min-width: 70px;
 
-        .wrapper {
-          display: flex;
-          flex-direction: row;
+      .wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        .locationIcon {
           justify-content: center;
-          align-items: center;
-
-          .locationIcon {
-            justify-content: center;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-          }
-          .text {
-            margin: 0px 10px;
-          }
+          border-radius: 50%;
+          width: 25px;
+          height: 25px;
+        }
+        .text {
+          margin: 0px 10px;
         }
       }
     }
   }
+  #pinIcon {
+    fill: #0cc8cc;
+  }
+}
 </style>

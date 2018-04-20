@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div v-if="!isEditing">
-        <a :href="document.uri" target="_blank" class="file-wrapper">
+        <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
           <div class="file-icon-wrapper">
             <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
@@ -19,16 +19,16 @@
             </div>
             <span v-if="document.size" class="text small-text">{{ document.size | sizeInBytesFilter }}</span>
           </div>
-        </a>
+        </div>
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
-          <div class="saveIco closeIco" @click="fileCancel()" >
+          <button type="button" class="btn saveIco closeIco" @click="cancel()" >
             <img :src="closeSvg" />
-          </div>
-          <div class="saveIco" @click="fileSave()" :class="{'is-disabled': errors.any() }">
+          </button>
+          <button type="submit" class="btn saveIco" @click="fileSave()" :class="{'is-disabled': errors.any() }">
             <img :src="approveSvg" />
-          </div>
+          </button>
           <div class="form-group">
             <input type="text" name="file" class="form-control uri" v-model="uri" placeholder="File URL" :class="{'input-error': errors.has('file') }" v-validate="'required|url'"/>
             <span v-if="errors.has('file')" class="help input-error">{{ errors.first('file') }}</span>
@@ -41,24 +41,21 @@
 </template>
 
 <script>
-
 import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 
 export default {
-  mixins: [
-    base
-  ],
-  data: function () {
+  mixins: [base],
+  data: function() {
     return {
-      title: this.document.title,
-      uri: this.document.uri,
-      type: this.document.type ? this.document.type : mime.lookup(this.uri),
-      size: this.document.size
+      title: undefined,
+      uri: undefined,
+      type: undefined,
+      size: undefined
     }
   },
   computed: {
-    mimeType: function () {
+    mimeType: function() {
       let extension = mime.extension(this.document.type)
       if (extension) {
         return this.document.type
@@ -67,7 +64,15 @@ export default {
     }
   },
   methods: {
-    fileSave: async function () {
+    init: function() {
+      this.title = this.document.title
+      this.uri = this.document.uri
+      this.type = this.document.type
+        ? this.document.type
+        : mime.lookup(this.uri)
+      this.size = this.document.siz
+    },
+    fileSave: async function() {
       let result = await this.$validator.validateAll()
       if (!result) return
 
@@ -78,10 +83,8 @@ export default {
         type: mime.lookup(this.uri) ? mime.lookup(this.uri) : 'application/pdf'
       })
     },
-    fileCancel: function () {
-      this.isEditing = false
-      this.title = this.document.title
-      this.uri = this.document.uri
+    handleFileLink: function () {
+      window.open(this.document.uri, '_blank')
     }
   }
 }
@@ -89,82 +92,82 @@ export default {
 
 
 <style lang="scss">
-   @import '../../styles/variables.scss';
+@import '../../styles/variables.scss';
 
-  .media-link .application {
-    .bubble {
-      &.left {
-        .description-wrapper {
-          color: $vue-gray;
-        }
-      }
-
-      &.right {
-        .file-icon-wrapper {
-          background-color: $vue-white;
-          padding-right: 20px !important;
-        }
-        .description-wrapper {
-          color: $vue-white;
-          padding-left: 20px !important;
-        }
-      }
-
-      .file-wrapper {
-        padding: 0;
-        height: 80px;
-        text-decoration: inherit;
-        display: flex;
-        flex-direction: row;
-        align-content: center;
-        justify-content: center;
-
-        .file-icon-wrapper {
-          display: flex;
-          padding: 20px;
-          padding-right: 10px;
-
-          .file-icon {
-            display: flex;
-            flex-direction: horizontal;
-            flex-grow: 1;
-            max-height: 40px;
-            max-width: 40px;
-            object-fit: contain;
-          }
-        }
-
-        .description-wrapper {
-          overflow: hidden;
-          padding: 20px;
-          padding-left: 10px;
-          display: flex;
-          flex-direction: column;
-
-          .link-description {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            .text {
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-            }
-          }
-
-          .small-text {
-            font-size: 10px;
-            font-weight: 100;
-          }
-        }
+.media-link .application {
+  .bubble {
+    &.left {
+      .description-wrapper {
+        color: $vue-gray;
       }
     }
 
-    .form-group {
-      min-width: auto;
-      .form-control.title {
-        margin-top: 10px;
+    &.right {
+      .file-icon-wrapper {
+        background-color: $vue-white;
+        padding-right: 20px !important;
+      }
+      .description-wrapper {
+        color: $vue-white;
+        padding-left: 20px !important;
+      }
+    }
+
+    .file-wrapper {
+      padding: 0;
+      height: 80px;
+      text-decoration: inherit;
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      justify-content: center;
+
+      .file-icon-wrapper {
+        display: flex;
+        padding: 20px;
+        padding-right: 10px;
+
+        .file-icon {
+          display: flex;
+          flex-direction: horizontal;
+          flex-grow: 1;
+          max-height: 40px;
+          max-width: 40px;
+          object-fit: contain;
+        }
+      }
+
+      .description-wrapper {
+        overflow: hidden;
+        padding: 20px;
+        padding-left: 10px;
+        display: flex;
+        flex-direction: column;
+
+        .link-description {
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          .text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+
+        .small-text {
+          font-size: 10px;
+          font-weight: 100;
+        }
       }
     }
   }
+
+  .form-group {
+    min-width: auto;
+    .form-control.title {
+      margin-top: 10px;
+    }
+  }
+}
 </style>

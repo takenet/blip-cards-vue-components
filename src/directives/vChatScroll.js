@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import debounce from 'lodash/debounce'
 
 /**
  * @name VueJS vChatScroll (vue-chat-scroll)
@@ -57,7 +57,6 @@ import _ from 'lodash'
   // Constructor
   function Ss(el) {
     this.target = el
-
     this.direction = w.getComputedStyle(this.target).direction
 
     this.bar = '<div class="ss-scroll">'
@@ -85,6 +84,14 @@ import _ from 'lodash'
     dragDealer(this.bar, this)
     this.moveBar()
 
+    // Stay at bottom if element is at bottom during resize
+    w.addEventListener('resize', () => {
+      if (this.el.scrollTop + this.currentHeigth >= this.el.scrollHeight) {
+        scrollToBottom(this.el)
+      }
+      this.currentHeigth = this.el.clientHeight
+    })
+
     w.addEventListener('resize', this.moveBar.bind(this))
     this.el.addEventListener('scroll', this.moveBar.bind(this))
     this.el.addEventListener('mouseenter', this.moveBar.bind(this))
@@ -102,6 +109,7 @@ import _ from 'lodash'
       var totalHeight = this.el.scrollHeight
       var ownHeight = this.el.clientHeight
       var _this = this
+      this.currentHeigth = this.el.clientHeight
 
       this.scrollRatio = ownHeight / totalHeight
 
@@ -170,7 +178,7 @@ const vChatScroll = {
       scroll(contentScroll, binding)
     })
 
-    let scrollEvent = _.debounce(() => {
+    let scrollEvent = debounce(() => {
       if (config.scrollToTop) {
         scrolled = contentScroll.scrollTop > 0
       } else {
@@ -191,7 +199,13 @@ const vChatScroll = {
       if (config.scrollToTop !== true && contentScroll.scrollTop === 0) {
         let addedHeight = 0
         for (let item of e) {
-          addedHeight += item.addedNodes[0].scrollHeight
+          addedHeight += item.addedNodes[0]
+          ? item.addedNodes[0].scrollHeight
+          : 0
+        }
+
+        if (contentScroll.scrollHeight > contentScroll.clientHeight) {
+          setTimeout(() => scroll(contentScroll, binding), 100)
         }
         contentScroll.scrollTop = addedHeight
       } else {

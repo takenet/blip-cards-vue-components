@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div class="header">
-        <div v-if="this.document.header.value.uri" :class="'ratio ratio' + aspect" :style="'background-image: url(' + this.document.header.value.uri + ')'">
+        <div v-if="this.document.header.value.uri" :class="'ratio ratio' + aspect" :style="'background-image: url(&quot;' + this.document.header.value.uri + '&quot;)'">
         </div>
 
         <div class="title" v-if="document.header.value.title || document.header.value.text || document.header.value">
@@ -24,7 +24,7 @@
 
       <div class="fixed-options" v-if="options">
         <ul>
-          <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
+          <li v-for="(item, index) in options" v-bind:key="index" @click="(editable ? null :select(item))" :class="editable ? '' : ' pointer'">
             <span v-html="item.previewText"></span>
           </li>
         </ul>
@@ -38,12 +38,12 @@
 
   <div v-else class="blip-container document-select">
     <form v-if="!showOptionDialog" class="editing bubble left" novalidate v-on:submit.prevent>
-      <div class="saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
+      <button class="btn saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
-      </div>
-      <div class="saveIco closeIco" @click="documentSelectCancel()">
+      </button>
+      <button class="btn saveIco closeIco" @click="cancel()">
         <img :src="closeSvg" />
-      </div>
+      </button>
       <div class="header">
         <div class="form-group">
           <input type="text" name="image" :class="{'input-error': errors.has('image') }" class="form-control" v-model="previewUri" placeholder="Image Uri" />
@@ -71,7 +71,7 @@
         <div class="form-group">
           <input type="title" name="title" :class="{'input-error': errors.has('title') }" class="form-control" v-model="title" placeholder="Title" />
           <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
-          <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" placeholder="Description" />
+          <textarea @keydown.enter="documentSelectSave($event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" placeholder="Description" />
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
       </div>
@@ -100,7 +100,7 @@
         <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
-        <input type="text" name="weblinkUri" class="form-control" v-validate="'required|url'" v-model="selectedOption.label.value.uri" placeholder="Uri" />
+        <input type="text" name="weblinkUri" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.uri" placeholder="Uri" @blur="fetchMetadaForSelectedOption()"/>
         <span v-show="errors.has('weblinkUri')" class="help input-error">{{ errors.first('weblinkUri') }}</span>
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
@@ -128,8 +128,8 @@
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea v-if="selectedOption.value.type && selectedOption.value.type.includes('json')" type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
-            <textarea v-else type="text" name="value" v-validate="'required'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption(true, $event)" v-if="selectedOption.value.type && selectedOption.value.type.includes('json')" type="text" name="value" v-validate="'required|json'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption(true, $event)" v-else type="text" name="value" v-validate="'required'" class="form-control" v-model="selectedOption.value.value" placeholder="Postback value" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
@@ -137,10 +137,10 @@
 
       <div class="form-group blip-card-flex">
         <span class="flex-item">
-          <button @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
+          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
         </span>
         <span class="flex-item">
-          <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
+          <button @click="saveOption(true)" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
         </span>
       </div>
     </form>
@@ -149,9 +149,10 @@
 
 <script>
 
-import { linkify } from '../utils'
-import _ from 'lodash'
+import { linkify } from '../utils/misc'
+import cloneDeep from 'lodash/cloneDeep'
 import { default as base } from '../mixins/baseComponent.js'
+import { MetadataService } from '../utils/metadataService.js'
 import mime from 'mime-types'
 const optionSize = 34
 
@@ -179,36 +180,21 @@ export default {
     },
     onOpenLink: {
       type: Function
-    },
-    initEditing: {
-      type: Boolean,
-      default: false
     }
-  },
-  created: function () {
-    this.isEditing = this.initEditing
   },
   data: function () {
     return {
-      showOptionDialog: false,
-      headerTab: null,
-      showPayload: false,
-      showContent: false,
-      title: this.document.header.value.title,
-      content: this.document.header.value.text,
-      aspect: this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1',
-      previewUri: this.document.header.value.uri,
-      selectedOption: { label: {}, value: {} },
-      options: this.document.options.map(function (x) {
-        let opts = {
-          ...x,
-          isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
-        }
-
-        opts.previewText = getOptionContent(opts)
-        return opts
-      })
+      showOptionDialog: undefined,
+      headerTab: undefined,
+      showPayload: undefined,
+      showContent: undefined,
+      title: undefined,
+      content: undefined,
+      aspect: undefined,
+      previewUri: undefined,
+      selectedOption: undefined,
+      options: undefined,
+      MetadataService: new MetadataService()
     }
   },
   watch: {
@@ -218,14 +204,14 @@ export default {
       this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
       this.previewUri = this.document.header.value.uri
       this.options = this.document.options.map(function (x) {
-        let opts = {
+        let opt = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
           value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
         }
 
-        opts.previewText = getOptionContent(opts)
-        return opts
+        opt.previewText = getOptionContent(opt)
+        return opt
       })
     }
   },
@@ -241,7 +227,7 @@ export default {
         return linkify(this.document.header.value.text)
       }
 
-      if (this.document.header.value) {
+      if (this.document.header.value && this.document.header.type === 'text/plain') {
         if (this.document.header.value.length > this.length) {
           return linkify(this.document.header.value.substring(0, this.length)) + '...'
         }
@@ -256,6 +242,26 @@ export default {
     }
   },
   methods: {
+    init: function() {
+      this.showOptionDialog = false
+      this.headerTab = null
+      this.showPayload = false
+      this.showContent = false
+      this.title = this.document.header.value.title
+      this.content = this.document.header.value.text
+      this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
+      this.previewUri = this.document.header.value.uri
+      this.selectedOption = { label: {}, value: {} }
+      this.options = this.document.options.map((x) => {
+        let opt = {
+          ...x,
+          isLink: x.label.type === 'application/vnd.lime.web-link+json',
+          value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
+        }
+        opt.previewText = getOptionContent(opt)
+        return opt
+      })
+    },
     setTab: function (name) {
       this.headerTab = name
       if (this.headerTab === 'weblink' && typeof this.selectedOption.label.value !== 'object') {
@@ -263,7 +269,7 @@ export default {
       }
       if (this.headerTab === 'plainText' && typeof this.selectedOption.label.value !== 'string') {
         this.selectedOption.LinkUri = this.selectedOption.label.value.uri
-        this.selectedOption.LinkTarget = this.selectedOption.label.value.target || ''
+        this.selectedOption.LinkTarget = this.selectedOption.label.value.target || 'blank'
         this.selectedOption.label.value = this.selectedOption.label.value.text
       }
     },
@@ -276,7 +282,12 @@ export default {
           let win = window.open(item.label.value.uri, '_blank')
           win.focus()
         } else if (this.onOpenLink) {
-          this.onOpenLink(item.label.value.uri, item.label.value.target)
+          this.onOpenLink({
+            uri: item.label.value.uri,
+            target: item.label.value.target,
+            title: item.label.value.title || item.label.value.text,
+            image: item.label.value.previewUri
+          })
         }
         return
       }
@@ -288,31 +299,15 @@ export default {
         })
       }
     },
-    documentSelectCancel: function () {
-      if (this.initEditing) {
-        this.trash(this.document)
-        return
+    documentSelectSave: async function ($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
       }
 
-      this.selectedOption = {}
-      this.title = this.document.header.value.title
-      this.content = this.document.header.value.text
-      this.aspect = this.document.header.value.aspectRatio ? this.document.header.value.aspectRatio.replace(':', '-') : '2-1'
-      this.previewUri = this.document.header.value.uri
-      this.options = this.document.options.map(function (x) {
-        let opts = {
-          ...x,
-          isLink: x.label.type === 'application/vnd.lime.web-link+json',
-          value: x.value ? {type: x.value.type, value: x.value.type.includes('json') ? JSON.stringify(x.value.value) : x.value.value} : {}
-        }
-        opts.previewText = getOptionContent(opts)
-        return opts
-      })
-      this.headerTab = null
-      this.showOptionDialog = false
-      this.isEditing = false
-    },
-    documentSelectSave: async function () {
       let result = await this.$validator.validateAll()
       if (!result) return
       this.selectedOption = { label: {}, value: {} }
@@ -343,7 +338,7 @@ export default {
             return {
               label: {
                 type: x.label.type,
-                value: x.label.type === 'text/plain' ? x.label.value : { text: x.label.value.text, uri: x.label.value.uri, target: x.label.value.target }
+                value: x.label.value
               },
               value
             }
@@ -357,26 +352,33 @@ export default {
 
       this.headerTab = null
       this.showOptionDialog = false
-
       this.save(newDocument)
     },
     editOption: function (item, index, $event) {
       this.showOptionDialog = true
 
-      this.selectedOption = _.cloneDeep(item)
+      this.selectedOption = cloneDeep(item)
       this.selectedOption.index = index
 
       this.showPayload = typeof this.selectedOption.value.type === 'string'
       this.headerTab = this.selectedOption.label.type === 'application/vnd.lime.web-link+json' ? 'weblink' : 'plainText'
       this.selectedOption.LinkTarget = (this.selectedOption.label.value ? this.selectedOption.label.value.target : '') || ''
       if (this.headerTab === 'weblink') {
-        this.selectedOption.label.value.target = this.selectedOption.label.value.target || ''
+        this.selectedOption.label.value.target = this.selectedOption.label.value.target || 'blank'
       }
     },
     deleteOption: function (index) {
       this.options.splice(index, 1)
     },
-    saveOption: function () {
+    saveOption: function (reset, $event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       this.$validator.validateAll().then((result) => {
         if (!result) return
         if (this.headerTab === 'weblink') {
@@ -397,9 +399,11 @@ export default {
           this.options.splice(this.selectedOption.index, 1, this.selectedOption)
         }
 
-        this.selectedOption = { label: {}, value: {} }
-        this.headerTab = null
-        this.showOptionDialog = false
+        if (reset) {
+          this.selectedOption = { label: {}, value: {} }
+          this.headerTab = null
+          this.showOptionDialog = false
+        }
       })
     },
     cancelOption: function (item) {
@@ -407,113 +411,136 @@ export default {
       this.selectedOption = { label: {}, value: {} }
       this.headerTab = null
       this.showOptionDialog = false
+    },
+    fetchMetadaForSelectedOption: async function () {
+      let currentOption = this.selectedOption
+
+      // Only fetch metadata if editing or missing one of options properties
+      if ((!this.isEditing && currentOption.label.value.previewUri && (currentOption.label.value.title || currentOption.label.value.text))) {
+        return
+      }
+
+      const fetchResult = await this.MetadataService.fetchMetadata(currentOption.label.value)
+
+      if (fetchResult) {
+        currentOption.label.value.title = fetchResult.title || currentOption.label.value.title
+        currentOption.label.value.text = currentOption.label.value.text || fetchResult.text
+        currentOption.label.value.previewUri = fetchResult.imgPreview
+        this.selectedOption = currentOption
+        // When fetch metadata is done after option is saved should update option
+        if (!this.selectedOption.label.value) {
+          this.headerTab = 'weblink'
+          this.selectedOption.index = this.options.length - 1
+          this.saveOption()
+        }
+      }
     }
   }
 }
 </script>
 
 <style lang="scss">
-   @import '../styles/variables.scss';
+@import '../styles/variables.scss';
 
-  .document-select {
-    .bubble {
-      width: $bubble-width;
-    }
+.document-select {
+  .bubble {
+    width: $bubble-width;
+  }
 
-    .header {
-
-      .title {
-        margin: 0;
-        padding: 10px 20px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-    }
-    .hide-overflow {
+  .header {
+    .title {
+      margin: 0;
+      padding: 10px 20px;
       text-overflow: ellipsis;
       overflow: hidden;
     }
-    .fixed-options ul {
-      margin:  0px;
-    }
-    .editing .fixed-options ul {
-      margin:  0px -10px;
-    }
-
-    .add-button {
-      cursor: pointer;
-      text-align: center;
-      padding: 5px;
-      margin: 2px;
-      font-size: 14px;
-      font-weight: 500;
-      color: $vue-light-blip;
-      background-color: $vue-white !important;
-      border: 1px dashed $vue-london !important;
-    }
-
-    .form-check {
-      padding: 0px 10px;
-      color: $vue-cloud;
-      margin: 0;
-
-      input[type="radio"] {
-        position: absolute;
-        visibility: hidden;
-      }
-
-      .form-check-container {
-        margin-left: 5px;
-        margin-top: 8px;
-        position: relative;
-        width: 40px;
-        height: 20px;
-        display: inline-block;
-      }
-
-      label{
-        position: absolute;
-        z-index: 1;
-        cursor: pointer;
-      }
-      .check{
-        display: block;
-        position: absolute;
-        border: 1px solid $vue-time;
-        border-radius: 100%;
-        height: 16px;
-        width: 16px;
-        top: 0px;
-        left: 0px;
-        transition: border .25s linear;
-        -webkit-transition: border .25s linear;
-        -moz-transition: border .25s linear;
-        -ms-transition: border .25s linear;
-      }
-      .check::before {
-        display: block;
-        position: absolute;
-        content: '';
-        border-radius: 100%;
-        height: 8px;
-        width: 8px;
-        top: 3px;
-        left: 3px;
-        margin: auto;
-        transition: background 0.25s linear;
-        -webkit-transition: background 0.25s linear;
-        -moz-transition: background 0.25s linear;
-        -ms-transition: background 0.25s linear;
-      }
-      input[type=radio]:checked ~ .check {
-        border: 1px solid $vue-light-blip;
-      }
-
-      input[type=radio]:checked ~ .check::before{
-        background: $vue-light-blip;
-      }
-    }
-
+  }
+  .hide-overflow {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .fixed-options ul {
+    margin: 0px;
+  }
+  .editing {
+    flex-direction: column;
+  }
+  .editing .fixed-options ul {
+    margin: 0px -10px;
   }
 
+  .add-button {
+    cursor: pointer;
+    text-align: center;
+    padding: 5px;
+    margin: 2px;
+    font-size: 16px;
+    font-weight: 500;
+    color: $vue-light-blip;
+    background-color: $vue-white !important;
+    border: 1px dashed $vue-london !important;
+  }
+
+  .form-check {
+    padding: 0px 10px;
+    color: $vue-cloud;
+    margin: 0;
+
+    input[type='radio'] {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .form-check-container {
+      margin-left: 5px;
+      margin-top: 8px;
+      position: relative;
+      width: 40px;
+      height: 20px;
+      display: inline-block;
+    }
+
+    label {
+      position: absolute;
+      z-index: 1;
+      cursor: pointer;
+    }
+    .check {
+      display: block;
+      position: absolute;
+      border: 1px solid $vue-time;
+      border-radius: 100%;
+      height: 16px;
+      width: 16px;
+      top: 0px;
+      left: 0px;
+      transition: border 0.25s linear;
+      -webkit-transition: border 0.25s linear;
+      -moz-transition: border 0.25s linear;
+      -ms-transition: border 0.25s linear;
+    }
+    .check::before {
+      display: block;
+      position: absolute;
+      content: '';
+      border-radius: 100%;
+      height: 8px;
+      width: 8px;
+      top: 3px;
+      left: 3px;
+      margin: auto;
+      transition: background 0.25s linear;
+      -webkit-transition: background 0.25s linear;
+      -moz-transition: background 0.25s linear;
+      -ms-transition: background 0.25s linear;
+    }
+    input[type='radio']:checked ~ .check {
+      border: 1px solid $vue-light-blip;
+    }
+
+    input[type='radio']:checked ~ .check::before {
+      background: $vue-light-blip;
+    }
+  }
+}
 </style>

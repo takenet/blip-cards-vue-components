@@ -52,14 +52,14 @@
 
   <div class="blip-container select" v-else-if="!addOption">
     <form class="bubble left" novalidate v-on:submit.prevent>
-      <div class="saveIco closeIco" @click="cancel()" >
+      <button class="btn saveIco closeIco" @click="cancel()" >
         <img :src="closeSvg" />
-      </div>
-      <div class="saveIco" :class="{'is-disabled': errors.any() }" @click="selectSave(text)">
+      </button>
+      <button class="btn saveIco" :class="{'is-disabled': errors.any() }" @click="selectSave(text)">
         <img :src="approveSvg" />
-      </div>
+      </button>
       <div class="form-group">
-        <textarea type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="text" />
+        <textarea @keydown.enter="selectSave(text, $event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="text" />
         <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
       </div>
 
@@ -101,8 +101,8 @@
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea v-if="selectedOption.type && selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
-            <textarea v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption($event)" v-if="selectedOption.type && selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption($event)" v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
@@ -110,7 +110,7 @@
 
       <div class="form-group blip-card-flex">
         <div class="flex-item">
-          <button @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
+          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
         </div>
         <div class="flex-item">
           <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
@@ -122,9 +122,9 @@
 
 <script>
 
-import { linkify } from '../utils'
-import _ from 'lodash'
 import { default as base } from '../mixins/baseComponent.js'
+import { linkify } from '../utils/misc'
+import debounce from 'lodash/debounce'
 const optionSize = 34
 
 export default {
@@ -143,32 +143,13 @@ export default {
   },
   data: function () {
     return {
-      addOption: false,
-      showPayload: false,
-      headerTab: 'plainText',
-      selectedOption: { value: {} },
-      hide: this.hideOptions,
-      text: this.document.text,
-      options: this.document.options.map(function (x) {
-        let value
-        if (x.value) {
-          if (x.type && x.type.includes('json')) {
-            value = JSON.stringify(x.value)
-          } else {
-            value = x.value
-          }
-        } else {
-          value = ''
-        }
-
-        let opts = {
-          ...x,
-          previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text,
-          value
-        }
-
-        return opts
-      })
+      addOption: undefined,
+      showPayload: undefined,
+      headerTab: undefined,
+      selectedOption: undefined,
+      hide: undefined,
+      text: undefined,
+      options: undefined
     }
   },
   computed: {
@@ -182,14 +163,13 @@ export default {
     }
   },
   methods: {
-    cancel: function () {
-      this.isEditing = false
+    init: function() {
       this.addOption = false
       this.showPayload = false
       this.headerTab = 'plainText'
-      this.selectedOption = {}
-      this.text = linkify(this.document.text)
+      this.selectedOption = { value: {} }
       this.hide = this.hideOptions
+      this.text = this.document.text
       this.options = this.document.options.map(function (x) {
         let value
         if (x.value) {
@@ -223,13 +203,23 @@ export default {
       this.selectedOption = {}
       this.addOption = false
     },
-    saveOption: function () {
+    saveOption: function ($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       this.addOption = false
+      this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
+      if (!this.showPayload) {
+        this.selectedOption.value = this.selectedOption.type = null
+      }
       if (this.selectedOption.index === -1) {
-        this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.push(this.selectedOption)
       } else {
-        this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
         this.options.splice(this.selectedOption.index, 1, this.selectedOption)
       }
 
@@ -242,7 +232,7 @@ export default {
     editOption: function (item, index, $event) {
       this.addOption = true
 
-      this.selectedOption = _.clone(item)
+      this.selectedOption = { ...item }
 
       if (!this.selectedOption.value || !this.selectedOption.type) {
         this.showPayload = false
@@ -252,7 +242,15 @@ export default {
 
       this.selectedOption.index = index
     },
-    selectSave: function () {
+    selectSave: function (text, $event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.selectedOption = {}
@@ -281,25 +279,29 @@ export default {
         })
       })
     },
-    select: function (item) {
-      if (this.onSelected) {
-        if (item.value) {
-          this.onSelected(item.text, {
-            type: item.type,
-            content: (item.type.indexOf('json') !== -1) ? JSON.parse(item.value) : item.value
-          })
-        } else {
-          this.onSelected(item.text, {
-            content: item.order ? item.order.toString() : item.text,
-            type: 'text/plain'
-          })
+    select: debounce(
+      function (item) {
+        if (!this.editable) {
+          this.hide = true
         }
-      }
 
-      if (!this.editable) {
-        this.hide = true
-      }
-    }
+        if (this.onSelected) {
+          if (item.value) {
+            this.onSelected(item.text, {
+              type: item.type,
+              content: (item.type.indexOf('json') !== -1) ? JSON.parse(item.value) : item.value
+            })
+          } else {
+            this.onSelected(item.text, {
+              content: item.order ? item.order.toString() : item.text,
+              type: 'text/plain'
+            })
+          }
+        }
+      },
+      500,
+      { leading: true, trailing: false }
+    )
   }
 }
 </script>
@@ -325,12 +327,12 @@ export default {
      align-items: end;
      background-color: #DAF2F4;
      border: 1px solid #0CC8CC;
-     box-shadow: 0 -1px 12px 0 #EEEEEE;
+     box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, .1);
      border-radius: 19px;
      padding: 10px 16px;
      margin: 2px;
      color: #0CC8CC;
-     font-size: 14px;
+     font-size: 16px;
      font-weight: 500;
      min-width: 70px;
 

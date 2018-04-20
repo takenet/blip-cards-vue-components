@@ -31,14 +31,14 @@
   <div class="blip-container" v-else>
     <div :class="'bubble ' + position">
       <form novalidate v-on:submit.prevent>
-        <div class="saveIco closeIco" @click="cancel()" >
+        <button class="btn saveIco closeIco" @click="cancel()" >
           <img :src="closeSvg" />
-        </div>
-        <div class="saveIco" @click="saveText()" :class="{'is-disabled': errors.any() }">
+        </button>
+        <button type="submit" class="btn saveIco" @click="saveText()" :class="{'is-disabled': errors.any() }">
           <img :src="approveSvg" />
-        </div>
+        </button>
         <div class="form-group">
-          <textarea name="text" v-auto-expand class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
+          <textarea @keydown.enter="saveText($event)" name="text" v-auto-expand class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
       </form>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { linkify } from '../utils'
+import { linkify } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
@@ -76,19 +76,28 @@ export default {
   },
   data: function() {
     return {
-      text: this.document,
-      showContent: false
+      text: undefined,
+      showContent: undefined
     }
   },
   methods: {
-    saveText: function() {
-      this.showContent = false
-      this.save(this.text)
-    },
-    cancel: function() {
+    init: function() {
       this.text = this.document
       this.showContent = false
-      this.isEditing = false
+    },
+    saveText: function($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) {
+        return
+      }
+
+      if ($event) {
+        $event.stopPropagation()
+        $event.preventDefault()
+        $event.returnValue = false
+      }
+
+      this.showContent = false
+      this.save(this.text)
     }
   }
 }
@@ -101,7 +110,7 @@ export default {
 .plain-text .bubble {
   padding: $bubble-padding;
   word-wrap: break-word;
-  min-width: auto!important;
+  min-width: auto !important;
   text-align: left;
 }
 </style>

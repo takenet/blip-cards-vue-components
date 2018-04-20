@@ -1,5 +1,4 @@
 @import 'variables';
-@import 'fonts';
 @import 'animations';
 @import 'utils';
 @import 'simple-scrollbar';
@@ -7,44 +6,44 @@
 .blip-container {
   margin-bottom: 10px;
   width: 100%;
-  font-family: "Avenir Next";
+  font-family: 'Nunito', sans-serif;
   position: relative;
 }
 
 .blip-card-container {
   width: 100%;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .blip-card {
   width: 100%;
-  font-family: "Avenir Next";
+  font-family: 'Nunito', sans-serif;
 
   *, ::after, ::before {
     box-sizing: border-box;
   }
 
   input, textarea, label {
-    font-family: "Avenir Next";
+    font-family: 'Nunito', sans-serif;
   }
 
   .bubble {
-      font-family: "Avenir Next";
+      font-family: 'Nunito', sans-serif;
       position: relative;
       margin-bottom: 5px;
       width: auto;
       height: 100%;
       max-width: 90%;
       min-width: 160px;
-      font-size: 15px;
-      font-weight: 500;
+      font-size: 16px;
+      font-weight: 300;
       line-height: 20px;
       white-space: pre-line;
   }
 
   .bubble.left {
       border-radius: 13px 13px 13px 2px;
-      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
       background-color: $vue-white;
       color: $vue-gray;
       float: left;
@@ -56,7 +55,7 @@
 
   .bubble.right {
       border-radius: 13px 2px 13px 13px;
-      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
       background-color: $vue-light-blip;
       color: $vue-white;
       float: right;
@@ -123,7 +122,7 @@
       text-align: center;
       padding: 10px;
       margin: 2px;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 500;
       word-break: break-word;
       display: flex;
@@ -516,4 +515,8 @@
 
 .blip-bubble .blip-card:first-child .bubble.left {
   background-color: black;
+}
+
+.pointer {
+  cursor: pointer;
 }

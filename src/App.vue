@@ -40,6 +40,8 @@
         <button class="button" @click="sendFile">ENVIAR Documento</button>
         <button class="button" @click="sendLocation">ENVIAR Location</button>
         <button class="button" @click="sendRequestLocation">ENVIAR Pedido de Localização</button>
+        <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
+        <button class="button" @click="sendRaw">ENVIAR Raw Content</button>
       </div>
 
       <div v-else>
@@ -49,10 +51,10 @@
       </div>
     </div>
 
-    <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px; height: 300px;'" v-chat-scroll="{scrollToTop: false}">
+    <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px; height: 800px;'" v-chat-scroll="{scrollToTop: false}">
       <div>
         <div v-for="(item, index) in documents" v-bind:key="index">
-          <blip-card :photo="photoUri" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType"/>
+          <blip-card :photo="photoUri" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
         </div>
       </div>
       <div style="clear: both"></div>
@@ -352,6 +354,28 @@ export default {
             rule: 'type',
             type: 'application/vnd.lime.location+json'
           }
+        }
+      })
+      this.send()
+    },
+    sendChatState: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.lime.chatstate+json',
+        content: {
+          'state': 'composing'
+        }
+      })
+      this.send()
+    },
+    sendRaw: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.lime.chatstate+json',
+        content: {
+          'state': 'composing'
         }
       })
       this.send()
