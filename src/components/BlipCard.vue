@@ -119,9 +119,18 @@ export default {
       if (!this.editableDocument) return
       const element = this.$el
 
-      const bubbleHeight = element.querySelector('.bubble')
-        ? element.querySelector('.bubble').offsetHeight
-        : 0
+      let bubbleHeight = 0
+      const relatives = element.querySelectorAll('.blip-relative') // Element has relatives if is a collection
+      if (relatives.length > 0) {
+        relatives.forEach((relative) => {
+          bubbleHeight += relative.offsetHeight
+        })
+        bubbleHeight -= 10 // Time height
+      } else {
+        bubbleHeight = element.querySelector('.bubble')
+          ? element.querySelector('.bubble').offsetHeight
+          : 0
+      }
       const photoHeight = 25
 
       return bubbleHeight - photoHeight
