@@ -96,6 +96,9 @@
       </div>
 
       <div class="form-group" v-if="headerTab === 'weblink'">
+        <input type="text" name="optionTitle" class="form-control" v-model="selectedOption.label.value.title" placeholder="Title" />
+      </div>
+      <div class="form-group" v-if="headerTab === 'weblink'">
         <input type="text" name="optionText" class="form-control" v-validate="'required'" v-model="selectedOption.label.value.text" placeholder="Text" />
         <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
       </div>
@@ -157,7 +160,7 @@ import mime from 'mime-types'
 const optionSize = 34
 
 let getOptionContent = function (item) {
-  let text = item.label.type === item.label.value.title || item.label.value.text || item.label.value.title || item.label.value.uri || item.label.value
+  let text = item.label.value.text || item.label.value.title || item.label.value.uri || item.label.value
   if (text.length > optionSize) {
     return text.substring(0, optionSize) + '...'
   } else {
@@ -423,7 +426,7 @@ export default {
       const fetchResult = await this.MetadataService.fetchMetadata(currentOption.label.value)
 
       if (fetchResult) {
-        currentOption.label.value.title = fetchResult.title || currentOption.label.value.title
+        currentOption.label.value.title = currentOption.label.value.title || fetchResult.title
         currentOption.label.value.text = currentOption.label.value.text || fetchResult.text
         currentOption.label.value.previewUri = fetchResult.imgPreview
         this.selectedOption = currentOption
