@@ -419,14 +419,14 @@ export default {
       let currentOption = this.selectedOption
 
       // Only fetch metadata if editing or missing one of options properties
-      if ((!this.isEditing && currentOption.label.value.previewUri && (currentOption.label.value.title || currentOption.label.value.text))) {
+      if ((!this.isEditing && currentOption.label.value.previewUri && (currentOption.label.value.title !== undefined || currentOption.label.value.text))) {
         return
       }
 
       const fetchResult = await this.MetadataService.fetchMetadata(currentOption.label.value)
 
       if (fetchResult) {
-        currentOption.label.value.title = currentOption.label.value.title || fetchResult.title
+        currentOption.label.value.title = currentOption.label.value.title === undefined ? fetchResult.title : currentOption.label.value.title
         currentOption.label.value.text = currentOption.label.value.text || fetchResult.text
         currentOption.label.value.previewUri = fetchResult.imgPreview
         this.selectedOption = currentOption
