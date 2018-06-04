@@ -1,8 +1,11 @@
 <template>
   <div>
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
-      <blip-card
-        v-for="message in group"
+      <div :class="'blip-card-photo ' + group.position" v-if="photo && group.position === 'left'" :style="{ bottom: '20px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
+      </div>
+      <div class="blip-card-group" :class="{'blip-container--with-photo': photo, [group.position]: true}">
+        <blip-card
+        v-for="message in group.msgs"
         :key="message.id"
         :document="message.document || message"
         :position="message.position"
@@ -22,6 +25,9 @@
         :on-location-error="onLocationError"
         :class="messageClass(message)"
         />
+      </div>
+      <div :class="'blip-card-photo ' + group.position" v-if="photo && group.position === 'right'" :style="{ bottom: '20px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
+      </div>
     </div>
   </div>
 </template>
@@ -41,7 +47,8 @@ export default {
       type: Function
     },
     messageClass: {
-      type: Function
+      type: Function,
+      default: () => {}
     },
     length: {
       type: Number
@@ -64,17 +71,29 @@ export default {
       type: Function
     }
   },
+  data() {
+    return {
+      photoMargin: 0
+    }
+  },
   computed: {
     groupedDocuments: function () {
       let messages = []
       if (!this.groupMethod) {
-        let group = []
+        let group = {
+          position: '',
+          msgs: []
+        }
         this.documents.forEach(msg => {
-          if (group.length === 0 || group[group.length - 1].position === msg.position) {
-            group.push(msg)
+          if (group.msgs.length === 0 || group.position === msg.position) {
+            group.msgs.push(msg)
+            group.position = group.msgs[0].position
           } else {
             messages.push(group)
-            group = [msg]
+            group = {
+              msgs: [msg],
+              position: msg.position
+            }
           }
         })
         messages.push(group)
@@ -94,26 +113,38 @@ $soft-round: 2px;
 $hard-round: 13px;
 
 .blip-message-group {
-  .blip-container {
-    margin-bottom: 0;
-  }
-  >:not(:last-child) .bubble.right {
-    border-radius: $hard-round $soft-round $soft-round $hard-round;
-  }
-  >:last-child .bubble.right {
-    border-radius: $hard-round $soft-round $hard-round $hard-round;
-  }
-  >:not(:first-child) .bubble.left {
-    border-radius: $soft-round $hard-round $hard-round $soft-round;
-  }
-  >:first-child .bubble.left {
-    border-radius: $hard-round $hard-round $hard-round $soft-round;
-  }
-  >:not(:last-child) .notification {
-    display: none !important;
-  }
-  >:last-child .notification {
-    display: block !important;
+  position: relative;
+
+  .blip-card-group {
+    .blip-container {
+      margin-bottom: 0;
+    }
+    .bubble {
+      margin-bottom: 3px;
+    }
+    
+    // Bubble Right
+    >:first-child .bubble.right {
+      border-radius: $hard-round $hard-round $soft-round $hard-round;
+    }
+    >:not(:first-child) .bubble.right {
+      border-radius: $hard-round $soft-round $soft-round $hard-round;
+    }
+
+    // Bubble Left
+    >:first-child .bubble.left {
+      border-radius: $hard-round $hard-round $hard-round $soft-round;
+    }
+    >:not(:first-child) .bubble.left {
+      border-radius: $soft-round $hard-round $hard-round $soft-round;
+    }
+    
+    >:not(:last-child) .notification {
+      display: none !important;
+    }
+    >:last-child .notification {
+      display: block !important;
+    }
   }
 }
 </style>
