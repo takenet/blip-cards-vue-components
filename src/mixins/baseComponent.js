@@ -9,8 +9,7 @@ import trashSvg from '../assets/img/Trash.svg'
 var baseComponent = {
   props: {
     document: {
-      type: Object,
-      required: true
+      type: Object
     },
     position: {
       type: String,
