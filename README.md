@@ -45,7 +45,7 @@ Then, reference the cards via <blip-card> tag as following
 Is possible to group your cards using any rule you want. For that use the <blip-group-card> tag as following
 
 ```html
-<blip-group-card :documents="documentList" :on-selected="function" :on-save="function" :editable="true" :hide-options="false"/>
+<blip-group-card :documents="documentList" :compare-messages="function" :on-selected="function" :on-save="function" :editable="true" :hide-options="false"/>
 ```
 
 | Attribute   |      Description      |  Type |
