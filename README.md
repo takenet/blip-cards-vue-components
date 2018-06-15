@@ -41,6 +41,23 @@ Then, reference the cards via <blip-card> tag as following
 | editable| make the card editable (OPTIONAL) | Boolean |
 | hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 
+## Group Card
+Is possible to group your cards using any rule you want. For that use the <blip-group-card> tag as following
+
+```html
+<blip-group-card :documents="documentList" :on-selected="function" :on-save="function" :editable="true" :hide-options="false"/>
+```
+
+| Attribute   |      Description      |  Type |
+|----------|:-------------:|------:|
+| documents | Array of BLiP JSON envelopes with the content, position and date (REQUIRED) | Array |
+| compare-messages | callback function to determine if two messages are in the same group | Function (msg1, msg2) |
+| on-selected | callback function that will be called when the user interacts with the card (OPTIONAL) | Function (text, option)|
+| on-save | callback function that will be called when the user saves the card after editing (OPTIONAL) | Function (document) |
+| on-deleted | callback function that will be called when the user delete the card (OPTIONAL) | Function (document) |
+| editable| make the card editable (OPTIONAL) | Boolean |
+| hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
+
 ## Contributions
 Any contribution to the code via pull request would be nice and any idea and/or suggestion are very welcome.
 
