@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
-      <div :class="'blip-card-photo ' + group.position" v-if="photo && group.position === 'left'" :style="{ bottom: '20px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
+      <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'left'" :style="{ bottom: '20px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
-      <div class="blip-card-group" :class="{'blip-container--with-photo': photo, [group.position]: true}">
+      <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
         <blip-card
         v-for="message in group.msgs"
         :key="message.id"
@@ -12,7 +12,6 @@
         :date="message.date"
         :editing="message.editing"
         :hide-options="message.hideOptions"
-        :photo="message.photo"
         :on-save="onSave"
         :on-deleted="onDeleted"
         :on-cancel="onCancel"
@@ -26,7 +25,7 @@
         :class="messageClass(message)"
         />
       </div>
-      <div :class="'blip-card-photo ' + group.position" v-if="photo && group.position === 'right'" :style="{ bottom: '20px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
+      <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '20px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
     </div>
   </div>
@@ -43,8 +42,9 @@ export default {
       type: Array,
       required: true
     },
-    groupMethod: {
-      type: Function
+    compareMessages: {
+      type: Function,
+      default: (msg1, msg2) => msg1.position === msg2.position
     },
     messageClass: {
       type: Function,
@@ -63,7 +63,6 @@ export default {
     onOpenLink: {
       type: Function
     },
-    photo: {},
     onUnsupportedType: {
       type: Function
     },
@@ -77,30 +76,30 @@ export default {
     }
   },
   computed: {
-    groupedDocuments: function () {
-      let messages = []
-      if (!this.groupMethod) {
-        let group = {
-          position: '',
-          msgs: []
-        }
-        this.documents.forEach(msg => {
-          if (group.msgs.length === 0 || group.position === msg.position) {
-            group.msgs.push(msg)
-            group.position = group.msgs[0].position
-          } else {
-            messages.push(group)
-            group = {
-              msgs: [msg],
-              position: msg.position
-            }
-          }
-        })
-        messages.push(group)
-      } else {
-        messages = this.groupMethod(this.documents)
+    groupedDocuments() {
+      let groups = []
+      if (this.documents.length === 0) return
+      let group = {
+        msgs: [this.documents[0]],
+        position: this.documents[0].position,
+        photo: this.documents[0].photo
       }
-      return messages
+      for (let i = 1; i < this.documents.length; i++) {
+        const message = this.documents[i]
+        if (this.compareMessages(group.msgs[group.msgs.length - 1], message)) {
+          group.msgs.push(message)
+        } else {
+          groups.push(group)
+
+          group = {
+            msgs: [message],
+            position: message.position,
+            photo: message.photo
+          }
+        }
+      }
+      groups.push(group)
+      return groups
     }
   }
 }
@@ -116,6 +115,8 @@ $hard-round: 13px;
   position: relative;
 
   .blip-card-group {
+    margin-bottom: 5px;
+
     .blip-container {
       margin-bottom: 0;
     }
@@ -139,6 +140,7 @@ $hard-round: 13px;
       border-radius: $soft-round $hard-round $hard-round $soft-round;
     }
     
+    // Date
     >:not(:last-child) .notification {
       display: none !important;
     }

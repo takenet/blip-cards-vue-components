@@ -62,8 +62,8 @@
 import { guid } from '../../utils/misc'
 import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
-import BrokenWhite from '@/assets/img/BrokenWhite.svg'
-import Broken from '@/assets/img/Broken.svg'
+import BrokenWhite from '../../assets/img/BrokenWhite.svg'
+import Broken from '../../assets/img/Broken.svg'
 
 export default {
   mixins: [base],
