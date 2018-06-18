@@ -117,11 +117,11 @@ $hard-round: 13px;
   .blip-card-group {
     margin-bottom: 5px;
 
-    .blip-container {
+    .blip-container:not(.document-select) {
       margin-bottom: 0;
-    }
-    .bubble {
-      margin-bottom: 3px;
+      > .bubble {
+        margin-bottom: 3px;
+      }
     }
     
     // Bubble Right
