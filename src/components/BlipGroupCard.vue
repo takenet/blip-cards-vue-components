@@ -123,6 +123,9 @@ $hard-round: 13px;
 
     .blip-container:not(.document-select) {
       margin-bottom: 0;
+      > .bubble {
+        margin-bottom: 3px;
+      }
     }
     
     // Bubble Right

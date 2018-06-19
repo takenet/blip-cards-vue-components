@@ -1,20 +1,21 @@
 <template>
   <div v-if="!isEditing" class="blip-container location">
-    <div :class="'bubble ' + position" :style="'width: ' + bubbleWidth">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
-      </div>
-      <div v-if="editable" class="editIco" @click="toggleEdit">
-        <img :src="editSvg" />
-      </div>
-      <div class="header">
-        <div class="ratio ratio1-1" :style="styleObject" @click="(editable ? null : handleLocationLink())" :class="editable ? '' : ' pointer'"></div>
-        <div class="title" v-if="document.text">
-          <span v-if="document.text" v-html="document.text"></span>
+    <div>
+      <div :class="'bubble ' + position" :style="'width: ' + bubbleWidth">
+        <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
+          <img :src="trashSvg" />
+        </div>
+        <div v-if="editable" class="editIco" @click="toggleEdit">
+          <img :src="editSvg" />
+        </div>
+        <div class="header">
+          <div class="ratio ratio1-1" :style="styleObject" @click="(editable ? null : handleLocationLink())" :class="editable ? '' : ' pointer'"></div>
+          <div class="title" v-if="document.text">
+            <span v-if="document.text" v-html="document.text"></span>
+          </div>
         </div>
       </div>
     </div>
-
     <div :class="'notification ' + position" v-if="date">
       {{ date }}
     </div>
