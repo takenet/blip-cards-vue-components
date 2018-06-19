@@ -10,8 +10,8 @@
         :document="message.document || message"
         :position="message.position"
         :date="message.date"
-        :editing="message.editing"
-        :hide-options="message.hideOptions"
+        :editing="editing"
+        :hide-options="hideOptions"
         :on-save="onSave"
         :on-deleted="onDeleted"
         :on-cancel="onCancel"
@@ -52,6 +52,10 @@ export default {
     },
     length: {
       type: Number
+    },
+    editing: {
+      type: Boolean,
+      default: false
     },
     hideOptions: {
       type: Boolean,

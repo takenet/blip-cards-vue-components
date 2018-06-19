@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isEditing" class="blip-container request-location">
-    <div class="bubble left">
+    <div :class="`bubble ${position}`">
       <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
         <img :src="trashSvg" />
       </div>
@@ -53,7 +53,7 @@
   </div>
   <div v-else>
     <div class="blip-container">
-      <div class="bubble left">
+      <div :class="`bubble ${position}`">
         <form novalidate v-on:submit.prevent>
           <button class="btn saveIco closeIco" @click="cancel()">
             <img :src="closeSvg" />

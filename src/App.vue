@@ -58,7 +58,7 @@
       <div>
         <blip-group-card v-if="group" :documents="docs" :photo="photoUri" :deletable="true" :on-selected="selected" :hide-options="false" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
-          <blip-card :photo="item.photo" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="true" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
+          <blip-card :photo="item.photo" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
         </div>
       </div>
       <div style="clear: both"></div>
