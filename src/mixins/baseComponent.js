@@ -4,6 +4,9 @@ import closeSvg from '../assets/img/Close.svg'
 import closeBlueSvg from '../assets/img/CloseBlue.svg'
 import plusSvg from '../assets/img/plus.svg'
 import trashSvg from '../assets/img/Trash.svg'
+import checkSentSvg from '../assets/img/CheckSent.svg'
+import doubleCheckReceivedSvg from '../assets/img/DoubleCheckReceived.svg'
+import doubleCheckReadSvg from '../assets/img/DoubleCheckRead.svg'
 
 // define um objeto mixin
 var baseComponent = {
@@ -52,7 +55,10 @@ var baseComponent = {
       closeSvg,
       closeBlueSvg,
       plusSvg,
-      trashSvg
+      trashSvg,
+      checkSentSvg,
+      doubleCheckReadSvg,
+      doubleCheckReceivedSvg
     }
   },
   created() {

@@ -31,7 +31,10 @@
       </div>
     </div>
 
-    <div :class="'notification ' + position" v-if="date">
+    <div class="flex" :class="'notification ' + position" v-if="date">
+      <img v-if="status === 'accepted'" :src="checkSentSvg"/>
+      <img v-else-if="status === 'received'" :src="doubleCheckReceivedSvg"/>
+      <img v-else-if="status === 'consumed'" :src="doubleCheckReadSvg"/>
       {{ date }}
     </div>
   </div>
@@ -177,6 +180,10 @@ export default {
     length: {
       type: Number,
       default: 532
+    },
+    status: {
+      type: String,
+      default: ''
     },
     onSelected: {
       type: Function
@@ -444,6 +451,10 @@ export default {
 
 <style lang="scss">
 @import '../styles/variables.scss';
+
+.flex {
+  display: flex;
+}
 
 .document-select {
   .bubble {

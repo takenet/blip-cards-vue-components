@@ -24,7 +24,10 @@
         <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
       </div>
 
-      <div :class="'notification ' + position" v-if="date">
+      <div class="flex" :class="'notification ' + position" v-if="date">
+        <img v-if="status === 'accepted'" :src="checkSentSvg"/>
+        <img v-else-if="status === 'received'" :src="doubleCheckReceivedSvg"/>
+        <img v-else-if="status === 'consumed'" :src="doubleCheckReadSvg"/>
         {{ date }}
       </div>
     </div>
@@ -63,6 +66,10 @@ export default {
     length: {
       type: Number,
       default: 532
+    },
+    status: {
+      type: String,
+      default: ''
     },
     initWith: {
       type: Number,
@@ -237,6 +244,10 @@ export default {
 <style lang="scss">
 @import '../styles/variables.scss';
 
+.flex {
+  display: flex;
+}
+
 .collection-editable {
   height: 100%;
   border: 1px dashed $vue-time;
@@ -283,7 +294,7 @@ export default {
     }
 
     .slide-item {
-      float: left;      
+      float: left;
       min-height: 1px;
       margin-right: 10px;
       height: calc(100% - 35px);
@@ -304,7 +315,7 @@ export default {
     padding: 8px 16px;
     opacity: 0.8;
     color: $vue-light-blip;
-    font-weight: bold;    
+    font-weight: bold;
     font-size: 18px;
     transition: 0.6s ease;
     border-radius: 5px 0 0 5px;

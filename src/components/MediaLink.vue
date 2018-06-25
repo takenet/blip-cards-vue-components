@@ -6,7 +6,10 @@
     <blip-video :document="document" :position="position" :date="date" @updated="emitUpdate" v-else-if="document.type.indexOf('video') != -1" :editable="editable" :on-save="save" :on-deleted="onDeleted" :deletable="deletable" :on-cancel="onCancel" :editing="editing"/>
     <blip-file :document="document" :position="position" :date="date" v-else :editable="editable" :on-save="save" :on-deleted="onDeleted" :deletable="deletable" :on-cancel="onCancel" :editing="editing"/>
 
-    <div :class="'notification ' + position" v-if="date">
+    <div class="flex" :class="'notification ' + position" v-if="date">
+      <img v-if="status === 'accepted'" :src="checkSentSvg"/>
+      <img v-else-if="status === 'received'" :src="doubleCheckReceivedSvg"/>
+      <img v-else-if="status === 'consumed'" :src="doubleCheckReadSvg"/>
       {{ date }}
     </div>
   </div>
@@ -22,6 +25,12 @@ import { default as base } from '../mixins/baseComponent.js'
 
 export default {
   name: 'media-link',
+  props: {
+    status: {
+      type: String,
+      default: ''
+    }
+  },
   mixins: [
     base
   ],
@@ -42,4 +51,7 @@ export default {
 <style lang="scss">
    @import '../styles/variables.scss';
 
+  .flex {
+    display: flex;
+  }
 </style>

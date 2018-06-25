@@ -22,8 +22,16 @@
         </div>
       </div>
 
-      <div :class="'notification ' + position" v-if="date">
-        {{ date }}
+      <div class="flex" :class="'notification ' + position" v-if="date">
+        <img v-if="this.status === 'accepted'" :src="checkSentSvg"/>
+        <img v-else-if="this.status === 'received'" :src="doubleCheckReceivedSvg"/>
+        <img v-else-if="this.status === 'consumed'" :src="doubleCheckReadSvg"/>
+        <div
+          class="failure"
+          v-else-if="this.status === 'failed'">
+          Falha ao enviar a mensagem.
+        </div>
+        <div>{{ date }}</div>
       </div>
     </div>
   </div>
@@ -57,6 +65,10 @@ export default {
     document: {
       type: String,
       required: true
+    },
+    status: {
+      type: String,
+      default: ''
     },
     length: {
       type: Number,
@@ -106,6 +118,14 @@ export default {
 
 <style lang="scss">
 @import '../styles/variables.scss';
+
+.flex {
+  display: flex;
+}
+
+.failure {
+  color: #F76556;
+}
 
 .plain-text .bubble {
   padding: $bubble-padding;

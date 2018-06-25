@@ -13,6 +13,7 @@
         :editing="editing"
         :hide-options="hideOptions"
         :on-save="onSave"
+        :status="message.status"
         :on-deleted="onDeleted"
         :on-cancel="onCancel"
         :editable="editable"
@@ -115,6 +116,10 @@ export default {
 $soft-round: 2px;
 $hard-round: 13px;
 
+.flex {
+  display: flex;
+}
+
 .blip-message-group {
   position: relative;
 
@@ -127,7 +132,7 @@ $hard-round: 13px;
         margin-bottom: 3px;
       }
     }
-    
+
     // Bubble Right
     >:first-child .bubble.right {
       border-radius: $hard-round $hard-round $soft-round $hard-round;
@@ -143,13 +148,10 @@ $hard-round: 13px;
     >:not(:first-child) .bubble.left {
       border-radius: $soft-round $hard-round $hard-round $soft-round;
     }
-    
+
     // Date
     >:not(:last-child) .notification {
       display: none !important;
-    }
-    >:last-child .notification {
-      display: block !important;
     }
   }
 }

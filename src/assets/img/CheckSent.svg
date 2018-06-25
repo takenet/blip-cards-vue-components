@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="15px" viewBox="0 0 20 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>Check</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(3.000000, 1.000000)">
+            <rect id="bounds" x="0" y="0" width="15" height="15"></rect>
+            <polygon id="Shape" fill="#A7BEC3" points="5.62499619 10.125 2.99999619 7.5 2.12499619 8.375 5.62499619 11.875 13.1249962 4.375 12.2499962 3.5"></polygon>
+        </g>
+    </g>
+</svg>

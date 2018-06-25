@@ -20,7 +20,10 @@
       </span>
       <span v-else v-html="this.textLink"></span>
     </div>
-    <div :class="'notification ' + position" v-if="date">
+    <div class="flex" :class="'notification ' + position" v-if="date">
+      <img v-if="status === 'accepted'" :src="checkSentSvg"/>
+      <img v-else-if="status === 'received'" :src="doubleCheckReceivedSvg"/>
+      <img v-else-if="status === 'consumed'" :src="doubleCheckReadSvg"/>
       {{ date }}
     </div>
   </div>
@@ -61,6 +64,10 @@ export default {
   props: {
     onOpenLink: {
       type: Function
+    },
+    status: {
+      type: String,
+      default: ''
     },
     initEditing: {
       type: Boolean,
@@ -151,6 +158,9 @@ export default {
 
 <style lang="scss">
 @import '../styles/variables.scss';
+.flex {
+  display: flex;
+}
 
 .web-link .bubble {
   &.right .text-wrapper:after {
