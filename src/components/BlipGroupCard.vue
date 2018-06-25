@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
-      <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'left'" :style="{ bottom: '20px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
+      <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
         <blip-card
@@ -24,8 +24,11 @@
         :on-location-error="onLocationError"
         :class="messageClass(message)"
         />
+        <div :class="'group-notification ' + group.position" v-if="group.date">
+          {{ group.date }}
+        </div>
       </div>
-      <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '20px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
+      <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '10px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
     </div>
   </div>
@@ -86,7 +89,8 @@ export default {
       let group = {
         msgs: [this.documents[0]],
         position: this.documents[0].position,
-        photo: this.documents[0].photo
+        photo: this.documents[0].photo,
+        date: this.documents[0].date
       }
       for (let i = 1; i < this.documents.length; i++) {
         const message = this.documents[i]
@@ -98,7 +102,8 @@ export default {
           group = {
             msgs: [message],
             position: message.position,
-            photo: message.photo
+            photo: message.photo,
+            date: message.date
           }
         }
       }
@@ -119,7 +124,7 @@ $hard-round: 13px;
   position: relative;
 
   .blip-card-group {
-    margin-bottom: 5px;
+    margin-bottom: 20px;
 
     .blip-container:not(.document-select) {
       margin-bottom: 0;
@@ -127,29 +132,41 @@ $hard-round: 13px;
         margin-bottom: 3px;
       }
     }
-    
+
     // Bubble Right
-    >:first-child .bubble.right {
+    > :first-child .bubble.right {
       border-radius: $hard-round $hard-round $soft-round $hard-round;
     }
-    >:not(:first-child) .bubble.right {
+    > :not(:first-child) .bubble.right {
       border-radius: $hard-round $soft-round $soft-round $hard-round;
     }
 
     // Bubble Left
-    >:first-child .bubble.left {
+    > :first-child .bubble.left {
       border-radius: $hard-round $hard-round $hard-round $soft-round;
     }
-    >:not(:first-child) .bubble.left {
+    > :not(:first-child) .bubble.left {
       border-radius: $soft-round $hard-round $hard-round $soft-round;
     }
-    
+
     // Date
-    >:not(:last-child) .notification {
+    .notification {
       display: none !important;
     }
-    >:last-child .notification {
-      display: block !important;
+
+    .group-notification {
+      font-size: 10px;
+      color: $vue-light-gray;
+      line-height: 14px;
+      clear: both;
+    }
+
+    .group-notification.left {
+      float: left;
+    }
+
+    .group-notification.right {
+      float: right;
     }
   }
 }
