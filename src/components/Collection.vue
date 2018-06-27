@@ -28,6 +28,11 @@
         <img v-if="status === 'accepted'" :src="checkSentSvg"/>
         <img v-else-if="status === 'received'" :src="doubleCheckReceivedSvg"/>
         <img v-else-if="status === 'consumed'" :src="doubleCheckReadSvg"/>
+        <div
+          class="failure"
+          v-else-if="this.status === 'failed'">
+          Falha ao enviar a mensagem.
+        </div>
         {{ date }}
       </div>
     </div>
@@ -231,9 +236,7 @@ export default {
       } else {
         let margin = this.elementsWidth === this.width ? -10 : 10
         const data =
-          'translate3d(' +
-          (((this.elementsWidth + 10) * (n - 1) - margin) * -1 + 10) +
-          'px, 0px, 0px)'
+          `translate3d(${10 - ((this.elementsWidth + 10) * (n - 1) - margin)}px, 0px, 0px)`
         trackElement.setAttribute('style', `transform: ${data}; -webkit-transform: ${data};`)
       }
     }
@@ -246,6 +249,12 @@ export default {
 
 .flex {
   display: flex;
+}
+
+.failure {
+  color: $vue-warning;
+  font-size: 10px;
+  margin-right: 5px;
 }
 
 .collection-editable {

@@ -28,6 +28,11 @@
       <img v-if="status === 'accepted'" :src="checkSentSvg"/>
       <img v-else-if="status === 'received'" :src="doubleCheckReceivedSvg"/>
       <img v-else-if="status === 'consumed'" :src="doubleCheckReadSvg"/>
+      <div
+          class="failure"
+          v-else-if="this.status === 'failed'">
+          Falha ao enviar a mensagem.
+      </div>
       {{ date }}
     </div>
 
@@ -192,6 +197,13 @@ export default {
 .flex {
   display: flex;
 }
+
+.failure {
+  color: $vue-warning;
+  font-size: 10px;
+  margin-right: 5px;
+}
+
 .request-location {
   .bubble {
     padding: $bubble-padding;
