@@ -44,6 +44,7 @@
         <button class="button" @click="sendLocation">ENVIAR Location</button>
         <button class="button" @click="sendRequestLocation">ENVIAR Pedido de Localização</button>
         <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
+        <button class="button" @click="sendTicket">ENVIAR Ticket</button>
         <button class="button" @click="sendRaw">ENVIAR Raw Content</button>
       </div>
 
@@ -71,7 +72,7 @@ export default {
   computed: {
     docs: function() {
       return this.documents.map((x) => {
-        return {...x, photo: this.photo ? this.photoUri : ''}
+        return { ...x, photo: this.photo ? this.photoUri : '' }
       })
     },
     photoUri() {
@@ -368,7 +369,31 @@ export default {
         to: '104222@telegram.gw.msging.net',
         type: 'application/vnd.lime.chatstate+json',
         content: {
-          'state': 'composing'
+          state: 'composing'
+        }
+      })
+      this.send()
+    },
+    sendTicket() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.iris.ticket+json',
+        content: {
+          id: '8b337066-b6e9-43a4-b951-3f961e48c127',
+          sequentialId: 313,
+          ownerIdentity: 'testebuilderluiz@msging.net',
+          customerIdentity:
+            '4cdbb741-160a-4d77-ba8e-53b54d6225e3.testebuilderluiz@0mn.io',
+          customerDomain: '0mn.io',
+          provider: 'Lime',
+          status: 'Waiting',
+          storageDate: '2018-06-28T16:19:09.110Z',
+          externalId: '8b337066-b6e9-43a4-b951-3f961e48c127',
+          rating: 0,
+          team: 'Default',
+          unreadMessages: 0,
+          closed: false
         }
       })
       this.send()
@@ -379,7 +404,7 @@ export default {
         to: '104222@telegram.gw.msging.net',
         type: 'application/vnd.lime.chatstate+json',
         content: {
-          'state': 'composing'
+          state: 'composing'
         }
       })
       this.send()

@@ -4,7 +4,7 @@
   <div class="blip-container ticket" v-if="document.status === 'Waiting' || document.status.indexOf('Closed') !== -1 ">
     <p class="subtitle fancy" v-if="document.status === 'Waiting'"><span>Chatbot {{identity}} encaminhou a conversa para atendimento</span></p>
     <p class="subtitle fancy" v-else-if="document.status.indexOf('Closed') !== -1"><span>Atendente {{agentIdentity}} encerrou o atendimento</span></p>
-    <h1>Ticket #{{document.sequentialId}}</h1>
+    <h3>Ticket #{{document.sequentialId}}</h3>
   </div>
 </template>
 
@@ -38,10 +38,10 @@ export default {
   padding-top: 5px;
 
   .subtitle {
-    margin: 0 0 2em 0;
+    margin: 0;
   }
   .fancy {
-    line-height: 0.5;
+    line-height: 1;
     text-align: center;
   }
   .fancy span {
@@ -67,8 +67,9 @@ export default {
   }
 }
 
-h1 {
-  font-size: 1.8em;
+h3 {
+  font-size: 1.25rem;
   font-weight: 500;
+  margin: 10px;
 }
 </style>
