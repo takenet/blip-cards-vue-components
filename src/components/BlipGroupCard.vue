@@ -24,7 +24,7 @@
         :on-location-error="onLocationError"
         :class="messageClass(message)"
         />
-        <div :class="'group-notification ' + group.position" v-if="group.date">
+        <div :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
           {{ group.date }}
         </div>
       </div>
@@ -48,6 +48,10 @@ export default {
     compareMessages: {
       type: Function,
       default: (msg1, msg2) => msg1.position === msg2.position
+    },
+    showNotification: {
+      type: Function,
+      default: (msg1) => true
     },
     messageClass: {
       type: Function,
@@ -90,7 +94,8 @@ export default {
         msgs: [this.documents[0]],
         position: this.documents[0].position,
         photo: this.documents[0].photo,
-        date: this.documents[0].date
+        date: this.documents[0].date,
+        hasNotification: this.showNotification(this.documents[0])
       }
       for (let i = 1; i < this.documents.length; i++) {
         const message = this.documents[i]
@@ -103,7 +108,8 @@ export default {
             msgs: [message],
             position: message.position,
             photo: message.photo,
-            date: message.date
+            date: message.date,
+            hasNotification: this.showNotification(message)
           }
         }
       }
