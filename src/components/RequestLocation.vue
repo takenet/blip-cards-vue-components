@@ -25,12 +25,10 @@
     </div>
 
     <div class="flex" v-if="date" :class="'notification ' + position">
-      <img v-if="status === 'accepted'" :src="checkSentSvg"/>
-      <img v-else-if="status === 'received'" :src="doubleCheckReceivedSvg"/>
-      <img v-else-if="status === 'consumed'" :src="doubleCheckReadSvg"/>
-      <div
-          class="failure"
-          v-else-if="this.status === 'failed'">
+      <img v-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
+      <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
+      <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
+      <div class="failure" v-else-if="this.status === 'failed' && this.position === 'right'">
           Falha ao enviar a mensagem.
       </div>
       {{ date }}

@@ -29,6 +29,17 @@
       <br>
       <input type="checkbox" value="false" v-model="group" > Group Messages
 
+      <div>
+        <h1>Status notification:</h1>
+        <form>
+          <input type="radio" name="status" v-model="msgStatus" value="accepted" checked> Accepted <br>
+          <input type="radio" name="status" v-model="msgStatus" value="received"> Received <br>
+          <input type="radio" name="status" v-model="msgStatus" value="consumed"> Consumed <br>
+          <input type="radio" name="status" v-model="msgStatus" value="failed"> Failed <br>
+        </form>
+      </div>
+
+
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
         <button class="button" @click="sendText">ENVIAR Texto</button>
@@ -59,7 +70,7 @@
       <div>
         <blip-group-card v-if="group" :documents="docs" :photo="photoUri" :deletable="true" :on-selected="selected" :hide-options="false" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
-          <blip-card :photo="item.photo" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
+          <blip-card :photo="item.photo" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :status="item.status" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
         </div>
       </div>
       <div style="clear: both"></div>
@@ -86,10 +97,12 @@ export default {
   },
   methods: {
     send: function() {
+      let doc = JSON.parse(this.json)
       this.documents.push({
-        document: JSON.parse(this.json),
+        document: doc,
         date: this.date,
-        position: this.position
+        position: this.position,
+        status: this.msgStatus
       })
     },
     sendText: function() {
@@ -426,6 +439,7 @@ export default {
       date: '08:32 PM',
       photo: false,
       group: false,
+      msgStatus: 'accepted',
       selected: function(d) {},
       save: function(d) {},
       deleted: function(d) {}
