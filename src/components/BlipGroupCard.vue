@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blip-container">
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
       <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
@@ -13,6 +13,7 @@
         :editing="editing"
         :hide-options="hideOptions"
         :on-save="onSave"
+        :status="message.status"
         :on-deleted="onDeleted"
         :on-cancel="onCancel"
         :editable="editable"
@@ -24,8 +25,15 @@
         :on-location-error="onLocationError"
         :class="messageClass(message)"
         />
-        <div :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
-          {{ group.date }}
+
+        <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
+          <img v-if="group.status === 'accepted' && group.position === 'right'" :src="checkSentSvg"/>
+          <img v-else-if="group.status === 'received' && group.position === 'right'" :src="doubleCheckReceivedSvg"/>
+          <img v-else-if="group.status === 'consumed' && group.position === 'right'" :src="doubleCheckReadSvg"/>
+          <div v-else-if="group.status === 'failed' && group.position === 'right'" class="failure">
+            Falha ao enviar a mensagem.
+          </div>
+          <span>{{ group.date }}</span>
         </div>
       </div>
       <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '10px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
@@ -95,12 +103,14 @@ export default {
         position: this.documents[0].position,
         photo: this.documents[0].photo,
         date: this.documents[0].date,
-        hasNotification: this.showNotification(this.documents[0])
+        hasNotification: this.showNotification(this.documents[0]),
+        status: this.documents[0].status
       }
       for (let i = 1; i < this.documents.length; i++) {
         const message = this.documents[i]
         if (this.compareMessages(group.msgs[group.msgs.length - 1], message)) {
           group.msgs.push(message)
+          group.status = message.status
         } else {
           groups.push(group)
 
@@ -109,7 +119,8 @@ export default {
             position: message.position,
             photo: message.photo,
             date: message.date,
-            hasNotification: this.showNotification(message)
+            hasNotification: this.showNotification(message),
+            status: message.status
           }
         }
       }

@@ -20,7 +20,13 @@
       </span>
       <span v-else v-html="this.textLink"></span>
     </div>
-    <div :class="'notification ' + position" v-if="date">
+    <div class="flex" :class="'notification ' + position" v-if="date">
+      <img v-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
+      <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
+      <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
+      <div v-else-if="this.status === 'failed' && this.position === 'right'" class="failure" >
+          Falha ao enviar a mensagem.
+        </div>
       {{ date }}
     </div>
   </div>
@@ -61,6 +67,10 @@ export default {
   props: {
     onOpenLink: {
       type: Function
+    },
+    status: {
+      type: String,
+      default: ''
     },
     initEditing: {
       type: Boolean,

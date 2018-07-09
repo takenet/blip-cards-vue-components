@@ -22,8 +22,14 @@
         </div>
       </div>
 
-      <div :class="'notification ' + position" v-if="date">
-        {{ date }}
+      <div class="flex" :class="'notification ' + position" v-if="date">
+        <img v-if="this.status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
+        <img v-else-if="this.status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
+        <img v-else-if="this.status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
+        <div v-else-if="this.status === 'failed' && this.position === 'right'" class="failure">
+          Falha ao enviar a mensagem.
+        </div>
+        <div>{{ date }}</div>
       </div>
     </div>
   </div>
@@ -57,6 +63,10 @@ export default {
     document: {
       type: String,
       required: true
+    },
+    status: {
+      type: String,
+      default: ''
     },
     length: {
       type: Number,

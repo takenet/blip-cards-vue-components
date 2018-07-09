@@ -24,7 +24,13 @@
         <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
       </div>
 
-      <div :class="'notification ' + position" v-if="date">
+      <div class="flex" :class="'notification ' + position" v-if="date">
+        <img v-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
+        <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
+        <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
+        <div class="failure" v-else-if="this.status === 'failed' && this.position === 'right'">
+          Falha ao enviar a mensagem.
+        </div>
         {{ date }}
       </div>
     </div>
@@ -63,6 +69,10 @@ export default {
     length: {
       type: Number,
       default: 532
+    },
+    status: {
+      type: String,
+      default: ''
     },
     initWith: {
       type: Number,
@@ -224,9 +234,7 @@ export default {
       } else {
         let margin = this.elementsWidth === this.width ? -10 : 10
         const data =
-          'translate3d(' +
-          (((this.elementsWidth + 10) * (n - 1) - margin) * -1 + 10) +
-          'px, 0px, 0px)'
+          `translate3d(${10 - ((this.elementsWidth + 10) * (n - 1) - margin)}px, 0px, 0px)`
         trackElement.setAttribute('style', `transform: ${data}; -webkit-transform: ${data};`)
       }
     }
@@ -283,7 +291,7 @@ export default {
     }
 
     .slide-item {
-      float: left;      
+      float: left;
       min-height: 1px;
       margin-right: 10px;
       height: calc(100% - 35px);
@@ -304,7 +312,7 @@ export default {
     padding: 8px 16px;
     opacity: 0.8;
     color: $vue-light-blip;
-    font-weight: bold;    
+    font-weight: bold;
     font-size: 18px;
     transition: 0.6s ease;
     border-radius: 5px 0 0 5px;
