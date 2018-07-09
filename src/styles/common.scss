@@ -3,6 +3,16 @@
 @import 'utils';
 @import 'simple-scrollbar';
 
+.flex {
+  display: flex;
+}
+
+.failure {
+  color: $vue-warning;
+  font-size: 10px;
+  margin-right: 5px;
+}
+
 .blip-container {
   margin-bottom: 10px;
   width: 100%;

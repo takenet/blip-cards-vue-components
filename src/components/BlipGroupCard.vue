@@ -137,10 +137,6 @@ export default {
 $soft-round: 2px;
 $hard-round: 13px;
 
-.flex {
-  display: flex;
-}
-
 .blip-message-group {
   position: relative;
 

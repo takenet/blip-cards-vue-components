@@ -245,16 +245,6 @@ export default {
 <style lang="scss">
 @import '../styles/variables.scss';
 
-.flex {
-  display: flex;
-}
-
-.failure {
-  color: $vue-warning;
-  font-size: 10px;
-  margin-right: 5px;
-}
-
 .collection-editable {
   height: 100%;
   border: 1px dashed $vue-time;

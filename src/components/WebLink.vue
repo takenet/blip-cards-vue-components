@@ -161,15 +161,6 @@ export default {
 
 <style lang="scss">
 @import '../styles/variables.scss';
-.flex {
-  display: flex;
-}
-
-.failure {
-  color: $vue-warning;
-  font-size: 10px;
-  margin-right: 5px;
-}
 
 .web-link .bubble {
   &.right .text-wrapper:after {

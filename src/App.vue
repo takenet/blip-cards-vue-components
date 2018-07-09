@@ -97,7 +97,7 @@ export default {
   },
   methods: {
     send: function() {
-      let doc = JSON.parse(this.json)
+      const doc = JSON.parse(this.json)
       this.documents.push({
         document: doc,
         date: this.date,
