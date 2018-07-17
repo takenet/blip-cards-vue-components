@@ -327,8 +327,11 @@ export default {
 
   /* Position the "next button" to the right */
   .next {
-    right: 18px;
+    right: 0px;
     border-radius: 3px 0 0 3px;
+    @media screen and (max-width: 480px) {
+      right: 18px;
+    }
   }
 
   /* On hover, add a black background color with a little bit see-through */

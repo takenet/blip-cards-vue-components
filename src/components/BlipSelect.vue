@@ -271,7 +271,17 @@ export default {
           .width.toString()
           .replace('px', '')
       )
-      this.endOfSlider = sliderWidth * this.slideIndex > itemListWidth
+      console.log(
+        'slider: ',
+        sliderWidth,
+        'lista: ',
+        itemListWidth,
+        'pagina: ',
+        this.slideIndex
+      )
+      this.endOfSlider =
+        sliderWidth + 0.5 * sliderWidth * (this.slideIndex - 1) - 20 >
+        itemListWidth
     },
     showSlides: function(n) {
       var element = this.$el
@@ -475,7 +485,7 @@ export default {
   .next {
     cursor: pointer;
     position: absolute;
-    top: 58%;
+    top: 57%;
     width: auto;
     padding: 8px 16px;
     opacity: 0.5;
@@ -495,8 +505,11 @@ export default {
 
   /* Position the "next button" to the right */
   .next {
-    right: 18px;
+    right: 0px;
     border-radius: 3px 0 0 3px;
+    @media screen and (max-width: 480px) {
+      right: 18px;
+    }
   }
 
   /* On hover, add a black background color with a little bit see-through */
@@ -522,11 +535,10 @@ export default {
   box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 19px;
   padding: 10px 16px;
-  margin: 2px;
+  margin: 4px;
   color: #0cc8cc;
   font-size: 16px;
   font-weight: 500;
-  min-width: 70px;
 
   span {
     line-height: 1;
