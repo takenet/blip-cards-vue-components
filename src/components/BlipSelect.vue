@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="blip-container select">
+  <div v-if="!isEditing" @show="checkForEndOfSlider" class="blip-container select">
    <div v-if="document.scope === 'immediate'">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
@@ -23,7 +23,7 @@
         {{ date }}
       </div>
       <transition name="fade">
-        <div :class="'slideshow-container ' + position" :id="id">
+        <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler">
         <div class="slideshow-list">
           <div class="slideshow-track options">
             <ul class="item-list">
@@ -177,6 +177,16 @@ export default {
       endOfSlider: undefined
     }
   },
+  updated: function() {
+    this.$nextTick(function() {
+      this.checkForEndOfSlider()
+    })
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      this.checkForEndOfSlider()
+    })
+  },
   computed: {
     computedText: function() {
       return linkify(this.document.text)
@@ -227,17 +237,53 @@ export default {
 
         return opts
       })
-      this.showSlides(1)
     },
     plusSlides: function(n) {
       this.showSlides((this.slideIndex += n))
+      this.checkForEndOfSlider()
+    },
+    swipeLeftHandler: function() {
+      if (this.showNext) {
+        this.plusSlides(1)
+      }
+    },
+    swipeRightHandler: function() {
+      if (this.showPrev) {
+        this.plusSlides(-1)
+      }
+    },
+    checkForEndOfSlider: function() {
+      var element = this.$el
+      let slider = element.querySelector('.slideshow-list')
+      let itemList = element.querySelector('.item-list')
+      if (!element || !slider || !itemList) {
+        return
+      }
+      let sliderWidth = parseInt(
+        window
+          .getComputedStyle(slider)
+          .width.toString()
+          .replace('px', '')
+      )
+      let itemListWidth = parseInt(
+        window
+          .getComputedStyle(itemList)
+          .width.toString()
+          .replace('px', '')
+      )
+      this.endOfSlider = sliderWidth * this.slideIndex > itemListWidth
     },
     showSlides: function(n) {
       var element = this.$el
+      if (!element) {
+        return
+      }
       let trackElement = element.querySelector('.slideshow-track')
-
       if (n === 1) {
-        trackElement.setAttribute('style', 'transform: translate3d(0px, 0px, 0px); -webkit-transform: translate3d(0px, 0px, 0px);')
+        trackElement.setAttribute(
+          'style',
+          'transform: translate3d(0px, 0px, 0px); -webkit-transform: translate3d(0px, 0px, 0px);'
+        )
       } else {
         let slider = element.querySelector('.slideshow-list')
         let sliderWidth = parseInt(
@@ -246,10 +292,12 @@ export default {
             .width.toString()
             .replace('px', '')
         )
-        let translation = (-0.5 * sliderWidth * (n - 1))
-        const data =
-          `translate3d(${translation}px, 0px, 0px)`
-        trackElement.setAttribute('style', `transform: ${data}; -webkit-transform: ${data};`)
+        let translation = -0.5 * sliderWidth * (n - 1)
+        const data = `translate3d(${translation}px, 0px, 0px)`
+        trackElement.setAttribute(
+          'style',
+          `transform: ${data}; -webkit-transform: ${data};`
+        )
       }
     },
     setTab: function(name) {
@@ -392,10 +440,10 @@ export default {
   padding: 10px;
 }
 
-.select{
+.select {
   a {
-      text-decoration: none;
-    }
+    text-decoration: none;
+  }
   .slideshow-container {
     margin: auto;
     clear: both;
@@ -430,7 +478,7 @@ export default {
     top: 58%;
     width: auto;
     padding: 8px 16px;
-    opacity: 0.8;
+    opacity: 0.5;
     color: $vue-light-blip;
     font-weight: bold;
     font-size: 18px;
@@ -452,8 +500,8 @@ export default {
   }
 
   /* On hover, add a black background color with a little bit see-through */
-  .prev:hover,
-  .next:hover {
+  .slideshow-container:hover .prev,
+  .slideshow-container:hover .next {
     opacity: 1;
   }
 
