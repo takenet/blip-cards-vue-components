@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="blip-container select">
+  <div v-if="!isEditing" @show="checkForEndOfSlider" class="blip-container select">
    <div v-if="document.scope === 'immediate'">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
@@ -22,15 +22,22 @@
         </div>
         {{ date }}
       </div>
-
       <transition name="fade">
-        <div class="options" v-if="!hide">
-          <ul>
+        <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler">
+        <div class="slideshow-list">
+          <div class="slideshow-track options">
+            <ul class="item-list">
             <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
               <div v-html="item.previewText"></div>
             </li>
           </ul>
+          </div>
         </div>
+
+        <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
+        <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
+      </div>
+
       </transition>
     </div>
 
@@ -135,17 +142,14 @@
 </template>
 
 <script>
-
 import { default as base } from '../mixins/baseComponent.js'
-import { linkify } from '../utils/misc'
+import { linkify, guid } from '../utils/misc'
 import debounce from 'lodash/debounce'
 const optionSize = 34
 
 export default {
   name: 'blip-select',
-  mixins: [
-    base
-  ],
+  mixins: [base],
   props: {
     hideOptions: {
       type: Boolean,
@@ -159,7 +163,7 @@ export default {
       type: Function
     }
   },
-  data: function () {
+  data: function() {
     return {
       addOption: undefined,
       showPayload: undefined,
@@ -167,12 +171,31 @@ export default {
       selectedOption: undefined,
       hide: undefined,
       text: undefined,
-      options: undefined
+      options: undefined,
+      id: undefined,
+      slideIndex: undefined,
+      endOfSlider: undefined
     }
   },
+  updated: function() {
+    this.$nextTick(function() {
+      this.checkForEndOfSlider()
+    })
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      this.checkForEndOfSlider()
+    })
+  },
   computed: {
-    computedText: function () {
+    computedText: function() {
       return linkify(this.document.text)
+    },
+    showPrev: function() {
+      return this.slideIndex !== 1
+    },
+    showNext: function() {
+      return !this.endOfSlider
     }
   },
   watch: {
@@ -182,13 +205,16 @@ export default {
   },
   methods: {
     init: function() {
+      this.id = guid()
+      this.slideIndex = 1
+      this.endOfSlider = false
       this.addOption = false
       this.showPayload = false
       this.headerTab = 'plainText'
       this.selectedOption = { value: {} }
       this.hide = this.hideOptions
       this.text = this.document.text
-      this.options = this.document.options.map(function (x) {
+      this.options = this.document.options.map(function(x) {
         let value
         if (x.value) {
           if (x.type && x.type.includes('json')) {
@@ -202,27 +228,104 @@ export default {
 
         let opts = {
           ...x,
-          previewText: x.text.length > optionSize ? x.text.substring(0, optionSize) + '...' : x.text,
+          previewText:
+            x.text.length > optionSize
+              ? x.text.substring(0, optionSize) + '...'
+              : x.text,
           value
         }
 
         return opts
       })
     },
-    setTab: function (name) {
+    plusSlides: function(n) {
+      this.showSlides((this.slideIndex += n))
+      this.checkForEndOfSlider()
+    },
+    swipeLeftHandler: function() {
+      if (this.showNext) {
+        this.plusSlides(1)
+      }
+    },
+    swipeRightHandler: function() {
+      if (this.showPrev) {
+        this.plusSlides(-1)
+      }
+    },
+    checkForEndOfSlider: function() {
+      var element = this.$el
+      let slider = element.querySelector('.slideshow-list')
+      let itemList = element.querySelector('.item-list')
+      if (!element || !slider || !itemList) {
+        return
+      }
+      let sliderWidth = parseInt(
+        window
+          .getComputedStyle(slider)
+          .width.toString()
+          .replace('px', '')
+      )
+      let itemListWidth = parseInt(
+        window
+          .getComputedStyle(itemList)
+          .width.toString()
+          .replace('px', '')
+      )
+      console.log(
+        'slider: ',
+        sliderWidth,
+        'lista: ',
+        itemListWidth,
+        'pagina: ',
+        this.slideIndex
+      )
+      this.endOfSlider =
+        sliderWidth + 0.5 * sliderWidth * (this.slideIndex - 1) - 20 >
+        itemListWidth
+    },
+    showSlides: function(n) {
+      var element = this.$el
+      if (!element) {
+        return
+      }
+      let trackElement = element.querySelector('.slideshow-track')
+      if (n === 1) {
+        trackElement.setAttribute(
+          'style',
+          'transform: translate3d(0px, 0px, 0px); -webkit-transform: translate3d(0px, 0px, 0px);'
+        )
+      } else {
+        let slider = element.querySelector('.slideshow-list')
+        let sliderWidth = parseInt(
+          window
+            .getComputedStyle(slider)
+            .width.toString()
+            .replace('px', '')
+        )
+        let translation = -0.5 * sliderWidth * (n - 1)
+        const data = `translate3d(${translation}px, 0px, 0px)`
+        trackElement.setAttribute(
+          'style',
+          `transform: ${data}; -webkit-transform: ${data};`
+        )
+      }
+    },
+    setTab: function(name) {
       this.headerTab = name
     },
-    deleteOption: function (index) {
+    deleteOption: function(index) {
       this.options.splice(index, 1)
     },
-    cancelOption: function (item) {
+    cancelOption: function(item) {
       this.errors.clear()
       this.$validator.clean()
       this.selectedOption = {}
       this.addOption = false
     },
-    saveOption: function ($event) {
-      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+    saveOption: function($event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) {
+        return
+      }
 
       if ($event) {
         $event.stopPropagation()
@@ -231,7 +334,10 @@ export default {
       }
 
       this.addOption = false
-      this.selectedOption.previewText = this.selectedOption.text.length > optionSize ? this.selectedOption.text.substring(0, optionSize) + '...' : this.selectedOption.text
+      this.selectedOption.previewText =
+        this.selectedOption.text.length > optionSize
+          ? this.selectedOption.text.substring(0, optionSize) + '...'
+          : this.selectedOption.text
       if (!this.showPayload) {
         this.selectedOption.value = this.selectedOption.type = null
       }
@@ -247,7 +353,7 @@ export default {
 
       this.addOption = false
     },
-    editOption: function (item, index, $event) {
+    editOption: function(item, index, $event) {
       this.addOption = true
 
       this.selectedOption = { ...item }
@@ -260,8 +366,10 @@ export default {
 
       this.selectedOption.index = index
     },
-    selectSave: function (text, $event) {
-      if (this.errors.any() || ($event && $event.shiftKey)) { return }
+    selectSave: function(text, $event) {
+      if (this.errors.any() || ($event && $event.shiftKey)) {
+        return
+      }
 
       if ($event) {
         $event.stopPropagation()
@@ -277,7 +385,7 @@ export default {
         this.save({
           ...this.document,
           text: this.text,
-          options: this.options.map(function (x) {
+          options: this.options.map(function(x) {
             let value
             if (x.value) {
               if (x.type.includes('json')) {
@@ -298,7 +406,7 @@ export default {
       })
     },
     select: debounce(
-      function (item) {
+      function(item) {
         if (!this.editable) {
           this.hide = true
         }
@@ -307,7 +415,10 @@ export default {
           if (item.value) {
             this.onSelected(item.text, {
               type: item.type,
-              content: (item.type.indexOf('json') !== -1) ? JSON.parse(item.value) : item.value
+              content:
+                item.type.indexOf('json') !== -1
+                  ? JSON.parse(item.value)
+                  : item.value
             })
           } else {
             this.onSelected(item.text, {
@@ -325,48 +436,125 @@ export default {
 </script>
 
 <style lang="scss">
-   @import '../styles/variables.scss';
+@import '../styles/variables.scss';
 
-    .select .bubble {
-      padding: $bubble-padding;
-      min-width: auto;
-    }
+.select .bubble {
+  padding: $bubble-padding;
+  min-width: auto;
+}
 
-    .select .options ul {
-      list-style-type: none;
-      clear: both;
+.select .options ul {
+  list-style-type: none;
+  clear: both;
+  margin: 0;
+  padding: 10px;
+}
+
+.select {
+  a {
+    text-decoration: none;
+  }
+  .slideshow-container {
+    margin: auto;
+    clear: both;
+
+    .slideshow-list {
+      overflow: hidden;
       margin: 0;
-      padding: 10px;
+      padding: 0px 30px;
     }
 
-   .select .options li {
-     cursor: pointer;
-     display: inline-flex;
-     align-items: end;
-     background-color: #DAF2F4;
-     border: 1px solid #0CC8CC;
-     box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, .1);
-     border-radius: 19px;
-     padding: 10px 16px;
-     margin: 2px;
-     color: #0CC8CC;
-     font-size: 16px;
-     font-weight: 500;
-     min-width: 70px;
+    .slideshow-track {
+      transition: all 0.8s ease;
+      opacity: 1;
+      width: 30000px;
+      transform: translate3d(0px, 0px, 0px);
+      display: flex;
+      top: 0;
+      left: 0;
+    }
 
-     span { line-height: 1; }
-
-     .remove-option {
-       margin-left: 8px;
-
-       img {
-         width: 12px; height: 14px;
-       }
-     }
-   }
-
-  .select .fixed-options li:last-child {
-    padding-bottom: 0px;
+    .slide-item {
+      float: left;
+      min-height: 1px;
+      margin-right: 10px;
+      height: calc(100% - 35px);
+    }
+  }
+  .prev,
+  .next {
+    cursor: pointer;
+    position: absolute;
+    top: 57%;
+    width: auto;
+    padding: 8px 16px;
+    opacity: 0.8;
+    color: $vue-light-blip;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 5px 0 0 5px;
+    box-shadow: -2px 2px 20px 0 rgba(51, 60, 74, 0.4);
+    background-color: #ffffff;
   }
 
+  .prev {
+    left: 0;
+    border-radius: 0 5px 5px 0;
+  }
+
+  /* Position the "next button" to the right */
+  .next {
+    right: 0px;
+    border-radius: 3px 0 0 3px;
+    @media screen and (max-width: 480px) {
+      right: 18px;
+    }
+  }
+
+  /* On hover, add a black background color with a little bit see-through */
+  .slideshow-container:hover .prev,
+  .slideshow-container:hover .next {
+    opacity: 1;
+  }
+
+  .fade {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+  }
+}
+
+.select .options li {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: end;
+  background-color: #daf2f4;
+  border: 1px solid #0cc8cc;
+  box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 19px;
+  padding: 10px 16px;
+  margin: 4px;
+  color: #0cc8cc;
+  font-size: 16px;
+  font-weight: 500;
+
+  span {
+    line-height: 1;
+  }
+
+  .remove-option {
+    margin-left: 8px;
+
+    img {
+      width: 12px;
+      height: 14px;
+    }
+  }
+}
+
+.select .fixed-options li:last-child {
+  padding-bottom: 0px;
+}
 </style>
