@@ -488,7 +488,7 @@ export default {
     top: 57%;
     width: auto;
     padding: 8px 16px;
-    opacity: 0.5;
+    opacity: 0.8;
     color: $vue-light-blip;
     font-weight: bold;
     font-size: 18px;
