@@ -362,7 +362,7 @@ export default {
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
       }
-
+      this.slideIndex = 1
       if ($event) {
         $event.stopPropagation()
         $event.preventDefault()
