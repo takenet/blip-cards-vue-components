@@ -271,14 +271,6 @@ export default {
           .width.toString()
           .replace('px', '')
       )
-      console.log(
-        'slider: ',
-        sliderWidth,
-        'lista: ',
-        itemListWidth,
-        'pagina: ',
-        this.slideIndex
-      )
       this.endOfSlider =
         sliderWidth + 0.5 * sliderWidth * (this.slideIndex - 1) - 20 >
         itemListWidth
