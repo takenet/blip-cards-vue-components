@@ -500,7 +500,7 @@ export default {
     right: 0px;
     border-radius: 3px 0 0 3px;
     @media screen and (max-width: 480px) {
-      right: 18px;
+      right: 0;
     }
   }
 
