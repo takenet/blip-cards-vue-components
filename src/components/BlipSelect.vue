@@ -453,7 +453,7 @@ export default {
     .slideshow-list {
       overflow: hidden;
       margin: 0;
-      padding: 0px 30px;
+      padding: 0px;
     }
 
     .slideshow-track {
