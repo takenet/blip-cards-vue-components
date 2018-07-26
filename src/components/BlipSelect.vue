@@ -34,8 +34,8 @@
           </div>
         </div>
 
-        <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
-        <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
+        <a class="prev" v-if="showPrev" @dblclick="$event.stopPropagation()" @click="plusSlides(-1)">&#10094;</a>
+        <a class="next" v-if="showNext" @dblclick="$event.stopPropagation()" @click="plusSlides(1)">&#10095;</a>
       </div>
 
       </transition>
@@ -86,9 +86,9 @@
 
       <div class="text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
         <ul>
-          <li v-for="(item, index) in options" v-bind:key="index">
-            <span @click="editOption(item, index, $event)" v-html="item.text"></span>
-            <span @click="deleteOption(index)" class="remove-option"><img :src="closeBlueSvg"></span>
+          <li v-for="(item, index) in options" v-bind:key="index" @click="editOption(item, index, $event)">
+            <span v-html="item.text"></span>
+            <span @click="deleteOption(index, $event)" class="remove-option"><img :src="closeBlueSvg"></span>
           </li>
           <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
             <span>Add option</span>
@@ -305,7 +305,10 @@ export default {
     setTab: function(name) {
       this.headerTab = name
     },
-    deleteOption: function(index) {
+    deleteOption: function(index, $event) {
+      if ($event) {
+        $event.stopPropagation()
+      }
       this.options.splice(index, 1)
     },
     cancelOption: function(item) {
@@ -315,6 +318,7 @@ export default {
       this.addOption = false
     },
     saveOption: function($event) {
+      this.$validator.validateAll()
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
       }
