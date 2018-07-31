@@ -94,6 +94,7 @@
             <span>Add option</span>
           </li>
         </ul>
+        <span v-show="hasDeleteOptionError" class="remove-option-error">Requires at least 1 option</span>
         <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
           <span>Add Button</span>
         </div>
@@ -113,7 +114,7 @@
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
 
-        <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">Set Payload</label>
+        <input id="showPayload" type="checkbox"  v-model="showPayload"><label for="showPayload">Set Payload</label>
         <div class="line"></div>
 
         <div v-show="showPayload">
@@ -174,7 +175,8 @@ export default {
       options: undefined,
       id: undefined,
       slideIndex: undefined,
-      endOfSlider: undefined
+      endOfSlider: undefined,
+      hasDeleteOptionError: false
     }
   },
   updated: function() {
@@ -309,6 +311,10 @@ export default {
       if ($event) {
         $event.stopPropagation()
       }
+      if (this.options.length < 2) {
+        this.hasDeleteOptionError = true
+        return
+      }
       this.options.splice(index, 1)
     },
     cancelOption: function(item) {
@@ -350,6 +356,7 @@ export default {
       this.addOption = false
     },
     editOption: function(item, index, $event) {
+      this.hasDeleteOptionError = false
       this.addOption = true
 
       this.selectedOption = { ...item }
@@ -552,5 +559,15 @@ export default {
 
 .select .fixed-options li:last-child {
   padding-bottom: 0px;
+}
+
+.remove-option-error {
+  color: $vue-warning;
+  size: 5px;
+  font-size: 12px;
+  text-align: left;
+  display: flex;
+  padding-left: 15px;
+  margin-top: -10px;
 }
 </style>
