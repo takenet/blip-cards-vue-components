@@ -12,7 +12,7 @@
               <document-select :on-cancel="cancel" :editing="newDocumentSelect.editing" :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink"
                 :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :on-deleted="deleteItem" />
             </div>
-            <div v-if="editable" @click="newDocumentSelect.editing = true">
+            <div v-if="editable" @click="openNewDocument()">
               <div :class="'collection-editable slide-item'" :style="styleObject">
                 <img :src="plusSvg" style="position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; margin-top: -25px; margin-left: -25px" />
               </div>
@@ -122,8 +122,17 @@ export default {
   methods: {
     editCard: function(item) {
       if (this.editable) {
+        const index = this.items.findIndex(i => i.id === item.id)
+        if (index !== -1 && this.slideIndex !== index + 1) {
+          const nSlides = -1 * (this.slideIndex - (index + 1))
+          this.plusSlides(nSlides)
+        }
         item.editing = true
       }
+    },
+    openNewDocument: function() {
+      this.newDocumentSelect.editing = true
+      this.slideIndex === this.items.length && this.plusSlides(1)
     },
     mounted: function() {
       if (
@@ -187,7 +196,7 @@ export default {
       }
     },
     deleteItem: function(document) {
-      this.items = this.items.filter((x) => x !== document)
+      this.items = this.items.filter(x => x !== document)
 
       if (this.items.length === 0) {
         this.trash({
@@ -212,7 +221,7 @@ export default {
       })
     },
     collectionSave: function(document) {
-      let items = this.items.filter((x) => x.id !== document.id)
+      let items = this.items.filter(x => x.id !== document.id)
       items.splice(document.id, 0, document)
       document.editing = false
 
@@ -230,12 +239,18 @@ export default {
       let trackElement = element.querySelector('.slideshow-track')
 
       if (n === 1) {
-        trackElement.setAttribute('style', 'transform: translate3d(0px, 0px, 0px); -webkit-transform: translate3d(0px, 0px, 0px);')
+        trackElement.setAttribute(
+          'style',
+          'transform: translate3d(0px, 0px, 0px); -webkit-transform: translate3d(0px, 0px, 0px);'
+        )
       } else {
         let margin = this.elementsWidth === this.width ? -10 : 10
-        const data =
-          `translate3d(${10 - ((this.elementsWidth + 10) * (n - 1) - margin)}px, 0px, 0px)`
-        trackElement.setAttribute('style', `transform: ${data}; -webkit-transform: ${data};`)
+        const data = `translate3d(${10 -
+          ((this.elementsWidth + 10) * (n - 1) - margin)}px, 0px, 0px)`
+        trackElement.setAttribute(
+          'style',
+          `transform: ${data}; -webkit-transform: ${data};`
+        )
       }
     }
   }
