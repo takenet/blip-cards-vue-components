@@ -23,14 +23,14 @@
         {{ date }}
       </div>
       <transition name="fade">
-        <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler">
+      <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="!hide">
         <div class="slideshow-list">
           <div class="slideshow-track options">
             <ul class="item-list">
-            <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
-              <div v-html="item.previewText"></div>
-            </li>
-          </ul>
+              <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
+                <div v-html="item.previewText"></div>
+              </li>
+            </ul>
           </div>
         </div>
 
