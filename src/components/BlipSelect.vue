@@ -73,7 +73,7 @@
 
   <div class="blip-container select" v-else-if="!addOption">
     <form class="bubble left" novalidate v-on:submit.prevent>
-      <button class="btn saveIco closeIco" @click="cancel()" >
+      <button class="btn saveIco closeIco" @click="selectCancel()" >
         <img :src="closeSvg" />
       </button>
       <button class="btn saveIco" :class="{'is-disabled': errors.any() }" @click="selectSave(text)">
@@ -370,6 +370,7 @@ export default {
       this.selectedOption.index = index
     },
     selectSave: function(text, $event) {
+      this.hasDeleteOptionError = false
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
       }
@@ -407,6 +408,10 @@ export default {
           })
         })
       })
+    },
+    selectCancel: function() {
+      this.hasDeleteOptionError = false
+      this.cancel()
     },
     select: debounce(
       function(item) {
