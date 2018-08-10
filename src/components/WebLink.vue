@@ -31,7 +31,7 @@
     </div>
   </div>
   <div v-else class="blip-container web-link">
-    <form class="bubble left" novalidate v-on:submit.prevent>
+    <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <button class="btn saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </button>

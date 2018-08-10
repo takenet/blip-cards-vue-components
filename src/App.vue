@@ -8,8 +8,10 @@
 
       <div>
         <h1>Position:</h1>
-        <input type="radio" value="left" v-model="position" > LEFT
-        <input type="radio" value="right" v-model="position" > RIGHT
+        <input type="radio" value="left" v-model="position" > LEFT <br>
+        <input type="radio" value="middle" v-model="position" > MIDDLE <br>
+        <input type="radio" value="right" v-model="position" > RIGHT <br>
+
       </div>
 
       <div>

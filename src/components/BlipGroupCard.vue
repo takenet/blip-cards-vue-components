@@ -166,6 +166,15 @@ $hard-round: 13px;
       border-radius: $soft-round $hard-round $hard-round $soft-round;
     }
 
+    //Bubble Middle
+    > :first-child .bubble.middle {
+      border-radius: $hard-round $hard-round $soft-round $soft-round;
+    }
+
+    > :not(:first-child) .bubble.middle {
+      border-radius: $soft-round $soft-round $soft-round $soft-round;
+    }
+
     // Date
     .notification {
       display: none !important;

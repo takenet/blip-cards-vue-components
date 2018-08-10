@@ -96,7 +96,7 @@ export default {
 
 .media-link .application {
   .bubble {
-    &.left {
+    &.left, &.middle {
       .description-wrapper {
         color: $vue-gray;
       }

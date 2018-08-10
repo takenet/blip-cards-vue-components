@@ -18,6 +18,11 @@
   width: 100%;
   font-family: 'Nunito', sans-serif;
   position: relative;
+  text-align: center;
+
+  > div:not(.bubble) {
+    text-align: center;
+  }
 }
 
 .blip-card-container {
@@ -41,34 +46,47 @@
       font-family: 'Nunito', sans-serif;
       position: relative;
       margin-bottom: 5px;
-      width: auto;
       height: 100%;
-      max-width: 90%;
       min-width: 160px;
       font-size: 16px;
       font-weight: 300;
       line-height: 20px;
       white-space: pre-line;
-  }
 
-  .bubble.left {
-      border-radius: 13px 13px 13px 2px;
-      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
-      background-color: $vue-white;
-      color: $vue-gray;
-      float: left;
+      &.left {
+        border-radius: 13px 13px 13px 2px;
+        float: left;
+      }
+
+      &.middle {
+        border-radius: 13px 13px 13px 13px;
+        margin-left: auto;
+        margin-right: auto;
+        display: inline-block;
+      }
+
+      &.right {
+        border-radius: 13px 2px 13px 13px;
+        box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+        background-color: $vue-light-blip;
+        color: $vue-white;
+        float: right;
+      }
+
+      &.middle, &.left {
+        box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+        background-color: $vue-white;
+        color: $vue-gray;
+      }
+
+      &.right, &.left {
+        width: auto;
+        max-width: 90%;
+      }
   }
 
   .ratio {
     border-radius: 0
-  }
-
-  .bubble.right {
-      border-radius: 13px 2px 13px 13px;
-      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
-      background-color: $vue-light-blip;
-      color: $vue-white;
-      float: right;
   }
 
   .notification {
@@ -80,6 +98,10 @@
 
   .notification.left {
     float: left;
+  }
+
+  .notification.middle {
+    text-align: center;
   }
 
   .notification.right {

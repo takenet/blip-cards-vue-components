@@ -364,7 +364,7 @@ export default {
     padding: 0;
     color: $vue-london;
   }
-  .left {
+  .left, .middle {
     .progress .pin {
       background-color: $vue-neon-blip;
     }

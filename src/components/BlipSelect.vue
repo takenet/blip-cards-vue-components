@@ -72,7 +72,7 @@
   </div>
 
   <div class="blip-container select" v-else-if="!addOption">
-    <form class="bubble left" novalidate v-on:submit.prevent>
+    <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <button class="btn saveIco closeIco" @click="selectCancel()" >
         <img :src="closeSvg" />
       </button>
@@ -103,7 +103,7 @@
   </div>
 
   <div class="blip-container" v-else>
-    <form novalidate v-on:submit.prevent class="bubble left">
+    <form novalidate v-on:submit.prevent :class="'bubble ' + position">
       <div class="tabs">
         <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
       </div>
