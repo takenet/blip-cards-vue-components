@@ -15,8 +15,7 @@
           <strong class="hide-overflow" v-if="document.header.value.title" v-html="document.header.value.title"></strong>
           <span class="hide-overflow" v-if="previewContent && !showContent" v-html="previewContent"></span>
           <transition name="slide-fade">
-            <div v-if="showContent && hasPreview" v-html="document.header.value.text || document.header.value">
-            </div>
+            <div v-if="showContent && hasPreview" v-html="document.header.value.text || document.header.value"></div>
           </transition>
           <a style="display: block;" v-if="!showContent && hasPreview" @click="showContent = true">Ver mais</a>
         </div>
