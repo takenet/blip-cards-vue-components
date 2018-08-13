@@ -113,13 +113,15 @@
     text-decoration: underline;
   }
 
-  .left a {
+  .left a, .middle a {
     color: $vue-light-blip;
-  }
 
-  .left a:visited {color: $vue-light-blip;}  /* visited link */
-  .left a:hover {color: $vue-light-blip;}  /* mouse over link */
-  .left a:active {color: $vue-light-blip;}  /* selected link */
+    &:visited,
+    &:hover,
+    &:active {
+      color: $vue-light-blip;
+    }
+  }
 
   .right a {
   font-weight: bold;
@@ -182,9 +184,11 @@
     }
   }
 
-  .left .fixed-options li {
-    color: $vue-light-blip;
-    border-top: 0.5px solid #e4e2e2;
+  .left, .middle {
+    .fixed-options li {
+      color: $vue-light-blip;
+      border-top: 0.5px solid #e4e2e2;
+    }
   }
 
   .right .fixed-options li {
