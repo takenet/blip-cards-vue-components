@@ -9,7 +9,7 @@
       </div>
       <div class="header" :id="id" v-if="!isEditing">
         <div :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')" :style="styleObject" @click="(editable ? null : handleImageLink())"></div>
-        
+
         <div class="title" v-if="document.title || document.text">
           <strong v-if="document.title" v-html="document.title"></strong>
           <span v-if="document.text" v-html="document.text"></span>
@@ -37,14 +37,18 @@
             </div>
             <div class="form-check-wrapper">
               <span class="form-check-container">
-                <input type="radio" name="aspect-selector" :id="_uid+'1-1'" class="form-check-input" v-model="aspect" value="1-1"/>
-                <label class="form-check-label" :for="_uid+'1-1'"><span class="radio">1:1</span></label>
-                <div class="check"></div>
+                <label class="form-check-label" :for="_uid+'1-1'">
+                  <input type="radio" name="aspect-selector" :id="_uid+'1-1'" class="form-check-input" v-model="aspect" value="1-1"/>
+                  <span class="radio">1:1</span>
+                  <div class="check"></div>
+                </label>
               </span>
               <span class="form-check-container">
-                <input type="radio" name="aspect-selector" :id="_uid+'2-1'" class="form-check-input" v-model="aspect" value="2-1"/>
-                <label class="form-check-label" :for="_uid+'2-1'"><span class="radio">2:1</span></label>
-                <div class="check"></div>
+                <label class="form-check-label" :for="_uid+'2-1'">
+                  <input type="radio" name="aspect-selector" :id="_uid+'2-1'" class="form-check-input" v-model="aspect" value="2-1"/>
+                  <span class="radio">2:1</span>
+                  <div class="check"></div>
+                </label>
               </span>
             </div>
           </div>
@@ -149,7 +153,7 @@ export default {
             this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
-          'background-image': `url("${this.position === 'left' ? Broken : BrokenWhite}")`,
+          'background-image': `url("${this.position === 'right' ? BrokenWhite : Broken}")`,
           'background-size': '125px',
           opacity: '0.6'
         }
@@ -232,10 +236,11 @@ export default {
     }
 
     label {
-      position: absolute;
+      position: relative;
       z-index: 1;
       cursor: pointer;
     }
+
     .check {
       display: block;
       position: absolute;

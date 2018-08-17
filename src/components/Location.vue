@@ -27,7 +27,7 @@
     </div>
   </div>
   <div v-else class="blip-container location">
-    <form class="editing bubble left" novalidate v-on:submit.prevent>
+    <form :class="'editing bubble ' + position" novalidate v-on:submit.prevent>
       <button class="btn saveIco" @click="locationSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </button>

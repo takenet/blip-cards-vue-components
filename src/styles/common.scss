@@ -18,6 +18,11 @@
   width: 100%;
   font-family: 'Nunito', sans-serif;
   position: relative;
+
+  text-align: center;
+   > div:not(.bubble) {
+    text-align: center;
+  }
 }
 
 .blip-card-container {
@@ -59,6 +64,16 @@
       float: left;
   }
 
+  .bubble.middle {
+    border-radius: 13px 13px 13px 13px;
+    box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+    background-color: $vue-white;
+    color: $vue-gray;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+  }
+
   .ratio {
     border-radius: 0
   }
@@ -98,6 +113,14 @@
   .left a:visited {color: $vue-light-blip;}  /* visited link */
   .left a:hover {color: $vue-light-blip;}  /* mouse over link */
   .left a:active {color: $vue-light-blip;}  /* selected link */
+
+  .middle a {
+    color: $vue-light-blip;
+  }
+
+  .middle a:visited {color: $vue-light-blip;}  /* visited link */
+  .middle a:hover {color: $vue-light-blip;}  /* mouse over link */
+  .middle a:active {color: $vue-light-blip;}  /* selected link */
 
   .right a {
   font-weight: bold;
@@ -160,7 +183,7 @@
     }
   }
 
-  .left .fixed-options li {
+  .left .fixed-options li, .middle .fixed-options li {
     color: $vue-light-blip;
     border-top: 0.5px solid #e4e2e2;
   }

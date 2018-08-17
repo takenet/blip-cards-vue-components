@@ -15,8 +15,7 @@
           <strong class="hide-overflow" v-if="document.header.value.title" v-html="document.header.value.title"></strong>
           <span class="hide-overflow" v-if="previewContent && !showContent" v-html="previewContent"></span>
           <transition name="slide-fade">
-            <div v-if="showContent && hasPreview" v-html="document.header.value.text || document.header.value">
-            </div>
+            <div v-if="showContent && hasPreview" v-html="document.header.value.text || document.header.value"></div>
           </transition>
           <a style="display: block;" v-if="!showContent && hasPreview" @click="showContent = true">Ver mais</a>
         </div>
@@ -43,7 +42,7 @@
   </div>
 
   <div v-else class="blip-container document-select">
-    <form v-if="!showOptionDialog" class="editing bubble left" novalidate v-on:submit.prevent>
+    <form v-if="!showOptionDialog" :class="'editing bubble ' + position" novalidate v-on:submit.prevent>
       <button class="btn saveIco" @click="documentSelectSave()" :class="{'is-disabled': errors.any() }">
         <img :src="approveSvg" />
       </button>
@@ -63,14 +62,18 @@
           </div>
           <div class="form-check-wrapper">
             <span class="form-check-container">
-              <input type="radio" name="aspect-selector" :id="_uid+'1-1'" class="form-check-input" v-model="aspect" value="1-1"/>
-              <label class="form-check-label" :for="_uid+'1-1'"><span class="radio">1:1</span></label>
-              <div class="check"></div>
+              <label class="form-check-label" :for="_uid+'1-1'">
+                <input type="radio" name="aspect-selector" :id="_uid+'1-1'" class="form-check-input" v-model="aspect" value="1-1"/>
+                <span class="radio">1:1</span>
+                <div class="check"></div>
+              </label>
             </span>
             <span class="form-check-container">
-              <input type="radio" name="aspect-selector" :id="_uid+'2-1'" class="form-check-input" v-model="aspect" value="2-1"/>
-              <label class="form-check-label" :for="_uid+'2-1'"><span class="radio">2:1</span></label>
-              <div class="check"></div>
+              <label class="form-check-label" :for="_uid+'2-1'">
+                <input type="radio" name="aspect-selector" :id="_uid+'2-1'" class="form-check-input" v-model="aspect" value="2-1"/>
+                <span class="radio">2:1</span>
+                <div class="check"></div>
+              </label>
             </span>
           </div>
         </div>
@@ -94,7 +97,7 @@
         </div>
       </div>
     </form>
-    <form v-else novalidate v-on:submit.prevent class="editing bubble left">
+    <form v-else novalidate v-on:submit.prevent :class="'editing bubble ' + position">
 
       <div class="tabs">
         <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
@@ -501,6 +504,10 @@ export default {
 
     input[type='radio'] {
       position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
       visibility: hidden;
     }
 
@@ -514,7 +521,7 @@ export default {
     }
 
     label {
-      position: absolute;
+      position: relative;
       z-index: 1;
       cursor: pointer;
     }
