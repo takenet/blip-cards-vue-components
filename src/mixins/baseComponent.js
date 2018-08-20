@@ -97,11 +97,9 @@ var baseComponent = {
         this.onSave(document)
       }
     },
-    editMetadata: function() {
-      console.log(this.onMetadataEdit)
-
+    editMetadata: function(document) {
       if (this.onMetadataEdit) {
-        this.onMetadataEdit()
+        this.onMetadataEdit(document)
       }
     }
   }

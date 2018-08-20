@@ -100,7 +100,7 @@
         </div>
       </div>
 
-      <button class="define-metadata blip-select-metadata" @click="metadataEdit()">
+      <button class="define-metadata blip-select-metadata" @click="editMetadata(document)">
         {{ metadataButtonText }}
       </button>
     </form>
@@ -416,9 +416,6 @@ export default {
     selectCancel: function() {
       this.hasDeleteOptionError = false
       this.cancel()
-    },
-    metadataEdit: function() {
-      this.editMetadata()
     },
     select: debounce(
       function(item) {

@@ -52,7 +52,7 @@
           <option value='selfTall'>SelfTall</option>
         </select>
       </div>
-      <button class="define-metadata blip-weblink-metadata" @click="metadataEdit()">
+      <button class="define-metadata blip-weblink-metadata" @click="editMetadata(document)">
         {{ metadataButtonText }}
       </button>
     </form>
@@ -156,9 +156,6 @@ export default {
         this.text = this.text ? this.text : fetchResult.text
         this.imgPreview = fetchResult.imgPreview
       }
-    },
-    metadataEdit: function() {
-      this.editMetadata()
     }
   }
 }

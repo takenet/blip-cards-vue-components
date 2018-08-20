@@ -96,7 +96,7 @@
           <span>Add Button</span>
         </div>
       </div>
-      <button class="define-metadata blip-document-select-metadata" @click="metadataEdit()">
+      <button class="define-metadata blip-document-select-metadata" @click="editMetadata(document)">
         {{ metadataButtonText }}
       </button>
     </form>
@@ -453,9 +453,6 @@ export default {
           this.saveOption()
         }
       }
-    },
-    metadataEdit: function() {
-      this.editMetadata()
     }
   }
 }

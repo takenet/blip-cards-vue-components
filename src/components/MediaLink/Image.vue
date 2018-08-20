@@ -56,7 +56,7 @@
             <input type="text" class="form-control" v-model="title" placeholder="Title" />
             <textarea @keydown.enter="imgSave($event)" v-model="text" class="form-control text" placeholder="Text" />
           </div>
-          <button class="define-metadata blip-media-link-metadata" @click="metadataEdit()">
+          <button class="define-metadata blip-media-link-metadata" @click="editMetadata(document)">
             {{ metadataButtonText }}
           </button>
         </form>
@@ -162,9 +162,6 @@ export default {
         }
       }
       img.src = url
-    },
-    metadataEdit: function() {
-      this.editMetadata()
     }
   },
   mounted: function() {

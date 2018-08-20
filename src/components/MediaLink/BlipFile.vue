@@ -34,7 +34,7 @@
             <span v-if="errors.has('file')" class="help input-error">{{ errors.first('file') }}</span>
             <input type="text" class="form-control title" v-model="title" placeholder="Title"/>
           </div>
-          <button class="define-metadata blip-media-link-metadata" @click="metadataEdit()">
+          <button class="define-metadata blip-media-link-metadata" @click="editMetadata(document)">
             {{ metadataButtonText }}
           </button>
         </form>
@@ -88,9 +88,6 @@ export default {
     },
     handleFileLink: function () {
       window.open(this.document.uri, '_blank')
-    },
-    metadataEdit: function() {
-      this.editMetadata()
     }
   }
 }
