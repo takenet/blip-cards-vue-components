@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div> 
     <div class="float" style="width: 200px">
       <div>
         <h1>Width:</h1>
