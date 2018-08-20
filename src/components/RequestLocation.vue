@@ -71,7 +71,7 @@
             <textarea @keydown.enter="saveLocation($event)" name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
             <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
           </div>
-          <button class="define-metadata blip-request-location-metadata" @click="metadataEdit()">
+          <button class="define-metadata blip-request-location-metadata" @click="editMetadata(document)">
             {{ metadataButtonText }}
           </button>
         </form>
@@ -188,9 +188,6 @@ export default {
           value: this.text
         }
       })
-    },
-    metadataEdit: function() {
-      this.editMetadata()
     }
   }
 }

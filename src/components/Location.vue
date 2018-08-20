@@ -45,7 +45,7 @@
         <input type="text" name="longitude" class="form-control" v-validate="'required'" v-model="longitude" placeholder="Longitude" />
         <span v-show="errors.has('longitude')" class="help input-error">{{ errors.first('longitude') }}</span>
       </div>
-      <button class="define-metadata blip-location-metadata" @click="metadataEdit()">
+      <button class="define-metadata blip-location-metadata" @click="editMetadata(document)">
         {{ metadataButtonText }}
       </button>
     </form>
@@ -136,9 +136,6 @@ export default {
     },
     handleLocationLink: function () {
       window.open(this.mapUrl, '_blank')
-    },
-    metadataEdit: function() {
-      this.editMetadata()
     }
   }
 }

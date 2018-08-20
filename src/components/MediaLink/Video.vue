@@ -106,7 +106,7 @@
             <input type="text" name="video" class="form-control" v-model="videoUri" placeholder="Video Uri" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
             <span v-if="errors.has('video')" class="help input-error">{{ errors.first('video') }}</span>
           </div>
-          <button class="define-metadata blip-media-link-metadata" @click="metadataEdit()">
+          <button class="define-metadata blip-media-link-metadata" @click="editMetadata(document)">
             {{ metadataButtonText }}
           </button>
         </form>
@@ -347,9 +347,6 @@ export default {
         ':' +
         (timeSec < 10 ? '0' + timeSec : timeSec)
       )
-    },
-    metadataEdit: function() {
-      this.editMetadata()
     }
   }
 }

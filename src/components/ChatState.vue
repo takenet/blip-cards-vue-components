@@ -31,7 +31,7 @@
             :class="{'input-error': errors.has('interval') }" v-model="interval" placeholder="Milliseconds to wait"/>
           <span v-show="errors.has('interval')" class="help input-error">{{ errors.first('interval') }}</span>
         </div>
-        <button class="define-metadata blip-chat-state-metadata" @click="metadataEdit()">
+        <button class="define-metadata blip-chat-state-metadata" @click="editMetadata(document)">
           {{ metadataButtonText }}
         </button>
       </form>
@@ -62,9 +62,6 @@ export default {
         ...this.document,
         interval: this.interval
       })
-    },
-    metadataEdit: function() {
-      this.editMetadata()
     }
   }
 }
