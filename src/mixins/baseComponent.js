@@ -98,6 +98,8 @@ var baseComponent = {
       }
     },
     editMetadata: function() {
+      console.log(this.onMetadataEdit)
+
       if (this.onMetadataEdit) {
         this.onMetadataEdit()
       }
