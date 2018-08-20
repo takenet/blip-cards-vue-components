@@ -99,6 +99,10 @@
           <span>Add Button</span>
         </div>
       </div>
+
+      <button class="define-metadata blip-select-metadata" @click="metadataEdit()">
+        {{ metadataButtonText }}
+      </button>
     </form>
   </div>
 
@@ -413,6 +417,9 @@ export default {
       this.hasDeleteOptionError = false
       this.cancel()
     },
+    metadataEdit: function() {
+      this.editMetadata()
+    },
     select: debounce(
       function(item) {
         if (!this.editable) {
@@ -531,6 +538,10 @@ export default {
     -webkit-animation-duration: 1.5s;
     animation-name: fade;
     animation-duration: 1.5s;
+  }
+
+  .blip-select-metadata {
+    margin: 0 0 5px 0;
   }
 }
 

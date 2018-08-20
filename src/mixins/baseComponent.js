@@ -27,6 +27,9 @@ var baseComponent = {
     onDeleted: {
       type: Function
     },
+    onMetadataEdit: {
+      type: Function
+    },
     onCancel: {
       type: Function
     },
@@ -50,6 +53,7 @@ var baseComponent = {
   data: function() {
     return {
       isEditing: this.editing || false,
+      metadataButtonText: 'Definir metadados',
       editSvg,
       approveSvg,
       closeSvg,
@@ -91,6 +95,11 @@ var baseComponent = {
 
       if (this.onSave) {
         this.onSave(document)
+      }
+    },
+    editMetadata: function() {
+      if (this.onMetadataEdit) {
+        this.onMetadataEdit()
       }
     }
   }

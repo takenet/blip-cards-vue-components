@@ -123,7 +123,7 @@ export default {
         type: 'application/vnd.lime.select+json',
         content: {
           scope: 'immediate',
-          text: 'Choice an option',
+          text: 'Choose an option',
           options: [
             { text: 'First option' },
             { order: '2', text: 'Second option' },
@@ -144,7 +144,7 @@ export default {
         to: '128271320123982@messenger.gw.msging.net',
         type: 'application/vnd.lime.select+json',
         content: {
-          text: 'Choice an option',
+          text: 'Choose an option',
           options: [
             { text: 'First option' },
             { order: '2', text: 'Second option' },

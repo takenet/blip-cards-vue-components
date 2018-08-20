@@ -553,3 +553,22 @@
 .pointer {
   cursor: pointer;
 }
+
+.define-metadata {
+  color: #2cc3d5;
+  font-size: 12px;
+  margin: -25px 20px 15px 0;
+  float: right;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  &:hover {
+    color: #15afb2;
+  }
+
+  &:focus {
+    outline:0;
+  }
+}

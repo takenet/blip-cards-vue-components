@@ -18,7 +18,7 @@
   </div>
 
   <div class="blip-container" v-else>
-  <div :class="'bubble ' + position">
+    <div :class="'bubble ' + position">
       <form novalidate v-on:submit.prevent>
         <button type="button" class="btn saveIco closeIco" @click="cancel()" >
           <img :src="closeSvg" />
@@ -31,6 +31,9 @@
             :class="{'input-error': errors.has('interval') }" v-model="interval" placeholder="Milliseconds to wait"/>
           <span v-show="errors.has('interval')" class="help input-error">{{ errors.first('interval') }}</span>
         </div>
+        <button class="define-metadata blip-chat-state-metadata" @click="metadataEdit()">
+          {{ metadataButtonText }}
+        </button>
       </form>
     </div>
   </div>
@@ -59,6 +62,9 @@ export default {
         ...this.document,
         interval: this.interval
       })
+    },
+    metadataEdit: function() {
+      this.editMetadata()
     }
   }
 }
@@ -68,45 +74,48 @@ export default {
 <style lang="scss" scoped>
    @import '../styles/variables.scss';
 
-    .chat-state .bubble {
-      padding: $bubble-padding;
-      word-wrap: break-word;
-      min-width: auto;
+  .chat-state .bubble {
+    padding: $bubble-padding;
+    word-wrap: break-word;
+    min-width: auto;
 
-      .typing {
-        display: inline-block;
-        }
-        .typing .typing-dot {
-            float: left;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            margin: 2px;
-            background: #929292;
-            animation-name: bounce;
-            animation-duration: 0.8s;
-            animation-iteration-count: infinite;
-            animation-timing-function: ease-in-out;
-        }
+    .typing {
+      display: inline-block;
+    }
+    .typing .typing-dot {
+        float: left;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin: 2px;
+        background: #929292;
+        animation-name: bounce;
+        animation-duration: 0.8s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+    }
 
-        .typing .typing-dot:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-        .typing .typing-dot:nth-child(3) {
-            animation-delay: 0.2s;
-        }
+    .typing .typing-dot:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+    .typing .typing-dot:nth-child(3) {
+        animation-delay: 0.2s;
+    }
 
-        @keyframes bounce {
-            0% {
-                transform: translateY(0px);
-            }
-            30% {
-                transform: translateY(-6px);
-            }
-            100% {
-                transform: translateY(0px);
-            }
+    @keyframes bounce {
+        0% {
+            transform: translateY(0px);
         }
-   }
+        30% {
+            transform: translateY(-6px);
+        }
+        100% {
+            transform: translateY(0px);
+        }
+    }
+  }
 
+  .blip-chat-state-metadata {
+    margin: -15px 8px 12px 0;
+  }
 </style>

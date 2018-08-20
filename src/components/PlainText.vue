@@ -48,6 +48,9 @@
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
       </form>
+      <button class="define-metadata" @click="metadataEdit()">
+        {{ metadataButtonText }}
+      </button>
     </div>
   </div>
 </template>
@@ -108,6 +111,9 @@ export default {
 
       this.showContent = false
       this.save(this.text)
+    },
+    metadataEdit: function() {
+      this.editMetadata()
     }
   }
 }

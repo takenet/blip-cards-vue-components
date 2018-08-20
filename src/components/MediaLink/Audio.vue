@@ -50,6 +50,9 @@
             <input type="text" name="audio" class="form-control" v-model="audioUri" placeholder="File URL" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
             <span v-if="errors.has('audio')" class="help input-error">{{ errors.first('audio') }}</span>
           </div>
+          <button class="define-metadata blip-media-link-metadata" @click="metadataEdit()">
+            {{ metadataButtonText }}
+          </button>
         </form>
       </div>
     </div>
@@ -159,6 +162,9 @@ export default {
         ':' +
         (timeSec < 10 ? '0' + timeSec : timeSec)
       )
+    },
+    metadataEdit: function() {
+      this.editMetadata()
     }
   }
 }
@@ -271,6 +277,10 @@ export default {
         }
       }
     }
+  }
+
+  .blip-media-link-metadata {
+    margin: -15px 6px 12px 0;
   }
 }
 </style>
