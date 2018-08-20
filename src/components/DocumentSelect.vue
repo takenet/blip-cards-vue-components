@@ -96,6 +96,9 @@
           <span>Add Button</span>
         </div>
       </div>
+      <button class="define-metadata blip-document-select-metadata" @click="metadataEdit()">
+        {{ metadataButtonText }}
+      </button>
     </form>
     <form v-else novalidate v-on:submit.prevent :class="'editing bubble ' + position">
 
@@ -450,6 +453,9 @@ export default {
           this.saveOption()
         }
       }
+    },
+    metadataEdit: function() {
+      this.editMetadata()
     }
   }
 }
@@ -561,6 +567,11 @@ export default {
     input[type='radio']:checked ~ .check::before {
       background: $vue-light-blip;
     }
+  }
+
+  .blip-document-select-metadata {
+    margin: 0 2px 5px 0;
+    text-align: right;
   }
 }
 </style>

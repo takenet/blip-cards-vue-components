@@ -56,6 +56,9 @@
             <input type="text" class="form-control" v-model="title" placeholder="Title" />
             <textarea @keydown.enter="imgSave($event)" v-model="text" class="form-control text" placeholder="Text" />
           </div>
+          <button class="define-metadata blip-media-link-metadata" @click="metadataEdit()">
+            {{ metadataButtonText }}
+          </button>
         </form>
       </div>
     </div>
@@ -159,6 +162,9 @@ export default {
         }
       }
       img.src = url
+    },
+    metadataEdit: function() {
+      this.editMetadata()
     }
   },
   mounted: function() {
@@ -277,6 +283,10 @@ export default {
     input[type='radio']:checked ~ .check::before {
       background: $vue-light-blip;
     }
+  }
+
+  .blip-media-link-metadata {
+    margin: -12px 8px 15px 0;
   }
 }
 </style>
