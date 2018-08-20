@@ -5,9 +5,9 @@
     <div :class="{'blip-container--with-photo': photo, [position]: true}">
       <div class="blip-card-container">
 
-        <plain-text v-if="document.metadata && document.metadata['#blip.payload.text']" :status="status" :length="length" :position="position" :document="document.metadata['#blip.payload.text']" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <plain-text v-if="document.metadata && document.metadata['#blip.payload.text']" :status="status" :length="length" :position="position" :document="document.metadata['#blip.payload.text']" :date="date" :on-save="saveCard" :on-metadata-edit="handleEditMetadata" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
 
-        <plain-text v-else-if="document.type === 'text/plain'" :status="status" :length="length" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <plain-text v-else-if="document.type === 'text/plain'" :status="status" :length="length" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="handleEditMetadata" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
 
         <media-link @updated="updatedPhotoMargin" v-else-if="document.type === 'application/vnd.lime.media-link+json'" :status="status" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
 
@@ -115,6 +115,10 @@ export default {
       this.isCardEditing = false
       this.editableDocument.content = document
       this.save(this.editableDocument)
+    },
+    handleEditMetadata() {
+      console.log('handleEditMetadata')
+      this.editMetadata()
     },
     updatedPhotoMargin() {
       this.photoMargin = this.getPhotoMargin()
