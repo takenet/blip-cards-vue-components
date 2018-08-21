@@ -567,7 +567,7 @@ export default {
   }
 
   .blip-document-select-metadata {
-    margin: 0 2px 5px 0;
+    padding: 10px 5px 0 0;
     text-align: right;
   }
 }

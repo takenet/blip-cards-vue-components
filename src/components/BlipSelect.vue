@@ -538,7 +538,7 @@ export default {
   }
 
   .blip-select-metadata {
-    margin: 0 0 5px 0;
+    padding: 10px 0 0 0;
   }
 }
 

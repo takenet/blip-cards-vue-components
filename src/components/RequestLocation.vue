@@ -247,6 +247,7 @@ export default {
 }
 
 .blip-request-location-metadata {
-  margin: -15px 8px 12px 0;
+  margin-top: -20px;
+  padding: 0 12px 10px 0;
 }
 </style>

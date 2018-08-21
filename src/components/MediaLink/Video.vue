@@ -583,7 +583,8 @@ export default {
   }
 
   .blip-media-link-metadata {
-    margin: -15px 6px 12px 0;
+    margin-top: -20px;
+    padding: 0 10px 10px 0;
   }
 }
 </style>
