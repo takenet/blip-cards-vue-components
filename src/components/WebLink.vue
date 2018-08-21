@@ -270,7 +270,8 @@ export default {
   }
 
   .blip-weblink-metadata {
-    margin: -12px 8px 8px 0;
+    margin-top: -8px;
+    padding: 0 10px 0 0;
   }
 }
 </style>

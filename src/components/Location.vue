@@ -151,7 +151,8 @@ export default {
     }
 
     .blip-location-metadata {
-      margin: -12px 8px 6px 0;
+      margin-top: -10px;
+      padding: 0 10px 0 0;
     }
   }
 
