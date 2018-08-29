@@ -52,7 +52,7 @@
           <option value='selfTall'>SelfTall</option>
         </select>
       </div>
-      <button class="define-metadata blip-weblink-metadata" @click="editMetadata(document)">
+      <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-weblink-metadata" @click="editMetadata(document)">
         {{ metadataButtonText }}
       </button>
     </form>

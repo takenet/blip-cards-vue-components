@@ -50,7 +50,7 @@
             <input type="text" name="audio" class="form-control" v-model="audioUri" placeholder="File URL" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
             <span v-if="errors.has('audio')" class="help input-error">{{ errors.first('audio') }}</span>
           </div>
-          <button class="define-metadata blip-media-link-metadata" @click="editMetadata(document)">
+          <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-media-link-metadata" @click="editMetadata(document)">
             {{ metadataButtonText }}
           </button>
         </form>

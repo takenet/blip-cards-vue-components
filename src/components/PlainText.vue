@@ -47,7 +47,7 @@
           <textarea @keydown.enter="saveText($event)" name="text" v-auto-expand class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
-        <button class="define-metadata blip-plain-text-metadata" @click="editMetadata(document)">
+        <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-plain-text-metadata" @click="editMetadata(document)">
           {{ metadataButtonText }}
         </button>
       </form>
