@@ -54,6 +54,7 @@ var baseComponent = {
     return {
       isEditing: this.editing || false,
       metadataButtonText: 'Definir metadados',
+      isMetadataReady: this.editMetadata,
       editSvg,
       approveSvg,
       closeSvg,

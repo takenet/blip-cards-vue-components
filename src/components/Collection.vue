@@ -6,11 +6,11 @@
           <div class="slideshow-track">
             <div v-for="(item, index) in items" v-bind:key="index" @dblclick="editCard(item)">
               <document-select :on-cancel="cancel" :editing="item.editing" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
-                :editable="editable" :on-save="collectionSave" :on-metadata-edit="editMetadata" :style="styleObject" :on-deleted="deleteItem" />
+                :editable="editable" :on-save="collectionSave" :on-metadata-edit="isMetadataReady" :style="styleObject" :on-deleted="deleteItem" />
             </div>
             <div v-if="newDocumentSelect.editing">
               <document-select :on-cancel="cancel" :editing="newDocumentSelect.editing" :style="styleObject" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink"
-                :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :on-metadata-edit="editMetadata" :on-deleted="deleteItem" />
+                :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :on-metadata-edit="isMetadataReady" :on-deleted="deleteItem" />
             </div>
             <div v-if="editable" @click="openNewDocument()">
               <div :class="'collection-editable slide-item'" :style="styleObject">
