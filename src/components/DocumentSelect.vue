@@ -96,7 +96,7 @@
           <span>Add Button</span>
         </div>
       </div>
-      <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-document-select-metadata" @click="editMetadata(document)">
+      <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-document-select-metadata" @click="editMetadata(fullDocument)">
         {{ metadataButtonText }}
       </button>
     </form>

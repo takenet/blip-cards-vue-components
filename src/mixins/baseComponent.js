@@ -14,6 +14,9 @@ var baseComponent = {
     document: {
       type: Object
     },
+    fullDocument: {
+      type: Object
+    },
     position: {
       type: String,
       default: 'left'
