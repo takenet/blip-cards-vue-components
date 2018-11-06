@@ -497,7 +497,7 @@ export default {
   .next {
     cursor: pointer;
     position: absolute;
-    top: 57%;
+    bottom: 15px;
     width: auto;
     padding: 8px 16px;
     opacity: 0.8;
