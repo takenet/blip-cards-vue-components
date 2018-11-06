@@ -153,7 +153,7 @@ const scrollToTop = (el) => {
 const scroll = (el, binding) => {
   let config = binding.value || {}
 
-  if (config.always !== true && scrolled) {
+  if (config.always !== true && config.scrolled) {
     return
   }
 
@@ -164,27 +164,24 @@ const scroll = (el, binding) => {
   }
 }
 
-let scrolled = false
-
 const vChatScroll = {
   bind: (el, binding) => {
     window.SimpleScrollbar.initEl(el)
 
     let contentScroll = el.querySelector('.ss-content')
     let config = binding.value || {}
+    config.contentHeight = 0
 
     contentScroll.addEventListener('force-scroll', (e) => {
-      scrolled = false
+      config.scrolled = false
       scroll(contentScroll, binding)
     })
 
     let scrollEvent = debounce(() => {
       if (config.scrollToTop) {
-        scrolled = contentScroll.scrollTop > 0
+        config.scrolled = contentScroll.scrollTop > 0
       } else {
-        scrolled =
-          contentScroll.scrollTop + contentScroll.clientHeight + 1 <
-          contentScroll.scrollHeight
+        config.scrolled = contentScroll.scrollHeight - contentScroll.scrollTop > contentScroll.clientHeight
       }
     }, 100)
 
@@ -192,34 +189,33 @@ const vChatScroll = {
       scrollEvent()
     })
 
-    new MutationObserver((e) => {
+    config.mutationObserver = new MutationObserver((e) => {
       if (!e.find((x) => x.addedNodes.length > 0)) return
-
       // Infinite scroll, new elements are added so we have to keep the scroll in the same position
       if (config.scrollToTop !== true && contentScroll.scrollTop === 0) {
-        let addedHeight = 0
-        for (let item of e) {
-          addedHeight += item.addedNodes[0]
-          ? item.addedNodes[0].scrollHeight
-          : 0
-        }
-
-        if (contentScroll.scrollHeight > contentScroll.clientHeight) {
-          setTimeout(() => scroll(contentScroll, binding), 100)
-        }
-        contentScroll.scrollTop = addedHeight
+        contentScroll.scrollTop = contentScroll.scrollHeight - config.contentHeight
       } else {
         scroll(contentScroll, binding)
       }
-    }).observe(contentScroll, {
+    })
+
+    config.mutationObserver.observe(contentScroll, {
       childList: true,
       subtree: true
     })
   },
   inserted: (el, binding) => {
-    scrolled = false
+    let config = binding.value || {}
+    config.scrolled = false
     let contentScroll = el.querySelector('.ss-content')
+    config.contentHeight = contentScroll.scrollHeight
     scroll(contentScroll, binding)
+  },
+  unbind: (el, binding) => {
+    let config = binding.value || {}
+    if (config.mutationObserver) {
+      config.mutationObserver.disconnect()
+    }
   }
 }
 
