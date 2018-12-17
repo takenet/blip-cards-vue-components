@@ -5,7 +5,9 @@
         <div class="slideshow-list">
           <div class="slideshow-track">
             <div v-for="(item, index) in items" v-bind:key="index" @dblclick="editCard(item)">
-              <document-select :on-cancel="cancel" :editing="item.editing" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
+              <document-select v-if="index == 0" :on-cancel="cancel" :editing="editing" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
+                :editable="editable" :on-save="collectionSave" :full-document="fullDocument" :on-metadata-edit="isMetadataReady" :style="styleObject" :on-deleted="deleteItem" />
+              <document-select v-else :on-cancel="cancel" :editing="item.editing" :length="95" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
                 :editable="editable" :on-save="collectionSave" :full-document="fullDocument" :on-metadata-edit="isMetadataReady" :style="styleObject" :on-deleted="deleteItem" />
             </div>
             <div v-if="newDocumentSelect.editing">
