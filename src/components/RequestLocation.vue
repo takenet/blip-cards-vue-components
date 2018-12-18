@@ -199,6 +199,7 @@ export default {
 .request-location {
   .bubble {
     padding: $bubble-padding;
+    text-align: left;
   }
   .options {
     ul {

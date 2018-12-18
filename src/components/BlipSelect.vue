@@ -453,6 +453,7 @@ export default {
 .select .bubble {
   padding: $bubble-padding;
   min-width: auto;
+  text-align: left;
 }
 
 .select .options ul {
