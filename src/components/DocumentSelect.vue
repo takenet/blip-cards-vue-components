@@ -78,9 +78,9 @@
           </div>
         </div>
         <div class="form-group">
-          <input type="title" name="title" :class="{'input-error': errors.has('title') }" class="form-control" v-model="title" placeholder="Title" />
+          <input type="title" name="title" :class="{'input-error': errors.has('title') }" class="form-control" v-model="title" v-validate="'required'" placeholder="Title" />
           <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
-          <textarea @keydown.enter="documentSelectSave($event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control textarea" v-model="content" placeholder="Description" />
+          <textarea @keydown.enter="documentSelectSave($event)" type="text" name="text" :class="{'input-error': errors.has('text') }" class="form-control textarea" v-model="content" placeholder="Description" />
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
       </div>
