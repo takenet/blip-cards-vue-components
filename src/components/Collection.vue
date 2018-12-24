@@ -174,6 +174,7 @@ export default {
       this.width = 0
       this.elementsWidth = 0
       this.elementsLength = 0
+
       this.items = this.document.items.map(function(x, i) {
         return {
           ...x,
