@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="blip-container location">
+  <div v-if="!isEditing" class="blip-container location" :class="(this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')">
     <div>
       <div :class="'bubble ' + position" :style="'width: ' + bubbleWidth">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">

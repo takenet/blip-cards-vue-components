@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isEditing" @show="checkForEndOfSlider" class="blip-container select">
    <div v-if="document.scope === 'immediate'">
-      <div :class="'bubble ' + position">
+      <div :class="'bubble ' + position + (this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
         </div>
@@ -72,7 +72,7 @@
   </div>
 
   <div class="blip-container select" v-else-if="!addOption">
-    <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
+    <form :class="'bubble ' + position + (this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')" novalidate v-on:submit.prevent>
       <button class="btn saveIco closeIco" @click="selectCancel()" >
         <img :src="closeSvg" />
       </button>

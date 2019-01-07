@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="'blip-container collection'" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
+    <div :class="'blip-container collection' + (this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
       <div :class="'slideshow-container ' + position" :id="id">
         <div class="slideshow-list">
           <div class="slideshow-track">

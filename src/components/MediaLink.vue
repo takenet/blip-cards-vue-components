@@ -1,5 +1,5 @@
 <template>
-  <div :class="'blip-container media-link ' + document.type.split('/')[0]">
+  <div :class="'blip-container media-link ' + document.type.split('/')[0] + (this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')">
 
     <blip-image :document="document" :full-document="fullDocument" :position="position" :date="date" v-if="document.type.indexOf('image') != -1" :editable="editable" :on-save="save" :on-deleted="onDeleted" :on-metadata-edit="isMetadataReady" :deletable="deletable" :on-cancel="onCancel" :editing="editing"/>
     <blip-audio :document="document" :full-document="fullDocument" :position="position" :date="date" v-else-if="document.type.indexOf('audio') != -1" :editable="editable" :on-save="save" :on-deleted="onDeleted" :on-metadata-edit="isMetadataReady" :deletable="deletable" :on-cancel="onCancel" :editing="editing"/>

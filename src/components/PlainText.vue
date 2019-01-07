@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isEditing">
-    <div v-if="previewDocument.content != null && previewDocument.content.length > 0" class="blip-container plain-text">
+    <div v-if="previewDocument.content != null && previewDocument.content.length > 0" class="blip-container plain-text" :class="(this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
