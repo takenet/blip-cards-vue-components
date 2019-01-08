@@ -26,6 +26,7 @@ function isFailedMessage (status, position) {
   if (status === 'failed' && position === 'right') {
     return ' failed-message'
   }
+  return ''
 }
 
 export {
