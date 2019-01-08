@@ -23,7 +23,7 @@
         :on-open-link="onOpenLink"
         :on-unsupported-type="onUnsupportedType"
         :on-location-error="onLocationError"
-        :class="messageClass(message)"
+        :class="messageClass(message) + (message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : '')"
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">

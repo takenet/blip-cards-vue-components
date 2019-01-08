@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isEditing">
-    <div v-if="this.document.state === 'composing'" class="blip-container chat-state">
+    <div v-if="this.document.state === 'composing'" class="blip-container chat-state" :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
@@ -42,15 +42,23 @@
 <script>
 
 import { default as base } from '../mixins/baseComponent.js'
+import { isFailedMessage } from '../utils/misc'
 
 export default {
   name: 'chat-state',
   mixins: [
     base
   ],
+  props: {
+    status: {
+      type: String,
+      default: ''
+    }
+  },
   data: function () {
     return {
-      interval: undefined
+      interval: undefined,
+      isFailedMessage
     }
   },
   methods: {
