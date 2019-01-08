@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="blip-container web-link" :class="(this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')">
+  <div v-if="!isEditing" class="blip-container web-link" :class="isFailedMessage(status, position)">
     <div :class="'bubble ' + position + (this.title == null && this.text == null ? ' text-link': '' )">
       <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
         <img :src="trashSvg" />
@@ -61,7 +61,7 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
-import { linkify } from '../utils/misc'
+import { linkify, isFailedMessage } from '../utils/misc'
 import { MetadataService } from '../utils//metadataService.js'
 
 export default {
@@ -87,7 +87,8 @@ export default {
       imgPreview: this.document.previewUri,
       uri: this.document.uri,
       target: this.document.target || 'blank',
-      MetadataService: new MetadataService()
+      MetadataService: new MetadataService(),
+      isFailedMessage
     }
   },
   computed: {

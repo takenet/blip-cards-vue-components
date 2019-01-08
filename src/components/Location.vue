@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="blip-container location" :class="(this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')">
+  <div v-if="!isEditing" class="blip-container location" :class="isFailedMessage(status, position)">
     <div>
       <div :class="'bubble ' + position" :style="'width: ' + bubbleWidth">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
@@ -56,6 +56,7 @@
 
 import { default as base } from '../mixins/baseComponent.js'
 import DefaultMap from '../assets/img/DefaultMap.png'
+import { isFailedMessage } from '../utils/misc'
 
 export default {
   name: 'location',
@@ -74,7 +75,8 @@ export default {
       latitude: undefined,
       longitude: undefined,
       bubbleWidth: undefined,
-      apiKey: undefined
+      apiKey: undefined,
+      isFailedMessage
     }
   },
   computed: {

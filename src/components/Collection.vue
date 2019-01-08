@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="'blip-container collection' + (this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
+    <div :class="'blip-container collection' + isFailedMessage(status, position)" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
       <div :class="'slideshow-container ' + position" :id="id">
         <div class="slideshow-list">
           <div class="slideshow-track">
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { guid } from '../utils/misc'
+import { guid, isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -103,7 +103,8 @@ export default {
       elementsLength: undefined,
       items: undefined,
       styleObject: undefined,
-      newDocumentSelect: undefined
+      newDocumentSelect: undefined,
+      isFailedMessage
     }
   },
   watch: {

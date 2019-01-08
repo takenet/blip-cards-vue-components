@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="blip-container request-location" :class="(this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')">
+  <div v-if="!isEditing" class="blip-container request-location" :class="isFailedMessage(status, position)">
     <div :class="`bubble ${position}`">
       <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
         <img :src="trashSvg" />
@@ -82,7 +82,7 @@
 
 
 <script>
-import { linkify } from '../utils/misc'
+import { linkify, isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
@@ -127,7 +127,8 @@ export default {
     return {
       hide: undefined,
       text: undefined,
-      showContent: undefined
+      showContent: undefined,
+      isFailedMessage
     }
   },
   watch: {

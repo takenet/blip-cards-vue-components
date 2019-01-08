@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isEditing" @show="checkForEndOfSlider" class="blip-container select">
-   <div v-if="document.scope === 'immediate'">
-      <div :class="'bubble ' + position + (this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')">
+    <div v-if="document.scope === 'immediate'" :class="isFailedMessage(status, position)">
+      <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
         </div>
@@ -41,7 +41,7 @@
       </transition>
     </div>
 
-    <div v-else>
+    <div v-else :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
@@ -72,7 +72,7 @@
   </div>
 
   <div class="blip-container select" v-else-if="!addOption">
-    <form :class="'bubble ' + position + (this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')" novalidate v-on:submit.prevent>
+    <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <button class="btn saveIco closeIco" @click="selectCancel()" >
         <img :src="closeSvg" />
       </button>
@@ -148,7 +148,7 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
-import { linkify, guid } from '../utils/misc'
+import { linkify, guid, isFailedMessage } from '../utils/misc'
 import debounce from 'lodash/debounce'
 const optionSize = 34
 
@@ -180,7 +180,8 @@ export default {
       id: undefined,
       slideIndex: undefined,
       endOfSlider: undefined,
-      hasDeleteOptionError: false
+      hasDeleteOptionError: false,
+      isFailedMessage
     }
   },
   updated: function() {

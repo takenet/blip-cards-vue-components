@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isEditing">
-    <div v-if="previewDocument.content != null && previewDocument.content.length > 0" class="blip-container plain-text" :class="(this.status === 'failed' && this.position === 'right' ? ' failed-message' : '')">
+    <div v-if="previewDocument.content != null && previewDocument.content.length > 0" class="blip-container plain-text" :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { linkify } from '../utils/misc'
+import { linkify, isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
@@ -90,7 +90,8 @@ export default {
   data: function() {
     return {
       text: undefined,
-      showContent: undefined
+      showContent: undefined,
+      isFailedMessage
     }
   },
   methods: {

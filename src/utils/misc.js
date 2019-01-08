@@ -22,7 +22,14 @@ function guid () {
   })
 }
 
+function isFailedMessage (status, position) {
+  if (status === 'failed' && position === 'right') {
+    return ' failed-message'
+  }
+}
+
 export {
   linkify,
-  guid
+  guid,
+  isFailedMessage
 }

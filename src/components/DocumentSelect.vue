@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="blip-container document-select" :class="this.status === 'failed' && this.position === 'right' ? ' failed-message' : ''">
+  <div v-if="!isEditing" class="blip-container document-select" :class="isFailedMessage(status, position)">
     <div :class="'bubble ' + position">
       <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
         <img :src="trashSvg" />
@@ -164,7 +164,7 @@
 
 <script>
 
-import { linkify } from '../utils/misc'
+import { linkify, isFailedMessage } from '../utils/misc'
 import cloneDeep from 'lodash/cloneDeep'
 import { default as base } from '../mixins/baseComponent.js'
 import { MetadataService } from '../utils/metadataService.js'
@@ -213,7 +213,8 @@ export default {
       previewUri: undefined,
       selectedOption: undefined,
       options: undefined,
-      MetadataService: new MetadataService()
+      MetadataService: new MetadataService(),
+      isFailedMessage
     }
   },
   watch: {
