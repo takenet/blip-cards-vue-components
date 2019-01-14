@@ -572,3 +572,7 @@
     outline:0;
   }
 }
+
+.disable-selection {
+  -webkit-user-select: none;
+}
