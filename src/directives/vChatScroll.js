@@ -86,15 +86,16 @@ import debounce from 'lodash/debounce'
 
     // Stay at bottom if element is at bottom during resize
     w.addEventListener('resize', () => {
-      if (this.el.scrollTop + this.currentHeigth >= this.el.scrollHeight) {
+      if (this.el.scrollTop + this.currentHeight >= this.el.scrollHeight) {
         scrollToBottom(this.el)
       }
-      this.currentHeigth = this.el.clientHeight
+      this.currentHeight = this.el.clientHeight
     })
 
     w.addEventListener('resize', this.moveBar.bind(this))
     this.el.addEventListener('scroll', this.moveBar.bind(this))
     this.el.addEventListener('mouseenter', this.moveBar.bind(this))
+    this.el.addEventListener('onMutation', this.moveBar.bind(this))
 
     this.target.classList.add('ss-container')
 
@@ -109,7 +110,7 @@ import debounce from 'lodash/debounce'
       var totalHeight = this.el.scrollHeight
       var ownHeight = this.el.clientHeight
       var _this = this
-      this.currentHeigth = this.el.clientHeight
+      this.currentHeight = this.el.clientHeight
 
       this.scrollRatio = ownHeight / totalHeight
 
@@ -181,7 +182,8 @@ const vChatScroll = {
       if (config.scrollToTop) {
         config.scrolled = contentScroll.scrollTop > 0
       } else {
-        config.scrolled = contentScroll.scrollHeight - contentScroll.scrollTop > contentScroll.clientHeight
+        // there is a 2 pixels threshold when content is not scrolled
+        config.scrolled = (contentScroll.scrollHeight - contentScroll.scrollTop) - contentScroll.clientHeight > 2
       }
     }, 100)
 
@@ -191,12 +193,15 @@ const vChatScroll = {
 
     config.mutationObserver = new MutationObserver((e) => {
       if (!e.find((x) => x.addedNodes.length > 0)) return
+
       // Infinite scroll, new elements are added so we have to keep the scroll in the same position
       if (config.scrollToTop !== true && contentScroll.scrollTop === 0) {
         contentScroll.scrollTop = contentScroll.scrollHeight - config.contentHeight
       } else {
         scroll(contentScroll, binding)
       }
+
+      contentScroll.dispatchEvent(new Event('onMutation'))
     })
 
     config.mutationObserver.observe(contentScroll, {
