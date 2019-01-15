@@ -120,6 +120,10 @@ import debounce from 'lodash/debounce'
         : (_this.target.clientWidth - _this.bar.clientWidth) * -1
 
       raf(function() {
+        const maximumTop = 90
+        let top = _this.el.scrollTop / totalHeight * 100
+        top = top > maximumTop ? maximumTop : top
+
         // Hide scrollbar if no scrolling is possible
         if (_this.scrollRatio >= 1) {
           _this.bar.classList.add('ss-hidden')
@@ -129,7 +133,7 @@ import debounce from 'lodash/debounce'
             'height:' +
             Math.max(_this.scrollRatio * 100, 10) +
             '%; top:' +
-            _this.el.scrollTop / totalHeight * 100 +
+            top +
             '%;right:' +
             right +
             'px;'
