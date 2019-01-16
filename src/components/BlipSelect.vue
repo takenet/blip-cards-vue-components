@@ -27,7 +27,7 @@
         <div class="slideshow-list">
           <div class="slideshow-track options">
             <ul class="item-list">
-              <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
+              <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection">
                 <div v-html="item.previewText"></div>
               </li>
             </ul>
@@ -50,7 +50,7 @@
           <img :src="editSvg" />
         </div>
         <div class="text-left" v-html="computedText"></div>
-        <div class="fixed-options">
+        <div class="fixed-options disable-selection">
           <ul>
             <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
               <div v-html="item.text"></div>
