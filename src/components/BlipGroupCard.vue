@@ -11,7 +11,7 @@
         :position="message.position"
         :date="message.date"
         :editing="editing"
-        :hide-options="hideOptions"
+        :hide-options="hideOptions || message.hideOptions"
         :on-save="onSave"
         :status="message.status"
         :on-deleted="onDeleted"
@@ -74,7 +74,6 @@ export default {
     },
     hideOptions: {
       type: Boolean,
-      default: false
     },
     onSelected: {
       type: Function
