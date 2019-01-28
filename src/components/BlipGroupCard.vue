@@ -139,6 +139,12 @@ $hard-round: 13px;
 .blip-message-group {
   position: relative;
 
+  .blip-card-photo {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
   .blip-card-group {
     margin-bottom: 20px;
 
