@@ -8,7 +8,7 @@
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>
-        <div v-html="computedText" v-if="computedText"></div>
+        <div v-html="sanitize(computedText)" v-if="computedText"></div>
       </div>
 
       <div class="flex" :class="'notification ' + position" v-if="date">
@@ -28,7 +28,7 @@
           <div class="slideshow-track options">
             <ul class="item-list">
               <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection">
-                <div v-html="item.previewText"></div>
+                <div v-html="sanitize(item.previewText)"></div>
               </li>
             </ul>
           </div>
@@ -49,11 +49,11 @@
         <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
           <img :src="editSvg" />
         </div>
-        <div class="text-left" v-html="computedText"></div>
+        <div class="text-left" v-html="sanitize(computedText)"></div>
         <div class="fixed-options disable-selection">
           <ul>
             <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
-              <div v-html="item.text"></div>
+              <div v-html="sanitize(item.text)"></div>
             </li>
           </ul>
         </div>
@@ -87,7 +87,7 @@
       <div class="text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index" @click="editOption(item, index, $event)">
-            <span v-html="item.text"></span>
+            <span v-html="sanitize(item.text)"></span>
             <span @click="deleteOption(index, $event)" class="remove-option"><img :src="closeBlueSvg"></span>
           </li>
           <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">

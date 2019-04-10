@@ -2,30 +2,42 @@
   <div>
     <div :class="'bubble ' + position">
       <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
+        <img :src="trashSvg">
       </div>
       <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img :src="editSvg" />
+        <img :src="editSvg">
       </div>
       <div class="header" :id="id" v-if="!isEditing">
-        <div :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')" :style="styleObject" @click="(editable ? null : handleImageLink())"></div>
+        <div
+          :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')"
+          :style="styleObject"
+          @click="(editable ? null : handleImageLink())"
+        ></div>
 
         <div class="title" v-if="document.title || document.text">
-          <strong v-if="document.title" v-html="document.title"></strong>
-          <span v-if="document.text" v-html="document.text"></span>
+          <strong v-if="document.title" v-html="sanitize(document.title)"></strong>
+          <span v-if="document.text" v-html="sanitize(document.text)"></span>
         </div>
       </div>
 
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
           <button type="button" class="btn saveIco closeIco" @click="cancel()">
-            <img :src="closeSvg" />
+            <img :src="closeSvg">
           </button>
           <button class="btn saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
-            <img :src="approveSvg" />
+            <img :src="approveSvg">
           </button>
           <div class="form-group">
-            <input type="text" name="image" :class="{'input-error': errors.has('image') }" v-validate="'required'" class="form-control" v-model="image" placeholder="Image Uri" />
+            <input
+              type="text"
+              name="image"
+              :class="{'input-error': errors.has('image') }"
+              v-validate="'required'"
+              class="form-control"
+              v-model="image"
+              placeholder="Image Uri"
+            >
             <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
             <div class="upload-intructions">
               <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
@@ -38,14 +50,28 @@
             <div class="form-check-wrapper">
               <span class="form-check-container">
                 <label class="form-check-label" :for="_uid+'1-1'">
-                  <input type="radio" name="aspect-selector" :id="_uid+'1-1'" class="form-check-input" v-model="aspect" value="1-1"/>
+                  <input
+                    type="radio"
+                    name="aspect-selector"
+                    :id="_uid+'1-1'"
+                    class="form-check-input"
+                    v-model="aspect"
+                    value="1-1"
+                  >
                   <span class="radio">1:1</span>
                   <div class="check"></div>
                 </label>
               </span>
               <span class="form-check-container">
                 <label class="form-check-label" :for="_uid+'2-1'">
-                  <input type="radio" name="aspect-selector" :id="_uid+'2-1'" class="form-check-input" v-model="aspect" value="2-1"/>
+                  <input
+                    type="radio"
+                    name="aspect-selector"
+                    :id="_uid+'2-1'"
+                    class="form-check-input"
+                    v-model="aspect"
+                    value="2-1"
+                  >
                   <span class="radio">2:1</span>
                   <div class="check"></div>
                 </label>
@@ -53,12 +79,19 @@
             </div>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" v-model="title" placeholder="Title" />
-            <textarea @keydown.enter="imgSave($event)" v-model="text" class="form-control text" placeholder="Text" />
+            <input type="text" class="form-control" v-model="title" placeholder="Title">
+            <textarea
+              @keydown.enter="imgSave($event)"
+              v-model="text"
+              class="form-control text"
+              placeholder="Text"
+            />
           </div>
-          <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-media-link-metadata" @click="editMetadata(fullDocument)">
-            {{ metadataButtonText }}
-          </button>
+          <button
+            v-if="typeof onMetadataEdit === 'function'"
+            class="define-metadata blip-media-link-metadata"
+            @click="editMetadata(fullDocument)"
+          >{{ metadataButtonText }}</button>
         </form>
       </div>
     </div>
@@ -156,7 +189,9 @@ export default {
             this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
-          'background-image': `url("${this.position === 'right' ? BrokenWhite : Broken}")`,
+          'background-image': `url("${
+            this.position === 'right' ? BrokenWhite : Broken
+          }")`,
           'background-size': '125px',
           opacity: '0.6'
         }

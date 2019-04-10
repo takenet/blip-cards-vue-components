@@ -1,14 +1,24 @@
 <template>
   <div v-if="!isEditing" class="blip-container web-link" :class="isFailedMessage(status, position)">
-    <div :class="'bubble ' + position + (this.title == null && this.text == null ? ' text-link': '' )">
+    <div
+      :class="'bubble ' + position + (this.title == null && this.text == null ? ' text-link': '' )"
+    >
       <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
+        <img :src="trashSvg">
       </div>
       <div v-if="editable" class="editIco" @click="toggleEdit">
-        <img :src="editSvg" />
+        <img :src="editSvg">
       </div>
-      <span v-if="this.previewTitle || this.previewText" class="link web-link-wrapper" @click="(editable ? null : handleWeblink())">
-        <div v-if="this.previewImage" class="preview" :style="'background-image: url(&quot;' + this.previewImage + '&quot;)'"></div>
+      <span
+        v-if="this.previewTitle || this.previewText"
+        class="link web-link-wrapper"
+        @click="(editable ? null : handleWeblink())"
+      >
+        <div
+          v-if="this.previewImage"
+          class="preview"
+          :style="'background-image: url(&quot;' + this.previewImage + '&quot;)'"
+        ></div>
         <div class="link-description-wrapper text-left">
           <span class="text big-text" :title="previewTitle" v-text="this.previewTitle"></span>
           <div class="text-wrapper">
@@ -18,43 +28,72 @@
           <span class="text small-text" :title="uri" v-text="uri"></span>
         </div>
       </span>
-      <span v-else v-html="this.textLink"></span>
+      <span v-else v-html="sanitize(this.textLink)"></span>
     </div>
     <div class="flex" :class="'notification ' + position" v-if="date">
-      <img v-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
-      <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
-      <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
-      <div v-else-if="this.status === 'failed' && this.position === 'right'" class="failure" >
-          Falha ao enviar a mensagem.
-        </div>
+      <img v-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg">
+      <img
+        v-else-if="status === 'received' && this.position === 'right'"
+        :src="doubleCheckReceivedSvg"
+      >
+      <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg">
+      <div
+        v-else-if="this.status === 'failed' && this.position === 'right'"
+        class="failure"
+      >Falha ao enviar a mensagem.</div>
       {{ date }}
     </div>
   </div>
   <div v-else class="blip-container web-link">
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <button class="btn saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
-        <img :src="approveSvg" />
+        <img :src="approveSvg">
       </button>
       <button class="btn saveIco closeIco" @click="cancel()">
-        <img :src="closeSvg" />
+        <img :src="closeSvg">
       </button>
       <div class="form-group">
-        <input type="text" name="page" class="form-control" :class="{'input-error': errors.has('page') }" v-validate="'required|url'" v-model="uri" placeholder="Page URL" @blur="fetchMetadata(true)" />
+        <input
+          type="text"
+          name="page"
+          class="form-control"
+          :class="{'input-error': errors.has('page') }"
+          v-validate="'required|url'"
+          v-model="uri"
+          placeholder="Page URL"
+          @blur="fetchMetadata(true)"
+        >
         <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>
-        <input type="text" name="title" class="form-control title" :class="{'input-error': errors.has('title') }" v-validate="'required'" v-model="title" placeholder="Title" />
+        <input
+          type="text"
+          name="title"
+          class="form-control title"
+          :class="{'input-error': errors.has('title') }"
+          v-validate="'required'"
+          v-model="title"
+          placeholder="Title"
+        >
         <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
-        <input type="text" name="webLinkText" class="form-control text" v-model="text" placeholder="Description" />
+        <input
+          type="text"
+          name="webLinkText"
+          class="form-control text"
+          v-model="text"
+          placeholder="Description"
+        >
         <select v-model="target" class="form-control text">
-          <option disabled value="">Target</option>
-          <option value='blank'>Blank</option>
-          <option value='self'>Self</option>
-          <option value='selfCompact'>SelfCompact</option>
-          <option value='selfTall'>SelfTall</option>
+          <option disabled value>Target</option>
+          <option value="blank">Blank</option>
+          <option value="self">Self</option>
+          <option value="selfCompact">SelfCompact</option>
+          <option value="selfTall">SelfTall</option>
         </select>
       </div>
-      <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-weblink-metadata" @click="editMetadata(fullDocument)">
-        {{ metadataButtonText }}
-      </button>
+      <button
+        v-if="typeof onMetadataEdit === 'function'"
+        class="define-metadata blip-weblink-metadata"
+        @click="editMetadata(fullDocument)"
+      >{{ metadataButtonText }}</button>
     </form>
   </div>
 </template>
@@ -144,7 +183,12 @@ export default {
     },
     fetchMetadata: async function(isEditing) {
       // Only fetch metadata if editing or missing one of weblink properties
-      if (!this.isEditing && this.document.previewUri && this.document.title && this.document.text) {
+      if (
+        !this.isEditing &&
+        this.document.previewUri &&
+        this.document.title &&
+        this.document.text
+      ) {
         return
       }
 

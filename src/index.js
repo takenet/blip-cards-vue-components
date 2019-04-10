@@ -1,5 +1,6 @@
 import VeeValidate, { Validator } from 'vee-validate'
 import Vue2TouchEvents from 'vue2-touch-events'
+import * as sanitize from 'sanitize-html'
 
 // Components
 import BlipCard from './components/BlipCard'
@@ -62,6 +63,14 @@ function install(Vue) {
 
   Vue.directive('autoExpand', AutoExpandDirective)
   Vue.directive('chat-scroll', vChatScroll)
+
+  Vue.mixin({
+    methods: {
+      sanitize: function (input) {
+        return sanitize(input)
+      }
+    }
+  })
 
   Vue.use(VeeValidate)
   Vue.use(Vue2TouchEvents)
