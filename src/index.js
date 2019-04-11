@@ -1,6 +1,5 @@
 import VeeValidate, { Validator } from 'vee-validate'
 import Vue2TouchEvents from 'vue2-touch-events'
-import * as sanitize from 'sanitize-html'
 
 // Components
 import BlipCard from './components/BlipCard'
@@ -31,6 +30,9 @@ import FileIconFilter from './filters/FileIconFilter'
 // Directives
 import AutoExpandDirective from './directives/AutoExpandDirective'
 import vChatScroll from './directives/vChatScroll'
+
+// Mixins
+import Sanitize from './mixins/sanitizeHtml'
 
 function install(Vue) {
   let components = []
@@ -66,9 +68,7 @@ function install(Vue) {
 
   Vue.mixin({
     methods: {
-      sanitize: function (input) {
-        return sanitize(input)
-      }
+      sanitize: Sanitize.mixin
     }
   })
 
