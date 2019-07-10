@@ -324,7 +324,7 @@ export default {
     },
     cancelOption: function(item) {
       this.errors.clear()
-      this.$validator.clean()
+      this.$validator.reset()
       this.selectedOption = {}
       this.addOption = false
     },
@@ -356,8 +356,8 @@ export default {
 
       this.selectedOption = {}
       this.errors.clear()
-      this.$validator.clean()
-
+      this.$validator.reset()
+      
       this.addOption = false
     },
     editOption: function(item, index, $event) {
