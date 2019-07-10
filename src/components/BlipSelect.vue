@@ -357,7 +357,6 @@ export default {
       this.selectedOption = {}
       this.errors.clear()
       this.$validator.reset()
-      
       this.addOption = false
     },
     editOption: function(item, index, $event) {
