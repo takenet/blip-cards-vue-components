@@ -1,0 +1,138 @@
+{
+  "form": {
+    "apply": "Aplicar",
+    "cancel": "Cancelar"
+  },
+  "notification": {
+    "failure": "Falha ao enviar a mensagem."
+  },
+  "metadata": {
+    "label": "Definir metadados"
+  },
+  "blipSelect": {
+    "payload": {
+      "label": "Definir payload",
+      "postback": {
+        "mime": "Tipo MIME do Postback",
+        "value": "Valor do Postback"
+      }
+    },
+    "option": {
+      "label": "Adicionar opção",
+      "warning": "Requer pelo menos 1 opção"
+    },
+    "button": {
+      "label": "Adicionar botão"
+    },
+    "text": {
+      "label": "Texto",
+      "placeholder": "Insira o texto"
+    }
+  },
+  "chatState": {
+    "interval": {
+      "placeholder": "Milisegundos a esperar"
+    }
+  },
+  "documentSelect": {
+    "more": "Ver mais",
+    "supported": "Formatos suportados: JPEG, JPG, PNG, GIF.",
+    "aspectRatio": {
+      "label": "Aspect Ratio"
+    },
+    "title": {
+      "placeholder": "Insira o título do menu"
+    },
+    "subtitle": {
+      "placeholder": "Insira o subtítulo do menu"
+    },
+    "image": {
+      "placeholder": "Insira o URI da imagem"
+    },
+    "link": {
+      "label": "Link",
+      "title": {
+        "placeholder": "Insira o título"
+      },
+      "description": {
+        "placeholder": "Insira a descrição"
+      },
+      "uri": {
+        "placeholder": "Insira o URI do link"
+      },
+      "target": {
+        "label": "Alvo",
+        "blank": "Blank",
+        "self": "Self",
+        "selfCompact": "SelfCompact",
+        "selfTall": "SelfTall"
+      }
+    },
+    "text": {
+      "label": "Texto",
+      "placeholder": "Insira o texto",
+      "payload": {
+        "label": "Definir payload",
+        "postback": {
+          "mime": "Tipo MIME do Postback",
+          "value": "Valor do Postback"
+        }
+      }
+    },
+    "option": {
+      "label": "Adicionar opção",
+      "title": {
+        "placeholder": "Insira o título"
+      },
+      "description": {
+        "placeholder": "Insira a descrição"
+      }
+    }
+  },
+  "location": {
+    "description": {
+      "placeholder": "Insira a descrição"
+    },
+    "latitude": {
+      "placeholder": "Insira a latitude"
+    },
+    "longitude": {
+      "placeholder": "Insira a longitude"
+    }
+  },
+  "requestLocation": {
+    "more": "Ver mais",
+    "button": "Enviar localização",
+    "text": {
+      "placeholder": "Insira o texto"
+    }
+  },
+  "plainText": {
+    "more": "Ver mais",
+    "placeholder": "Insira o texto"
+  },
+  "ticket": {
+    "title": "Ticket #{sequentialId}",
+    "redirect": "Chatbot {identity} encaminhou a conversa para atendimento",
+    "closed": "Atendente {agentIdentity} encerrou o atendimento"
+  },
+  "weblink": {
+    "label": "Link",
+    "title": {
+      "placeholder": "Insira o título"
+    },
+    "description": {
+      "placeholder": "Insira a descrição"
+    },
+    "url": {
+      "placeholder": "Insira o URL da página"
+    },
+    "target": {
+      "label": "Alvo",
+      "blank": "Blank",
+      "self": "Self",
+      "selfCompact": "SelfCompact",
+      "selfTall": "SelfTall"
+    }
+  }
+}

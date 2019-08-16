@@ -1,0 +1,138 @@
+{
+  "form": {
+    "apply": "Apply",
+    "cancel": "Cancel"
+  },
+  "notification": {
+    "failure": "Failed to send message."
+  },
+  "metadata": {
+    "label": "Set metadata"
+  },
+  "blipSelect": {
+    "payload": {
+      "label": "Set payload",
+      "postback": {
+        "mime": "Postback MIME type",
+        "value": "Postback value"
+      }
+    },
+    "option": {
+      "label": "Add option",
+      "warning": "Requires at least 1 option"
+    },
+    "button": {
+      "label": "Add button"
+    },
+    "text": {
+      "label": "Text",
+      "placeholder": "Enter the text"
+    }
+  },
+  "chatState": {
+    "interval": {
+      "placeholder": "Milliseconds to wait"
+    }
+  },
+  "documentSelect": {
+    "more": "See more",
+    "supported": "Supported formats: JPEG, JPG, PNG, GIF.",
+    "aspectRatio": {
+      "label": "Aspect Ratio"
+    },
+    "title": {
+      "placeholder": "Enter the menu title"
+    },
+    "subtitle": {
+      "placeholder": "Enter the menu subtitle"
+    },
+    "image": {
+      "placeholder": "Enter the image URI"
+    },
+    "link": {
+      "label": "Link",
+      "title": {
+        "placeholder": "Enter the title"
+      },
+      "description": {
+        "placeholder": "Enter the description"
+      },
+      "uri": {
+        "placeholder": "Enter the link URI"
+      },
+      "target": {
+        "label": "Target",
+        "blank": "Blank",
+        "self": "Self",
+        "selfCompact": "SelfCompact",
+        "selfTall": "SelfTall"
+      }
+    },
+    "text": {
+      "label": "Text",
+      "placeholder": "Enter the text",
+      "payload": {
+        "label": "Set payload",
+        "postback": {
+          "mime": "Postback MIME type",
+          "value": "Postback value"
+        }
+      }
+    },
+    "option": {
+      "label": "Add option",
+      "title": {
+        "placeholder": "Enter the title"
+      },
+      "description": {
+        "placeholder": "Enter the description"
+      }
+    }
+  },
+  "location": {
+    "description": {
+      "placeholder": "Enter the description"
+    },
+    "latitude": {
+      "placeholder": "Enter the latitude"
+    },
+    "longitude": {
+      "placeholder": "Enter the longitude"
+    }
+  },
+  "requestLocation": {
+    "more": "See more",
+    "button": "Send location",
+    "text": {
+      "placeholder": "Enter the text"
+    }
+  },
+  "plainText": {
+    "more": "See more",
+    "placeholder": "Enter the text"
+  },
+  "ticket": {
+    "title": "Ticket #{sequentialId}",
+    "redirect": "Chatbot {identity} redirected chat to customer service",
+    "closed": "Agent {agentIdentity} closed the ticket"
+  },
+  "weblink": {
+    "label": "Link",
+    "title": {
+      "placeholder": "Enter the title"
+    },
+    "description": {
+      "placeholder": "Enter the description"
+    },
+    "url": {
+      "placeholder": "Enter the page URL"
+    },
+    "target": {
+      "label": "Target",
+      "blank": "Blank",
+      "self": "Self",
+      "selfCompact": "SelfCompact",
+      "selfTall": "SelfTall"
+    }
+  }
+}
