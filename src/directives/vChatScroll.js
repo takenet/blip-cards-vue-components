@@ -238,7 +238,7 @@ const vChatScroll = {
     el.previousContentHeight = contentScroll.scrollHeight
     scroll(contentScroll, binding)
   },
-  unbind: (el, binding) => {
+  unbind: (_, binding) => {
     let config = binding.value || {}
     if (config.mutationObserver) {
       config.mutationObserver.disconnect()
