@@ -172,10 +172,9 @@ const scroll = (el, binding) => {
 const vChatScroll = {
   bind: (el, binding) => {
     window.SimpleScrollbar.initEl(el)
-
     let contentScroll = el.querySelector('.ss-content')
     let config = binding.value || {}
-    config.contentHeight = 0
+    el.previousContentHeight = 0
 
     contentScroll.addEventListener('force-scroll', (e) => {
       config.scrolled = false
@@ -183,11 +182,13 @@ const vChatScroll = {
     })
 
     let scrollEvent = debounce(() => {
+      const scrollTop = contentScroll.scrollTop || contentScroll.scrollY || 0
+
       if (config.scrollToTop) {
-        config.scrolled = contentScroll.scrollTop > 0
+        config.scrolled = scrollTop > 0
       } else {
         // there is a 2 pixels threshold when content is not scrolled
-        config.scrolled = (contentScroll.scrollHeight - contentScroll.scrollTop) - contentScroll.clientHeight > 2
+        config.scrolled = (contentScroll.scrollHeight - scrollTop) - contentScroll.clientHeight > 2
       }
     }, 100)
 
@@ -198,9 +199,22 @@ const vChatScroll = {
     config.mutationObserver = new MutationObserver((e) => {
       if (!e.find((x) => x.addedNodes.length > 0)) return
 
+      const previousContentHeight = el.previousContentHeight
+      el.previousContentHeight = contentScroll.scrollHeight
+
+      // In case there is no more information to load on infinite loading ($state.complete())
+      // Or we want to prevent any scroll updates on mutation, we pass { updateOnMutation: false }
+      // Bug correction for new chat scroll arrow behaviour
+      if (el.shouldScrollOnMutation === false) {
+        contentScroll.dispatchEvent(new Event('onMutation'))
+        return
+      }
+
+      const scrollTop = contentScroll.scrollTop || contentScroll.scrollY || 0
+
       // Infinite scroll, new elements are added so we have to keep the scroll in the same position
-      if (config.scrollToTop !== true && contentScroll.scrollTop === 0) {
-        contentScroll.scrollTop = contentScroll.scrollHeight - config.contentHeight
+      if (config.scrollToTop !== true && scrollTop === 0) {
+        contentScroll.scrollTop = contentScroll.scrollHeight - previousContentHeight
       } else {
         scroll(contentScroll, binding)
       }
@@ -213,11 +227,15 @@ const vChatScroll = {
       subtree: true
     })
   },
+  update: (el, binding) => {
+    let config = binding.value || {}
+    el.shouldScrollOnMutation = config.updateOnMutation !== false
+  },
   inserted: (el, binding) => {
     let config = binding.value || {}
     config.scrolled = false
     let contentScroll = el.querySelector('.ss-content')
-    config.contentHeight = contentScroll.scrollHeight
+    el.previousContentHeight = contentScroll.scrollHeight
     scroll(contentScroll, binding)
   },
   unbind: (el, binding) => {
