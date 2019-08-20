@@ -202,9 +202,10 @@ const vChatScroll = {
       const previousContentHeight = el.previousContentHeight
       el.previousContentHeight = contentScroll.scrollHeight
 
+      // Bug correction for new chat scroll arrow behaviour
       // In case there is no more information to load on infinite loading ($state.complete())
       // Or we want to prevent any scroll updates on mutation, we pass { updateOnMutation: false }
-      // Bug correction for new chat scroll arrow behaviour
+      // Ignoring mutation will only happen when user has scrolled
       if (el.shouldScrollOnMutation === false && config.scrolled === true) {
         contentScroll.dispatchEvent(new Event('onMutation'))
         return
