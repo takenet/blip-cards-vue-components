@@ -27,7 +27,8 @@
       </div>
 
       <div class="flex" :class="'notification ' + position" v-if="date">
-        <img v-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
+        <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
+        <img v-else-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
         <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
         <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
         <div class="failure" v-else-if="this.status === 'failed' && this.position === 'right'">

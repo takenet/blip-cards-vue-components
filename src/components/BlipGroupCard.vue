@@ -27,7 +27,8 @@
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
-          <img v-if="group.status === 'accepted' && group.position === 'right'" :src="checkSentSvg"/>
+          <img v-if="group.status === 'waiting' && group.position === 'right'" :src="clockSvg">
+          <img v-else-if="group.status === 'accepted' && group.position === 'right'" :src="checkSentSvg"/>
           <img v-else-if="group.status === 'received' && group.position === 'right'" :src="doubleCheckReceivedSvg"/>
           <img v-else-if="group.status === 'consumed' && group.position === 'right'" :src="doubleCheckReadSvg"/>
           <div v-else-if="group.status === 'failed' && group.position === 'right'" class="failure">

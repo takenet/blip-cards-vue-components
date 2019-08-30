@@ -5,6 +5,7 @@ import closeBlueSvg from '../assets/img/CloseBlue.svg'
 import plusSvg from '../assets/img/plus.svg'
 import trashSvg from '../assets/img/Trash.svg'
 import checkSentSvg from '../assets/img/CheckSent.svg'
+import clockSvg from '../assets/img/clock.svg'
 import doubleCheckReceivedSvg from '../assets/img/DoubleCheckReceived.svg'
 import doubleCheckReadSvg from '../assets/img/DoubleCheckRead.svg'
 
@@ -65,6 +66,7 @@ var baseComponent = {
       plusSvg,
       trashSvg,
       checkSentSvg,
+      clockSvg,
       doubleCheckReadSvg,
       doubleCheckReceivedSvg
     }

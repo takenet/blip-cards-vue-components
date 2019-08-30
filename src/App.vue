@@ -1,5 +1,5 @@
 <template>
-  <div> 
+  <div>
     <div class="float" style="width: 200px">
       <div>
         <h1>Width:</h1>
@@ -34,6 +34,7 @@
       <div>
         <h1>Status notification:</h1>
         <form>
+          <input type="radio" name="status" v-model="msgStatus" value="waiting" checked> Waiting <br>
           <input type="radio" name="status" v-model="msgStatus" value="accepted" checked> Accepted <br>
           <input type="radio" name="status" v-model="msgStatus" value="received"> Received <br>
           <input type="radio" name="status" v-model="msgStatus" value="consumed"> Consumed <br>
