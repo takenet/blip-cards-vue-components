@@ -297,7 +297,7 @@ export default {
       max-width: 100%;
       border-radius: 13px;
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
 
       .header {
         width: 100%;
