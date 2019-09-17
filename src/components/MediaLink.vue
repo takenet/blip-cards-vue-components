@@ -7,7 +7,8 @@
     <blip-file :document="document" :full-document="fullDocument" :position="position" :date="date" v-else :editable="editable" :on-save="save" :on-deleted="onDeleted" :on-metadata-edit="isMetadataReady" :deletable="deletable" :on-cancel="onCancel" :editing="editing"/>
 
     <div class="flex" :class="'notification ' + position" v-if="date">
-      <img v-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
+      <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
+      <img v-else-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
       <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
       <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
       <div v-else-if="this.status === 'failed' && this.position === 'right'" class="failure">
