@@ -36,7 +36,7 @@
           </div>
           <span>{{ group.date }}</span>
         </div>
-        <div class="flex" :class="'group-notification ' + group.position" v-else-if="group.hasNotification">
+        <div class="flex" :class="'group-notification ' + group.position" v-else>
           <img v-if="group.status === 'dispatched' && group.position === 'right'" :src="clockSvg">
         </div>
       </div>

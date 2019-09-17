@@ -34,7 +34,7 @@
       <div>
         <h1>Status notification:</h1>
         <form>
-          <input type="radio" name="status" v-model="msgStatus" value="waiting" checked> Waiting <br>
+          <input type="radio" name="status" v-model="msgStatus" value="dispatched" checked> Dispatched <br>
           <input type="radio" name="status" v-model="msgStatus" value="accepted" checked> Accepted <br>
           <input type="radio" name="status" v-model="msgStatus" value="received"> Received <br>
           <input type="radio" name="status" v-model="msgStatus" value="consumed"> Consumed <br>
