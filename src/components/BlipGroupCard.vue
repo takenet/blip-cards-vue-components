@@ -100,7 +100,9 @@ export default {
   computed: {
     groupedDocuments() {
       let groups = []
-      if (this.documents.length === 0) return
+      if (this.documents.length === 0) {
+        return
+      }
       let group = {
         msgs: [this.documents[0]],
         position: this.documents[0].position,
