@@ -27,7 +27,7 @@
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
-          <img v-if="group.status === 'waiting' && group.position === 'right'" :src="clockSvg">
+          <img v-if="group.status === 'dispatched' && group.position === 'right'" :src="clockSvg">
           <img v-else-if="group.status === 'accepted' && group.position === 'right'" :src="checkSentSvg"/>
           <img v-else-if="group.status === 'received' && group.position === 'right'" :src="doubleCheckReceivedSvg"/>
           <img v-else-if="group.status === 'consumed' && group.position === 'right'" :src="doubleCheckReadSvg"/>
@@ -35,6 +35,9 @@
             Falha ao enviar a mensagem.
           </div>
           <span>{{ group.date }}</span>
+        </div>
+        <div class="flex" :class="'group-notification ' + group.position" v-else-if="group.hasNotification">
+          <img v-if="group.status === 'dispatched' && group.position === 'right'" :src="clockSvg">
         </div>
       </div>
       <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '10px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
