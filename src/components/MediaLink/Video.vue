@@ -556,6 +556,11 @@ export default {
     width: 100%;
     height: 100%;
 
+    #blipVideo {
+      max-height: 100%;
+      border-radius: 0 !important;
+    }
+
     .video-player-controls.hide-player {
       bottom: -50px;
       visibility: hidden;
