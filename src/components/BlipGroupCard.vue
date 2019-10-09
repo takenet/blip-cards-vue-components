@@ -27,10 +27,10 @@
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
-          <img v-if="group.status === 'dispatched' && group.position === 'right'" :src="clockSvg">
-          <img v-else-if="group.status === 'accepted' && group.position === 'right'" :src="checkSentSvg"/>
-          <img v-else-if="group.status === 'received' && group.position === 'right'" :src="doubleCheckReceivedSvg"/>
-          <img v-else-if="group.status === 'consumed' && group.position === 'right'" :src="doubleCheckReadSvg"/>
+          <img v-if="group.status === 'dispatched' && group.position === 'right'" class='dispatched' :src="clockSvg"/>
+          <img v-else-if="group.status === 'accepted' && group.position === 'right'" class='accepted' :src="checkSentSvg"/>
+          <img v-else-if="group.status === 'received' && group.position === 'right'" class='received' :src="doubleCheckReceivedSvg"/>
+          <img v-else-if="group.status === 'consumed' && group.position === 'right'" class='consumed' :src="doubleCheckReadSvg"/>
           <div v-else-if="group.status === 'failed' && group.position === 'right'" class="failure">
             Falha ao enviar a mensagem.
           </div>
