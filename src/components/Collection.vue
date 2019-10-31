@@ -22,8 +22,8 @@
           </div>
         </div>
 
-        <a class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</a>
-        <a class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</a>
+        <span class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</span>
+        <span class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</span>
       </div>
 
       <div class="flex" :class="'notification ' + position" v-if="date">
@@ -112,7 +112,7 @@ export default {
   },
   watch: {
     document: function() {
-      this.items = this.document.items.map(function(x, i) {
+      this.items = this.document.items && this.document.items.map(function(x, i) {
         return {
           ...x,
           id: i
