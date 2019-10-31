@@ -112,7 +112,7 @@ export default {
   },
   watch: {
     document: function() {
-      this.items = this.document.items.map(function(x, i) {
+      this.items = this.document.items && this.document.items.map(function(x, i) {
         return {
           ...x,
           id: i
