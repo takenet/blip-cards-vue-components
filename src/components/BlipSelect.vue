@@ -263,8 +263,8 @@ export default {
     },
     checkForEndOfSlider: function() {
       var element = this.$el
-      let slider = element.querySelector('.slideshow-list')
-      let itemList = element.querySelector('.item-list')
+      let slider = element && element.querySelector('.slideshow-list')
+      let itemList = element && element.querySelector('.item-list')
       if (!element || !slider || !itemList) {
         return
       }
