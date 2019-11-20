@@ -246,12 +246,12 @@ export default {
       if (n === 1) {
         trackElement.setAttribute(
           'style',
-          'transform: translate3d(0px, 0px, 0px); -webkit-transform: translate3d(0px, 0px, 0px);'
+          'transform: translate(0px, 0px, 0px); -webkit-transform: translate(0px, 0px, 0px);'
         )
       } else {
         let margin = this.elementsWidth === this.width ? -10 : 10
-        const data = `translate3d(${10 -
-          ((this.elementsWidth + 10) * (n - 1) - margin)}px, 0px, 0px)`
+        const data = `translateX(${10 -
+          ((this.elementsWidth + 10) * (n - 1) - margin)}px)`
         trackElement.setAttribute(
           'style',
           `transform: ${data}; -webkit-transform: ${data};`
@@ -286,7 +286,8 @@ export default {
       transition: all 0.8s ease;
       opacity: 1;
       width: 30000px;
-      transform: translate3d(0px, 0px, 0px);
+      transform: translate(0px, 0px, 0px);
+      -webkit-transform: translate(0px, 0px, 0px);
       display: flex;
       top: 0;
       left: 0;
