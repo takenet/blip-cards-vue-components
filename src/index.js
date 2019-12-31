@@ -12,6 +12,7 @@ import Collection from './components/Collection'
 import WebLink from './components/WebLink'
 import Location from './components/Location'
 import RequestLocation from './components/RequestLocation'
+import LimeInput from './components/LimeInput'
 import Raw from './components/Raw'
 import ChatState from './components/ChatState'
 import Redirect from './components/Redirect'
@@ -51,6 +52,7 @@ function install(Vue) {
   components.push(Vue.component(WebLink.name, WebLink))
   components.push(Vue.component(Location.name, Location))
   components.push(Vue.component(RequestLocation.name, RequestLocation))
+  components.push(Vue.component(LimeInput.name, LimeInput))
   components.push(Vue.component(Raw.name, Raw))
   components.push(Vue.component(ChatState.name, ChatState))
 
