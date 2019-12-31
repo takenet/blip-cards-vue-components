@@ -92,7 +92,10 @@ import debounce from 'lodash/debounce'
       this.currentHeight = this.el.clientHeight
     })
 
-    w.addEventListener('resize', this.moveBar.bind(this))
+    w.addEventListener('resize', () => {
+      setTimeout(this.moveBar.bind(this), 100)
+    })
+
     this.el.addEventListener('scroll', this.moveBar.bind(this))
     this.el.addEventListener('mouseenter', this.moveBar.bind(this))
     this.el.addEventListener('onMutation', this.moveBar.bind(this))
