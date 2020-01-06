@@ -5,7 +5,7 @@
     <div :class="'bubble ' + position">
       <div class="flex flex-column">
         <img v-if="position === 'right'" :src="alertWhiteSvg" alt="Alert" class="alert-icon">
-        <img v-else :src="alertSvg" alt="Alert">
+        <img v-else :src="alertSvg" alt="Alert" class="alert-icon">
         <span>
           Unsuported Content
         </span>
@@ -63,6 +63,7 @@ export default {
    @import '../styles/variables.scss';
 
    .unsuported-content .alert-icon {
+     height: 20px;
      margin-right: 2px;
    }
 
