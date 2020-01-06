@@ -13,7 +13,7 @@ import WebLink from './components/WebLink'
 import Location from './components/Location'
 import RequestLocation from './components/RequestLocation'
 import LimeInput from './components/LimeInput'
-import Raw from './components/Raw'
+import UnsuportedContent from './components/UnsuportedContent'
 import ChatState from './components/ChatState'
 import Redirect from './components/Redirect'
 import Ticket from './components/Ticket'
@@ -53,7 +53,7 @@ function install(Vue) {
   components.push(Vue.component(Location.name, Location))
   components.push(Vue.component(RequestLocation.name, RequestLocation))
   components.push(Vue.component(LimeInput.name, LimeInput))
-  components.push(Vue.component(Raw.name, Raw))
+  components.push(Vue.component(UnsuportedContent.name, UnsuportedContent))
   components.push(Vue.component(ChatState.name, ChatState))
 
   Vue.component(Editable.name, Editable)
@@ -89,6 +89,6 @@ export default {
   WebLink,
   Location,
   RequestLocation,
-  Raw,
+  UnsuportedContent,
   install
 }

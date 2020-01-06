@@ -31,7 +31,7 @@
 
         <ticket v-else-if="document.type === 'application/vnd.iris.ticket+json'" :status="status" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
 
-        <blip-raw @unsupportedType="unsupportedType" v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <unsuported-content v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
       </div>
       <div :class="'blip-card-photo ' + position" v-if="photo && position === 'right'" :style="{ top: photoMargin + 'px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
       </div>
