@@ -162,18 +162,18 @@ $hard-round: 13px;
     }
 
     // Bubble Right
-    > :first-child .bubble.right {
+    > :first-child :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $hard-round $soft-round $hard-round;
     }
-    > :not(:first-child) .bubble.right {
+    > :not(:first-child) :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $soft-round $soft-round $hard-round;
     }
 
     // Bubble Left
-    > :first-child .bubble.left {
+    > :first-child :not(.unsuported-content) > .bubble.left {
       border-radius: $hard-round $hard-round $hard-round $soft-round;
     }
-    > :not(:first-child) .bubble.left {
+    > :not(:first-child) :not(.unsuported-content) > .bubble.left {
       border-radius: $soft-round $hard-round $hard-round $soft-round;
     }
 

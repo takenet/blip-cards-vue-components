@@ -47,7 +47,11 @@ export default {
     base
   ],
   props: {
-    document: { }
+    document: { },
+    status: {
+      type: String,
+      default: ''
+    }
   },
   data: function() {
     return {
@@ -62,25 +66,26 @@ export default {
 <style lang="scss">
    @import '../styles/variables.scss';
 
-   .unsuported-content .alert-icon {
+   .blip-container.unsuported-content .alert-icon {
      height: 20px;
      margin-right: 2px;
    }
 
-    .unsuported-content .bubble.left {
+    .blip-container.unsuported-content .bubble.left {
       background-color: #DEE8EC;
       color: $vue-rooftop;
     }
 
-    .unsuported-content .bubble.right {
+    .blip-container.unsuported-content .bubble.right {
       background-color: #0CC8CC;
     }
 
-    .unsuported-content.blip-card .bubble {
+    .blip-container.unsuported-content.blip-card .bubble {
       padding: 4px 16px;
       word-wrap: break-word;
       border-radius: 15px;
       white-space: normal;
       font-size: 13px;
+      box-shadow: 0px 0px 0px;
     }
 </style>
