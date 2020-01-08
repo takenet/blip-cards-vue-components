@@ -1,7 +1,7 @@
 <template>
  <div class="blip-container unsuported-content">
     <div :class="'bubble ' + position">
-      <div class="flex flex-column">
+      <div class="flex">
         <img v-if="position === 'right'" :src="alertWhiteSvg" alt="Alert" class="alert-icon">
         <img v-else :src="alertSvg" alt="Alert" class="alert-icon">
         <span>
