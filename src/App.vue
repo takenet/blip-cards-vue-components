@@ -58,7 +58,7 @@
         <button class="button" @click="sendRequestLocation">ENVIAR Pedido de Localização</button>
         <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
         <button class="button" @click="sendTicket">ENVIAR Ticket</button>
-        <button class="button" @click="sendRaw">ENVIAR Raw Content</button>
+        <button class="button" @click="sendRaw">ENVIAR Unsuportend Content</button>
       </div>
 
       <div v-else>
@@ -68,8 +68,8 @@
       </div>
     </div>
 
-    <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; padding: 20px; height: 800px;'" v-chat-scroll="{scrollToTop: false}">
-      <div>
+    <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; height: 800px;'" v-chat-scroll="{scrollToTop: false}">
+      <div style="padding: 20px">
         <blip-group-card v-if="group" :documents="docs" :photo="photoUri" :deletable="true" :on-selected="selected" :hide-options="false" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
           <blip-card :photo="item.photo" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :status="item.status" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
@@ -417,7 +417,7 @@ export default {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
-        type: 'application/vnd.lime.chatstate+json',
+        type: 'application/vnd.lime.chatstater+json',
         content: {
           state: 'composing'
         }
