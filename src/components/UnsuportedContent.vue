@@ -1,5 +1,3 @@
-
-
 <template>
  <div class="blip-container unsuported-content">
     <div :class="'bubble ' + position">
@@ -61,7 +59,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="scss">
    @import '../styles/variables.scss';
