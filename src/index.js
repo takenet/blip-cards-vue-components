@@ -1,4 +1,6 @@
 import VeeValidate, { Validator } from 'vee-validate'
+import VeeValidateMessagesBR from 'vee-validate/dist/locale/pt_BR'
+import VeeValidateMessagesEN from 'vee-validate/dist/locale/en'
 import Vue2TouchEvents from 'vue2-touch-events'
 
 // Components
@@ -74,7 +76,16 @@ function install(Vue) {
     }
   })
 
-  Vue.use(VeeValidate)
+  Validator.localize({
+    'pt-BR': VeeValidateMessagesBR,
+    'en': VeeValidateMessagesEN
+  })
+
+  const userLanguageIsEnglish = navigator.language.startsWith('en')
+  Vue.use(VeeValidate, {
+    locale: userLanguageIsEnglish ? 'en' : 'pt-BR'
+  })
+
   Vue.use(Vue2TouchEvents)
   return components
 }
