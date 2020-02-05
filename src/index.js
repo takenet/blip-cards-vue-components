@@ -81,9 +81,9 @@ function install(Vue) {
     'en': VeeValidateMessagesEN
   })
 
-  const userLanguageIsEnglish = navigator.language.startsWith('en')
+  const userLanguageIsEnglish = () => navigator.language.startsWith('en')
   Vue.use(VeeValidate, {
-    locale: userLanguageIsEnglish ? 'en' : 'pt-BR'
+    locale: userLanguageIsEnglish() ? 'en' : 'pt-BR'
   })
 
   Vue.use(Vue2TouchEvents)
