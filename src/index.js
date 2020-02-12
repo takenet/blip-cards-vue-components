@@ -60,9 +60,6 @@ function install(Vue) {
 
   Vue.component(Editable.name, Editable)
 
-  Validator.extend('json', JsonValidator)
-  Validator.extend('mime', MimeValidator)
-
   Vue.filter('sizeInBytesFilter', SizeInBytesFilter.filter)
   Vue.filter('limitContentFilter', LimitContentFilter.filter)
   Vue.filter('fileIconFilter', FileIconFilter.filter)
@@ -76,14 +73,17 @@ function install(Vue) {
     }
   })
 
+  Validator.extend('json', JsonValidator)
+  Validator.extend('mime', MimeValidator)
   Validator.localize({
-    'pt-BR': VeeValidateMessagesBR,
+    'pt_BR': VeeValidateMessagesBR,
     'en': VeeValidateMessagesEN
   })
 
-  const userLanguageIsEnglish = () => navigator.language.startsWith('en')
+  const getUserLanguage = () => navigator.language.startsWith('en') ? 'en' : 'pt_BR'
+
   Vue.use(VeeValidate, {
-    locale: userLanguageIsEnglish() ? 'en' : 'pt-BR'
+    locale: getUserLanguage()
   })
 
   Vue.use(Vue2TouchEvents)
