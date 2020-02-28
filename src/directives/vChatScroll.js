@@ -19,7 +19,16 @@ import debounce from 'lodash/debounce'
       return
     }
 
-    Object.defineProperty(el, 'data-simple-scrollbar', new Ss(el))
+    Object.defineProperty(el, 'data-simple-scrollbar', {
+      value: new Ss(el),
+      configurable: true
+    })
+  }
+
+  function unbindEl(el) {
+    if (!Object.prototype.hasOwnProperty.call(el, 'data-simple-scrollbar')) return
+    el['data-simple-scrollbar'].unBind()
+    delete el['data-simple-scrollbar']
   }
 
   // Mouse drag handler
@@ -57,7 +66,11 @@ import debounce from 'lodash/debounce'
   // Constructor
   function Ss(el) {
     this.target = el
+    this.content = el.firstElementChild
     this.direction = w.getComputedStyle(this.target).direction
+
+    // Create a reference to the function binding to remove the event listeners
+    this.mB = this.moveBar.bind(this)
 
     this.bar = '<div class="ss-scroll">'
 
@@ -85,26 +98,43 @@ import debounce from 'lodash/debounce'
     this.moveBar()
 
     // Stay at bottom if element is at bottom during resize
-    w.addEventListener('resize', () => {
+    this.resizeFunction = () => {
       if (this.el.scrollTop + this.currentHeight >= this.el.scrollHeight) {
         scrollToBottom(this.el)
       }
       this.currentHeight = this.el.clientHeight
-    })
+      setTimeout(this.mB, 100)
+    }
 
-    w.addEventListener('resize', () => {
-      setTimeout(this.moveBar.bind(this), 100)
-    })
+    w.addEventListener('resize', this.resizeFunction)
 
-    this.el.addEventListener('scroll', this.moveBar.bind(this))
-    this.el.addEventListener('mouseenter', this.moveBar.bind(this))
-    this.el.addEventListener('onMutation', this.moveBar.bind(this))
+    this.el.addEventListener('scroll', this.mB)
+    this.el.addEventListener('mouseenter', this.mB)
+    this.el.addEventListener('onMutation', this.mB)
 
     this.target.classList.add('ss-container')
 
     var css = w.getComputedStyle(el)
     if (css['height'] === '0px' && css['max-height'] !== '0px') {
       el.style.height = css['max-height']
+    }
+
+    this.unBind = function() {
+      // Remove event listeners
+      w.removeEventListener('resize', this.resizeFunction)
+      this.el.removeEventListener('scroll', this.mB)
+      this.el.removeEventListener('mouseenter', this.mB)
+      this.el.removeEventListener('onMutation', this.mB)
+
+      this.target.classList.remove('ss-container')
+
+      // Unwrap the initial content and remove remaining wrappers
+      this.target.insertBefore(this.content, this.wrapper)
+      this.target.removeChild(this.wrapper)
+
+      // Remove the bar including its drag-dealer event listener
+      this.target.removeChild(this.bar)
+      this.bar = null // make way for the garbage collector
     }
   }
 
@@ -146,6 +176,7 @@ import debounce from 'lodash/debounce'
   }
 
   Ss.initEl = initEl
+  Ss.unbindEl = unbindEl
 
   w.SimpleScrollbar = Ss
 })(window, document)
@@ -247,6 +278,7 @@ const vChatScroll = {
     if (config.mutationObserver) {
       config.mutationObserver.disconnect()
     }
+    window.SimpleScrollbar.unbindEl(el)
   }
 }
 

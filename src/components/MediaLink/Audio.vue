@@ -80,6 +80,11 @@ export default {
     this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
+  destroyed: function() {
+    this.audio.removeEventListener('timeupdate', this.audioTimeUpdated)
+    this.audio.removeEventListener('loadedmetadata', this.audioLoaded)
+    this.audio.removeEventListener('ended', this.resetPlay)
+  },
   methods: {
     init: function() {
       this.audioUri = this.document.uri

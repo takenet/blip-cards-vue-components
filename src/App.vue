@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div class="float" style="width: 200px">
       <div>
         <h1>Width:</h1>
@@ -59,6 +60,7 @@
         <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
         <button class="button" @click="sendTicket">ENVIAR Ticket</button>
         <button class="button" @click="sendRaw">ENVIAR Unsuportend Content</button>
+        <button class="button" @click="toogleBlipGroupCard">CRIAR/DESTRUIR scroll</button>
       </div>
 
       <div v-else>
@@ -68,7 +70,7 @@
       </div>
     </div>
 
-    <div :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; height: 800px;'" v-chat-scroll="{scrollToTop: false}">
+    <div v-if="showBlipGroupCard" :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; height: 800px;'" v-chat-scroll="{scrollToTop: false}">
       <div style="padding: 20px">
         <blip-group-card v-if="group" :documents="docs" :photo="photoUri" :deletable="true" :on-selected="selected" :hide-options="false" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
@@ -301,7 +303,7 @@ export default {
         type: 'application/vnd.lime.media-link+json',
         content: {
           type: 'audio/mp3',
-          uri: 'http://blaamandagjazzband.dk/jazz/mp3/basin_street_blues.mp3',
+          uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3',
           size: '1'
         }
       })
@@ -315,7 +317,7 @@ export default {
         content: {
           type: 'video/mp4',
           uri:
-            'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_30mb.mp4',
+            'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
           size: '1'
         }
       })
@@ -424,7 +426,10 @@ export default {
       })
       this.send()
     },
-    onUnsupportedType: function(document) {}
+    onUnsupportedType: function(document) {},
+    toogleBlipGroupCard: function() {
+      this.showBlipGroupCard = !this.showBlipGroupCard
+    }
   },
   data: function() {
     return {
@@ -444,7 +449,8 @@ export default {
       msgStatus: 'accepted',
       selected: function(d) {},
       save: function(d) {},
-      deleted: function(d) {}
+      deleted: function(d) {},
+      showBlipGroupCard: true
     }
   },
   components: {}
