@@ -147,6 +147,19 @@ export default {
     document.addEventListener('mozfullscreenchange', this.fullScreenChange)
     document.addEventListener('MSFullscreenChange', this.fullScreenChange)
   },
+  destroyed: function() {
+    document.addEventListener('fullscreenchange', this.fullScreenChange)
+    document.addEventListener('webkitfullscreenchange', this.fullScreenChange)
+    document.addEventListener('mozfullscreenchange', this.fullScreenChange)
+    document.addEventListener('MSFullscreenChange', this.fullScreenChange)
+    this.video.addEventListener('timeupdate', this.videoTimeUpdated)
+    this.video.addEventListener('loadedmetadata', this.videoLoaded)
+    this.video.addEventListener('seeking', this.readyToPlay)
+    this.video.addEventListener('waiting', this.readyToPlay)
+    this.video.addEventListener('seeked', this.readyToPlay)
+    this.video.addEventListener('canplay', this.readyToPlay)
+    this.video.addEventListener('ended', this.resetPlay)
+  },
   updated: function() {
     this.initVideo()
   },
