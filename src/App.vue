@@ -428,11 +428,7 @@ export default {
     },
     onUnsupportedType: function(document) {},
     toogleBlipGroupCard: function() {
-      if (this.showBlipGroupCard) {
-        this.showBlipGroupCard = false
-      } else {
-        this.showBlipGroupCard = true
-      }
+      this.showBlipGroupCard = !this.showBlipGroupCard
     }
   },
   data: function() {
