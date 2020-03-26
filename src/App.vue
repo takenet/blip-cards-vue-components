@@ -70,7 +70,7 @@
       </div>
     </div>
 
-    <div v-if="showBlipGroupCard" :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; height: 800px;'" v-chat-scroll="{scrollToTop: false}">
+    <div v-if="showBlipGroupCard" :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; height: 800px;'" v-chat-scroll="{scrollToTop: false, onScroll}">
       <div style="padding: 20px">
         <blip-group-card v-if="group" :documents="docs" :photo="photoUri" :deletable="true" :on-selected="selected" :hide-options="false" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected"/>
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
@@ -100,6 +100,9 @@ export default {
     }, 500)
   },
   methods: {
+    onScroll: function(e) {
+      console.log('scroll', e)
+    },
     send: function() {
       const doc = JSON.parse(this.json)
       this.documents.push({
