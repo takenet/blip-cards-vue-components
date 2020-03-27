@@ -7,7 +7,7 @@ import debounce from 'lodash/debounce'
  * @file v-chat-scroll  directive definition
  */
 ;(function(w, d) {
-  var raf =
+  const raf =
     w.requestAnimationFrame ||
     w.setImmediate ||
     function(c) {
@@ -33,9 +33,9 @@ import debounce from 'lodash/debounce'
 
   // Mouse drag handler
   function dragDealer(el, context) {
-    var lastPageY
+    let lastPageY
 
-    el.addEventListener('mousedown', function(e) {
+    const onMouseDown = function(e) {
       lastPageY = e.pageY
       el.classList.add('ss-grabbed')
       d.body.classList.add('ss-grabbed')
@@ -44,10 +44,12 @@ import debounce from 'lodash/debounce'
       d.addEventListener('mouseup', stop)
 
       return false
-    })
+    }
+
+    el.addEventListener('mousedown', onMouseDown)
 
     function drag(e) {
-      var delta = e.pageY - lastPageY
+      const delta = e.pageY - lastPageY
       lastPageY = e.pageY
 
       raf(function() {
@@ -56,6 +58,8 @@ import debounce from 'lodash/debounce'
     }
 
     function stop() {
+      el.removeEventListener('mousedown', onMouseDown)
+
       el.classList.remove('ss-grabbed')
       d.body.classList.remove('ss-grabbed')
       d.removeEventListener('mousemove', drag)
@@ -107,14 +111,13 @@ import debounce from 'lodash/debounce'
     }
 
     w.addEventListener('resize', this.resizeFunction)
-
     this.el.addEventListener('scroll', this.mB)
     this.el.addEventListener('mouseenter', this.mB)
     this.el.addEventListener('onMutation', this.mB)
 
     this.target.classList.add('ss-container')
 
-    var css = w.getComputedStyle(el)
+    const css = w.getComputedStyle(el)
     if (css['height'] === '0px' && css['max-height'] !== '0px') {
       el.style.height = css['max-height']
     }
@@ -140,15 +143,15 @@ import debounce from 'lodash/debounce'
 
   Ss.prototype = {
     moveBar: function(e) {
-      var totalHeight = this.el.scrollHeight
-      var ownHeight = this.el.clientHeight
-      var _this = this
+      const totalHeight = this.el.scrollHeight
+      const ownHeight = this.el.clientHeight
+      const _this = this
       this.currentHeight = this.el.clientHeight
 
       this.scrollRatio = ownHeight / totalHeight
 
-      var isRtl = _this.direction === 'rtl'
-      var right = isRtl
+      const isRtl = _this.direction === 'rtl'
+      const right = isRtl
         ? _this.target.clientWidth - _this.bar.clientWidth + 18
         : (_this.target.clientWidth - _this.bar.clientWidth) * -1
 
@@ -215,6 +218,10 @@ const vChatScroll = {
       scroll(contentScroll, binding)
     })
 
+    if (config.onScroll) {
+      contentScroll.addEventListener('scroll', config.onScroll)
+    }
+
     let scrollEvent = debounce(() => {
       const scrollTop = contentScroll.scrollTop || contentScroll.scrollY || 0
 
@@ -279,6 +286,11 @@ const vChatScroll = {
       config.mutationObserver.disconnect()
     }
     window.SimpleScrollbar.unbindEl(el)
+
+    let contentScroll = el.querySelector('.ss-content')
+    if (config.onScroll && contentScroll) {
+      contentScroll.removeEventListener('scroll', config.onScroll)
+    }
   }
 }
 
