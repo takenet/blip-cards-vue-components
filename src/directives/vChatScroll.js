@@ -286,6 +286,11 @@ const vChatScroll = {
       config.mutationObserver.disconnect()
     }
     window.SimpleScrollbar.unbindEl(el)
+
+    let contentScroll = el.querySelector('.ss-content')
+    if (config.onScroll && contentScroll) {
+      contentScroll.removeEventListener('scroll', config.onScroll)
+    }
   }
 }
 

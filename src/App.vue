@@ -101,7 +101,6 @@ export default {
   },
   methods: {
     onScroll: function(e) {
-      console.log('scroll', e)
     },
     send: function() {
       const doc = JSON.parse(this.json)
