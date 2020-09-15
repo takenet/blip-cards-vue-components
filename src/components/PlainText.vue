@@ -13,11 +13,11 @@
           <img :src="editSvg">
         </div>
 
-        <div v-if="!previewDocument.hasPreview" v-html="sanitize(previewDocument.content)"></div>
+        <div v-if="!previewDocument.hasPreview" v-html="sanitize(previewDocument.content, disableLink)"></div>
         <div v-else>
-          <div v-show="!showContent" v-html="sanitize(previewDocument.previewContent)"></div>
+          <div v-show="!showContent" v-html="sanitize(previewDocument.previewContent, disableLink)"></div>
           <transition name="slide-fade">
-            <div v-show="showContent" v-html="sanitize(previewDocument.content)"></div>
+            <div v-show="showContent" v-html="sanitize(previewDocument.content, disableLink)"></div>
           </transition>
           <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">Ver mais</a>
         </div>
@@ -101,6 +101,10 @@ export default {
     length: {
       type: Number,
       default: 532
+    },
+    disableLink: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
