@@ -7,7 +7,7 @@
 
         <plain-text v-if="document.metadata && document.metadata['#blip.payload.text']" :status="status" :length="length" :position="position" :document="document.metadata['#blip.payload.text']" :full-document="editableDocument" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
 
-        <plain-text v-else-if="document.type === 'text/plain'" :status="status" :length="length" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <plain-text v-else-if="document.type === 'text/plain'" :status="status" :length="length" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel" :disable-link="disableLink" />
 
         <media-link @updated="updatedPhotoMargin" v-else-if="document.type === 'application/vnd.lime.media-link+json'" :status="status" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
 
@@ -69,6 +69,10 @@ export default {
     },
     onLocationError: {
       type: Function
+    },
+    disableLink: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
