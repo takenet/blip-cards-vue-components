@@ -28,7 +28,7 @@ var components = blipCards.install(Vue);
 Then, reference the cards via <blip-card> tag as following
 
 ```html
-<blip-card :document="document" :position="'left'" :date="13:00 PM" :on-selected="function" :on-save="function" :editable="true" :hide-options="false" />
+<blip-card :document="document" :position="'left'" :date="13:00 PM" :on-selected="function" :on-save="function" :editable="true" :hide-options="false" :disable-link="false"/>
 ```
 
 | Attribute   |      Description      |  Type |
@@ -41,12 +41,13 @@ Then, reference the cards via <blip-card> tag as following
 | on-deleted | callback function that will be called when the user delete the card (OPTIONAL) | Function (document) |
 | editable| make the card editable (OPTIONAL) | Boolean |
 | hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
+| disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
 
 ## Group Card
 Is possible to group your cards using any rule you want. For that use the <blip-group-card> tag as following
 
 ```html
-<blip-group-card :documents="documentList" :compare-messages="function" :on-selected="function" :on-save="function" :editable="true" :hide-options="false"/>
+<blip-group-card :documents="documentList" :compare-messages="function" :on-selected="function" :on-save="function" :editable="true" :hide-options="false" :disable-link="false"/>
 ```
 
 | Attribute   |      Description      |  Type |
@@ -58,6 +59,7 @@ Is possible to group your cards using any rule you want. For that use the <blip-
 | on-deleted | callback function that will be called when the user delete the card (OPTIONAL) | Function (document) |
 | editable| make the card editable (OPTIONAL) | Boolean |
 | hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
+| disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
 
 ## Contributions
 Any contribution to the code via pull request would be nice and any idea and/or suggestion are very welcome.
