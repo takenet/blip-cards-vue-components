@@ -91,6 +91,10 @@ export default {
     },
     onLocationError: {
       type: Function
+    },
+    disableLink: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
