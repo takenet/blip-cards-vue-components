@@ -1,7 +1,16 @@
-function linkify (inputText) {
+function linkify (inputText, disableLink) {
   if (!inputText) {
     return ''
   }
+
+  if (isTagA(inputText)) {
+    return encodeHTML(inputText)
+  }
+
+  if (disableLink) {
+    return inputText
+  }
+
   // http://, https://, ftp://
   const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#/%?=~_|!:,.;]*[a-z0-9-+&@#/%=~_|]/gim
 
@@ -15,6 +24,22 @@ function linkify (inputText) {
       .replace(urlPattern, '<a href="$&" target="_blank">$&</a>')
       .replace(pseudoUrlPattern, '$1<a href="http://$2" target="_blank">$2</a>')
       .replace(emailAddressPattern, '<a href="mailto:$&" target="_blank">$&</a>')
+}
+
+function isTagA (inputText) {
+  const tagAPattern = /href\s*=/i
+  if (inputText.search(tagAPattern) !== -1) {
+    return true
+  }
+  return false
+}
+
+function encodeHTML (inputText) {
+  return inputText
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
 }
 
 function guid () {
@@ -36,5 +61,7 @@ function isFailedMessage (status, position) {
 export {
   linkify,
   guid,
-  isFailedMessage
+  isFailedMessage,
+  isTagA,
+  encodeHTML
 }
