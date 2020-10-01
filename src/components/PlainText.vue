@@ -109,9 +109,8 @@ export default {
   },
   computed: {
     previewDocument: function() {
-      console.log(`document: ${this.document}`)
       const sanitizedDocument = this.sanitize(this.document)
-      console.log(`sanitizedDocument: ${sanitizedDocument}`)
+
       return {
         hasPreview: sanitizedDocument.length > this.length,
         previewContent: linkify(

@@ -4,7 +4,6 @@ function linkify (inputText, disableLink) {
   }
 
   if (isTagA(inputText)) {
-   // console.log(encodeHTML(inputText))
     return encodeHTML(inputText)
   }
 
@@ -36,8 +35,6 @@ function isTagA (inputText) {
 }
 
 function encodeHTML (inputText) {
-  console.log(`input: ${inputText}`)
-  console.log(`encode: ${inputText.replace(/"/g, '&quot;')}`)
   return inputText
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
