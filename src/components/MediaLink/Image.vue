@@ -107,6 +107,11 @@ import Broken from '../../assets/img/Broken.svg'
 
 export default {
   mixins: [base],
+  props: {
+    onSelected: {
+      type: Function
+    }
+  },
   data: function() {
     return {
       styleObject: undefined,
@@ -170,7 +175,11 @@ export default {
       })
     },
     handleImageLink: function() {
-      window.open(this.document.uri, '_blank')
+      if (this.onSelected) {
+        this.onSelected(this.document.uri)
+      } else {
+        window.open(this.document.uri, '_blank')
+      }
     },
     checkImage(url) {
       var img = new Image()

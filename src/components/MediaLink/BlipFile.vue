@@ -49,6 +49,11 @@ import mime from 'mime-types'
 
 export default {
   mixins: [base],
+  props: {
+    onSelected: {
+      type: Function
+    }
+  },
   data: function() {
     return {
       title: undefined,
@@ -87,7 +92,11 @@ export default {
       })
     },
     handleFileLink: function () {
-      window.open(this.document.uri, '_blank')
+      if (this.onSelected) {
+        this.onSelected(this.document.uri)
+      } else {
+        window.open(this.document.uri, '_blank')
+      }
     }
   }
 }
