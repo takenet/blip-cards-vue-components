@@ -5,33 +5,243 @@
     <div :class="{'blip-container--with-photo': photo, [position]: true}">
       <div class="blip-card-container">
 
-        <plain-text v-if="document.metadata && document.metadata['#blip.payload.text']" :status="status" :length="length" :position="position" :document="document.metadata['#blip.payload.text']" :full-document="editableDocument" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <plain-text
+          v-if="document.metadata && document.metadata['#blip.payload.text']"
+          class="blip-card"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="document.metadata['#blip.payload.text']"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
 
-        <plain-text v-else-if="document.type === 'text/plain'" :status="status" :length="length" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel" :disable-link="disableLink" />
+        <plain-text
+          v-else-if="document.type ==='text/plain'"
+          class="blip-card"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :disable-link="disableLink" />
 
-        <media-link @updated="updatedPhotoMargin" v-else-if="document.type === 'application/vnd.lime.media-link+json'" :status="status" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-selected="onSelected" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <media-link
+          class="blip-card"
+          v-else-if="document.type === 'application/vnd.lime.media-link+json'"
+          @updated="updatedPhotoMargin"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-selected="onSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
 
-        <document-select v-else-if="document.type === 'application/vnd.lime.document-select+json'" :status="status" :length="length" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-selected="onSelected" :on-save="saveCard" :editable="editable" :on-open-link="onOpenLink" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <document-select
+        v-else-if="document.type === 'application/vnd.lime.document-select+json'"
+          class="blip-card"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-selected="onSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-open-link="onOpenLink"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
 
-        <collection v-else-if="document.type === 'application/vnd.lime.collection+json'" :status="status" :length="length" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-selected="onSelected" :on-save="saveCard" :editable="editable" :on-open-link="onOpenLink" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <collection
+          v-else-if="document.type === 'application/vnd.lime.collection+json'"
+          class="blip-card"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-selected="onSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-open-link="onOpenLink"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
 
-        <blip-select v-else-if="document.type === 'application/vnd.lime.select+json'" :status="status" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-selected="onSelected" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :hide-options="hideOptions" :editing="isCardEditing" :on-cancel="cancel"/>
+        <blip-select
+          v-else-if="document.type === 'application/vnd.lime.select+json'"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-selected="onSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :hide-options="hideOptions"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
 
-        <web-link v-else-if="document.type === 'application/vnd.lime.web-link+json'" :status="status" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-save="saveCard" :editable="editable" :on-open-link="onOpenLink" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <web-link
+          class="blip-card"
+          v-else-if="document.type === 'application/vnd.lime.web-link+json'"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-open-link="onOpenLink"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
 
-        <location v-else-if="document.type === 'application/vnd.lime.location+json'" :status="status" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <location
+          class="blip-card"
+          v-else-if="document.type === 'application/vnd.lime.location+json'"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
 
-        <request-location v-else-if="document.type === 'application/vnd.lime.input+json' && document.content.validation && document.content.validation.type === 'application/vnd.lime.location+json'" :status="status" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-selected="onSelected" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :hide-options="hideOptions" :editing="isCardEditing" :on-cancel="cancel"  :on-location-error="onLocationError"/>
+        <request-location
+          v-else-if="document.type === 'application/vnd.lime.input+json' && document.content.validation && document.content.validation.type === 'application/vnd.lime.location+json'"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-selected="onSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :hide-options="hideOptions"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
 
-        <lime-input v-else-if="document.type === 'application/vnd.lime.input+json'" :status="status" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-selected="onSelected" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :hide-options="hideOptions" :editing="isCardEditing" :on-cancel="cancel"  :on-location-error="onLocationError"/>
+          :on-location-error="onLocationError"/>
 
-        <chat-state v-else-if="document.type === 'application/vnd.lime.chatstate+json'" :status="status" :position="position" :document="editableDocument.content" :full-document="editableDocument" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :on-metadata-edit="isMetadataReady" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <lime-input
+          v-else-if="document.type === 'application/vnd.lime.input+json'"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-selected="onSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :hide-options="hideOptions"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :on-location-error="onLocationError"/>
 
-        <blip-redirect v-else-if="document.type === 'application/vnd.lime.redirect+json'" :status="status" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <chat-state
+          v-else-if="document.type === 'application/vnd.lime.chatstate+json'"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
 
-        <ticket v-else-if="document.type === 'application/vnd.iris.ticket+json'" :status="status" :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <blip-redirect
+          v-else-if="document.type === 'application/vnd.lime.redirect+json'"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
 
-        <unsuported-content v-else :position="position" :document="editableDocument.content" :date="date" :on-save="saveCard" :editable="editable" class="blip-card" :on-deleted="deleteCard" :deletable="deletable" :editing="isCardEditing" :on-cancel="cancel"/>
+        <ticket
+          v-else-if="document.type === 'application/vnd.iris.ticket+json'"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
+
+        <unsuported-content
+          v-else
+          class="blip-card"
+          :position="position"
+          :document="editableDocument.content"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
       </div>
       <div :class="'blip-card-photo ' + position" v-if="photo && position === 'right'" :style="{ top: photoMargin + 'px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
       </div>
