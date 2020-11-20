@@ -20,6 +20,7 @@
         :deletable="deletable"
         :length="length"
         :on-selected="onSelected"
+        :on-media-selected="onMediaSelected"
         :on-open-link="onOpenLink"
         :on-unsupported-type="onUnsupportedType"
         :on-location-error="onLocationError"
@@ -81,6 +82,9 @@ export default {
       type: Boolean
     },
     onSelected: {
+      type: Function
+    },
+    onMediaSelected: {
       type: Function
     },
     onOpenLink: {

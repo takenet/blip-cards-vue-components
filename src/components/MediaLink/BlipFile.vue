@@ -50,7 +50,7 @@ import mime from 'mime-types'
 export default {
   mixins: [base],
   props: {
-    onSelected: {
+    onMediaSelected: {
       type: Function
     }
   },
@@ -92,8 +92,8 @@ export default {
       })
     },
     handleFileLink: function () {
-      if (this.onSelected) {
-        this.onSelected(this.document.uri)
+      if (this.onMediaSelected) {
+        this.onMediaSelected(this.document.uri)
       } else {
         window.open(this.document.uri, '_blank')
       }
