@@ -5,7 +5,7 @@
     <p class="subtitle fancy" v-if="document.status === 'Waiting'"><span>Chatbot {{identity}} encaminhou a conversa para atendimento</span></p>
     <p class="subtitle fancy" v-else-if="document.status === 'ClosedAttendant'"><span>Atendente {{agentIdentity}} encerrou o atendimento</span></p>
     <p class="subtitle fancy" v-else-if="document.status === 'ClosedClient'"><span>Cliente encerrou o atendimento</span></p>
-    <h3>Ticket #{{document.sequentialId}}</h3>
+    <h3>Ticket #{{`${document.sequentialId}${document.sequentialSuffix ? document.sequentialSuffix : ''}`}}</h3>
   </div>
 </template>
 
