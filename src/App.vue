@@ -8,6 +8,12 @@
       </div>
 
       <div>
+        <h1>Editing:</h1>
+        <input type="checkbox" :value="true" v-model="editable"> Editable <br>
+        <input type="checkbox" :value="true" v-model="deletable"> Deletable <br>
+      </div>
+
+      <div>
         <h1>Position:</h1>
         <input type="radio" value="left" v-model="position" > LEFT <br>
         <input type="radio" value="middle" v-model="position" > MIDDLE <br>
@@ -43,9 +49,9 @@
       </div>
 
       <div>
-        <h1>Renderizar link:</h1>
-        <input type="radio" :value="false" v-model="disableLink"> Sim <br>
-        <input type="radio" :value="true" v-model="disableLink"> Não <br>
+        <h1>Link rendering:</h1>
+        <input type="radio" :value="false" v-model="disableLink"> Yes <br>
+        <input type="radio" :value="true" v-model="disableLink"> No <br>
       </div>
 
       <div v-if="isSample === 'true'">
@@ -77,9 +83,37 @@
 
     <div v-if="showBlipGroupCard" :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; height: 800px;'" v-chat-scroll="{scrollToTop: false, onScroll}">
       <div style="padding: 20px">
-        <blip-group-card v-if="group" :documents="docs" :photo="photoUri" :deletable="true" :on-selected="selected" :hide-options="false" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected" :disable-link="disableLink"/>
+        <blip-group-card
+          v-if="group"
+          :documents="docs"
+          :photo="photoUri"
+          :deletable="deletable"
+          :on-selected="selected"
+          :hide-options="false"
+          :on-save="save"
+          :on-deleted="deleted"
+          :editable="editable"
+          :on-open-link="selected"
+          :on-unsupported-type="onUnsupportedType"
+          :on-location-error="selected"
+          :disable-link="disableLink"/>
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
-          <blip-card :photo="item.photo" :position="item.position" :deletable="true" :date="item.date" :on-selected="selected" :hide-options="false" :document="item.document" :status="item.status" :on-save="save" :on-deleted="deleted" :editable="true" :on-open-link="selected" :on-unsupported-type="onUnsupportedType" :on-location-error="selected" :disable-link="disableLink"/>
+          <blip-card
+            :photo="item.photo"
+            :position="item.position"
+            :deletable="deletable"
+            :date="item.date"
+            :on-selected="selected"
+            :hide-options="false"
+            :document="item.document"
+            :status="item.status"
+            :on-save="save"
+            :on-deleted="deleted"
+            :editable="editable"
+            :on-open-link="selected"
+            :on-unsupported-type="onUnsupportedType"
+            :on-location-error="selected"
+            :disable-link="disableLink"/>
         </div>
       </div>
       <div style="clear: both"></div>
@@ -458,7 +492,9 @@ export default {
       save: function(d) {},
       deleted: function(d) {},
       showBlipGroupCard: true,
-      disableLink: false
+      disableLink: false,
+      editable: true,
+      deletable: true
     }
   },
   components: {}
