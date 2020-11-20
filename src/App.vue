@@ -406,6 +406,7 @@ export default {
         content: {
           id: '8b337066-b6e9-43a4-b951-3f961e48c127',
           sequentialId: 313,
+          sequentialSuffix: 'TST',
           ownerIdentity: 'testebuilderluiz@msging.net',
           customerIdentity:
             '4cdbb741-160a-4d77-ba8e-53b54d6225e3.testebuilderluiz@0mn.io',
