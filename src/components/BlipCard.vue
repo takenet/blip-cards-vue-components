@@ -49,7 +49,7 @@
           :document="editableDocument.content"
           :full-document="editableDocument"
           :date="date"
-          :on-selected="onSelected"
+          :on-media-selected="onMediaSelected"
           :on-save="saveCard"
           :editable="editable"
           :on-deleted="deleteCard"
@@ -268,6 +268,9 @@ export default {
       default: false
     },
     onSelected: {
+      type: Function
+    },
+    onMediaSelected: {
       type: Function
     },
     onOpenLink: {

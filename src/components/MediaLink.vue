@@ -1,10 +1,67 @@
 <template>
   <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)">
 
-    <blip-image :document="document" :full-document="fullDocument" :position="position" :date="date" v-if="document.type.indexOf('image') != -1" :editable="editable" :on-selected="onSelected" :on-save="save" :on-deleted="onDeleted" :on-metadata-edit="isMetadataReady" :deletable="deletable" :on-cancel="onCancel" :editing="editing"/>
-    <blip-audio :document="document" :full-document="fullDocument" :position="position" :date="date" v-else-if="document.type.indexOf('audio') != -1" :editable="editable" :on-save="save" :on-deleted="onDeleted" :on-metadata-edit="isMetadataReady" :deletable="deletable" :on-cancel="onCancel" :editing="editing"/>
-    <blip-video :document="document" :full-document="fullDocument" :position="position" :date="date" @updated="emitUpdate" v-else-if="document.type.indexOf('video') != -1" :editable="editable" :on-save="save" :on-deleted="onDeleted" :on-metadata-edit="isMetadataReady" :deletable="deletable" :on-cancel="onCancel" :editing="editing"/>
-    <blip-file :document="document" :full-document="fullDocument" :position="position" :date="date" v-else :editable="editable" :on-selected="onSelected" :on-save="save" :on-deleted="onDeleted" :on-metadata-edit="isMetadataReady" :deletable="deletable" :on-cancel="onCancel" :editing="editing"/>
+    <blip-image
+      :document="document"
+      :full-document="fullDocument"
+      :position="position"
+      :date="date"
+      v-if="document.type.indexOf('image')
+      !=
+      -1"
+      :editable="editable"
+      :on-media-selected="onMediaSelected"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"/>
+    <blip-audio
+      :document="document"
+      :full-document="fullDocument"
+      :position="position"
+      :date="date"
+      v-else-if="document.type.indexOf('audio')
+      !=
+      -1"
+      :editable="editable"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"/>
+    <blip-video
+      :document="document"
+      :full-document="fullDocument"
+      :position="position"
+      :date="date"
+      @updated="emitUpdate"
+      v-else-if="document.type.indexOf('video')
+      !=
+      -1"
+      :editable="editable"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"/>
+    <blip-file
+      :document="document"
+      :full-document="fullDocument"
+      :position="position"
+      :date="date"
+      v-else
+      :editable="editable"
+      :on-media-selected="onMediaSelected"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"/>
 
     <div class="flex" :class="'notification ' + position" v-if="date">
       <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
@@ -35,7 +92,7 @@ export default {
       type: String,
       default: ''
     },
-    onSelected: {
+    onMediaSelected: {
       type: Function
     }
   },
