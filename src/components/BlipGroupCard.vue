@@ -34,7 +34,7 @@
           <img v-else-if="group.status === 'received' && group.position === 'right'" class='received' :src="doubleCheckReceivedSvg"/>
           <img v-else-if="group.status === 'consumed' && group.position === 'right'" class='consumed' :src="doubleCheckReadSvg"/>
           <div v-else-if="group.status === 'failed' && group.position === 'right'" class="failure">
-            Falha ao enviar a mensagem.
+            {{ failedToSendMsg }}
           </div>
           <span>{{ group.date }}</span>
         </div>
@@ -99,6 +99,10 @@ export default {
     disableLink: {
       type: Boolean,
       default: false
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem.'
     }
   },
   data() {

@@ -2,6 +2,8 @@
   <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)">
 
     <blip-image
+      :aspect-ratio-msg="aspectRatioMsg"
+      :supported-formats-msg="supportedFormatsMsg"
       :document="document"
       :full-document="fullDocument"
       :position="position"
@@ -69,7 +71,7 @@
       <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
       <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
       <div v-else-if="this.status === 'failed' && this.position === 'right'" class="failure">
-          Falha ao enviar a mensagem.
+          {{ failedToSendMsg }}
         </div>
       {{ date }}
     </div>
@@ -94,6 +96,18 @@ export default {
     },
     onMediaSelected: {
       type: Function
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem'
+    },
+    aspectRatioMsg: {
+      type: String,
+      default: 'Aspect Ratio'
+    },
+    supportedFormatsMsg: {
+      type: String,
+      default: 'Supported formats'
     }
   },
   data: function() {

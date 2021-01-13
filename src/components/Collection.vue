@@ -32,7 +32,7 @@
         <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
         <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
         <div class="failure" v-else-if="this.status === 'failed' && this.position === 'right'">
-          Falha ao enviar a mensagem.
+          {{ failedToSendMsg }}
         </div>
         {{ date }}
       </div>
@@ -86,6 +86,10 @@ export default {
     },
     onOpenLink: {
       type: Function
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem.'
     }
   },
   computed: {

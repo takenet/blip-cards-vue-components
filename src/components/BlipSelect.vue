@@ -19,7 +19,7 @@
         <div
           class="failure"
           v-else-if="this.status === 'failed' && this.position === 'right'">
-          Falha ao enviar a mensagem.
+          {{ failedToSendMsg }}
         </div>
         {{ date }}
       </div>
@@ -66,7 +66,7 @@
         <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
         <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
         <div v-else-if="this.status === 'failed' && this.position === 'right'" class="failure" >
-          Falha ao enviar a mensagem.
+          {{ failedToSendMsg }}
         </div>
         {{ date }}
       </div>
@@ -93,12 +93,12 @@
             <span @click="deleteOption(index, $event)" class="remove-option"><img :src="closeBlueSvg"></span>
           </li>
           <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
-            <span>Add option</span>
+            <span>{{ addOptionMsg }}</span>
           </li>
         </ul>
-        <span v-show="hasDeleteOptionError" class="remove-option-error">Requires at least 1 option</span>
+        <span v-show="hasDeleteOptionError" class="remove-option-error">{{ notEnoughOptionsMsg }}</span>
         <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
-          <span>Add Button</span>
+          <span>{{ addButtonMsg }}</span>
         </div>
       </div>
 
@@ -111,7 +111,7 @@
   <div class="blip-container" v-else>
     <form novalidate v-on:submit.prevent :class="'bubble ' + position">
       <div class="tabs">
-        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
+        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">{{ textMsg }}</span>
       </div>
 
       <div v-if="headerTab === 'plainText'">
@@ -120,7 +120,7 @@
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
 
-        <input id="showPayload" type="checkbox"  v-model="showPayload"><label for="showPayload">Set Payload</label>
+        <input id="showPayload" type="checkbox"  v-model="showPayload"><label for="showPayload">{{ setPayloadMsg }}</label>
         <div class="line"></div>
 
         <div v-show="showPayload">
@@ -138,10 +138,10 @@
 
       <div class="form-group blip-card-flex">
         <div class="flex-item">
-          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
+          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">{{ cancelMsg }}</button>
         </div>
         <div class="flex-item">
-          <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">Apply</button>
+          <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">{{ applyMsg }}</button>
         </div>
       </div>
     </form>
@@ -168,6 +168,38 @@ export default {
     },
     onSelected: {
       type: Function
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem.'
+    },
+    addOptionMsg: {
+      type: String,
+      default: 'Add option'
+    },
+    addButtonMsg: {
+      type: String,
+      default: 'Add button'
+    },
+    notEnoughOptionsMsg: {
+      type: String,
+      default: 'Requires at least 1 option'
+    },
+    textMsg: {
+      type: String,
+      default: 'Text'
+    },
+    setPayloadMsg: {
+      type: String,
+      default: 'Set payload'
+    },
+    applyMsg: {
+      type: String,
+      default: 'Apply'
+    },
+    cancelMsg: {
+      type: String,
+      default: 'Cancel'
     }
   },
   data: function() {

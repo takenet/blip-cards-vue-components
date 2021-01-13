@@ -19,7 +19,7 @@
           <transition name="slide-fade">
             <div v-show="showContent" v-html="previewDocument.content"></div>
           </transition>
-          <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">Ver mais</a>
+          <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
         </div>
       </div>
 
@@ -40,7 +40,7 @@
         <div
           v-else-if="this.status === 'failed' && this.position === 'right'"
           class="failure"
-        >Falha ao enviar a mensagem.</div>
+        >{{ failedToSendMsg }}</div>
         <div>{{ date }}</div>
       </div>
     </div>
@@ -105,6 +105,14 @@ export default {
     disableLink: {
       type: Boolean,
       default: false
+    },
+    showMoreMsg: {
+      type: String,
+      default: 'Ver mais'
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem.'
     }
   },
   computed: {

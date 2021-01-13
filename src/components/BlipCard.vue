@@ -8,6 +8,8 @@
         <plain-text
           v-if="document.metadata && document.metadata['#blip.payload.text']"
           class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :show-more-msg="translations.showMore"
           :status="status"
           :length="length"
           :position="position"
@@ -41,9 +43,12 @@
           :disable-link="disableLink" />
 
         <media-link
-          class="blip-card"
           v-else-if="document.type === 'application/vnd.lime.media-link+json'"
+          class="blip-card"
           @updated="updatedPhotoMargin"
+          :failed-to-send-msg="translations.failedToSend"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :supported-formats-msg="translations.supportedFormats"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -59,8 +64,17 @@
           :on-cancel="cancel"/>
 
         <document-select
-        v-else-if="document.type === 'application/vnd.lime.document-select+json'"
+          v-else-if="document.type === 'application/vnd.lime.document-select+json'"
           class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :apply-msg="translations.apply"
+          :set-payload-msg="translations.setPayload"
+          :add-button-msg="translations.addButton"
+          :text-msg="translations.text"
+          :link-msg="translations.link"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :show-more-msg="translations.showMore"
+          :supported-formats-msg="translations.supportedFormats"
           :status="status"
           :length="length"
           :position="position"
@@ -80,6 +94,7 @@
         <collection
           v-else-if="document.type === 'application/vnd.lime.collection+json'"
           class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
           :status="status"
           :length="length"
           :position="position"
@@ -99,6 +114,14 @@
         <blip-select
           v-else-if="document.type === 'application/vnd.lime.select+json'"
           class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :add-option-msg="translations.addOption"
+          :add-button-msg="translations.addButton"
+          :not-enough-options-msg="translations.notEnoughOptions"
+          :text-msg="translations.text"
+          :set-payload-msg="translations.setPayload"
+          :apply-msg="translations.apply"
+          :cancel-msg="translations.cancel"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -117,6 +140,7 @@
         <web-link
           class="blip-card"
           v-else-if="document.type === 'application/vnd.lime.web-link+json'"
+          :failed-to-send-msg="translations.failedToSend"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -134,6 +158,7 @@
         <location
           class="blip-card"
           v-else-if="document.type === 'application/vnd.lime.location+json'"
+          :failed-to-send-msg="translations.failedToSend"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -150,6 +175,9 @@
         <request-location
           v-else-if="document.type === 'application/vnd.lime.input+json' && document.content.validation && document.content.validation.type === 'application/vnd.lime.location+json'"
           class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :show-more-msg="translations.showMore"
+          :button-label-msg="translations.RequestLocationButtonLabel"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -219,6 +247,9 @@
         <ticket
           v-else-if="document.type === 'application/vnd.iris.ticket+json'"
           class="blip-card"
+          :waiting-msg="translations.userWaitingAttendance"
+          :closed-attendant-msg="translations.closedByAttendant"
+          :closed-client-msg="translations.closedByClient"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -233,6 +264,8 @@
         <unsuported-content
           v-else
           class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :unsupported-content-msg="translations.unsupportedContent"
           :position="position"
           :document="editableDocument.content"
           :date="date"
@@ -286,6 +319,10 @@ export default {
     disableLink: {
       type: Boolean,
       default: false
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {

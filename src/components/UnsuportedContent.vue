@@ -5,7 +5,7 @@
         <img v-if="position === 'right'" :src="alertWhiteSvg" alt="Alert" class="alert-icon">
         <img v-else :src="alertSvg" alt="Alert" class="alert-icon">
         <span>
-          Unsuported Content
+          {{ unsupportedContentMsg }}
         </span>
       </div>
     </div>
@@ -25,7 +25,7 @@
         <div
           v-else-if="this.status === 'failed'"
           class="failure">
-            Falha ao enviar a mensagem.
+            {{ failedToSendMsg }}
         </div>
       </span>
       <div>{{ date }}</div>
@@ -49,6 +49,14 @@ export default {
     status: {
       type: String,
       default: ''
+    },
+    unsupportedContentMsg: {
+      type: String,
+      default: 'Unsuported Content'
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem'
     }
   },
   data: function() {
