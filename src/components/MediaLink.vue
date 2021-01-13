@@ -2,6 +2,8 @@
   <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)">
 
     <blip-image
+      :aspect-ratio-msg="aspectRatioMsg"
+      :supported-formats-msg="supportedFormatsMsg"
       :document="document"
       :full-document="fullDocument"
       :position="position"
@@ -98,6 +100,14 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem'
+    },
+    aspectRatioMsg: {
+      type: String,
+      default: 'Aspect Ratio'
+    },
+    supportedFormatsMsg: {
+      type: String,
+      default: 'Supported formats'
     }
   },
   data: function() {
