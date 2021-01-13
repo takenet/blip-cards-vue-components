@@ -42,7 +42,7 @@
             style="display: block;"
             v-if="!showContent && hasPreview"
             @click="showContent = true"
-          >Ver mais</a>
+          >{{ showMoreMsg }}</a>
         </div>
       </div>
 
@@ -71,7 +71,7 @@
       <div
         class="failure"
         v-else-if="this.status === 'failed' && this.position === 'right'"
-      >Falha ao enviar a mensagem.</div>
+      >{{ failedToSendMsg }}</div>
       {{ date }}
     </div>
   </div>
@@ -104,12 +104,12 @@
             placeholder="Image Uri"
           >
           <div class="upload-intructions">
-            <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
+            <span>{{ supportedFormatsMsg }}: JPEG,JPG,PNG,GIF.</span>
           </div>
         </div>
         <div class="form-check">
           <div>
-            <span>Aspect Ratio:</span>
+            <span>{{ aspectRatioMsg }}:</span>
           </div>
           <div class="form-check-wrapper">
             <span class="form-check-container">
@@ -176,7 +176,7 @@
           </li>
         </ul>
         <div @click="editOption({label: {}, value: {}}, -1, $event, true)" class="add-button">
-          <span>Add Button</span>
+          <span>{{ addButtonMsg }}</span>
         </div>
       </div>
       <button
@@ -187,8 +187,8 @@
     </form>
     <form v-else novalidate v-on:submit.prevent :class="'editing bubble ' + position">
       <div class="tabs">
-        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">Text</span>
-        <span :class="{ 'active': headerTab === 'weblink'}" @click="setTab('weblink')">Link</span>
+        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">{{ textMsg }}</span>
+        <span :class="{ 'active': headerTab === 'weblink'}" @click="setTab('weblink')">{{ linkMsg }}</span>
       </div>
 
       <div class="form-group" v-if="headerTab === 'weblink'">
@@ -256,7 +256,7 @@
         </div>
 
         <input id="showPayload" type="checkbox" v-model="showPayload">
-        <label for="showPayload">Set Payload</label>
+        <label for="showPayload">{{ setPayloadMsg }}</label>
         <div class="line"></div>
 
         <div v-if="showPayload">
@@ -306,7 +306,7 @@
             @click="saveOption(true)"
             class="btn btn-white primary-color"
             :class="{'is-disabled': errors.any() }"
-          >Apply</button>
+          >{{ applyMsg }}</button>
         </span>
       </div>
     </form>
@@ -351,6 +351,42 @@ export default {
     },
     onOpenLink: {
       type: Function
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem'
+    },
+    applyMsg: {
+      type: String,
+      default: 'Apply'
+    },
+    setPayloadMsg: {
+      type: String,
+      default: 'Set payload'
+    },
+    addButtonMsg: {
+      type: String,
+      default: 'Add Button'
+    },
+    textMsg: {
+      type: String,
+      default: 'Text'
+    },
+    linkMsg: {
+      type: String,
+      default: 'Link'
+    },
+    aspectRatioMsg: {
+      type: String,
+      default: 'Aspect Ratio'
+    },
+    showMoreMsg: {
+      type: String,
+      default: 'Ver mais'
+    },
+    supportedFormatsMsg: {
+      type: String,
+      default: 'Supported formats'
     }
   },
   data: function() {

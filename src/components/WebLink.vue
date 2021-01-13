@@ -41,7 +41,7 @@
       <div
         v-else-if="this.status === 'failed' && this.position === 'right'"
         class="failure"
-      >Falha ao enviar a mensagem.</div>
+      >{{ failedToSendMsg }}</div>
       {{ date }}
     </div>
   </div>
@@ -118,6 +118,10 @@ export default {
     initEditing: {
       type: Boolean,
       default: false
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem'
     }
   },
   data: function() {

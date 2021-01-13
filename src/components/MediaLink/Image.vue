@@ -40,12 +40,12 @@
             >
             <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
             <div class="upload-intructions">
-              <span>Supported formats: JPEG,JPG,PNG,GIF.</span>
+              <span>{{ supportedFormatsMsg }}: JPEG,JPG,PNG,GIF.</span>
             </div>
           </div>
           <div class="form-check">
             <div>
-              <span>Aspect Ratio:</span>
+              <span>{{ aspectRatioMsg }}:</span>
             </div>
             <div class="form-check-wrapper">
               <span class="form-check-container">
@@ -110,6 +110,14 @@ export default {
   props: {
     onMediaSelected: {
       type: Function
+    },
+    aspectRatioMsg: {
+      type: String,
+      default: 'Aspect Ratio'
+    },
+    supportedFormatsMsg: {
+      type: String,
+      default: 'Supported formats'
     }
   },
   data: function() {

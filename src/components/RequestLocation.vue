@@ -20,7 +20,7 @@
             <span>{{ previewDocument.content }}</span>
           </div>
         </transition>
-        <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">Ver mais</a>
+        <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
       </div>
     </div>
 
@@ -30,7 +30,7 @@
       <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
       <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
       <div class="failure" v-else-if="this.status === 'failed' && this.position === 'right'">
-          Falha ao enviar a mensagem.
+          {{ failedToSendMsg }}
       </div>
       {{ date }}
     </div>
@@ -50,7 +50,7 @@
               </svg>
               </div>
               <div class="text">
-                <span v-text="previewDocument.buttonLabel"></span>
+                <span v-text="buttonLabelMsg"></span>
               </div>
             </div>
           </li>
@@ -107,6 +107,20 @@ export default {
     },
     onLocationError: {
       type: Function
+    },
+    showMoreMsg: {
+      type: String,
+      default: 'Ver mais'
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem.'
+    },
+    buttonLabelMsg: {
+      type: String,
+      default: navigator.language.toLowerCase().startsWith('pt')
+            ? 'Enviar Localização'
+            : 'Send Location'
     }
   },
   computed: {
@@ -116,10 +130,6 @@ export default {
         previewContent: linkify(
           this.document.label.value.substring(0, this.length - 3) + '...'
         ),
-        buttonLabel:
-          navigator.language.toLowerCase().startsWith('pt')
-            ? 'Enviar Localização'
-            : 'Send Location',
         content: linkify(this.document.label.value)
       }
     }

@@ -2,9 +2,9 @@
 
 <template>
   <div class="blip-container ticket" v-if="document.status === 'Waiting' || document.status.indexOf('Closed') !== -1 ">
-    <p class="subtitle fancy" v-if="document.status === 'Waiting'"><span>Chatbot {{identity}} encaminhou a conversa para atendimento</span></p>
-    <p class="subtitle fancy" v-else-if="document.status === 'ClosedAttendant'"><span>Atendente {{agentIdentity}} encerrou o atendimento</span></p>
-    <p class="subtitle fancy" v-else-if="document.status === 'ClosedClient'"><span>Cliente encerrou o atendimento</span></p>
+    <p class="subtitle fancy" v-if="document.status === 'Waiting'"><span>{{ waitingMsg.replace(/\{\{identity\}\}/g, identity) }}</span></p>
+    <p class="subtitle fancy" v-else-if="document.status === 'ClosedAttendant'"><span>{{ waitingMsg.replace(/\{\{agentIdentity\}\}/g, identity) }}</span></p>
+    <p class="subtitle fancy" v-else-if="document.status === 'ClosedClient'"><span>{{ closedClientMsg }}</span></p>
     <h3>Ticket #{{`${document.sequentialId}${document.sequentialSuffix ? document.sequentialSuffix : ''}`}}</h3>
   </div>
 </template>
@@ -15,6 +15,20 @@ import { default as base } from '../mixins/baseComponent.js'
 export default {
   name: 'ticket',
   mixins: [base],
+  props: {
+    waitingMsg: {
+      type: String,
+      default: 'Chatbot {{identity}} encaminhou a conversa para atendimento'
+    },
+    closedAttendantMsg: {
+      type: String,
+      default: 'Atendente {{agentIdentity}} encerrou o atendimento'
+    },
+    closedClientMsg: {
+      type: String,
+      default: 'Cliente encerrou o atendimento'
+    }
+  },
   computed: {
     identity() {
       return this.document.ownerIdentity.split('@')[0]
