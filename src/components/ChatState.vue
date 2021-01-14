@@ -38,7 +38,7 @@
             v-validate="'required|numeric'"
             :class="{'input-error': errors.has('interval') }"
             v-model="interval"
-            placeholder="Milliseconds to wait"
+            :placeholder="msToWaitMsg"
           >
           <span
             v-show="errors.has('interval')"
@@ -66,6 +66,10 @@ export default {
     status: {
       type: String,
       default: ''
+    },
+    msToWaitMsg: {
+      type: String,
+      default: 'Milliseconds to wait'
     }
   },
   data: function() {

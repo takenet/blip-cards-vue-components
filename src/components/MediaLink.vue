@@ -2,6 +2,9 @@
   <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)">
 
     <blip-image
+      :image-uri-msg="titleMsg"
+      :title-msg="titleMsg"
+      :text-msg="textMsg"
       :aspect-ratio-msg="aspectRatioMsg"
       :supported-formats-msg="supportedFormatsMsg"
       :document="document"
@@ -20,6 +23,7 @@
       :on-cancel="onCancel"
       :editing="editing"/>
     <blip-audio
+      :file-url-msg="fileUrlMsg"
       :document="document"
       :full-document="fullDocument"
       :position="position"
@@ -35,6 +39,7 @@
       :on-cancel="onCancel"
       :editing="editing"/>
     <blip-video
+      :video-uri-msg="videoUriMsg"
       :document="document"
       :full-document="fullDocument"
       :position="position"
@@ -51,6 +56,7 @@
       :on-cancel="onCancel"
       :editing="editing"/>
     <blip-file
+      :title-msg="titleMsg"
       :document="document"
       :full-document="fullDocument"
       :position="position"
@@ -101,14 +107,13 @@ export default {
       type: String,
       default: 'Falha ao enviar a mensagem'
     },
-    aspectRatioMsg: {
-      type: String,
-      default: 'Aspect Ratio'
-    },
-    supportedFormatsMsg: {
-      type: String,
-      default: 'Supported formats'
-    }
+    aspectRatioMsg: String,
+    supportedFormatsMsg: String,
+    fileUrlMsg: String,
+    imageUriMsg: String,
+    videoUriMsg: String,
+    titleMsg: String,
+    textMsg: String
   },
   data: function() {
     return {
