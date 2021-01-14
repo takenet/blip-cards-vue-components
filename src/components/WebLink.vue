@@ -61,7 +61,7 @@
           :class="{'input-error': errors.has('page') }"
           v-validate="'required|url'"
           v-model="uri"
-          placeholder="Page URL"
+          :placeholder="pageUrlMsg"
           @blur="fetchMetadata(true)"
         >
         <span v-show="errors.has('page')" class="help input-error">{{ errors.first('page') }}</span>
@@ -72,7 +72,7 @@
           :class="{'input-error': errors.has('title') }"
           v-validate="'required'"
           v-model="title"
-          placeholder="Title"
+          :placeholder="titleMsg"
         >
         <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
         <input
@@ -80,7 +80,7 @@
           name="webLinkText"
           class="form-control text"
           v-model="text"
-          placeholder="Description"
+          :placeholder="descriptionMsg"
         >
         <select v-model="target" class="form-control text">
           <option disabled value>Target</option>
@@ -122,6 +122,18 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem'
+    },
+    pageUrlMsg: {
+      type: String,
+      default: 'Page URL'
+    },
+    titleMsg: {
+      type: String,
+      default: 'Title'
+    },
+    descriptionMsg: {
+      type: String,
+      default: 'Description'
     }
   },
   data: function() {

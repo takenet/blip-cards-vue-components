@@ -101,7 +101,7 @@
             :class="{'input-error': errors.has('image') }"
             class="form-control"
             v-model="previewUri"
-            placeholder="Image Uri"
+            :placeholder="imageUriMsg"
           >
           <div class="upload-intructions">
             <span>{{ supportedFormatsMsg }}: JPEG,JPG,PNG,GIF.</span>
@@ -150,7 +150,7 @@
             class="form-control"
             v-model="title"
             v-validate="'required'"
-            placeholder="Title"
+            :placeholder="titleMsg"
           >
           <span v-show="errors.has('title')" class="help input-error">{{ errors.first('title') }}</span>
           <textarea
@@ -160,7 +160,7 @@
             :class="{'input-error': errors.has('text') }"
             class="form-control textarea"
             v-model="content"
-            placeholder="Description"
+            :placeholder="descriptionMsg"
           />
           <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
         </div>
@@ -197,7 +197,7 @@
           name="optionTitle"
           class="form-control"
           v-model="selectedOption.label.value.title"
-          placeholder="Title"
+          :placeholder="titleMsg"
         >
       </div>
       <div class="form-group" v-if="headerTab === 'weblink'">
@@ -207,7 +207,7 @@
           class="form-control"
           v-validate="'required'"
           v-model="selectedOption.label.value.text"
-          placeholder="Text"
+          :placeholder="textMsg"
         >
         <span
           v-show="errors.has('optionText')"
@@ -221,7 +221,7 @@
           class="form-control"
           v-validate="'required'"
           v-model="selectedOption.label.value.uri"
-          placeholder="Uri"
+          :placeholder="uriMsg"
           @blur="fetchMetadaForSelectedOption()"
         >
         <span
@@ -247,7 +247,7 @@
             v-validate="'required'"
             class="form-control"
             v-model="selectedOption.label.value"
-            placeholder="Text"
+            :placeholder="textMsg"
           >
           <span
             v-show="errors.has('optionText')"
@@ -267,7 +267,7 @@
               v-validate="'required|mime'"
               class="form-control"
               v-model="selectedOption.value.type"
-              placeholder="Postback mime type"
+              :placeholder="postbackMimetypeMsg"
             >
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
@@ -280,7 +280,7 @@
               v-validate="'required|json'"
               class="form-control"
               v-model="selectedOption.value.value"
-              placeholder="Postback value"
+              :placeholder="postbackValueMsg"
             />
             <textarea
               @keydown.enter="saveOption(true, $event)"
@@ -290,7 +290,7 @@
               v-validate="'required'"
               class="form-control"
               v-model="selectedOption.value.value"
-              placeholder="Postback value"
+              :placeholder="postbackValueMsg"
             />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
@@ -387,6 +387,30 @@ export default {
     supportedFormatsMsg: {
       type: String,
       default: 'Supported formats'
+    },
+    imageUriMsg: {
+      type: String,
+      default: 'Image Uri'
+    },
+    titleMsg: {
+      type: String,
+      default: 'Title'
+    },
+    descriptionMsg: {
+      type: String,
+      default: 'Description'
+    },
+    uriMsg: {
+      type: String,
+      default: 'Uri'
+    },
+    postbackMimetypeMsg: {
+      type: String,
+      default: 'Postback mime type'
+    },
+    postbackValueMsg: {
+      type: String,
+      default: 'Postback value'
     }
   },
   data: function() {

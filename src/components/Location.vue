@@ -45,7 +45,7 @@
         <img :src="closeSvg">
       </button>
       <div class="form-group">
-        <input type="text" name="text" class="form-control" v-model="text" placeholder="Text">
+        <input type="text" name="text" class="form-control" v-model="text" :placeholder="textMsg">
       </div>
       <div class="form-group">
         <input
@@ -54,7 +54,7 @@
           class="form-control"
           v-validate="'required'"
           v-model="latitude"
-          placeholder="Latitude"
+          :placeholder="latitudeMsg"
         >
         <span
           v-show="errors.has('latitude')"
@@ -68,7 +68,7 @@
           class="form-control"
           v-validate="'required'"
           v-model="longitude"
-          placeholder="Longitude"
+          :placeholder="longitudeMsg"
         >
         <span
           v-show="errors.has('longitude')"
@@ -96,6 +96,18 @@ export default {
     status: {
       type: String,
       default: ''
+    },
+    latitudeMsg: {
+      type: String,
+      default: 'Latitude'
+    },
+    longitudeMsg: {
+      type: String,
+      default: 'Longitude'
+    },
+    textMsg: {
+      type: String,
+      default: 'Text'
     },
     failedToSendMsg: {
       type: String,

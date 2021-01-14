@@ -116,7 +116,7 @@
 
       <div v-if="headerTab === 'plainText'">
         <div class="form-group">
-          <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.text" placeholder="Text" />
+          <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.text" :placeholder="textMsg" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
 
@@ -125,12 +125,12 @@
 
         <div v-show="showPayload">
           <div class="form-group">
-            <input type="text" name="type" v-validate="showPayload ? 'required|mime' : ''"  class="form-control" v-model="selectedOption.type" placeholder="Postback mime type" />
+            <input type="text" name="type" v-validate="showPayload ? 'required|mime' : ''"  class="form-control" v-model="selectedOption.type" :placeholder="postbackMimetypeMsg" />
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea @keydown.enter="saveOption($event)" v-if="selectedOption.type && selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
-            <textarea @keydown.enter="saveOption($event)" v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" placeholder="Postback value" />
+            <textarea @keydown.enter="saveOption($event)" v-if="selectedOption.type && selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" :placeholder="postbackValueMsg" />
+            <textarea @keydown.enter="saveOption($event)" v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" :placeholder="postbackValueMsg" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
@@ -200,6 +200,14 @@ export default {
     cancelMsg: {
       type: String,
       default: 'Cancel'
+    },
+    postbackMimetypeMsg: {
+      type: String,
+      default: 'Postback mime type'
+    },
+    postbackValueMsg: {
+      type: String,
+      default: 'Postback value'
     }
   },
   data: function() {

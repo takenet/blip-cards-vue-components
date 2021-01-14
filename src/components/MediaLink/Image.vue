@@ -36,7 +36,7 @@
               v-validate="'required'"
               class="form-control"
               v-model="image"
-              placeholder="Image Uri"
+              :placeholder="imageUriMsg"
             >
             <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
             <div class="upload-intructions">
@@ -79,12 +79,12 @@
             </div>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" v-model="title" placeholder="Title">
+            <input type="text" class="form-control" v-model="title" :placeholder="titleMsg">
             <textarea
               @keydown.enter="imgSave($event)"
               v-model="text"
               class="form-control text"
-              placeholder="Text"
+              :placeholder="textMsg"
             />
           </div>
           <button
@@ -118,6 +118,18 @@ export default {
     supportedFormatsMsg: {
       type: String,
       default: 'Supported formats'
+    },
+    imageUriMsg: {
+      type: String,
+      default: 'Image Uri'
+    },
+    titleMsg: {
+      type: String,
+      default: 'Title'
+    },
+    textMsg: {
+      type: String,
+      default: 'Text'
     }
   },
   data: function() {

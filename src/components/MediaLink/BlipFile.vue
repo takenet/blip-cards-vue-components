@@ -30,9 +30,9 @@
             <img :src="approveSvg" />
           </button>
           <div class="form-group">
-            <input type="text" name="file" class="form-control uri" v-model="uri" placeholder="File URL" :class="{'input-error': errors.has('file') }" v-validate="'required|url'"/>
+            <input type="text" name="file" class="form-control uri" v-model="uri" :placeholder="fileUrlMsg" :class="{'input-error': errors.has('file') }" v-validate="'required|url'"/>
             <span v-if="errors.has('file')" class="help input-error">{{ errors.first('file') }}</span>
-            <input type="text" class="form-control title" v-model="title" placeholder="Title"/>
+            <input type="text" class="form-control title" v-model="title" :placeholder="titleMsg"/>
           </div>
           <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-media-link-metadata" @click="editMetadata(fullDocument)">
             {{ metadataButtonText }}
@@ -50,6 +50,14 @@ import mime from 'mime-types'
 export default {
   mixins: [base],
   props: {
+    fileUrlMsg: {
+      type: String,
+      default: 'File URL'
+    },
+    titleMsg: {
+      type: String,
+      default: 'Title'
+    },
     onMediaSelected: {
       type: Function
     }
