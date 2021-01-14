@@ -1,6 +1,6 @@
 {
   "name": "blip-cards",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Reusable BLiP cards using Vue",
   "license": "MIT",
   "main": "dist/blip-cards.js",
