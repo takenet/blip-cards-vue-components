@@ -299,7 +299,7 @@
 
       <div class="form-group blip-card-flex">
         <span class="flex-item">
-          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">Cancel</button>
+          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">{{ cancelMsg }}</button>
         </span>
         <span class="flex-item">
           <button
@@ -359,6 +359,10 @@ export default {
     applyMsg: {
       type: String,
       default: 'Apply'
+    },
+    cancelMsg: {
+      type: String,
+      default: 'Cancel'
     },
     setPayloadMsg: {
       type: String,

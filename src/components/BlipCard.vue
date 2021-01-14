@@ -73,6 +73,7 @@
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :apply-msg="translations.apply"
+          :cancel-msg="translations.cancel"
           :set-payload-msg="translations.setPayload"
           :add-button-msg="translations.addButton"
           :text-msg="translations.text"
