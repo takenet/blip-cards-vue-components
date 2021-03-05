@@ -20,6 +20,7 @@ import ChatState from './components/ChatState'
 import Redirect from './components/Redirect'
 import Ticket from './components/Ticket'
 import Editable from './components/Editable'
+import Survey from './components/Survey'
 
 // Validators
 import JsonValidator from './validators/jsonValidator'
@@ -57,6 +58,7 @@ function install(Vue) {
   components.push(Vue.component(LimeInput.name, LimeInput))
   components.push(Vue.component(UnsuportedContent.name, UnsuportedContent))
   components.push(Vue.component(ChatState.name, ChatState))
+  components.push(Vue.component(Survey.name, Survey))
 
   Vue.component(Editable.name, Editable)
 
