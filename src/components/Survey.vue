@@ -79,7 +79,7 @@ export default {
       if (positiveLabel) {
         return this.type === 'recomendationSurvey' ? 'Recommend' : 'Positive'
       } else {
-        return this.type === 'recomendationSurvey' ? "Don't Recommend" : 'Negavite'
+        return this.type === 'recomendationSurvey' ? "Don't Recommend" : 'Negative'
       }
     },
     surveySave: function () {
@@ -126,12 +126,13 @@ export default {
 
   .container {
     &-title {
+      color: rgba(115,129,146,1);
       font-size: 1.1rem;
       text-align: center;
     }
     &-survey {
       margin-bottom: 8px;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       text-align: left;
     }
   }
@@ -238,6 +239,7 @@ export default {
   }
 
   &-score{
+    margin-top: 10px;
     text-align: center;
   }
 }
@@ -304,7 +306,7 @@ export default {
       <div class="form-group">
         <div class="container-survey">
           <span class="message--label">{{ surveyTypeLabel }}</span>
-          <select v-model="type" class="form-control text">
+          <select v-model="type" class="form-control text" v-validate="'required'">
             <option disabled value></option>
             <option value="recomendationSurvey">
               Would you recommend this bot?
@@ -331,7 +333,7 @@ export default {
 
         <div class="container-survey">
           <span class="message--label">{{ scaleLabel }}</span>
-          <select v-model="scale" class="form-control text">
+          <select v-model="scale" class="form-control text" v-validate="'required'">
             <option value="numeric3">Number 1 to 3</option>
             <option value="numeric5">Number 1 to 5</option>
             <option value="star3">Stars 1 to 3</option>
