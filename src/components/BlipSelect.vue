@@ -1,6 +1,7 @@
 <template>
   <div v-if="!isEditing" @show="checkForEndOfSlider" class="blip-container select">
     <div v-if="document.scope === 'immediate'" :class="isFailedMessage(status, position)">
+      <h2>immediate</h2>
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
@@ -44,6 +45,7 @@
 
     <div v-else :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
+        <h2>bubble</h2>
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
         </div>
@@ -74,6 +76,7 @@
   </div>
 
   <div class="blip-container select" v-else-if="!addOption">
+    <h2>!addOption</h2>
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <button class="btn saveIco closeIco" @click="selectCancel()" >
         <img :src="closeSvg" />
@@ -109,6 +112,7 @@
   </div>
 
   <div class="blip-container" v-else>
+    <h2>blip-container</h2>
     <form novalidate v-on:submit.prevent :class="'bubble ' + position">
       <div class="tabs">
         <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">{{ textMsg }}</span>

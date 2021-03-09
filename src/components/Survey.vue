@@ -104,7 +104,7 @@ export default {
 @import '../styles/variables.scss';
 
 .survey .bubble {
-  
+  line-height: normal;
   &.right .text-wrapper:after {
     background: $vue-light-blip !important;
   }
@@ -126,12 +126,13 @@ export default {
 
   .container {
     &-title {
+      margin: 10px 0 0px;
       color: rgba(115,129,146,1);
       font-size: 1.1rem;
       text-align: center;
     }
     &-survey {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-size: 0.7rem;
       text-align: left;
     }
@@ -315,7 +316,7 @@ export default {
               Did you solve your problem?
             </option>
             <option value="chatbotResolution">
-              Did your problem has been solved?
+              Has your problem been solved?
             </option>
           </select>
           <span v-show="errors.has('title')" class="help input-error">{{
