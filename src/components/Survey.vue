@@ -3,8 +3,20 @@ import numeric3 from '../assets/img/survey/numbers3.png'
 import numeric5 from '../assets/img/survey/numbers5.png'
 import star3 from '../assets/img/survey/stars3.png'
 import star5 from '../assets/img/survey/stars5.png'
+import star from '../assets/img/survey/star.svg'
+// import starFill from '../assets/img/survey/star_fill.svg'
+import numeric from '../assets/img/survey/numeric.svg'
+// import numericFill from '../assets/img/survey/numeric_fill.svg'
 import { default as base } from '../mixins/baseComponent.js'
 import { isFailedMessage } from '../utils/misc'
+
+export const RECOMENDATION_SURVEY = 'recomendationSurvey'
+export const SOLUTION_SURVEY = 'solutionSurvey'
+export const CHATBOT_SURVEY = 'chatbotSurvey'
+
+export const NUMERIC = 'numeric'
+export const STAR = 'star'
+
 export default {
   name: 'survey',
   mixins: [base],
@@ -62,24 +74,58 @@ export default {
       this.question =
         this.document.question || 'Would you recommend our product? Rate us'
       this.score = this.document.score || 5
+      this.numberOfIcons = 0
     },
     getTitlePreview: function () {
       switch (this.type) {
-        case 'recomendationSurvey':
+        case RECOMENDATION_SURVEY:
           return 'Would you recommend our Chatbot?'
-        case 'solutionSurvey':
+        case SOLUTION_SURVEY:
           return 'How did you feel about the service on this channel?'
-        case 'chatbotSurvey':
+        case CHATBOT_SURVEY:
           return 'How did you feel about the chatbot assistance?'
         default:
           return 'How did you feel about the service on this channel?'
       }
     },
-    getDescriptionPreview: function(positiveLabel) {
+    getDescriptionPreview: function (positiveLabel) {
       if (positiveLabel) {
-        return this.type === 'recomendationSurvey' ? 'Recommend' : 'Positive'
+        return this.type === RECOMENDATION_SURVEY ? 'Recommend' : 'Positive'
       } else {
-        return this.type === 'recomendationSurvey' ? "Don't Recommend" : 'Negative'
+        return this.type === RECOMENDATION_SURVEY
+          ? "Don't Recommend"
+          : 'Negative'
+      }
+    },
+    changeScale: function () {
+      this.isStarIcon = this.scale.includes(STAR)
+      this.numberOfIcons = parseInt(
+        this.scale.indexOf(NUMERIC) !== -1
+          ? this.scale.split(NUMERIC)[1]
+          : this.scale.split(STAR)[1]
+      )
+      console.log('Items number: ', this.numberOfIcons)
+    },
+    changeQuestion: function () {
+      this.question = this.getTitlePreview()
+    },
+    getScoreIconImage: function () {
+      return this.isStarIcon ? star : numeric
+    },
+    getStarIcon: function() {
+      return star
+    },
+    setScore: function (event) {
+      const currentItem = event.target
+      console.log(currentItem)
+      if (this.isStarIcon) {
+
+      } else {
+        const collectionSurveyItems = document.getElementsByClassName('survey-item-number')
+        collectionSurveyItems.forEach(el => {
+          console.log(el)
+        })
+        currentItem.classList.add('active')
       }
     },
     surveySave: function () {
@@ -127,7 +173,7 @@ export default {
   .container {
     &-title {
       margin: 10px 0 0px;
-      color: rgba(115,129,146,1);
+      color: rgba(115, 129, 146, 1);
       font-size: 1.1rem;
       text-align: center;
     }
@@ -228,7 +274,7 @@ export default {
   }
 }
 
-.survey{
+.survey {
   &-row {
     display: flex;
   }
@@ -239,9 +285,26 @@ export default {
     text-align: center;
   }
 
-  &-score{
-    margin-top: 10px;
+  &-score {
+    margin-top: 15px;
     text-align: center;
+  }
+
+  &-item{
+    margin: 0 10px;
+
+    &-number{
+      padding: 5px 8px;
+      background-color: $vue-light-gray;
+      border-radius: 5px;
+      color: #F2F2F2;
+      cursor: pointer;
+      text-align: center;
+      &:hover, &.active{
+        background-color: $vue-main-color;
+        color: #fff;
+      }
+    }
   }
 }
 </style>
@@ -273,19 +336,35 @@ export default {
         <div class="container-survey">
           <div class="survey-row">
             <div class="survey-cell">
-              {{getDescriptionPreview(false)}}
+              {{ getDescriptionPreview(false) }}
             </div>
             <div class="survey-cell">
-              {{getDescriptionPreview(true)}}
+              {{ getDescriptionPreview(true) }}
             </div>
           </div>
         </div>
-        <div class="container-survey">
+
+        <div v-if="!deletable && !editable" class="container-survey">
           <div class="survey-score">
-            <img v-if="scale === 'numeric3'" :src=numeric3 />
-            <img v-if="scale === 'numeric5'" :src=numeric5 />
-            <img v-if="scale === 'star3'" :src=star3 />
-            <img v-if="scale === 'star5'" :src=star5 />
+            <img v-if="scale === 'numeric3'" :src="numeric3" />
+            <img v-if="scale === 'numeric5'" :src="numeric5" />
+            <img v-if="scale === 'star3'" :src="star3" />
+            <img v-if="scale === 'star5'" :src="star5" />
+          </div>
+        </div>
+        <div v-if="deletable && editable" class="container-survey">
+          <div class="survey-score">
+            <span
+              v-for="(index, $event) in numberOfIcons"
+              v-bind:key="index"
+              @click="setScore($event)"
+              class="survey-item"
+              :class="isStarIcon ? 'star' : 'numeric'"
+              :data-value="index"
+            >
+              <span class='survey-item-number' v-if="!isStarIcon">{{index}}</span>
+              <img  class='survey-item-star' v-else :src="getStarIcon()" />
+            </span>
           </div>
         </div>
       </div>
@@ -307,17 +386,18 @@ export default {
       <div class="form-group">
         <div class="container-survey">
           <span class="message--label">{{ surveyTypeLabel }}</span>
-          <select v-model="type" class="form-control text" v-validate="'required'">
+          <select
+            v-on:change="changeQuestion"
+            v-model="type"
+            class="form-control text"
+            v-validate="'required'"
+          >
             <option disabled value></option>
             <option value="recomendationSurvey">
               Would you recommend this bot?
             </option>
-            <option value="reviewResolution">
-              Did you solve your problem?
-            </option>
-            <option value="chatbotResolution">
-              Has your problem been solved?
-            </option>
+            <option value="reviewSurvey">Chatbot attendance assessment</option>
+            <option value="chatbotSurvey">Problem resolution assessment</option>
           </select>
           <span v-show="errors.has('title')" class="help input-error">{{
             errors.first('title')
@@ -326,7 +406,8 @@ export default {
 
         <div class="container-survey">
           <span class="message--label">{{ introductionLabel }}</span>
-          <textarea v-model="question" class="form-control text"> </textarea>
+          <textarea readonly v-model="question" class="form-control text">
+          </textarea>
           <span v-show="errors.has('title')" class="help input-error">{{
             errors.first('title')
           }}</span>
@@ -334,7 +415,12 @@ export default {
 
         <div class="container-survey">
           <span class="message--label">{{ scaleLabel }}</span>
-          <select v-model="scale" class="form-control text" v-validate="'required'">
+          <select
+            v-on:change="changeScale"
+            v-model="scale"
+            class="form-control text"
+            v-validate="'required'"
+          >
             <option value="numeric3">Number 1 to 3</option>
             <option value="numeric5">Number 1 to 5</option>
             <option value="star3">Stars 1 to 3</option>
