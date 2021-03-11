@@ -3,10 +3,6 @@ import numeric3 from '../assets/img/survey/numbers3.png'
 import numeric5 from '../assets/img/survey/numbers5.png'
 import star3 from '../assets/img/survey/stars3.png'
 import star5 from '../assets/img/survey/stars5.png'
-import star from '../assets/img/survey/star.svg'
-// import starFill from '../assets/img/survey/star_fill.svg'
-import numeric from '../assets/img/survey/numeric.svg'
-// import numericFill from '../assets/img/survey/numeric_fill.svg'
 import { default as base } from '../mixins/baseComponent.js'
 import { isFailedMessage } from '../utils/misc'
 
@@ -48,6 +44,10 @@ export default {
     scaleLabel: {
       type: String,
       default: 'Scale'
+    },
+    isActivated: {
+      type: Boolean,
+      default: false
     }
   },
   data: function () {
@@ -104,28 +104,24 @@ export default {
           ? this.scale.split(NUMERIC)[1]
           : this.scale.split(STAR)[1]
       )
-      console.log('Items number: ', this.numberOfIcons)
     },
     changeQuestion: function () {
       this.question = this.getTitlePreview()
     },
-    getScoreIconImage: function () {
-      return this.isStarIcon ? star : numeric
-    },
-    getStarIcon: function() {
-      return star
-    },
     setScore: function (event) {
-      const currentItem = event.target
-      console.log(currentItem)
+      const collectionSurveyItems = this.isStarIcon ? document.getElementsByClassName('survey-item-star') : document.getElementsByClassName('survey-item-number')
+      Array.from(collectionSurveyItems).forEach(el => {
+        el.classList.remove('active')
+      })
       if (this.isStarIcon) {
-
-      } else {
-        const collectionSurveyItems = document.getElementsByClassName('survey-item-number')
-        collectionSurveyItems.forEach(el => {
-          console.log(el)
-        })
-        currentItem.classList.add('active')
+        while (event >= 0) {
+          const item = document.getElementsByClassName('star' + event)[0]
+          if (!item) {
+            return
+          }
+          item.classList.add('active')
+          event--
+        }
       }
     },
     surveySave: function () {
@@ -305,6 +301,18 @@ export default {
         color: #fff;
       }
     }
+
+    &-star{
+      display: inline-block;
+      height: 24px;
+      width: 24px;
+      background-repeat: no-repeat;
+      background-image: url('~@/assets/img/survey/star.svg');
+
+      &:hover, &.active{
+        background-image: url('~@/assets/img/survey/star_fill.svg');
+      }
+    }
   }
 }
 </style>
@@ -355,16 +363,23 @@ export default {
         <div v-if="deletable && editable" class="container-survey">
           <div class="survey-score">
             <span
-              v-for="(index, $event) in numberOfIcons"
-              v-bind:key="index"
-              @click="setScore($event)"
+              v-for="item in numberOfIcons"
+              v-bind:key="item"
+              @click="setScore(item)"
               class="survey-item"
-              :class="isStarIcon ? 'star' : 'numeric'"
-              :data-value="index"
+              :data-value="item"
+              :ref="'item'+item"
             >
-              <span class='survey-item-number' v-if="!isStarIcon">{{index}}</span>
-              <img  class='survey-item-star' v-else :src="getStarIcon()" />
+              <span v-if="!isStarIcon" :data-value="item" class='survey-item-number' >{{item}}</span>
+              <span v-else :data-value="item" class='survey-item-star' :class="'star' + item"  ></span>
             </span>
+          </div>
+          <div class="survey-score">
+            <button
+              v-if="score != 0"
+              class="define-metadata blip-document-select-metadata"
+              @click="editMetadata(fullDocument)"
+              >]]{{ metadataButtonText }}</button>
           </div>
         </div>
       </div>

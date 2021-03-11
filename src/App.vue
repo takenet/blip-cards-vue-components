@@ -205,7 +205,6 @@ export default {
         position: this.position,
         status: this.msgStatus
       })
-      console.log(this.documents, doc)
     },
     sendText: function () {
       this.json = JSON.stringify({
