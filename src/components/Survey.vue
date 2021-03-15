@@ -45,9 +45,9 @@ export default {
       type: String,
       default: 'Scale'
     },
-    isActivated: {
-      type: Boolean,
-      default: false
+    saveButtonLabel: {
+      type: String,
+      default: 'Save'
     }
   },
   data: function () {
@@ -62,7 +62,9 @@ export default {
       numeric3,
       numeric5,
       star3,
-      star5
+      star5,
+      isScoredActivated: false,
+      isScoreFormFinished: false
     }
   },
   methods: {
@@ -73,8 +75,9 @@ export default {
       this.scale = this.document.scale || 'numeric5'
       this.question =
         this.document.question || 'Would you recommend our product? Rate us'
-      this.score = this.document.score || 5
+      this.score = this.document.score || 0
       this.numberOfIcons = 0
+      this.changeScale()
     },
     getTitlePreview: function () {
       switch (this.type) {
@@ -99,6 +102,7 @@ export default {
     },
     changeScale: function () {
       this.isStarIcon = this.scale.includes(STAR)
+      this.isScoredActivated = false
       this.numberOfIcons = parseInt(
         this.scale.indexOf(NUMERIC) !== -1
           ? this.scale.split(NUMERIC)[1]
@@ -108,23 +112,37 @@ export default {
     changeQuestion: function () {
       this.question = this.getTitlePreview()
     },
-    setScore: function (event) {
+    setScore: function (value) {
+      this.score = parseInt(value)
+
       const collectionSurveyItems = this.isStarIcon ? document.getElementsByClassName('survey-item-star') : document.getElementsByClassName('survey-item-number')
       Array.from(collectionSurveyItems).forEach(el => {
         el.classList.remove('active')
       })
       if (this.isStarIcon) {
-        while (event >= 0) {
-          const item = document.getElementsByClassName('star' + event)[0]
-          if (!item) {
-            return
+        while (value >= 0) {
+          const currentItem = document.getElementsByClassName('star' + value)[0]
+          if (currentItem) {
+            currentItem.classList.add('active')
           }
-          item.classList.add('active')
-          event--
+          value--
         }
+      } else {
+        const currentItem = document.getElementsByClassName('number' + value)[0]
+        currentItem.classList.add('active')
+      }
+      if (!this.isScoredActivated) {
+        this.isScoredActivated = true
       }
     },
+    editingModeSave: function () {
+      this.saveForm()
+    },
     surveySave: function () {
+      this.isScoreFormFinished = true
+      this.saveForm()
+    },
+    saveForm: function () {
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.save({
@@ -288,17 +306,16 @@ export default {
 
   &-item{
     margin: 0 10px;
+    cursor: pointer;
 
     &-number{
       padding: 5px 8px;
       background-color: $vue-light-gray;
       border-radius: 5px;
-      color: #F2F2F2;
-      cursor: pointer;
+      color: #fff;
       text-align: center;
       &:hover, &.active{
-        background-color: $vue-main-color;
-        color: #fff;
+        background-color: $primary-color;        
       }
     }
 
@@ -314,6 +331,25 @@ export default {
       }
     }
   }
+
+  .button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 5px 16px;
+    
+    background-color: $primary-color;
+    border: solid 1px $primary-color;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+
+    &:focus {
+      outline:0;
+      border: 1px solid $color-disabled-bg;
+    }
+  }
+
 }
 </style>
 
@@ -331,10 +367,15 @@ export default {
         (this.title == null && this.text == null ? ' text-link' : '')
       "
     >
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
+      <div v-if="deletable" 
+        class="editIco trashIco"
+        :class="{ 'is-disabled' : isScoreFormFinished}" 
+        @click="trash(document)">
         <img :src="trashSvg" />
       </div>
-      <div v-if="editable" class="editIco" @click="toggleEdit">
+      <div v-if="editable" class="editIco" @click="toggleEdit"
+        :class="{ 'is-disabled' : isScoreFormFinished}"
+      >
         <img :src="editSvg" />
       </div>
       <div v-if="this.type || this.question || this.scale">
@@ -352,7 +393,7 @@ export default {
           </div>
         </div>
 
-        <div v-if="!deletable && !editable" class="container-survey">
+        <div v-if="deletable && editable" class="container-survey">
           <div class="survey-score">
             <img v-if="scale === 'numeric3'" :src="numeric3" />
             <img v-if="scale === 'numeric5'" :src="numeric5" />
@@ -360,7 +401,7 @@ export default {
             <img v-if="scale === 'star5'" :src="star5" />
           </div>
         </div>
-        <div v-if="deletable && editable" class="container-survey">
+        <div v-if="!deletable && !editable" class="container-survey">
           <div class="survey-score">
             <span
               v-for="item in numberOfIcons"
@@ -368,18 +409,20 @@ export default {
               @click="setScore(item)"
               class="survey-item"
               :data-value="item"
+              :class="{ 'is-disabled' : isScoreFormFinished}"
               :ref="'item'+item"
             >
-              <span v-if="!isStarIcon" :data-value="item" class='survey-item-number' >{{item}}</span>
-              <span v-else :data-value="item" class='survey-item-star' :class="'star' + item"  ></span>
+              <span v-if="!isStarIcon" :data-value="item" class='survey-item-number' :class="'number' + item">{{item}}</span>
+              <span v-else             :data-value="item" class='survey-item-star'   :class="'star' + item"  ></span>
             </span>
           </div>
           <div class="survey-score">
             <button
-              v-if="score != 0"
-              class="define-metadata blip-document-select-metadata"
-              @click="editMetadata(fullDocument)"
-              >]]{{ metadataButtonText }}</button>
+              v-if="isScoredActivated && score != 0"
+              class="button primary-color"
+              :class="{ 'is-disabled' : isScoreFormFinished}"
+              @click="surveySave()"
+              >{{ saveButtonLabel }}</button>
           </div>
         </div>
       </div>
@@ -390,12 +433,16 @@ export default {
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <button
         class="btn saveIco"
-        @click="surveySave()"
-        :class="{ 'is-disabled': errors.any() }"
+        :class="{ 'is-disabled': errors.any() || isScoreFormFinished }"
+        @click="editingModeSave()"
       >
         <img :src="approveSvg" />
       </button>
-      <button class="btn saveIco closeIco" @click="cancel()">
+      <button 
+        class="btn saveIco closeIco" 
+        :class="{ 'is-disabled' : isScoreFormFinished }"
+        @click="cancel()"
+      >
         <img :src="closeSvg" />
       </button>
       <div class="form-group">
