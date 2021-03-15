@@ -74,7 +74,6 @@
   </div>
 
   <div class="blip-container select" v-else-if="!addOption">
-    <h2>!addOption</h2>
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <button class="btn saveIco closeIco" @click="selectCancel()" >
         <img :src="closeSvg" />
