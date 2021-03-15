@@ -172,6 +172,20 @@
           :editing="isCardEditing"
           :on-cancel="cancel"/>
 
+        <survey
+          class="blip-card"
+          v-else-if="document.type === 'application/vnd.lime.satisfaction-survey+json'"
+          :failed-to-send-msg="translations.failedToSend"
+          :introduction-msg='translations.introduction'
+          :status="status"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :document="editableDocument.content"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
+
         <location
           class="blip-card"
           v-else-if="document.type === 'application/vnd.lime.location+json'"
@@ -191,6 +205,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"/>
+
+        
 
         <request-location
           v-else-if="document.type === 'application/vnd.lime.input+json' && document.content.validation && document.content.validation.type === 'application/vnd.lime.location+json'"
