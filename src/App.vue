@@ -140,6 +140,7 @@
       <div style="padding: 20px">
         <blip-group-card
           v-if="group"
+          :failed-to-send-msg="translations.failedToSend"
           :documents="docs"
           :photo="photoUri"
           :deletable="deletable"
