@@ -27,6 +27,8 @@
         <plain-text
           v-else-if="document.type ==='text/plain'"
           class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :show-more-msg="translations.showMore"
           :status="status"
           :length="length"
           :position="position"
@@ -206,7 +208,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"/>
 
-        
+
 
         <request-location
           v-else-if="document.type === 'application/vnd.lime.input+json' && document.content.validation && document.content.validation.type === 'application/vnd.lime.location+json'"
