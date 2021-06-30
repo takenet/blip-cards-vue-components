@@ -31,7 +31,7 @@
     "start": "npm run dev",
     "bundle:min": "cross-env MINIFY=true webpack --progress --config build/webpack.build.config.js",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
