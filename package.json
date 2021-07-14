@@ -120,7 +120,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "sanitize-html": "^1.20.0",
+    "sanitize-html": "^2.3.2",
     "vee-validate": "^2.0.0-rc.21",
     "vue2-touch-events": "^1.0.0"
   }
