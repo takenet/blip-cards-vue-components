@@ -2,7 +2,8 @@
  <div class="blip-container unsuported-content">
     <div :class="'bubble ' + position">
       <div class="flex">
-        <img v-if="position === 'right'" :src="alertWhiteSvg" alt="Alert" class="alert-icon">
+        <img v-if="fromMessageTemplate == true" :src="megaphoneSvg" alt="Alert" class="alert-icon">
+        <img v-else-if="position === 'right'" :src="alertWhiteSvg" alt="Alert" class="alert-icon">
         <img v-else :src="alertSvg" alt="Alert" class="alert-icon">
         <span>
           {{ unsupportedContentMsg }}
@@ -38,6 +39,7 @@
 import { default as base } from '../mixins/baseComponent.js'
 import alertSvg from '../assets/img/alert.svg'
 import alertWhiteSvg from '../assets/img/alertWhite.svg'
+import megaphoneSvg from '../assets/img/megaphone.svg'
 
 export default {
   name: 'unsuported-content',
@@ -54,6 +56,10 @@ export default {
       type: String,
       default: 'Unsuported Content'
     },
+    fromMessageTemplate: {
+      type: Boolean,
+      default: false
+    },
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem'
@@ -62,7 +68,8 @@ export default {
   data: function() {
     return {
       alertSvg,
-      alertWhiteSvg
+      alertWhiteSvg,
+      megaphoneSvg
     }
   }
 }

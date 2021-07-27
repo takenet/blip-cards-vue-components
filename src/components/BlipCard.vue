@@ -301,6 +301,22 @@
           :on-cancel="cancel"/>
 
         <unsuported-content
+          v-else-if="document.content.type ==='template'"
+          class="blip-card"
+          :from-message-template="true"
+          :failed-to-send-msg="translations.failedToSend"
+          :unsupported-content-msg="translations.messageTemplate + document.content.template.name"
+          :position="position"
+          :document="editableDocument.content"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
+
+        <unsuported-content
           v-else
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
