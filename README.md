@@ -1,6 +1,6 @@
 # blip-cards
 
-[![Build Status](https://travis-ci.com/takenet/blip-cards-vue-components.svg?branch=master)](https://travis-ci.com/takenet/blip-cards-vue-components)
+[![Build Status](https://dev.azure.com/curupira/BLiP/_build?definitionId=1295)
 
 > Reusable BLiP cards using Vue
 
