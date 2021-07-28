@@ -208,8 +208,6 @@
           :editing="isCardEditing"
           :on-cancel="cancel"/>
 
-
-
         <request-location
           v-else-if="document.type === 'application/vnd.lime.input+json' && document.content.validation && document.content.validation.type === 'application/vnd.lime.location+json'"
           class="blip-card"
@@ -230,7 +228,6 @@
           :hide-options="hideOptions"
           :editing="isCardEditing"
           :on-cancel="cancel"
-
           :on-location-error="onLocationError"/>
 
         <lime-input
