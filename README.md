@@ -1,6 +1,6 @@
 # blip-cards
 
-[![Build Status](https://dev.azure.com/curupira/BLiP/_build?definitionId=1295)
+[![Build Status](https://dev.azure.com/curupira/BLiP/_build?definitionId=1295 )
 
 > Reusable BLiP cards using Vue
 
