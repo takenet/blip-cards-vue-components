@@ -24,6 +24,7 @@
         :on-open-link="onOpenLink"
         :on-unsupported-type="onUnsupportedType"
         :on-location-error="onLocationError"
+        :translations="translations"
         :class="messageClass(message) + (message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : '')"
         :disable-link="disableLink"
         />
@@ -103,6 +104,10 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem.'
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
