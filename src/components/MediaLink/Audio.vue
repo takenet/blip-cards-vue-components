@@ -8,19 +8,44 @@
         <img :src="editSvg" />
       </div>
       <div class="audio-player-wrapper" v-if="!isEditing">
-        <div class="audio-player-controls">
+        <div v-if="!isLoading" class="audio-player-controls">
           <span v-if="isPlaying" @click="togglePlay">
-            <svg  class="audio-player-button" width="12px" height="18px" viewBox="0 0 12 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <g id="Pause" stroke="none" stroke-width="1" fill-rule="nonzero">
-                    <path d="M4.61538462,17.351355 C4.61538462,17.7095549 4.33986449,18 4,18 L0.615384615,18 C0.275520128,18 0,17.7095885 0,17.351355 L0,0.648645015 C0,0.290411481 0.275520128,0 0.615384615,0 L4,0 C4.33986449,0 4.61538462,0.290411481 4.61538462,0.648645015 L4.61538462,17.351355 Z" id="Shape"></path>
-                    <path d="M12,17.351355 C12,17.7095549 11.7244799,18 11.3846154,18 L8,18 C7.66013551,18 7.38461538,17.7095885 7.38461538,17.351355 L7.38461538,0.648645015 C7.38461538,0.290411481 7.66013551,0 8,0 L11.3846154,0 C11.7244799,0 12,0.290411481 12,0.648645015 L12,17.351355 Z" id="Shape"></path>
-                </g>
+            <svg
+              class="audio-player-button"
+              width="12px"
+              height="18px"
+              viewBox="0 0 12 18"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
+              <g id="Pause" stroke="none" stroke-width="1" fill-rule="nonzero">
+                <path
+                  d="M4.61538462,17.351355 C4.61538462,17.7095549 4.33986449,18 4,18 L0.615384615,18 C0.275520128,18 0,17.7095885 0,17.351355 L0,0.648645015 C0,0.290411481 0.275520128,0 0.615384615,0 L4,0 C4.33986449,0 4.61538462,0.290411481 4.61538462,0.648645015 L4.61538462,17.351355 Z"
+                  id="Shape"
+                ></path>
+                <path
+                  d="M12,17.351355 C12,17.7095549 11.7244799,18 11.3846154,18 L8,18 C7.66013551,18 7.38461538,17.7095885 7.38461538,17.351355 L7.38461538,0.648645015 C7.38461538,0.290411481 7.66013551,0 8,0 L11.3846154,0 C11.7244799,0 12,0.290411481 12,0.648645015 L12,17.351355 Z"
+                  id="Shape"
+                ></path>
+              </g>
             </svg>
           </span>
           <span v-else @click="togglePlay">
-            <svg class="audio-player-button" width="14px" height="18px" viewBox="0 0 14 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <svg
+              class="audio-player-button"
+              width="14px"
+              height="18px"
+              viewBox="0 0 14 18"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
               <g id="Play" stroke="none" stroke-width="1" fill-rule="evenodd">
-                <path d="M13.3805199,7.82862117 C14.2064934,8.35374536 14.2064934,9.64760806 13.3805199,10.1700254 L1.21459333,17.8790651 C0.677273234,18.2201251 0,17.7992137 0,17.1238607 L0,0.876139285 C0,0.200786266 0.677273234,-0.220125134 1.21459333,0.120934907 L13.3805199,7.82862117 Z" id="play-copy-3"></path>
+                <path
+                  d="M13.3805199,7.82862117 C14.2064934,8.35374536 14.2064934,9.64760806 13.3805199,10.1700254 L1.21459333,17.8790651 C0.677273234,18.2201251 0,17.7992137 0,17.1238607 L0,0.876139285 C0,0.200786266 0.677273234,-0.220125134 1.21459333,0.120934907 L13.3805199,7.82862117 Z"
+                  id="play-copy-3"
+                ></path>
               </g>
             </svg>
           </span>
@@ -30,27 +55,55 @@
                 <div class="pin" id="progress-pin" data-method="rewind"></div>
               </div>
             </div>
-            <input class="audio-player-range" type="range" :value="this.currentTime" :max="this.totalTime" @input="setAudioPosition($event)" @change="setAudioPosition($event)">
+            <input
+              class="audio-player-range"
+              type="range"
+              :value="this.currentTime"
+              :max="this.totalTime"
+              @input="setAudioPosition($event)"
+              @change="setAudioPosition($event)"
+            />
             <div class="audio-player-time">
-              <span>{{getTimeFromSeconds(this.currentTime)}}</span>
-              <span>{{getTimeFromSeconds(this.totalTime)}}</span>
+              <span>{{ getTimeFromSeconds(this.currentTime) }}</span>
+              <span>{{ getTimeFromSeconds(this.totalTime) }}</span>
             </div>
           </div>
+        </div>
+        <div v-else>
+          <img :src="loadingGif" />
         </div>
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button class="btn saveIco closeIco" @click="cancel()" >
+          <button class="btn saveIco closeIco" @click="cancel()">
             <img :src="closeSvg" />
           </button>
-          <button class="btn saveIco" @click="audioSave()" :class="{'is-disabled': errors.any() }">
+          <button
+            class="btn saveIco"
+            @click="audioSave()"
+            :class="{ 'is-disabled': errors.any() }"
+          >
             <img :src="approveSvg" />
           </button>
           <div class="form-group">
-            <input type="text" name="audio" class="form-control" v-model="audioUri" :placeholder="fileUrlMsg" :class="{'input-error': errors.has('audio') }" v-validate="'required|url'"/>
-            <span v-if="errors.has('audio')" class="help input-error">{{ errors.first('audio') }}</span>
+            <input
+              type="text"
+              name="audio"
+              class="form-control"
+              v-model="audioUri"
+              :placeholder="fileUrlMsg"
+              :class="{ 'input-error': errors.has('audio') }"
+              v-validate="'required|url'"
+            />
+            <span v-if="errors.has('audio')" class="help input-error">{{
+              errors.first('audio')
+            }}</span>
           </div>
-          <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-media-link-metadata" @click="editMetadata(fullDocument)">
+          <button
+            v-if="typeof onMetadataEdit === 'function'"
+            class="define-metadata blip-media-link-metadata"
+            @click="editMetadata(fullDocument)"
+          >
             {{ metadataButtonText }}
           </button>
         </form>
@@ -71,10 +124,11 @@ export default {
       default: 'File URL'
     }
   },
-  data: function() {
+  data: function () {
     return {
       audioUri: undefined,
       isPlaying: undefined,
+      isLoading: true,
       audio: undefined,
       currentTime: undefined,
       totalTime: undefined,
@@ -82,17 +136,18 @@ export default {
       slider: undefined
     }
   },
-  mounted: function() {
+  mounted: function () {
     this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
-  destroyed: function() {
+  destroyed: function () {
     this.audio.removeEventListener('timeupdate', this.audioTimeUpdated)
     this.audio.removeEventListener('loadedmetadata', this.audioLoaded)
     this.audio.removeEventListener('ended', this.resetPlay)
+    this.audio.addEventListener('canplaythrough', this.audioReadyToPlay, false)
   },
   methods: {
-    init: function() {
+    init: function () {
       this.audioUri = this.document.uri
       this.isPlaying = false
       this.audio = Audio
@@ -101,14 +156,15 @@ export default {
       this.progress = undefined
       this.slider = undefined
     },
-    initAudio: function(uri) {
+    initAudio: function (uri) {
       this.audio = new Audio(uri)
-
+      this.isLoading = true
+      this.audio.addEventListener('canplaythrough', this.audioReadyToPlay, false)
       this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
       this.audio.addEventListener('loadedmetadata', this.audioLoaded)
       this.audio.addEventListener('ended', this.resetPlay)
     },
-    toggleEdit: function() {
+    toggleEdit: function () {
       this.isEditing = !this.isEditing
 
       this.isPlaying = false
@@ -116,7 +172,7 @@ export default {
       this.audio.src = ''
       this.audio.load()
     },
-    audioSave: function() {
+    audioSave: function () {
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.progress = null
@@ -130,7 +186,7 @@ export default {
         })
       })
     },
-    togglePlay: function() {
+    togglePlay: function () {
       this.isPlaying = !this.isPlaying
       if (this.isPlaying) {
         this.audio.play()
@@ -138,34 +194,34 @@ export default {
         this.audio.pause()
       }
     },
-    resetPlay: function() {
+    resetPlay: function () {
       if (this.isPlaying && (this.audio.currentTime = this.totalTime)) {
         this.isPlaying = false
         this.audio.pause()
         this.audio.currentTime = 0
       }
     },
-    audioTimeUpdated: function() {
+    audioTimeUpdated: function () {
       if (!this.progress) {
         this.progress = this.$el.querySelector('.progress')
       }
 
       try {
         var current = this.audio.currentTime
-        var percent = current / this.totalTime * 100
+        var percent = (current / this.totalTime) * 100
         this.progress.style.width = percent + '%'
 
         this.currentTime = this.audio.currentTime
       } catch (e) {}
     },
-    audioLoaded: function() {
+    audioLoaded: function () {
       this.totalTime = this.audio.duration
     },
-    setAudioPosition: function(event) {
+    setAudioPosition: function (event) {
       // srcElement is no supported in FF, but needed if working with IE6-8
       this.audio.currentTime = (event.target || event.srcElement).value
     },
-    getTimeFromSeconds: function(seconds) {
+    getTimeFromSeconds: function (seconds) {
       var timeMin = Math.floor(seconds / 60)
       var timeSec = Math.floor(seconds % 60)
       return (
@@ -173,6 +229,9 @@ export default {
         ':' +
         (timeSec < 10 ? '0' + timeSec : timeSec)
       )
+    },
+    audioReadyToPlay: function () {
+      this.isLoading = false
     }
   }
 }
@@ -189,7 +248,8 @@ export default {
     color: $vue-london;
   }
 
-  .left, .middle {
+  .left,
+  .middle {
     .progress .pin {
       background-color: $vue-neon-blip;
     }

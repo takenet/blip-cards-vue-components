@@ -8,6 +8,7 @@ import checkSentSvg from '../assets/img/CheckSent.svg'
 import clockSvg from '../assets/img/clock.svg'
 import doubleCheckReceivedSvg from '../assets/img/DoubleCheckReceived.svg'
 import doubleCheckReadSvg from '../assets/img/DoubleCheckRead.svg'
+import loadingGif from '../assets/img/loading.gif'
 
 // define um objeto mixin
 var baseComponent = {
@@ -68,7 +69,8 @@ var baseComponent = {
       checkSentSvg,
       clockSvg,
       doubleCheckReadSvg,
-      doubleCheckReceivedSvg
+      doubleCheckReceivedSvg,
+      loadingGif
     }
   },
   created() {
