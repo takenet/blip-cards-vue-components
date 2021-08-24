@@ -27,6 +27,8 @@
         <plain-text
           v-else-if="document.type ==='text/plain'"
           class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :show-more-msg="translations.showMore"
           :status="status"
           :length="length"
           :position="position"
@@ -172,6 +174,20 @@
           :editing="isCardEditing"
           :on-cancel="cancel"/>
 
+        <survey
+          class="blip-card"
+          v-else-if="document.type === 'application/vnd.lime.satisfaction-survey+json'"
+          :failed-to-send-msg="translations.failedToSend"
+          :introduction-msg='translations.introduction'
+          :status="status"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :document="editableDocument.content"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
+
         <location
           class="blip-card"
           v-else-if="document.type === 'application/vnd.lime.location+json'"
@@ -212,7 +228,6 @@
           :hide-options="hideOptions"
           :editing="isCardEditing"
           :on-cancel="cancel"
-
           :on-location-error="onLocationError"/>
 
         <lime-input
@@ -272,6 +287,22 @@
           :closed-attendant-msg="translations.closedByAttendant"
           :closed-client-msg="translations.closedByClient"
           :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
+
+        <unsuported-content
+          v-else-if="document.content.type ==='template'"
+          class="blip-card"
+          :from-message-template="true"
+          :failed-to-send-msg="translations.failedToSend"
+          :unsupported-content-msg="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
           :position="position"
           :document="editableDocument.content"
           :date="date"

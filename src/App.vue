@@ -1,65 +1,101 @@
 <template>
   <div>
-
     <div class="float" style="width: 200px">
       <div>
         <h1>Width:</h1>
-        <input v-model="width" >
+        <input v-model="width" />
       </div>
 
       <div>
         <h1>Editing:</h1>
-        <input type="checkbox" :value="true" v-model="editable"> Editable <br>
-        <input type="checkbox" :value="true" v-model="deletable"> Deletable <br>
+        <input type="checkbox" :value="true" v-model="editable" /> Editable
+        <br />
+        <input type="checkbox" :value="true" v-model="deletable" /> Deletable
+        <br />
       </div>
 
       <div>
         <h1>Position:</h1>
-        <input type="radio" value="left" v-model="position" > LEFT <br>
-        <input type="radio" value="middle" v-model="position" > MIDDLE <br>
-        <input type="radio" value="right" v-model="position" > RIGHT <br>
+        <input type="radio" value="left" v-model="position" /> LEFT <br />
+        <input type="radio" value="middle" v-model="position" /> MIDDLE <br />
+        <input type="radio" value="right" v-model="position" /> RIGHT <br />
       </div>
 
       <div>
         <h1>Date:</h1>
-        <input v-model="date" >
+        <input v-model="date" />
       </div>
 
-      <div style="clear: both">
-      </div>
+      <div style="clear: both"></div>
 
       <br />
 
-      <input type="radio" value="true" v-model="isSample" > Samples
-      <input type="radio" value="false" v-model="isSample" > JSON
-      <br>
-      <input type="checkbox" value="false" v-model="photo" > Show Photo
-      <br>
-      <input type="checkbox" value="false" v-model="group" > Group Messages
+      <input type="radio" value="true" v-model="isSample" /> Samples
+      <input type="radio" value="false" v-model="isSample" /> JSON
+      <br />
+      <input type="checkbox" value="false" v-model="photo" /> Show Photo
+      <br />
+      <input type="checkbox" value="false" v-model="group" /> Group Messages
 
       <div>
         <h1>Status notification:</h1>
         <form>
-          <input type="radio" name="status" v-model="msgStatus" value="dispatched" checked> Dispatched <br>
-          <input type="radio" name="status" v-model="msgStatus" value="accepted" checked> Accepted <br>
-          <input type="radio" name="status" v-model="msgStatus" value="received"> Received <br>
-          <input type="radio" name="status" v-model="msgStatus" value="consumed"> Consumed <br>
-          <input type="radio" name="status" v-model="msgStatus" value="failed"> Failed <br>
+          <input
+            type="radio"
+            name="status"
+            v-model="msgStatus"
+            value="dispatched"
+            checked
+          />
+          Dispatched <br />
+          <input
+            type="radio"
+            name="status"
+            v-model="msgStatus"
+            value="accepted"
+            checked
+          />
+          Accepted <br />
+          <input
+            type="radio"
+            name="status"
+            v-model="msgStatus"
+            value="received"
+          />
+          Received <br />
+          <input
+            type="radio"
+            name="status"
+            v-model="msgStatus"
+            value="consumed"
+          />
+          Consumed <br />
+          <input
+            type="radio"
+            name="status"
+            v-model="msgStatus"
+            value="failed"
+          />
+          Failed <br />
         </form>
       </div>
 
       <div>
         <h1>Link rendering:</h1>
-        <input type="radio" :value="false" v-model="disableLink"> Yes <br>
-        <input type="radio" :value="true" v-model="disableLink"> No <br>
+        <input type="radio" :value="false" v-model="disableLink" /> Yes <br />
+        <input type="radio" :value="true" v-model="disableLink" /> No <br />
       </div>
 
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendMenu">ENVIAR Menu</button>
-        <button class="button" @click="sendQuickReply">ENVIAR QuickReply</button>
-        <button class="button" @click="sendMultimediaMenu">ENVIAR Menu Multimídia</button>
+        <button class="button" @click="sendQuickReply">
+          ENVIAR QuickReply
+        </button>
+        <button class="button" @click="sendMultimediaMenu">
+          ENVIAR Menu Multimídia
+        </button>
         <button class="button" @click="sendCollection">ENVIAR Coleção</button>
         <button class="button" @click="sendImage">ENVIAR Imagem</button>
         <button class="button" @click="sendAudio">ENVIAR Audio</button>
@@ -67,24 +103,44 @@
         <button class="button" @click="sendWebLink">ENVIAR WebLink</button>
         <button class="button" @click="sendFile">ENVIAR Documento</button>
         <button class="button" @click="sendLocation">ENVIAR Location</button>
-        <button class="button" @click="sendRequestLocation">ENVIAR Pedido de Localização</button>
+        <button class="button" @click="sendRequestLocation">
+          ENVIAR Pedido de Localização
+        </button>
         <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
         <button class="button" @click="sendTicket">ENVIAR Ticket</button>
-        <button class="button" @click="sendRaw">ENVIAR Unsuportend Content</button>
-        <button class="button" @click="toogleBlipGroupCard">CRIAR/DESTRUIR scroll</button>
+        <button class="button" @click="sendRaw">
+          ENVIAR Unsuportend Content
+        </button>
+        <button class="button" @click="sendSurveyContent">ENVIAR Survey</button>
+        <button class="button" @click="toogleBlipGroupCard">
+          CRIAR/DESTRUIR scroll
+        </button>
       </div>
 
       <div v-else>
         <h1>JSON:</h1>
-        <textarea v-model="json" id='textarea' style="width: 100%; height: 300px;"></textarea>
+        <textarea
+          v-model="json"
+          id="textarea"
+          style="width: 100%; height: 300px"
+        ></textarea>
         <button class="button" @click="send">ENVIAR JSON</button>
       </div>
     </div>
 
-    <div v-if="showBlipGroupCard" :style="'float: left; width:' + width + 'px; margin: 50px 100px; background-color: #FAF9F8; height: 800px;'" v-chat-scroll="{scrollToTop: false, onScroll}">
+    <div
+      v-if="showBlipGroupCard"
+      :style="
+        'float: left; width:' +
+        width +
+        'px; margin: 50px 100px; background-color: #FAF9F8; height: 800px;'
+      "
+      v-chat-scroll="{ scrollToTop: false, onScroll }"
+    >
       <div style="padding: 20px">
         <blip-group-card
           v-if="group"
+          :failed-to-send-msg="translations.failedToSend"
           :documents="docs"
           :photo="photoUri"
           :deletable="deletable"
@@ -96,7 +152,8 @@
           :on-open-link="selected"
           :on-unsupported-type="onUnsupportedType"
           :on-location-error="selected"
-          :disable-link="disableLink"/>
+          :disable-link="disableLink"
+        />
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
           <blip-card
             :photo="item.photo"
@@ -113,7 +170,8 @@
             :on-open-link="selected"
             :on-unsupported-type="onUnsupportedType"
             :on-location-error="selected"
-            :disable-link="disableLink"/>
+            :disable-link="disableLink"
+          />
         </div>
       </div>
       <div style="clear: both"></div>
@@ -124,7 +182,7 @@
 <script>
 export default {
   computed: {
-    docs: function() {
+    docs: function () {
       return this.documents.map((x) => {
         return { ...x, photo: this.photo ? this.photoUri : '' }
       })
@@ -139,9 +197,8 @@ export default {
     }, 500)
   },
   methods: {
-    onScroll: function(e) {
-    },
-    send: function() {
+    onScroll: function (e) {},
+    send: function () {
       const doc = JSON.parse(this.json)
       this.documents.push({
         document: doc,
@@ -150,7 +207,7 @@ export default {
         status: this.msgStatus
       })
     },
-    sendText: function() {
+    sendText: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -159,7 +216,7 @@ export default {
       })
       this.send()
     },
-    sendQuickReply: function() {
+    sendQuickReply: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -181,7 +238,7 @@ export default {
       })
       this.send()
     },
-    sendMenu: function() {
+    sendMenu: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -202,7 +259,7 @@ export default {
       })
       this.send()
     },
-    sendMultimediaMenu: function() {
+    sendMultimediaMenu: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '1042221589186385@messenger.gw.msging.net',
@@ -242,7 +299,7 @@ export default {
       })
       this.send()
     },
-    sendCollection: function() {
+    sendCollection: function () {
       this.json = JSON.stringify({
         id: '5',
         to: '1042221589186385@messenger.gw.msging.net',
@@ -323,7 +380,7 @@ export default {
       })
       this.send()
     },
-    sendImage: function() {
+    sendImage: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -337,7 +394,7 @@ export default {
       })
       this.send()
     },
-    sendAudio: function() {
+    sendAudio: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -350,7 +407,7 @@ export default {
       })
       this.send()
     },
-    sendVideo: function() {
+    sendVideo: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -364,7 +421,7 @@ export default {
       })
       this.send()
     },
-    sendWebLink: function() {
+    sendWebLink: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '553199991111@0mn.io',
@@ -377,7 +434,7 @@ export default {
       })
       this.send()
     },
-    sendFile: function() {
+    sendFile: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -392,7 +449,7 @@ export default {
       })
       this.send()
     },
-    sendLocation: function() {
+    sendLocation: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '1042221589186385@messenger.gw.msging.net',
@@ -406,7 +463,7 @@ export default {
       })
       this.send()
     },
-    sendRequestLocation: function() {
+    sendRequestLocation: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '1042221589186385@messenger.gw.msging.net',
@@ -421,7 +478,7 @@ export default {
       })
       this.send()
     },
-    sendChatState: function() {
+    sendChatState: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
@@ -457,7 +514,7 @@ export default {
       })
       this.send()
     },
-    sendRaw: function() {
+    sendRaw: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
@@ -468,12 +525,26 @@ export default {
       })
       this.send()
     },
-    onUnsupportedType: function(document) {},
-    toogleBlipGroupCard: function() {
+    sendSurveyContent: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.lime.satisfaction-survey+json',
+        content: {
+          type: 'recomendationSurvey',
+          scale: 'numeric5',
+          question: 'Would you recommend our product? Rate us',
+          score: 0
+        }
+      })
+      this.send()
+    },
+    onUnsupportedType: function (document) {},
+    toogleBlipGroupCard: function () {
       this.showBlipGroupCard = !this.showBlipGroupCard
     }
   },
-  data: function() {
+  data: function () {
     return {
       documents: [],
       json: JSON.stringify({
@@ -489,9 +560,9 @@ export default {
       photo: false,
       group: false,
       msgStatus: 'accepted',
-      selected: function(d) {},
-      save: function(d) {},
-      deleted: function(d) {},
+      selected: function (d) {},
+      save: function (d) {},
+      deleted: function (d) {},
       showBlipGroupCard: true,
       disableLink: false,
       editable: true,

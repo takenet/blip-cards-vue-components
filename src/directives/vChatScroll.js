@@ -58,8 +58,6 @@ import debounce from 'lodash/debounce'
     }
 
     function stop() {
-      el.removeEventListener('mousedown', onMouseDown)
-
       el.classList.remove('ss-grabbed')
       d.body.classList.remove('ss-grabbed')
       d.removeEventListener('mousemove', drag)
