@@ -57,7 +57,9 @@
             </span>
           </div>
           <div v-else>
-            <img class="audio-player-loading" :src="loadingGif" />
+            <img 
+              class="audio-player-loading" 
+              :src="loadingGif" />
           </div>
           <div class="audio-player-bar">
             <div class="slider" data-direction="horizontal" ref="audioSlider">
