@@ -37,7 +37,8 @@
       :on-metadata-edit="isMetadataReady"
       :deletable="deletable"
       :on-cancel="onCancel"
-      :editing="editing"/>
+      :editing="editing"
+      :on-audio-validate-uri="onAudioValidateUri" />
     <blip-video
       :video-uri-msg="videoUriMsg"
       :document="document"
@@ -113,7 +114,10 @@ export default {
     imageUriMsg: String,
     videoUriMsg: String,
     titleMsg: String,
-    textMsg: String
+    textMsg: String,
+    onAudioValidateUri: {
+      type: Function
+    }
   },
   data: function() {
     return {
