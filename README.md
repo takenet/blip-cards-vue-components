@@ -66,7 +66,7 @@ Any contribution to the code via pull request would be nice and any idea and/or 
 
 However, please do not feel bad if your pull requests or contributions do not get merged or implemented into `blip-cards`.
 
-### Building
+### Building #
 
 ```bash
 # install dependencies
