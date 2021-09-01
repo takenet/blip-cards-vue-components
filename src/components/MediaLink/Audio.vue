@@ -57,8 +57,8 @@
             </span>
           </div>
           <div v-else>
-            <img 
-              class="audio-player-loading" 
+            <img
+              class="audio-player-loading"
               :src="loadingGif" />
           </div>
           <div class="audio-player-bar">
@@ -131,6 +131,9 @@ export default {
     fileUrlMsg: {
       type: String,
       default: 'File URL'
+    },
+    onAudioValidateUri: {
+      type: Function
     }
   },
   data: function () {
@@ -199,13 +202,22 @@ export default {
         })
       })
     },
-    togglePlay: function () {
-      this.isPlaying = !this.isPlaying
+    togglePlay: async function() {
       if (this.isPlaying) {
-        this.audio.play()
-      } else {
         this.audio.pause()
+      } else {
+        if (this.onAudioValidateUri) {
+          const refreshedAudioUri = await this.onAudioValidateUri(this.audioUri)
+          if (refreshedAudioUri !== this.audioUri) {
+            this.audioUri = refreshedAudioUri
+            this.initAudio(this.audioUri)
+          }
+        }
+
+        this.audio.play()
       }
+
+      this.isPlaying = !this.isPlaying
     },
     resetPlay: function () {
       if (this.isPlaying && (this.audio.currentTime = this.totalTime)) {

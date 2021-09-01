@@ -68,7 +68,8 @@
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+          :on-audio-validate-uri="onAudioValidateUri" />
 
         <document-select
           v-else-if="document.type === 'application/vnd.lime.document-select+json'"
@@ -375,6 +376,9 @@ export default {
     translations: {
       type: Object,
       default: () => ({})
+    },
+    onAudioValidateUri: {
+      type: Function
     }
   },
   data() {

@@ -5,28 +5,29 @@
       </div>
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
         <blip-card
-        v-for="message in group.msgs"
-        :key="message.id"
-        :document="message.document || message"
-        :position="message.position"
-        :date="message.date"
-        :editing="editing"
-        :hide-options="hideOptions || message.hideOptions"
-        :on-save="onSave"
-        :status="message.status"
-        :on-deleted="onDeleted"
-        :on-cancel="onCancel"
-        :editable="editable"
-        :deletable="deletable"
-        :length="length"
-        :on-selected="onSelected"
-        :on-media-selected="onMediaSelected"
-        :on-open-link="onOpenLink"
-        :on-unsupported-type="onUnsupportedType"
-        :on-location-error="onLocationError"
-        :translations="translations"
-        :class="messageClass(message) + (message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : '')"
-        :disable-link="disableLink"
+          v-for="message in group.msgs"
+          :key="message.id"
+          :document="message.document || message"
+          :position="message.position"
+          :date="message.date"
+          :editing="editing"
+          :hide-options="hideOptions || message.hideOptions"
+          :on-save="onSave"
+          :status="message.status"
+          :on-deleted="onDeleted"
+          :on-cancel="onCancel"
+          :editable="editable"
+          :deletable="deletable"
+          :length="length"
+          :on-selected="onSelected"
+          :on-media-selected="onMediaSelected"
+          :on-open-link="onOpenLink"
+          :on-unsupported-type="onUnsupportedType"
+          :on-location-error="onLocationError"
+          :translations="translations"
+          :class="messageClass(message) + (message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : '')"
+          :disable-link="disableLink"
+          :on-audio-validate-uri="onAudioValidateUri"
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
@@ -108,6 +109,9 @@ export default {
     translations: {
       type: Object,
       default: () => ({})
+    },
+    onAudioValidateUri: {
+      type: Function
     }
   },
   data() {
