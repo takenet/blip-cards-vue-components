@@ -124,6 +124,7 @@
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
+import loadingGif from '../../assets/img/loading.gif'
 
 export default {
   mixins: [base],
@@ -142,7 +143,8 @@ export default {
       currentTime: undefined,
       totalTime: undefined,
       progress: undefined,
-      slider: undefined
+      slider: undefined,
+      loadingGif
     }
   },
   mounted: function () {
