@@ -2,8 +2,8 @@
 
 <template>
   <div class="blip-container ticket" v-if="document.status === 'Waiting' || document.status.indexOf('Closed') !== -1 ">
-    <p class="subtitle fancy" v-if="document.status === 'Waiting'"><span>{{ waitingMsg.replace(/\{\{identity\}\}/g, identity) }}</span></p>
-    <p class="subtitle fancy" v-else-if="document.status === 'ClosedAttendant'"><span>{{ waitingMsg.replace(/\{\{agentIdentity\}\}/g, identity) }}</span></p>
+    <p class="subtitle fancy" v-if="document.status === 'Waiting'"><span>{{ waitingMsg.replace(/\{chatbotIdentity\}/g, identity) }}</span></p>
+    <p class="subtitle fancy" v-else-if="document.status === 'ClosedAttendant'"><span>{{ closedAttendantMsg.replace(/\{agentIdentity\}/g, identity) }}</span></p>
     <p class="subtitle fancy" v-else-if="document.status === 'ClosedClient'"><span>{{ closedClientMsg }}</span></p>
     <h3>Ticket #{{`${document.sequentialId}${document.sequentialSuffix ? document.sequentialSuffix : ''}`}}</h3>
   </div>
@@ -18,11 +18,11 @@ export default {
   props: {
     waitingMsg: {
       type: String,
-      default: 'Chatbot {{identity}} encaminhou a conversa para atendimento'
+      default: 'Chatbot {chatbotIdentity} encaminhou a conversa para atendimento'
     },
     closedAttendantMsg: {
       type: String,
-      default: 'Atendente {{agentIdentity}} encerrou o atendimento'
+      default: 'Atendente {agentIdentity} encerrou o atendimento'
     },
     closedClientMsg: {
       type: String,
