@@ -31,17 +31,17 @@
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
-          <img draggable="false" v-if="group.status === 'dispatched' && group.position === 'right'" class='dispatched' :src="clockSvg"/>
-          <img draggable="false" v-else-if="group.status === 'accepted' && group.position === 'right'" class='accepted' :src="checkSentSvg"/>
-          <img draggable="false" v-else-if="group.status === 'received' && group.position === 'right'" class='received' :src="doubleCheckReceivedSvg"/>
-          <img draggable="false" v-else-if="group.status === 'consumed' && group.position === 'right'" class='consumed' :src="doubleCheckReadSvg"/>
+          <img v-if="group.status === 'dispatched' && group.position === 'right'" class='dispatched' :src="clockSvg" draggable="false"/>
+          <img v-else-if="group.status === 'accepted' && group.position === 'right'" class='accepted' :src="checkSentSvg" draggable="false"/>
+          <img v-else-if="group.status === 'received' && group.position === 'right'" class='received' :src="doubleCheckReceivedSvg" draggable="false"/>
+          <img v-else-if="group.status === 'consumed' && group.position === 'right'" class='consumed' :src="doubleCheckReadSvg" draggable="false"/>
           <div v-else-if="group.status === 'failed' && group.position === 'right'" class="failure">
             {{ failedToSendMsg }}
           </div>
           <span>{{ group.date }}</span>
         </div>
         <div class="flex" :class="'group-notification ' + group.position" v-else>
-          <img draggable="false" v-if="group.status === 'dispatched' && group.position === 'right'" :src="clockSvg">
+          <img v-if="group.status === 'dispatched' && group.position === 'right'" :src="clockSvg" draggable="false">
         </div>
       </div>
       <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '10px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
