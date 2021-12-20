@@ -208,6 +208,10 @@ export default {
     postbackValueMsg: {
       type: String,
       default: 'Postback value'
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {
@@ -461,6 +465,8 @@ export default {
     },
     select: debounce(
       function(item) {
+        if (this.readonly) return
+
         if (!this.editable) {
           this.hide = true
         }

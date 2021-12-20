@@ -152,7 +152,8 @@
           :deletable="deletable"
           :hide-options="hideOptions"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+          :readonly="readonly"/>
 
         <web-link
           class="blip-card"
@@ -379,6 +380,10 @@ export default {
     },
     onAudioValidateUri: {
       type: Function
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

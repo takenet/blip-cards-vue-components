@@ -12,6 +12,8 @@
         <br />
         <input type="checkbox" :value="true" v-model="deletable" /> Deletable
         <br />
+        <input type="checkbox" :value="false" v-model="readonly" /> Readonly
+        <br />
       </div>
 
       <div>
@@ -153,6 +155,7 @@
           :on-unsupported-type="onUnsupportedType"
           :on-location-error="selected"
           :disable-link="disableLink"
+          :readonly="readonly"
         />
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
           <blip-card
@@ -171,6 +174,7 @@
             :on-unsupported-type="onUnsupportedType"
             :on-location-error="selected"
             :disable-link="disableLink"
+            :readonly="readonly"
           />
         </div>
       </div>
@@ -206,6 +210,7 @@ export default {
         position: this.position,
         status: this.msgStatus
       })
+      console.log(JSON.stringify(this.documents))
     },
     sendText: function () {
       this.json = JSON.stringify({
@@ -566,7 +571,8 @@ export default {
       showBlipGroupCard: true,
       disableLink: false,
       editable: true,
-      deletable: true
+      deletable: true,
+      readonly: this.readonly
     }
   },
   components: {}
