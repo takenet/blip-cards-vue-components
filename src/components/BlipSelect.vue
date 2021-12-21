@@ -28,7 +28,7 @@
         <div class="slideshow-list">
           <div class="slideshow-track options">
             <ul class="item-list">
-              <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection" v-bind:class="{ readonly: readonly && !editable }">
+              <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection" v-bind:class="{ readonly: readonly }">
                 <div v-html="sanitize(item.previewText)"></div>
               </li>
             </ul>
@@ -465,7 +465,7 @@ export default {
     },
     select: debounce(
       function(item) {
-        if (this.readonly && !this.editable) return
+        if (this.readonly) return
 
         if (!this.editable) {
           this.hide = true
