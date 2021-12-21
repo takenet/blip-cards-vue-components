@@ -572,7 +572,7 @@ export default {
       disableLink: false,
       editable: true,
       deletable: true,
-      readonly: this.readonly
+      readonly: false
     }
   },
   components: {}
