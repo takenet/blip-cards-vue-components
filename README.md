@@ -39,8 +39,10 @@ Then, reference the cards via <blip-card> tag as following
 | on-selected | callback function that will be called when the user interacts with the card (OPTIONAL) | Function (text, option)|
 | on-save | callback function that will be called when the user saves the card after editing (OPTIONAL) | Function (document) |
 | on-deleted | callback function that will be called when the user delete the card (OPTIONAL) | Function (document) |
+| deletable| make the card deletable (OPTIONAL) | Boolean |
 | editable| make the card editable (OPTIONAL) | Boolean |
-| hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
+| readonly | Currently being used only in the quick reply. Could be implemented in other components too. This is used to avoid click actions in the quick reply options. If this attribute is true, than the <em>editable</em> and <em>deletable</em> should be false (OPTIONAL) | Boolean |
+| hide-options | Used only only in the quick reply. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
 
 ## Group Card
@@ -57,8 +59,10 @@ Is possible to group your cards using any rule you want. For that use the <blip-
 | on-selected | callback function that will be called when the user interacts with the card (OPTIONAL) | Function (text, option)|
 | on-save | callback function that will be called when the user saves the card after editing (OPTIONAL) | Function (document) |
 | on-deleted | callback function that will be called when the user delete the card (OPTIONAL) | Function (document) |
+| deletable| make the card deletable (OPTIONAL) | Boolean |
 | editable| make the card editable (OPTIONAL) | Boolean |
-| hide-options | Used only in the select with scope immediate. This is used to hide the quick reply options (OPTIONAL) | Boolean |
+| readonly | Currently being used only in the quick reply. Could be implemented in other components too. This is used to avoid click actions in the quick reply options. If this attribute is true, than the <em>editable</em> and <em>deletable</em> should be false (OPTIONAL) | Boolean |
+| hide-options | Used only only in the quick reply. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
 
 ## Contributions

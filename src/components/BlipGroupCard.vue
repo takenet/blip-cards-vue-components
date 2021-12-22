@@ -28,6 +28,7 @@
           :class="messageClass(message) + (message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : '')"
           :disable-link="disableLink"
           :on-audio-validate-uri="onAudioValidateUri"
+          :readonly="readonly"
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
@@ -112,6 +113,9 @@ export default {
     },
     onAudioValidateUri: {
       type: Function
+    },
+    readonly: {
+      type: Boolean
     }
   },
   data() {
