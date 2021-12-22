@@ -14,7 +14,7 @@
         <br />
         <input type="checkbox" :value="false" v-model="readonly" /> Readonly
         <br />
-       <label style="font-sieze:smaller;color:#bbb"> Readonly property does not apply to every component. Please, checkout the readme.md file!</label>
+       <label style="font-size:smaller;color:#bbb"> Readonly property does not apply to every component. Please, checkout the README.md file!</label>
       </div>
 
       <div>
