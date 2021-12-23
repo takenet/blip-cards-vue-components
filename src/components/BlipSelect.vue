@@ -482,8 +482,8 @@ export default {
             })
           } else {
             this.onSelected(item.text, {
-              content: item.order 
-              ? item.order.toString() 
+              content: item.order
+              ? item.order.toString()
               : item.text,
               type: 'text/plain'
             })
