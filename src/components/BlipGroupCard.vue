@@ -141,6 +141,7 @@ export default {
         const message = this.documents[i]
         if (this.compareMessages(group.msgs[group.msgs.length - 1], message)) {
           group.msgs.push(message)
+          group.date = message.date
           group.status = message.status
         } else {
           groups.push(group)
