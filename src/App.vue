@@ -217,7 +217,7 @@ export default {
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
         type: 'text/plain',
-        content: 'service-desk@take.com'
+        content: 'Seja bem-vindo ao nosso serviço! Como podemos te ajudar?'
       })
       this.send()
     },
