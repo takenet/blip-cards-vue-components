@@ -92,6 +92,7 @@
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
         <button class="button" @click="sendText">ENVIAR Texto</button>
+        <button class="button" @click="sendTextEmail">ENVIAR Texto contendo email</button>
         <button class="button" @click="sendMenu">ENVIAR Menu</button>
         <button class="button" @click="sendQuickReply">
           ENVIAR QuickReply
@@ -218,6 +219,15 @@ export default {
         to: '128271320123982@messenger.gw.msging.net',
         type: 'text/plain',
         content: 'Seja bem-vindo ao nosso serviço! Como podemos te ajudar?'
+      })
+      this.send()
+    },
+    sendTextEmail: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@messenger.gw.msging.net',
+        type: 'text/plain',
+        content: 'Este é um exemplo de email valido: teste-blip@take.net'
       })
       this.send()
     },
