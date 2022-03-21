@@ -18,7 +18,7 @@ function linkify (inputText, disableLink) {
   const pseudoUrlPattern = /(^|[^/])(www\.[\S]+(\b|$))/gim
 
   // Email addresses
-  const emailAddressPattern = /[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
+  const emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
 
   return inputText
       .replace(urlPattern, '<a href="$&" target="_blank">$&</a>')
