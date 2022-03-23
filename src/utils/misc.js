@@ -1,4 +1,4 @@
-function linkify (inputText, disableLink) {
+function linkify(inputText, disableLink) {
   if (!inputText) {
     return ''
   }
@@ -11,22 +11,31 @@ function linkify (inputText, disableLink) {
     return inputText
   }
 
+  /*
+    Validating url correct Pattern
+  */
   // http://, https://, ftp://
-  const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#/%?=~_|!:,.;]*[a-z0-9-+&@#/%=~_|]/gim
+  const urlValidPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#/%?=~_|!:,.;]*[a-z0-9-+&@#/%=~_|]/gim
 
+  /*
+    Pseudo URL correct Pattern
+  */
   // www. sans http:// or https://
-  const pseudoUrlPattern = /(^|[^/])(www\.[\S]+(\b|$))/gim
+  const pseudoUrlValidPattern = /(^|[^/])(www\.[\S]+(\b|$))/gim
 
+  /*
+    Email address correct Pattern
+  */
   // Email addresses
-  const emailAddressPattern = /[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
+  const emailAddressValidPattern = /[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
 
   return inputText
-      .replace(urlPattern, '<a href="$&" target="_blank">$&</a>')
-      .replace(pseudoUrlPattern, '$1<a href="http://$2" target="_blank">$2</a>')
-      .replace(emailAddressPattern, '<a href="mailto:$&" target="_blank">$&</a>')
+    .replace(urlValidPattern, '<a href="$&" target="_blank">$&</a>')
+    .replace(pseudoUrlValidPattern, '$1<a href="http://$2" target="_blank">$2</a>')
+    .replace(emailAddressValidPattern, '<a href="mailto:$&" target="_blank">$&</a>')
 }
 
-function isTagA (inputText) {
+function isTagA(inputText) {
   const tagAPattern = /href\s*=/i
   if (inputText.search(tagAPattern) !== -1) {
     return true
@@ -34,15 +43,15 @@ function isTagA (inputText) {
   return false
 }
 
-function encodeHTML (inputText) {
+function encodeHTML(inputText) {
   return inputText
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
 }
 
-function guid () {
+function guid() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     let r = Math.random() * 16 | 0
     let v = c === 'x' ? r : (r & 0x3 | 0x8)
@@ -50,7 +59,7 @@ function guid () {
   })
 }
 
-function isFailedMessage (status, position) {
+function isFailedMessage(status, position) {
   if (status === 'failed' && position === 'right') {
     return ' failed-message'
   }
