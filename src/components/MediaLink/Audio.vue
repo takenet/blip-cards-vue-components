@@ -2,10 +2,10 @@
   <div>
     <div :class="'bubble ' + position">
       <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
+        <img :src="trashSvg" alt />
       </div>
       <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img class="loadinIcon" :src="editSvg" />
+        <img class="loadinIcon" :src="editSvg" alt />
       </div>
       <div class="audio-player-wrapper" v-if="!isEditing">
         <div class="audio-player-controls">
@@ -59,7 +59,8 @@
           <div v-else>
             <img
               class="audio-player-loading"
-              :src="loadingGif" />
+              :src="loadingGif"
+              alt />
           </div>
           <div class="audio-player-bar">
             <div class="slider" data-direction="horizontal" ref="audioSlider">
@@ -75,6 +76,7 @@
               @input="setAudioPosition($event)"
               @change="setAudioPosition($event)"
             />
+            <button @click="changePlaybackRate">{{ this.playbackRate }}x</button>
             <div class="audio-player-time">
               <span>{{ getTimeFromSeconds(this.currentTime) }}</span>
               <span>{{ getTimeFromSeconds(this.totalTime) }}</span>
@@ -85,14 +87,14 @@
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
           <button class="btn saveIco closeIco" @click="cancel()">
-            <img :src="closeSvg" />
+            <img :src="closeSvg" alt />
           </button>
           <button
             class="btn saveIco"
             @click="audioSave()"
             :class="{ 'is-disabled': errors.any() }"
           >
-            <img :src="approveSvg" />
+            <img :src="approveSvg" alt />
           </button>
           <div class="form-group">
             <input
@@ -145,10 +147,13 @@ export default {
       currentTime: undefined,
       totalTime: undefined,
       progress: undefined,
-      slider: undefined
+      slider: undefined,
+      possiblePlaybackRates: undefined,
+      playbackRate: undefined
     }
   },
   mounted: function () {
+    this.init()
     this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
@@ -167,6 +172,8 @@ export default {
       this.totalTime = 0
       this.progress = undefined
       this.slider = undefined
+      this.possiblePlaybackRates = [ 1, 1.5, 2 ]
+      this.playbackRate = 1
     },
     initAudio: function (uri) {
       this.audio = new Audio(uri)
@@ -257,6 +264,16 @@ export default {
     },
     audioReadyToPlay: function () {
       this.isLoading = false
+    },
+    changePlaybackRate: function() {
+      let playbackRateIndex = this.possiblePlaybackRates.indexOf(this.playbackRate)
+
+      if (++playbackRateIndex > this.possiblePlaybackRates.length - 1 || playbackRateIndex === -1) {
+        playbackRateIndex = 0
+      }
+
+      this.playbackRate = this.possiblePlaybackRates[playbackRateIndex]
+      this.audio.playbackRate = this.playbackRate
     }
   }
 }
