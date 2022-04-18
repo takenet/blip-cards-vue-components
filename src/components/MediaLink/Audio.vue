@@ -306,22 +306,6 @@ export default {
     .blip-change-Playback-Rate {	
       border-color: $vue-light-gray;      
       color: $vue-light-gray; 
-      display: inline-block;
-      cursor: pointer;
-      margin: 0;
-      overflow: hidden;
-      text-align: center;
-      white-space: nowrap;
-      font-weight: 600;
-      font-family: 'Nunito sans' !important;
-	    background-color: transparent;
-      border-width: 1px;
-	    border-style: solid;
-	    border-radius: 8px;
-	    outline: none;
-      text-decoration: none;   
-      width: 2.75rem; 
-	    height: 2rem;
     }
   }
   .right {
@@ -336,22 +320,6 @@ export default {
     .blip-change-Playback-Rate {	
       border-color: $vue-white;      
       color: $vue-white;  
-      display: inline-block;
-      cursor: pointer;
-      margin: 0;
-      overflow: hidden;
-      text-align: center;
-      white-space: nowrap;
-      font-weight: 600;
-      font-family: 'Nunito sans' !important;
-	    background-color: transparent;
-      border-width: 1px;
-	    border-style: solid;
-	    border-radius: 8px;
-	    outline: none;
-      text-decoration: none;   
-      width: 2.75rem; 
-	    height: 2rem;
       
 	  }
   }
@@ -381,6 +349,27 @@ export default {
       color: inherit;
       cursor: pointer;
     }
+
+    .blip-change-Playback-Rate {	
+      display: inline-block;
+      cursor: pointer;
+      margin: 0;
+      overflow: hidden;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 600;
+      font-family: 'Nunito sans' !important;
+	    background-color: transparent;
+      border-width: 1px;
+	    border-style: solid;
+	    border-radius: 8px;
+	    outline: none;
+      text-decoration: none;   
+      width: 2.75rem; 
+	    height: 2rem;
+      
+	  }
+
     .audio-play-pause {
       margin-top: 6px;
     }
