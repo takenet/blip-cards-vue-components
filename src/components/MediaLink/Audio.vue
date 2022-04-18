@@ -319,8 +319,7 @@ export default {
 
     .blip-change-Playback-Rate {	
       border-color: $vue-white;      
-      color: $vue-white;  
-      
+      color: $vue-white; 
 	  }
   }
 
@@ -367,7 +366,6 @@ export default {
       text-decoration: none;   
       width: 2.75rem; 
 	    height: 2rem;
-      
 	  }
 
     .audio-play-pause {
