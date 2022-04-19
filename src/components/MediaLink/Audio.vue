@@ -84,7 +84,7 @@
           </div>
 
           <div> 
-            <button class="blip-change-Playback-Rate" @click="changePlaybackRate">x{{ this.playbackRate }}</button>
+            <button class="blip-change-playback-rate" @click="changePlaybackRate">x{{ this.playbackRate }}</button>
           </div>
         </div>
 
@@ -303,7 +303,7 @@ export default {
     .audio-player-button {
       fill: $vue-london;
     }
-    .blip-change-Playback-Rate {	
+    .blip-change-playback-rate {	
       border-color: $vue-light-gray;      
       color: $vue-light-gray; 
     }
@@ -317,7 +317,7 @@ export default {
       fill: $vue-white;
     }
 
-    .blip-change-Playback-Rate {	
+    .blip-change-playback-rate {	
       border-color: $vue-white;      
       color: $vue-white; 
 	  }
@@ -349,7 +349,7 @@ export default {
       cursor: pointer;
     }
 
-    .blip-change-Playback-Rate {	
+    .blip-change-playback-rate {	
       display: inline-block;
       cursor: pointer;
       margin: 0;
