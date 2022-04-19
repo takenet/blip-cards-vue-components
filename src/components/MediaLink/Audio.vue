@@ -2,14 +2,14 @@
   <div>
     <div :class="'bubble ' + position">
       <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
+        <img :src="trashSvg" alt />
       </div>
       <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img class="loadinIcon" :src="editSvg" />
+        <img class="loadinIcon" :src="editSvg" alt />
       </div>
       <div class="audio-player-wrapper" v-if="!isEditing">
         <div class="audio-player-controls">
-          <div v-if="!isLoading">
+          <div v-if="!isLoading" class="audio-play-pause">
             <span v-if="isPlaying" @click="togglePlay">
               <svg
                 class="audio-player-button"
@@ -56,10 +56,11 @@
               </svg>
             </span>
           </div>
-          <div v-else>
+          <div v-else class="audio-play-pause">
             <img
               class="audio-player-loading"
-              :src="loadingGif" />
+              :src="loadingGif"
+              alt />
           </div>
           <div class="audio-player-bar">
             <div class="slider" data-direction="horizontal" ref="audioSlider">
@@ -79,20 +80,26 @@
               <span>{{ getTimeFromSeconds(this.currentTime) }}</span>
               <span>{{ getTimeFromSeconds(this.totalTime) }}</span>
             </div>
+
+          </div>
+
+          <div> 
+             <button class="blip-change-playback-rate" @click="changePlaybackRate">x{{ this.playbackRate }}</button>
           </div>
         </div>
+
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
           <button class="btn saveIco closeIco" @click="cancel()">
-            <img :src="closeSvg" />
+            <img :src="closeSvg" alt />
           </button>
           <button
             class="btn saveIco"
             @click="audioSave()"
             :class="{ 'is-disabled': errors.any() }"
           >
-            <img :src="approveSvg" />
+            <img :src="approveSvg" alt />
           </button>
           <div class="form-group">
             <input
@@ -145,10 +152,13 @@ export default {
       currentTime: undefined,
       totalTime: undefined,
       progress: undefined,
-      slider: undefined
+      slider: undefined,
+      possiblePlaybackRates: undefined,
+      playbackRate: undefined
     }
   },
   mounted: function () {
+    this.init()
     this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
@@ -167,6 +177,8 @@ export default {
       this.totalTime = 0
       this.progress = undefined
       this.slider = undefined
+      this.possiblePlaybackRates = [ 1, 1.5, 2 ]
+      this.playbackRate = 1
     },
     initAudio: function (uri) {
       this.audio = new Audio(uri)
@@ -257,6 +269,16 @@ export default {
     },
     audioReadyToPlay: function () {
       this.isLoading = false
+    },
+    changePlaybackRate: function() {
+      let playbackRateIndex = this.possiblePlaybackRates.indexOf(this.playbackRate)
+
+      if (++playbackRateIndex > this.possiblePlaybackRates.length - 1 || playbackRateIndex === -1) {
+        playbackRateIndex = 0
+      }
+
+      this.playbackRate = this.possiblePlaybackRates[playbackRateIndex]
+      this.audio.playbackRate = this.playbackRate
     }
   }
 }
@@ -281,6 +303,10 @@ export default {
     .audio-player-button {
       fill: $vue-london;
     }
+     .blip-change-playback-rate {	
+      border-color: $vue-light-gray;      
+      color: $vue-light-gray; 
+    }
   }
   .right {
     color: $vue-cotton;
@@ -290,6 +316,11 @@ export default {
     .audio-player-button {
       fill: $vue-white;
     }
+
+     .blip-change-playback-rate {	
+      border-color: $vue-white;      
+      color: $vue-white; 
+	  }
   }
 
   .notification {
@@ -318,11 +349,35 @@ export default {
       cursor: pointer;
     }
 
+     .blip-change-playback-rate {	
+      display: inline-block;
+      cursor: pointer;
+      margin: 0;
+      overflow: hidden;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 600;
+      font-family: 'Nunito sans' !important;
+	    background-color: transparent;
+      border-width: 1px;
+	    border-style: solid;
+	    border-radius: 8px;
+	    outline: none;
+      text-decoration: none;   
+      width: 2.75rem; 
+	    height: 2rem;
+	  }
+
+    .audio-play-pause {
+      margin-top: 6px;
+    }
+
     .audio-player-bar {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      margin-top: 6px;
+      margin-top: 13px;
+      margin-right: 16px;
     }
 
     .audio-player-time {
@@ -357,7 +412,6 @@ export default {
     .slider {
       border-radius: 1.5px;
       height: 3px;
-      flex-grow: 1;
       background-color: $vue-cotton;
       position: relative;
 
@@ -380,12 +434,12 @@ export default {
           box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);
         }
       }
-    }
+    } 
   }
 
   .blip-media-link-metadata {
     margin-top: -10px;
     padding: 0 10px 5px 0;
-  }
+  } 
 }
 </style>
