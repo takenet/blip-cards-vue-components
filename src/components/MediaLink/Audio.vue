@@ -84,7 +84,9 @@
           </div>
 
           <div> 
-             <button class="blip-change-playback-rate" @click="changePlaybackRate">x{{ this.playbackRate }}</button>
+             <button class="blip-change-playback-rate" @click="changePlaybackRate">
+               x{{ this.playbackRate }}
+              </button>
           </div>
         </div>
 
