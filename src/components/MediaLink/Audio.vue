@@ -89,7 +89,6 @@
               </button>
           </div>
         </div>
-
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
