@@ -1,23 +1,22 @@
 <template>
-  <div class="blip-container">
-    <div class="blip-message-group" >
-      <div class="blip-container-list-card">
-        <div class="blip-list-card wrap media-link image"
-          v-for="mediaLinkDocument in documents" 
-          :key="mediaLinkDocument.id">
-          <div :class="fileIconWrapper(mediaLinkDocument.content.type)">
-            <img v-if="mediaLinkDocument.content.type.indexOf('image') != -1" class="file-icon"
-              :src="mediaLinkDocument.content.uri"/>
-            <img v-else class="file-icon"
-              :src="mimeType(mediaLinkDocument.content) | fileIconFilter"/>
-          </div>
-          <div class="column-flex text-flex">
-            <span v-if="mediaLinkDocument.content.title" v-html="sanitize(mediaLinkDocument.content.title)"></span>
-          </div>
-          <div class="column-flex">
-            <bds-button variant='secondary' @click="remove(mediaLinkDocument.content.title)"><img :src="trashBlackSvg"></bds-button>
-          </div>
+  <div class="blip-container-flex">
+    <div class="blip-container-list-card">
+      <div class="blip-list-card wrap"
+        v-for="mediaLinkDocument in documents" 
+        :key="mediaLinkDocument.id">
+        <div :class="fileIconWrapper(mediaLinkDocument.content.type)">
+          <img v-if="mediaLinkDocument.content.type.indexOf('image') != -1" class="file-icon"
+            :src="mediaLinkDocument.content.uri"/>
+          <img v-else class="file-icon"
+            :src="mimeType(mediaLinkDocument.content) | fileIconFilter"/>
         </div>
+        <div class="column-flex text-flex">
+          <span class="ellipsis-text" v-if="mediaLinkDocument.content.title" v-html="sanitize(trincFileName(mediaLinkDocument.content.title))"></span>
+          <span v-if="mediaLinkDocument.content.title" v-html="sanitize(truncExtension(mediaLinkDocument.content.title))"></span>
+        </div>
+        <bds-button variant='secondary' @click="remove(mediaLinkDocument.content.title)">
+          <img :src="trashBlackSvg">
+        </bds-button>
       </div>
     </div>
   </div>
@@ -54,6 +53,13 @@ export default {
     },
     remove(docTitle) {
       this.onRemove(docTitle)
+    },
+    trincFileName(initial) {
+      return initial.split('.')[0]
+    },
+    truncExtension(initial) {
+      var split = initial.split('.')
+      return '.' + split[split.length - 1]
     }
   }
 }
@@ -65,39 +71,69 @@ export default {
 $soft-round: 2px;
 $hard-round: 13px;
 
-.blip-message-group {
-  position: relative;
+.column-flex {
+  display: flex;
+  margin: auto;
+
+  img {
+    width: 18.02px;
+    height: 20px;
+  }
+}
+
+.text-flex {
+  padding: 0 24px;
+  flex: 1;
+  width: 0;
+	display: flex;
+	flex: 1;
+
+  .ellipsis-text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+.blip-container-flex {
+  margin: 0;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 
   .blip-container-list-card {
     display: flex;
-    flex-direction: column; 
-    justify-content: start; 
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
     overflow-y:auto; 
-    max-width: 592px; 
+    max-width: 592px;
     max-height: 318px;
 
     .wrap {
       border-bottom: 2px solid #F3F6FA;
-      flex-grow: 1;
     }
 
     .blip-list-card {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      margin: 8px;
+      width: 100%;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+      padding: 8px;
 
       .file-icon-wrapper {
         display: flex; 
-        width: 6%; 
-        margin-right: 24px
+        width: 32.5px;
+        height: 38.37px;
+        margin: auto;
       }
 
       .file-icon-wrapper-image {
-        display: flex; 
+        display: flex;
         width: 124px;
         height: 124px;
-        margin-right: 24px
       }
     }
   }
@@ -118,16 +154,6 @@ $hard-round: 13px;
     background: #555;
     padding: 8px;
   }
-
-  .column-flex {
-    display: flex;
-    margin: auto;
-  }
-
-  .text-flex {
-    margin-right: 32px;
-    flex: auto;
-  }
-
 }
+
 </style>
