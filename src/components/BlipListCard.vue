@@ -1,11 +1,11 @@
 <template>
   <div class="blip-container-flex">
-    <div class="blip-container-list-card">
+    <div class="blip-container-list-card wrap">
       <div class="blip-list-card wrap"
         v-for="mediaLinkDocument in documents" 
         :key="mediaLinkDocument.id">
-        <div :class="fileIconWrapper(mediaLinkDocument.content.type)">
-          <img v-if="mediaLinkDocument.content.type.indexOf('image') != -1" class="file-icon"
+        <div :class="fileIconWrapper()">
+          <img v-if="attachType.indexOf('image') != -1" class="file-icon"
             :src="mediaLinkDocument.content.uri"/>
           <img v-else class="file-icon"
             :src="mimeType(mediaLinkDocument.content) | fileIconFilter"/>
@@ -14,7 +14,7 @@
           <span class="ellipsis-text" v-if="mediaLinkDocument.content.title" v-html="sanitize(trincFileName(mediaLinkDocument.content.title))"></span>
           <span v-if="mediaLinkDocument.content.title" v-html="sanitize(truncExtension(mediaLinkDocument.content.title))"></span>
         </div>
-        <bds-button variant='secondary' @click="remove(mediaLinkDocument.content.title)">
+        <bds-button variant='secondary' @click="remove(mediaLinkDocument.id)">
           <img :src="trashBlackSvg">
         </bds-button>
       </div>
@@ -34,13 +34,16 @@ export default {
       type: Array,
       default: () => []
     },
+    attachType: {
+      type: String
+    },
     onRemove: {
       type: Function
     }
   },
   methods: {
-    fileIconWrapper(type) {
-      return type.indexOf('image') !== -1
+    fileIconWrapper() {
+      return this.attachType.indexOf('image') !== -1
         ? 'file-icon-wrapper-image'
         : 'file-icon-wrapper'
     },
@@ -111,10 +114,6 @@ $hard-round: 13px;
     max-width: 592px;
     max-height: 318px;
 
-    .wrap {
-      border-bottom: 2px solid #F3F6FA;
-    }
-
     .blip-list-card {
       width: 100%;
 			display: flex;
@@ -134,8 +133,13 @@ $hard-round: 13px;
         display: flex;
         width: 124px;
         height: 124px;
+        border-radius: 8px;
       }
     }
+  }
+
+  .wrap {
+    border-bottom: 2px solid #F3F6FA;
   }
 
   ::-webkit-scrollbar {
