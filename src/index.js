@@ -6,6 +6,7 @@ import Vue2TouchEvents from 'vue2-touch-events'
 // Components
 import BlipCard from './components/BlipCard'
 import BlipGroupCard from './components/BlipGroupCard'
+import BlipListCard from './components/BlipListCard'
 import PlainText from './components/PlainText'
 import BlipSelect from './components/BlipSelect'
 import DocumentSelect from './components/DocumentSelect'
@@ -45,6 +46,7 @@ function install(Vue) {
 
   components.push(Vue.component(BlipCard.name, BlipCard))
   components.push(Vue.component(BlipGroupCard.name, BlipGroupCard))
+  components.push(Vue.component(BlipListCard.name, BlipListCard))
   components.push(Vue.component(Ticket.name, Ticket))
   components.push(Vue.component(Redirect.name, Redirect))
   components.push(Vue.component(PlainText.name, PlainText))
