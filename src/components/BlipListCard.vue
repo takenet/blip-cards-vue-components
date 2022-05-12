@@ -14,7 +14,7 @@
           <span class="ellipsis-text" v-if="mediaLinkDocument.content.title" v-html="sanitize(trincFileName(mediaLinkDocument.content.title))"></span>
           <span v-if="mediaLinkDocument.content.title" v-html="sanitize(truncExtension(mediaLinkDocument.content.title))"></span>
         </div>
-        <bds-button variant='secondary' @click="remove(mediaLinkDocument.id)">
+        <bds-button variant='secondary' @click="remove(mediaLinkDocument.id)" :disabled="disableRemove">
           <img :src="trashBlackSvg">
         </bds-button>
       </div>
@@ -39,6 +39,9 @@ export default {
     },
     onRemove: {
       type: Function
+    },
+    disableRemove: {
+      type: Boolean
     }
   },
   methods: {
@@ -55,7 +58,9 @@ export default {
       return mime.lookup(document.uri)
     },
     remove(docTitle) {
-      this.onRemove(docTitle)
+      if (!this.disableRemove) {
+        this.onRemove(docTitle)
+      }
     },
     trincFileName(initial) {
       return initial.split('.')[0]
