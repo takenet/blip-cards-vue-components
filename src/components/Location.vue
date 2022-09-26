@@ -182,7 +182,7 @@ export default {
       this.latitude = this.document.latitude
       this.longitude = this.document.longitude
       this.bubbleWidth = '500px'
-      this.apiKey = 'AIzaSyC2BjLFJiNXFTOWeyss8cPTx7csKBBrRBY'
+      this.apiKey = 'AIzaSyAlC3a3DZZBscR0QIbQpee13Op9Y05m_wc'
 
       if (this.$el) {
         this.mounted()
