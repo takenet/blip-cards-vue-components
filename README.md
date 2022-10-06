@@ -92,7 +92,7 @@ npm run bundle:min
 We follow some rules to create commits and generate pull request, those rules can be found here: (https://www.conventionalcommits.org/en/v1.0.0-beta.2/) and it is something that **YOU MUST DO**, if you don't, messages
 like this one will be show on semantic release pipeline (https://dev.azure.com/curupira/BLiP/, takenet.blip-cards-vue-components pipeline): **There are no relevant changes, so no new version is released**.
 
-e.g:
+e.g.:
 <type>[optional scope]: <description>
 - feat: blip cards update audio
 - feat(blipCards): create a new component
