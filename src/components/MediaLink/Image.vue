@@ -198,7 +198,7 @@ export default {
       if (this.onMediaSelected) {
         this.onMediaSelected(this.document.uri)
       } else {
-        window.open(this.document.uri, '_blank')
+        window.open(this.document.uri, '_blank', 'noopener')
       }
     },
     checkImage(url) {
