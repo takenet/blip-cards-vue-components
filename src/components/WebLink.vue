@@ -175,7 +175,7 @@ export default {
     },
     handleWeblink: function() {
       if (this.target === 'blank') {
-        window.open(this.uri, '_blank')
+        window.open(this.uri, '_blank', 'noopener')
       } else {
         this.onOpenLink({
           uri: this.uri,
