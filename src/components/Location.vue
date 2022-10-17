@@ -200,7 +200,7 @@ export default {
       })
     },
     handleLocationLink: function() {
-      window.open(this.mapUrl, '_blank', 'noopener')
+      window.open(this.mapUrl, '_blank')
     }
   }
 }
