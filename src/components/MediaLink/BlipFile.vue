@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div v-if="!isEditing">
-        <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
+        <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? `file-${position}` : `file-${position} ` + pointer">
           <div class="file-icon-wrapper">
             <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
@@ -38,6 +38,9 @@
             {{ metadataButtonText }}
           </button>
         </form>
+      </div>
+      <div class="file-text" v-if="document.text">
+        <span v-if="document.text" v-html="sanitize(document.text)"></span>
       </div>
     </div>
   </div>
@@ -180,6 +183,23 @@ export default {
           font-weight: 100;
         }
       }
+    }
+
+    .file-left{
+      border-radius: 8px;
+      background-color: #f2f7fa;
+      margin: 5px 5px;
+    }
+
+    .file-text {
+      text-align: left;
+      strong {
+        color: $vue-dark-gray;
+        display: block;
+      }
+
+      margin: 0;
+      padding: 10px 20px;
     }
   }
 
