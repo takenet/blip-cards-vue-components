@@ -8,7 +8,7 @@
         <img :src="editSvg" />
       </div>
       <div v-if="!isEditing" :class="`file-${position}`">
-        <div class="file-wrapper" @click="(editable ? null : handleFileLink())">
+        <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
           <div class="file-icon-wrapper">
             <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
@@ -199,15 +199,10 @@ export default {
     }
   }
 
-  .file-right{
-    cursor: pointer;
-  }
-
   .file-left{
     border-radius: 8px;
     background-color: #f2f7fa;
     margin: 5px 5px;
-    cursor: pointer;
   }
 
   .form-group {
