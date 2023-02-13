@@ -7,15 +7,15 @@
       <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
         <img :src="editSvg" />
       </div>
-      <div v-if="!isEditing">
-        <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? `file-${position}` : `file-${position} ` + pointer">
+      <div v-if="!isEditing" :class="`file-${position}`">
+        <div class="file-wrapper" @click="(editable ? null : handleFileLink())">
           <div class="file-icon-wrapper">
             <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
           <div class="description-wrapper">
             <div class="link-description">
-              <span v-if="document.title" :title="document.title" class="text big-text">{{ document.title }}</span>
-              <span v-else :title="document.uri" class="text big-text">{{ document.uri }}</span>
+              <span v-if="document.title" :title="document.title" class="text">{{ document.title }}</span>
+              <span v-else :title="document.uri" class="text">{{ document.uri }}</span>
             </div>
             <span v-if="document.size" class="text small-text">{{ document.size | sizeInBytesFilter }}</span>
           </div>
@@ -143,7 +143,7 @@ export default {
       display: flex;
       flex-direction: row;
       align-content: center;
-      justify-content: center;
+      justify-content: flex-start;
 
       .file-icon-wrapper {
         display: flex;
@@ -181,14 +181,10 @@ export default {
         .small-text {
           font-size: 10px;
           font-weight: 100;
+          display: flex;
+          align-items: flex-start;
         }
       }
-    }
-
-    .file-left{
-      border-radius: 8px;
-      background-color: #f2f7fa;
-      margin: 5px 5px;
     }
 
     .file-text {
@@ -201,6 +197,17 @@ export default {
       margin: 0;
       padding: 10px 20px;
     }
+  }
+
+  .file-right{
+    cursor: pointer;
+  }
+
+  .file-left{
+    border-radius: 8px;
+    background-color: #f2f7fa;
+    margin: 5px 5px;
+    cursor: pointer;
   }
 
   .form-group {
