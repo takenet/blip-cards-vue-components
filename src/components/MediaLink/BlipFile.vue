@@ -7,15 +7,15 @@
       <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
         <img :src="editSvg" />
       </div>
-      <div v-if="!isEditing">
+      <div v-if="!isEditing" :class="`file-${position}`">
         <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
           <div class="file-icon-wrapper">
             <img class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
           <div class="description-wrapper">
             <div class="link-description">
-              <span v-if="document.title" :title="document.title" class="text big-text">{{ document.title }}</span>
-              <span v-else :title="document.uri" class="text big-text">{{ document.uri }}</span>
+              <span v-if="document.title" :title="document.title" class="text">{{ document.title }}</span>
+              <span v-else :title="document.uri" class="text">{{ document.uri }}</span>
             </div>
             <span v-if="document.size" class="text small-text">{{ document.size | sizeInBytesFilter }}</span>
           </div>
@@ -38,6 +38,9 @@
             {{ metadataButtonText }}
           </button>
         </form>
+      </div>
+      <div class="file-text" v-if="document.text">
+        <span v-if="document.text" v-html="sanitize(document.text)"></span>
       </div>
     </div>
   </div>
@@ -140,7 +143,7 @@ export default {
       display: flex;
       flex-direction: row;
       align-content: center;
-      justify-content: center;
+      justify-content: flex-start;
 
       .file-icon-wrapper {
         display: flex;
@@ -178,9 +181,28 @@ export default {
         .small-text {
           font-size: 10px;
           font-weight: 100;
+          display: flex;
+          align-items: flex-start;
         }
       }
     }
+
+    .file-text {
+      text-align: left;
+      strong {
+        color: $vue-dark-gray;
+        display: block;
+      }
+
+      margin: 0;
+      padding: 10px 20px;
+    }
+  }
+
+  .file-left{
+    border-radius: 8px;
+    background-color: #f2f7fa;
+    margin: 5px 5px;
   }
 
   .form-group {
