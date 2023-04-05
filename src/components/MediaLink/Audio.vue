@@ -293,34 +293,40 @@ export default {
   .bubble {
     padding: 0;
     width: $bubble-width;
-    color: $vue-london;
+    color: $color-content-default;
   }
 
   .left,
   .middle {
+    .slider {
+      background-color: $color-surface-3;
+    }
     .progress .pin {
-      background-color: $vue-neon-blip;
+      background-color: $color-content-default;
     }
     .audio-player-button {
-      fill: $vue-london;
+      fill: $color-content-default;
     }
      .blip-change-playback-rate {	
-      border-color: $vue-light-gray;      
-      color: $vue-light-gray; 
+      border-color: $color-content-ghost;      
+      color: $color-content-default; 
     }
   }
   .right {
     color: $vue-cotton;
+    .slider {
+      background-color: $color-content-ghost;
+    }
     .progress .pin {
-      background-color: $vue-white;
+      background-color: $color-content-default;
     }
     .audio-player-button {
-      fill: $vue-white;
+      fill: $color-content-default;
     }
 
      .blip-change-playback-rate {	
-      border-color: $vue-white;      
-      color: $vue-white; 
+      border-color: $color-content-ghost;      
+      color: $color-content-default; 
 	  }
   }
 
@@ -358,7 +364,6 @@ export default {
       text-align: center;
       white-space: nowrap;
       font-weight: 600;
-      font-family: 'Nunito sans' !important;
 	    background-color: transparent;
       border-width: 1px;
 	    border-style: solid;
@@ -384,7 +389,6 @@ export default {
     .audio-player-time {
       display: flex;
       justify-content: space-between;
-      font-family: 'Nunito', sans-serif;
       font-size: x-small;
       line-height: 10px;
       color: inherit;
@@ -413,13 +417,12 @@ export default {
     .slider {
       border-radius: 1.5px;
       height: 3px;
-      background-color: $vue-cotton;
       position: relative;
 
       .progress {
         width: 0;
         height: 100%;
-        background-color: $vue-neon-blip;
+        background-color: $color-primary;
         border-radius: inherit;
         position: absolute;
         pointer-events: none;

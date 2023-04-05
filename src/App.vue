@@ -133,11 +133,12 @@
     </div>
 
     <div
+      class="ss-container light-theme"
       v-if="showBlipGroupCard"
       :style="
         'float: left; width:' +
         width +
-        'px; margin: 50px 100px; background-color: #FAF9F8; height: 800px;'
+        'px; margin: 50px 100px; height: 800px;'
       "
       v-chat-scroll="{ scrollToTop: false, onScroll }"
     >

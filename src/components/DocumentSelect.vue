@@ -171,11 +171,11 @@
           <li v-for="(item, index) in options" v-bind:key="index">
             <span @click="editOption(item, index, $event)" v-html="sanitize(item.previewText)"></span>
             <span @click="deleteOption(index)" class="remove-option">
-              <img :src="closeBlueSvg">
+              <bds-icon name="close"></bds-icon>
             </span>
           </li>
         </ul>
-        <div @click="editOption({label: {}, value: {}}, -1, $event, true)" class="add-button">
+        <div @click="editOption({label: {}, value: {}}, -1, $event, true)" class="btn-dashed primary-color btn">
           <span>{{ addButtonMsg }}</span>
         </div>
       </div>
@@ -299,7 +299,7 @@
 
       <div class="form-group blip-card-flex">
         <span class="flex-item">
-          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">{{ cancelMsg }}</button>
+          <button type="button" @click="cancelOption()" class="btn btn-white color-primary">{{ cancelMsg }}</button>
         </span>
         <span class="flex-item">
           <button
@@ -792,7 +792,6 @@ export default {
 
   .form-check {
     padding: 0px 10px;
-    color: $vue-cloud;
     margin: 0;
 
     input[type='radio'] {
@@ -821,7 +820,7 @@ export default {
     .check {
       display: block;
       position: absolute;
-      border: 1px solid $vue-time;
+      border: 1px solid $color-content-default;
       border-radius: 100%;
       height: 16px;
       width: 16px;
@@ -848,11 +847,11 @@ export default {
       -ms-transition: background 0.25s linear;
     }
     input[type='radio']:checked ~ .check {
-      border: 1px solid $vue-light-blip;
+      border: 1px solid $color-content-default;
     }
 
     input[type='radio']:checked ~ .check::before {
-      background: $vue-light-blip;
+      background: $color-primary;
     }
   }
 

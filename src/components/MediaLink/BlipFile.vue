@@ -121,18 +121,35 @@ export default {
   .bubble {
     &.left, &.middle {
       .description-wrapper {
-        color: $vue-gray;
+        color: $color-content-default;
       }
     }
 
     &.right {
       .file-icon-wrapper {
-        background-color: $vue-white;
+        background-color: $color-surface-3;
         padding-right: 20px !important;
+        border-radius: 13px 0 0 13px;
       }
       .description-wrapper {
-        color: $vue-white;
+        background-color: $color-surface-2;
+        color: $color-content-default;
         padding-left: 20px !important;
+        border-radius: 0 2px 13px 0;
+      }
+    }
+
+    &.left {
+      .file-icon-wrapper {
+        background-color: $color-surface-2;
+        padding-right: 20px !important;
+        border-radius: 13px 0 0 2px;
+      }
+      .description-wrapper {
+        background-color: $color-surface-1;
+        color: $color-content-default;
+        padding-left: 20px !important;
+        border-radius: 0 13px 13px 0;
       }
     }
 
@@ -190,7 +207,7 @@ export default {
     .file-text {
       text-align: left;
       strong {
-        color: $vue-dark-gray;
+        color: $color-content-default;
         display: block;
       }
 
@@ -201,8 +218,6 @@ export default {
 
   .file-left{
     border-radius: 8px;
-    background-color: #f2f7fa;
-    margin: 5px 5px;
   }
 
   .form-group {
