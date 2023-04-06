@@ -384,23 +384,29 @@ export default {
   .bubble {
     max-width: $bubble-width;
     padding: 0;
-    color: $vue-london;
+    color: $color-content-default;
   }
   .left, .middle {
+    .slider {
+      background-color: $color-surface-3;
+    }
     .progress .pin {
-      background-color: $vue-neon-blip;
+      background-color: $color-content-default;
     }
     .video-player-button {
-      fill: $vue-london;
+      fill: $color-content-default;
     }
   }
   .right {
+    .slider {
+      background-color: $color-content-ghost;
+    }
     color: $vue-cotton;
     .progress .pin {
-      background-color: $vue-white;
+      background-color: $color-content-default;
     }
     .video-player-button {
-      fill: $vue-white;
+      fill: $color-content-default;
     }
   }
 
@@ -544,13 +550,12 @@ export default {
       border-radius: 1.5px;
       height: 3px;
       flex-grow: 1;
-      background-color: $vue-cotton;
       position: relative;
 
       .progress {
         width: 0;
         height: 100%;
-        background-color: $vue-neon-blip;
+        background-color: $color-primary;
         border-radius: inherit;
         position: absolute;
         pointer-events: none;

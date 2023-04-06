@@ -112,7 +112,7 @@ export default {
     height: 6px;
     border-radius: 50%;
     margin: 2px;
-    background: #929292;
+    background: $color-content-default;
     animation-name: bounce;
     animation-duration: 0.8s;
     animation-iteration-count: infinite;

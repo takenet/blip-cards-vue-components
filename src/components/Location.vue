@@ -235,17 +235,17 @@ export default {
 
 .select .options li {
   cursor: pointer;
-  display: inline-block;
-  background-color: #daf2f4;
-  border: 1px solid #0cc8cc;
-  box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  background-color: $color-system;
+  border: 1px solid $color-content-ghost;
   border-radius: 19px;
   padding: 10px 16px;
-  margin: 2px;
-  color: #0cc8cc;
+  margin: 4px;
+  color: $color-content-default;
   font-size: 16px;
   font-weight: 500;
-  min-width: 70px;
 }
 
 .select .fixed-options li:last-child {

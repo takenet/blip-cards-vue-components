@@ -1,10 +1,10 @@
 <template>
- <div class="blip-container unsuported-content">
+  <div class="blip-container unsuported-content">
     <div :class="'bubble ' + position">
-      <div class="flex">
-        <img v-if="fromMessageTemplate == true" :src="megaphoneSvg" alt="Alert" class="alert-icon">
-        <img v-else-if="position === 'right'" :src="alertWhiteSvg" alt="Alert" class="alert-icon">
-        <img v-else :src="alertSvg" alt="Alert" class="alert-icon">
+      <div class="unsuported-content-icons">
+        <bds-icon v-if="fromMessageTemplate == true" size="small" alt="Alert" name="megaphone"></bds-icon>
+        <bds-icon v-else-if="position === 'right'" size="small" alt="Alert" name="warning"></bds-icon>
+        <bds-icon v-else size="small" alt="Alert" name="warning"></bds-icon>
         <span>
           {{ unsupportedContentMsg }}
         </span>
@@ -14,19 +14,11 @@
     <div class="flex" :class="'notification ' + position" v-if="date">
       <span v-if="this.position === 'right'">
         <img v-if="this.status === 'waiting'" :src="clockSvg">
-        <img
-          v-else-if="this.status === 'accepted'"
-          :src="checkSentSvg">
-        <img
-          v-else-if="this.status === 'received'"
-          :src="doubleCheckReceivedSvg">
-        <img
-          v-else-if="this.status === 'consumed'"
-          :src="doubleCheckReadSvg">
-        <div
-          v-else-if="this.status === 'failed'"
-          class="failure">
-            {{ failedToSendMsg }}
+        <img v-else-if="this.status === 'accepted'" :src="checkSentSvg">
+        <img v-else-if="this.status === 'received'" :src="doubleCheckReceivedSvg">
+        <img v-else-if="this.status === 'consumed'" :src="doubleCheckReadSvg">
+        <div v-else-if="this.status === 'failed'" class="failure">
+          {{ failedToSendMsg }}
         </div>
       </span>
       <div>{{ date }}</div>
@@ -47,7 +39,7 @@ export default {
     base
   ],
   props: {
-    document: { },
+    document: {},
     status: {
       type: String,
       default: ''
@@ -65,7 +57,7 @@ export default {
       default: 'Falha ao enviar a mensagem'
     }
   },
-  data: function() {
+  data: function () {
     return {
       alertSvg,
       alertWhiteSvg,
@@ -76,28 +68,46 @@ export default {
 </script>
 
 <style lang="scss">
-   @import '../styles/variables.scss';
+@import '../styles/variables.scss';
 
-   .blip-container.unsuported-content .alert-icon {
-     height: 20px;
-     margin-right: 2px;
-   }
+.blip-container.unsuported-content .alert-icon {
+  height: 20px;
+  margin-right: 2px;
+}
 
-    .blip-container.unsuported-content .bubble.left {
-      background-color: #DEE8EC;
-      color: $vue-rooftop;
-    }
+.unsuported-content-icons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
 
-    .blip-container.unsuported-content .bubble.right {
-      background-color: #0CC8CC;
-    }
+.blip-container.unsuported-content .bubble.left {
+  background-color: $color-surface-3;
+  color: $color-content-default;
 
-    .blip-container.unsuported-content.blip-card .bubble {
-      padding: 4px 16px;
-      word-wrap: break-word;
-      border-radius: 15px;
-      white-space: normal;
-      font-size: 13px;
-      box-shadow: 0px 0px 0px;
-    }
+  .unsuported-content-icons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+}
+
+.blip-container.unsuported-content .bubble.right {
+  background-color: $color-surface-3;
+  color: $color-content-default;
+
+  .unsuported-content-icons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+}
+
+.blip-container.unsuported-content.blip-card .bubble {
+  padding: 4px 16px;
+  word-wrap: break-word;
+  border-radius: 15px;
+  white-space: normal;
+  font-size: 13px;
+}
 </style>

@@ -90,14 +90,14 @@
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index" @click="editOption(item, index, $event)">
             <span v-html="sanitize(item.text)"></span>
-            <span @click="deleteOption(index, $event)" class="remove-option"><img :src="closeBlueSvg"></span>
+            <span @click="deleteOption(index, $event)" class="remove-option"><bds-icon name="close"></bds-icon></span>
           </li>
           <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
             <span>{{ addOptionMsg }}</span>
           </li>
         </ul>
         <span v-show="hasDeleteOptionError" class="remove-option-error">{{ notEnoughOptionsMsg }}</span>
-        <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
+        <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 24px; width: 100%;">
           <span>{{ addButtonMsg }}</span>
         </div>
       </div>
@@ -138,7 +138,7 @@
 
       <div class="form-group blip-card-flex">
         <div class="flex-item">
-          <button type="button" @click="cancelOption()" class="btn btn-white color-gray">{{ cancelMsg }}</button>
+          <button type="button" @click="cancelOption()" class="btn btn-white primary-color">{{ cancelMsg }}</button>
         </div>
         <div class="flex-item">
           <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">{{ applyMsg }}</button>
@@ -552,13 +552,12 @@ export default {
     width: auto;
     padding: 8px 16px;
     opacity: 0.8;
-    color: $vue-light-blip;
+    color: $color-primary;
     font-weight: bold;
     font-size: 18px;
     transition: 0.6s ease;
     border-radius: 5px 0 0 5px;
-    box-shadow: -2px 2px 20px 0 rgba(51, 60, 74, 0.4);
-    background-color: #ffffff;
+    background-color: $color-surface-1;
   }
 
   .prev {
@@ -596,14 +595,14 @@ export default {
 .select .options li {
   cursor: pointer;
   display: inline-flex;
-  align-items: end;
-  background-color: #daf2f4;
-  border: 1px solid #0cc8cc;
-  box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+  align-items: center;
+  height: 40px;
+  background-color: $color-system;
+  border: 1px solid $color-content-ghost;
   border-radius: 19px;
   padding: 10px 16px;
   margin: 4px;
-  color: #0cc8cc;
+  color: $color-content-default;
   font-size: 16px;
   font-weight: 500;
 
