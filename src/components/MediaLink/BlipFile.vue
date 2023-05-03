@@ -135,7 +135,7 @@ export default {
         background-color: $color-surface-2;
         color: $color-content-default;
         padding-left: 20px !important;
-        border-radius: 0 2px 13px 0;
+        border-radius: 0 2px 2px 0;
       }
     }
 

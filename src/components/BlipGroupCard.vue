@@ -191,6 +191,10 @@ $hard-round: 13px;
     // Bubble Right
     > :first-child :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $hard-round $soft-round $hard-round;
+
+      .description-wrapper {
+        border-radius: 0 $hard-round $soft-round 0;
+      }
     }
     > :not(:first-child) :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $soft-round $soft-round $hard-round;
