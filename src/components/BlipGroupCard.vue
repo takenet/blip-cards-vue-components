@@ -224,7 +224,7 @@ $hard-round: 13px;
 
     .group-notification {
       font-size: 10px;
-      color: $vue-light-gray;
+      color: $color-content-disable;
       line-height: 14px;
       clear: both;
     }
