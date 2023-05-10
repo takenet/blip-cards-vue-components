@@ -300,7 +300,7 @@
           :on-cancel="cancel"/>
 
         <unsuported-content
-          v-else-if="document.content.type ==='template'"
+          v-else-if="document.content.type === 'template'"
           class="blip-card"
           :from-message-template="true"
           :failed-to-send-msg="translations.failedToSend"
@@ -314,6 +314,28 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"/>
+
+        <contact
+          v-else-if="document.type === 'application/vnd.lime.contact+json'"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :show-more-msg="translations.showMore"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :phone-label="translations.phoneLabel"
+          :mail-label="translations.mailLabel"
+          :address-label="translations.addressLabel" />
 
         <unsuported-content
           v-else
