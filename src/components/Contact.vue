@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isEditing">
     <div
-      v-if="previewDocument.content != null && previewDocument.content.length > 0"
+      v-if="this.document != null"
       class="blip-container contact"
       :class="isFailedMessage(status, position)"
     >
@@ -13,7 +13,7 @@
           <img :src="editSvg">
         </div>
 
-        <div v-if="!previewDocument.hasPreview">
+        <div>
           <div v-if="this.document.name" class="mb-name">
             <bds-typo variant="fs-16" bold="semi-bold">{{ sanitizeText(this.document.name) | limitContentFilter(30) }}</bds-typo>
           </div>
@@ -29,13 +29,6 @@
             <bds-typo tag="p" variant="fs-12" bold="regular">{{ addressLabel }}</bds-typo>
             <bds-typo tag="p" variant="fs-16" bold="regular">{{ sanitizeText(this.document.address) }}</bds-typo>
           </div>
-        </div>
-        <div v-else>
-          <div v-show="!showContent" v-html="previewDocument.previewContent"></div>
-          <transition name="slide-fade">
-            <div v-show="showContent" v-html="previewDocument.content"></div>
-          </transition>
-          <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
         </div>
       </div>
 
@@ -99,7 +92,7 @@
 </template>
 
 <script>
-import { linkify, isFailedMessage } from '../utils/misc'
+import { isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
@@ -107,24 +100,12 @@ export default {
   mixins: [base],
   props: {
     document: {
-      type: String,
+      type: Object,
       required: true
     },
     status: {
       type: String,
       default: ''
-    },
-    length: {
-      type: Number,
-      default: 532
-    },
-    disableLink: {
-      type: Boolean,
-      default: false
-    },
-    showMoreMsg: {
-      type: String,
-      default: 'Ver mais'
     },
     failedToSendMsg: {
       type: String,
@@ -141,20 +122,6 @@ export default {
     addressLabel: {
       type: String,
       default: 'Endereço'
-    }
-  },
-  computed: {
-    previewDocument: function() {
-      const sanitizedDocument = this.sanitize(this.document)
-
-      return {
-        hasPreview: sanitizedDocument.length > this.length,
-        previewContent: linkify(
-          sanitizedDocument.substring(0, this.length - 3) + '...',
-          this.disableLink
-        ),
-        content: linkify(sanitizedDocument, this.disableLink)
-      }
     }
   },
   data: function() {
