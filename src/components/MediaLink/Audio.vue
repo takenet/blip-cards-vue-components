@@ -83,7 +83,7 @@
 
           </div>
 
-          <div> 
+          <div>
              <button class="blip-change-playback-rate" @click="changePlaybackRate">
                x{{ this.playbackRate }}
               </button>
@@ -307,9 +307,9 @@ export default {
     .audio-player-button {
       fill: $color-content-default;
     }
-     .blip-change-playback-rate {	
-      border-color: $color-content-ghost;      
-      color: $color-content-default; 
+     .blip-change-playback-rate {
+      border-color: $color-content-ghost;
+      color: $color-content-default;
     }
   }
   .right {
@@ -324,14 +324,14 @@ export default {
       fill: $color-content-default;
     }
 
-     .blip-change-playback-rate {	
-      border-color: $color-content-ghost;      
-      color: $color-content-default; 
+     .blip-change-playback-rate {
+      border-color: $color-content-ghost;
+      color: $color-content-default;
 	  }
   }
 
   .notification {
-    color: $vue-london;
+    color: $color-content-disable;
   }
 
   .form {
@@ -356,7 +356,7 @@ export default {
       cursor: pointer;
     }
 
-     .blip-change-playback-rate {	
+     .blip-change-playback-rate {
       display: inline-block;
       cursor: pointer;
       margin: 0;
@@ -369,8 +369,8 @@ export default {
 	    border-style: solid;
 	    border-radius: 8px;
 	    outline: none;
-      text-decoration: none;   
-      width: 2.75rem; 
+      text-decoration: none;
+      width: 2.75rem;
 	    height: 2rem;
 	  }
 
@@ -438,12 +438,12 @@ export default {
           box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);
         }
       }
-    } 
+    }
   }
 
   .blip-media-link-metadata {
     margin-top: -10px;
     padding: 0 10px 5px 0;
-  } 
+  }
 }
 </style>

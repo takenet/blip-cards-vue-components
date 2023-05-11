@@ -417,7 +417,7 @@ export default {
   }
 
   .notification {
-    color: $vue-london;
+    color: $color-content-disable;
   }
 
   .video-player-wrapper {

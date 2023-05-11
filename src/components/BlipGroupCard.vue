@@ -191,6 +191,10 @@ $hard-round: 13px;
     // Bubble Right
     > :first-child :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $hard-round $soft-round $hard-round;
+
+      .description-wrapper {
+        border-radius: 0 $hard-round $soft-round 0;
+      }
     }
     > :not(:first-child) :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $soft-round $soft-round $hard-round;
@@ -220,7 +224,7 @@ $hard-round: 13px;
 
     .group-notification {
       font-size: 10px;
-      color: $vue-light-gray;
+      color: $color-content-disable;
       line-height: 14px;
       clear: both;
     }
