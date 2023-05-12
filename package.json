@@ -34,7 +34,7 @@
     "semantic-release": "semantic-release"
   },
   "release": {
-    "branch": "2.11.4"
+    "branch": "hotfix-2.11.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
