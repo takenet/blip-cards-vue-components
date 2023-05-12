@@ -564,7 +564,7 @@ export default {
         to: '128271320123982@wa.gw.msging.net',
         type: 'application/vnd.lime.contact+json',
         content: {
-          name: 'My Contact Name',
+          name: 'My Test Contact Name',
           email: 'mycontact@take.net',
           phoneNumber: '+55 33 3131-3131',
           cellPhoneNumber: '+55 33 93131-3131',
