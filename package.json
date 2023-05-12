@@ -33,6 +33,12 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs",
     "semantic-release": "semantic-release"
   },
+  "release": {
+    "branches": [
+      "master",
+      "hotfix"
+    ]
+  },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
