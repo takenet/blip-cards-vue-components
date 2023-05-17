@@ -23,6 +23,7 @@ import Ticket from './components/Ticket'
 import Editable from './components/Editable'
 import Survey from './components/Survey'
 import Contact from './components/Contact'
+import ApplicationJSon from './components/ApplicationJSon'
 
 // Validators
 import JsonValidator from './validators/jsonValidator'
@@ -63,6 +64,7 @@ function install(Vue) {
   components.push(Vue.component(ChatState.name, ChatState))
   components.push(Vue.component(Survey.name, Survey))
   components.push(Vue.component(Contact.name, Contact))
+  components.push(Vue.component(ApplicationJSon.name, ApplicationJSon))
 
   Vue.component(Editable.name, Editable)
 

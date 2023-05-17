@@ -335,6 +335,33 @@
           :mail-label="translations.mailLabel"
           :address-label="translations.addressLabel" />
 
+        <application-json
+          v-else-if="document.type === 'application/json'"
+          class="blip-card"
+          @updated="updatedPhotoMargin"
+          :failed-to-send-msg="translations.failedToSend"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :supported-formats-msg="translations.supportedFormats"
+          :file-url-msg="translations.fileUrl"
+          :title-msg="translations.title"
+          :image-uri-msg="translations.imageUri"
+          :text-msg="translations.text"
+          :video-uri-msg="translations.videoUri"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-media-selected="onMediaSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :on-audio-validate-uri="onAudioValidateUri" />
+
         <unsuported-content
           v-else
           class="blip-card"
