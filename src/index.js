@@ -24,6 +24,7 @@ import Editable from './components/Editable'
 import Survey from './components/Survey'
 import Contact from './components/Contact'
 import ApplicationJSon from './components/ApplicationJSon'
+import MenuList from './components/ApplicationJSon/MenuList'
 
 // Validators
 import JsonValidator from './validators/jsonValidator'
@@ -65,6 +66,7 @@ function install(Vue) {
   components.push(Vue.component(Survey.name, Survey))
   components.push(Vue.component(Contact.name, Contact))
   components.push(Vue.component(ApplicationJSon.name, ApplicationJSon))
+  components.push(Vue.component(MenuList.name, MenuList))
 
   Vue.component(Editable.name, Editable)
 

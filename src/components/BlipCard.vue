@@ -360,7 +360,9 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :on-audio-validate-uri="onAudioValidateUri" />
+          :on-audio-validate-uri="onAudioValidateUri"
+          :translations="translations"
+          :on-selected="onSelected" />
 
         <unsuported-content
           v-else

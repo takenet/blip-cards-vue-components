@@ -1,76 +1,35 @@
 <template>
-  <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)">
+  <div class="blip-container">
+  <!-- <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)"> -->
 
-    <blip-image
-      :image-uri-msg="titleMsg"
-      :title-msg="titleMsg"
-      :text-msg="textMsg"
-      :aspect-ratio-msg="aspectRatioMsg"
-      :supported-formats-msg="supportedFormatsMsg"
-      :document="document"
-      :full-document="fullDocument"
-      :position="position"
-      :date="date"
-      v-if="document.type.indexOf('image')
-      !=
-      -1"
-      :editable="editable"
-      :on-media-selected="onMediaSelected"
-      :on-save="save"
-      :on-deleted="onDeleted"
-      :on-metadata-edit="isMetadataReady"
-      :deletable="deletable"
-      :on-cancel="onCancel"
-      :editing="editing"/>
-    <blip-audio
-      :file-url-msg="fileUrlMsg"
-      :document="document"
-      :full-document="fullDocument"
-      :position="position"
-      :date="date"
-      v-else-if="document.type.indexOf('audio')
-      !=
-      -1"
-      :editable="editable"
-      :on-save="save"
-      :on-deleted="onDeleted"
-      :on-metadata-edit="isMetadataReady"
-      :deletable="deletable"
-      :on-cancel="onCancel"
-      :editing="editing"
-      :on-audio-validate-uri="onAudioValidateUri" />
-    <blip-video
-      :video-uri-msg="videoUriMsg"
-      :document="document"
-      :full-document="fullDocument"
-      :position="position"
-      :date="date"
-      @updated="emitUpdate"
-      v-else-if="document.type.indexOf('video')
-      !=
-      -1"
-      :editable="editable"
-      :on-save="save"
-      :on-deleted="onDeleted"
-      :on-metadata-edit="isMetadataReady"
-      :deletable="deletable"
-      :on-cancel="onCancel"
-      :editing="editing"/>
-    <blip-file
-      :title-msg="titleMsg"
-      :document="document"
-      :full-document="fullDocument"
-      :position="position"
-      :date="date"
-      v-else
-      :editable="editable"
-      :on-media-selected="onMediaSelected"
-      :on-save="save"
-      :on-deleted="onDeleted"
-      :on-metadata-edit="isMetadataReady"
-      :deletable="deletable"
-      :on-cancel="onCancel"
-      :editing="editing"/>
+    <menu-list
+        v-if="document.type === 'interactive' && document.interactive.type === 'list'"
+        class="blip-card"
+        :failed-to-send-msg="translations.failedToSend"
+        :add-option-msg="translations.addOption"
+        :add-button-msg="translations.addButton"
+        :not-enough-options-msg="translations.notEnoughOptions"
+        :text-msg="translations.text"
+        :set-payload-msg="translations.setPayload"
+        :apply-msg="translations.apply"
+        :cancel-msg="translations.cancel"
+        :postback-mimetype-msg="translations.postbackMimetype"
+        :postback-value-msg="translations.postbackValue"
+        :status="status"
+        :position="position"
+        :document="fullDocument.content"
+        :full-document="fullDocument"
+        :date="date"
+        :on-selected="onSelected"
+        :on-save="saveCard"
+        :editable="editable"
+        :on-deleted="deleteCard"
+        :on-metadata-edit="isMetadataReady"
+        :deletable="deletable"
+        :hide-options="hideOptions"
+        :editing="isCardEditing"
+        :on-cancel="cancel"
+        :readonly="readonly"/>
 
     <div class="flex" :class="'notification ' + position" v-if="date">
       <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
@@ -87,10 +46,7 @@
 
 <script>
 
-import BlipImage from './MediaLink/Image'
-import BlipAudio from './MediaLink/Audio'
-import BlipVideo from './MediaLink/Video'
-import BlipFile from './MediaLink/BlipFile'
+import MenuList from './ApplicationJSon/MenuList'
 import { default as base } from '../mixins/baseComponent.js'
 import { isFailedMessage } from '../utils/misc'
 
@@ -107,6 +63,31 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem'
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
+    },
+    onSelected: {
+      type: Function
+    },
+    saveCard: {
+      type: Function
+    },
+    deleteCard: {
+      type: Function
+    },
+    hideOptions: {
+      type: Boolean,
+      default: false
+    },
+    isCardEditing: {
+      type: Boolean,
+      default: false
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     },
     aspectRatioMsg: String,
     supportedFormatsMsg: String,
@@ -128,10 +109,7 @@ export default {
     base
   ],
   components: {
-    BlipImage,
-    BlipAudio,
-    BlipVideo,
-    BlipFile
+    MenuList
   },
   methods: {
     emitUpdate () {

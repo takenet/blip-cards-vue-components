@@ -122,6 +122,9 @@
         <button class="button" @click="sendContact">
           ENVIAR Contato
         </button>
+        <button class="button" @click="sendMenuList">
+          ENVIAR Menu List
+        </button>
       </div>
 
       <div v-else>
@@ -574,6 +577,57 @@ export default {
           },
           firstName: 'Contact',
           lastName: 'Last Name'
+        }
+      })
+      this.send()
+    },
+    sendMenuList: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@wa.gw.msging.net',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'list',
+            header: {
+              type: 'text',
+              text: 'E então, com qual assunto posso te ajudar?'
+            },
+            body: {
+              text: 'Clique para abrir as opções 👇'
+            },
+            action: {
+              button: 'Escolher assunto',
+              sections: [
+                {
+                  rows: [
+                    {
+                      id: 'id:1.0',
+                      title: '🤖 Como funciona?',
+                      description: 'Entender como o Blip funciona, seus benefícios, preços e mais'
+                    },
+                    {
+                      id: 'id:1.1',
+                      title: '🤝 Contratar Take Blip',
+                      description: 'Quero conversar com o time de vendas para tirar dúvidas e contratar'
+                    },
+                    {
+                      id: 'id:1.2',
+                      title: '💬 Já uso o Blip',
+                      description: 'Se você é cliente Take Blip e precisa de ajuda ou suporte, clique aqui'
+                    },
+                    {
+                      id: 'id:1.3',
+                      title: '👥 Parceria',
+                      description: 'Tenho interesse em ser uma empresa parceira'
+                    }
+                  ]
+                }
+              ]
+            }
+          }
         }
       })
       this.send()
