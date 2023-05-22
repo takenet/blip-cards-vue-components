@@ -75,11 +75,11 @@
             </li>
           </ul> -->
           <ul>
-            <div>
-              <bds-typo v-if="sections.length === 1" class="disable-selection" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
+            <div class="button-text">
+              <bds-typo variant="fs-16" bold="regular" italic="true" v-if="sections.length === 1" class="disable-selection" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
             </div>
             <li v-for="(section, index) in sections" v-bind:key="index" @click="select(section)" class="disable-selection" v-bind:class="{ readonly: readonly }">
-              <bds-typo v-if="sections.length > 1">{{ buttonText }}</bds-typo>
+              <bds-typo variant="fs-16" bold="semi-bold" v-if="sections.length > 1">{{ buttonText }}</bds-typo>
               <div>
                 <li v-if="section.title"><bds-typo variant="fs-16" bold="semi-bold">{{ sanitize(section.title) }}</bds-typo></li>
                 <li v-for="(row, index) in section.rows" v-bind:key="index" @click="select(row)" class="disable-selection" v-bind:class="{ readonly: readonly }">
@@ -290,7 +290,6 @@ export default {
       this.selectedOption = { value: {} }
       this.hide = this.hideOptions
       this.text = this.document.text
-      console.log(JSON.stringify(this.document))
       this.sections = this.document.interactive.action.sections
       this.buttonText = this.document.interactive.action.button
     },
@@ -640,4 +639,42 @@ export default {
   padding-left: 15px;
   margin-top: -10px;
 }
+
+.button-text {
+  padding-top: 0px!important;
+  padding-bottom: 0px!important;
+  padding-left: 10px;
+}
+
+.blip-card .left .fixed-options li, 
+.middle .fixed-options li, 
+.right .fixed-options li {
+  color: $vue-light-blip;
+  border-top: none!important;
+  border-bottom: 0.5px solid #e4e2e2;
+}
+
+.blip-card .left .fixed-options li:last-child, 
+.middle .fixed-options li:last-child, 
+.right .fixed-options li:last-child {
+  border-top: none!important;
+  border-bottom: none!important;
+}
+
+.blip-card .fixed-options ul {
+  margin-top: 0px!important;
+}
+
+// .blip-card .fixed-options li {
+//   cursor: pointer;
+//   text-align: center;
+//   padding: 10px;
+//   margin: 2px;
+//   font-size: 16px;
+//   font-weight: 500;
+//   word-break: break-word;
+//   display: -webkit-box;
+//   display: -ms-flexbox;
+//   display: flex;
+// }
 </style>
