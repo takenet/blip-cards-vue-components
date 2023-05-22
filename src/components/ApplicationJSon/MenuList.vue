@@ -1,53 +1,7 @@
 <template>
   <div v-if="!isEditing" @show="checkForEndOfSlider" class="blip-container select">
-    <div v-if="document.scope === 'immediate'" :class="isFailedMessage(status, position)">
-      <div :class="'bubble ' + position">
-        <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-          <img :src="trashSvg" />
-        </div>
-        <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-          <img :src="editSvg" />
-        </div>
-        <div v-html="sanitize(computedText)" v-if="computedText"></div>
-      </div>
-
-      <div class="flex" :class="'notification ' + position" v-if="date">
-        <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
-        <img v-else-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
-        <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
-        <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
-        <div
-          class="failure"
-          v-else-if="this.status === 'failed' && this.position === 'right'">
-          {{ failedToSendMsg }}
-        </div>
-        {{ date }}
-      </div>
-      <transition name="fade">
-      <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="!hide">
-        <div class="slideshow-list">
-          <div class="slideshow-track options">
-            <ul class="item-list">
-              <li v-for="(section, index) in sections" v-bind:key="index" @click="select(section)" class="disable-selection" v-bind:class="{ readonly: readonly }">
-                <ul class="item-list">
-                  <li v-if="section.title"><bds-typo variant="fs-16" bold="semi-bold">{{ sanitize(section.title) }}</bds-typo></li>
-                  <li v-for="(row, index) in section.rows" v-bind:key="index" @click="select(row)" class="disable-selection" v-bind:class="{ readonly: readonly }">
-                    <div v-html="sanitize(row.title)"></div>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <a class="prev" v-if="showPrev" @dblclick="$event.stopPropagation()" @click="plusSlides(-1)">&#10094;</a>
-        <a class="next" v-if="showNext" @dblclick="$event.stopPropagation()" @click="plusSlides(1)">&#10095;</a>
-      </div>
-
-      </transition>
-    </div>
-
-    <div v-else :class="isFailedMessage(status, position)">
+    
+    <div :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg" />
@@ -56,41 +10,25 @@
           <img :src="editSvg" />
         </div>
         <div class="fixed-options disable-selection">
-          <!-- <ul>
-            <li v-for="(section, index) in sections" v-bind:key="index" @click="select(section)">
-              <div v-html="sanitize(section.title)"></div>
-            </li>
-          </ul> -->
-          <!-- <ul>
-            <bds-typo>{{ this.document.interactive.header.text }}</bds-typo>
-            <bds-typo v-if="sections.length === 1">{{ buttonText }}</bds-typo>
-            <li v-for="(section, index) in sections" v-bind:key="index" @click="select(section)" class="disable-selection" v-bind:class="{ readonly: readonly }">
-              <bds-typo v-if="sections.length > 1">{{ buttonText }}</bds-typo>
-              <ul>
-                <li v-if="section.title"><bds-typo variant="fs-16" bold="semi-bold">{{ sanitize(section.title) }}</bds-typo></li>
-                <li v-for="(row, index) in section.rows" v-bind:key="index" @click="select(row)" class="disable-selection" v-bind:class="{ readonly: readonly }">
-                  <div v-html="sanitize(row.title)"></div>
-                </li>
-              </ul>
-            </li>
-          </ul> -->
           <ul>
             <div class="button-text">
-              <bds-typo variant="fs-16" bold="regular" italic="true" v-if="sections.length === 1" class="disable-selection" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
+              <bds-typo variant="fs-16" bold="regular" italic="true" class="disable-selection" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
             </div>
             <li v-for="(section, index) in sections" v-bind:key="index" @click="select(section)" class="disable-selection" v-bind:class="{ readonly: readonly }">
-              <bds-typo variant="fs-16" bold="semi-bold" v-if="sections.length > 1">{{ buttonText }}</bds-typo>
               <div>
-                <li v-if="section.title"><bds-typo variant="fs-16" bold="semi-bold">{{ sanitize(section.title) }}</bds-typo></li>
+                <li v-if="section.title">
+                  <bds-typo variant="fs-16" bold="semi-bold">{{ sanitize(section.title) }}</bds-typo>
+                </li>
                 <li v-for="(row, index) in section.rows" v-bind:key="index" @click="select(row)" class="disable-selection" v-bind:class="{ readonly: readonly }">
-                  <div v-html="sanitize(row.title)"></div>
+                  <div>
+                    <bds-typo variant="fs-16" bold="regular">{{ sanitize(row.title) }}</bds-typo>
+                  </div>
                 </li>
               </div>
             </li>
           </ul>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -504,7 +442,7 @@ export default {
 
 .select .bubble {
   padding: $bubble-padding;
-  min-width: auto;
+  min-width: 206px;
   text-align: left;
 }
 
@@ -654,11 +592,25 @@ export default {
   border-bottom: 0.5px solid #e4e2e2;
 }
 
+.blip-card .left .fixed-options li li:first-child, 
+.middle .fixed-options li:first-child, 
+.right .fixed-options li:first-child {
+  border-top: none!important;
+  border-bottom: none!important;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
 .blip-card .left .fixed-options li:last-child, 
 .middle .fixed-options li:last-child, 
 .right .fixed-options li:last-child {
   border-top: none!important;
   border-bottom: none!important;
+}
+
+.blip-card .fixed-options li {
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 .blip-card .fixed-options ul {

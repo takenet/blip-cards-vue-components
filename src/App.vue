@@ -125,6 +125,9 @@
         <button class="button" @click="sendMenuList">
           ENVIAR Menu List
         </button>
+        <button class="button" @click="sendMenuListMultiSection">
+          ENVIAR Menu List Multi Section
+        </button>
       </div>
 
       <div v-else>
@@ -622,6 +625,85 @@ export default {
                       id: 'id:1.3',
                       title: '👥 Parceria',
                       description: 'Tenho interesse em ser uma empresa parceira'
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendMenuListMultiSection: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@wa.gw.msging.net',
+        type: 'application/json',
+        content: {
+          type: 'interactive',
+          interactive: {
+            type: 'list',
+            header: {
+              type: 'text',
+              text: 'header-content'
+            },
+            body: {
+              text: 'text-body-content'
+            },
+            footer: {
+              text: 'footer-content'
+            },
+            action: {
+              button: 'Choose subject',
+              sections: [
+                {
+                  title: 'Section 1',
+                  rows: [
+                    {
+                      id: '1',
+                      title: '💬 My row 1',
+                      description: 'My row 1 description'
+                    },
+                    {
+                      id: '2',
+                      title: '🤖 My row 2',
+                      description: 'My row 2 description'
+                    },
+                    {
+                      id: '3',
+                      title: 'My row 3',
+                      description: 'My row 3 description'
+                    },
+                    {
+                      id: '4',
+                      title: 'My row 4',
+                      description: 'My row 4 description'
+                    }
+                  ]
+                },
+                {
+                  title: 'Section 2',
+                  rows: [
+                    {
+                      id: '5',
+                      title: '💬 My row 5',
+                      description: 'My row 5 description'
+                    },
+                    {
+                      id: '6',
+                      title: '🤖 My row 6',
+                      description: 'My row 6 description'
+                    },
+                    {
+                      id: '7',
+                      title: 'My row 7',
+                      description: 'My row 7 description'
+                    },
+                    {
+                      id: '8',
+                      title: 'My row 8',
+                      description: 'My row 8 description'
                     }
                   ]
                 }
