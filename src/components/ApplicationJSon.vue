@@ -23,7 +23,7 @@
         :on-selected="onSelected"
         :on-save="saveCard"
         :editable="editable"
-        :on-deleted="deleteCard"
+        :on-deleted="onDeleted"
         :on-metadata-edit="isMetadataReady"
         :deletable="deletable"
         :hide-options="hideOptions"
@@ -74,7 +74,7 @@ export default {
     saveCard: {
       type: Function
     },
-    deleteCard: {
+    onDeleted: {
       type: Function
     },
     hideOptions: {
@@ -88,6 +88,10 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    deletable: {
+      type: Boolean,
+      default: true
     },
     aspectRatioMsg: String,
     supportedFormatsMsg: String,

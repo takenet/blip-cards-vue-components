@@ -16,7 +16,7 @@
             </div>
             <li v-for="(section, index) in sections" v-bind:key="index" @click="select(section)" class="disable-selection" v-bind:class="{ readonly: readonly }">
               <div>
-                <li v-if="section.title">
+                <li v-if="section.title" class="section-title">
                   <bds-typo variant="fs-16" bold="semi-bold">{{ sanitize(section.title) }}</bds-typo>
                 </li>
                 <li v-for="(row, index) in section.rows" v-bind:key="index" @click="select(row)" class="disable-selection" v-bind:class="{ readonly: readonly }">
@@ -37,28 +37,43 @@
       <button class="btn saveIco closeIco" @click="selectCancel()" >
         <img :src="closeSvg" />
       </button>
-      <button class="btn saveIco" :class="{'is-disabled': errors.any() }" @click="selectSave(text)">
+      <button class="btn saveIco" :class="{'is-disabled': errors.any() }" @click="selectSave(buttonText)">
         <img :src="approveSvg" />
       </button>
       <div class="form-group">
-        <textarea @keydown.enter="selectSave(text, $event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="text" />
+        <textarea @keydown.enter="selectSave(buttonText, $event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="buttonText" />
         <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
       </div>
 
       <div class="text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
         <ul>
-          <li v-for="(section, index) in sections" v-bind:key="index" @click="editOption(section, index, $event)">
+          <!-- <li v-for="(section, index) in sections" v-bind:key="index" @click="editOption(section, index, $event)">
             <span v-html="sanitize(section.title)"></span>
             <span @click="deleteOption(index, $event)" class="remove-option"><img :src="closeBlueSvg"></span>
           </li>
           <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
             <span>{{ addOptionMsg }}</span>
+          </li> -->
+          <li v-for="(section, indexSection) in sections" v-bind:key="indexSection">
+            <div>
+              <li v-if="section.title" class="section-title" @click="editOption(section, index, $event)">
+                <bds-typo variant="fs-16" bold="semi-bold">{{ sanitize(section.title) }}</bds-typo>
+              </li>
+              <li v-for="(row, indexRow) in section.rows" v-bind:key="indexRow" @click="editOption(row, indexSection, indexRow, $event)">
+                <div>
+                  <bds-typo variant="fs-16" bold="regular">{{ sanitize(row.title) }}</bds-typo>
+                  <bds-typo variant="fs-16" @click="deleteOption(indexSection, indexRow, $event)" class="remove-option">
+                    <img :src="(position !== 'right')? closeBlueSvg : closeSvg">
+                  </bds-typo>
+                </div>
+              </li>
+              <span v-show="hasDeleteOptionError" class="remove-option-error">{{ notEnoughOptionsMsg }}</span>
+              <div @click="editOption({}, indexSection, -1, $event)" :class="'btn-dashed primary-color ' + (position !== 'right'? 'btn': 'btn-white pointer')" style="margin-top: 10px; width: 100%;">
+                <span>{{ addButtonMsg }}</span>
+              </div>
+            </div>
           </li>
         </ul>
-        <span v-show="hasDeleteOptionError" class="remove-option-error">{{ notEnoughOptionsMsg }}</span>
-        <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 10px; width: 100%;">
-          <span>{{ addButtonMsg }}</span>
-        </div>
       </div>
 
       <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-select-metadata" @click="editMetadata(fullDocument)">
@@ -70,28 +85,13 @@
   <div class="blip-container" v-else>
     <form novalidate v-on:submit.prevent :class="'bubble ' + position">
       <div class="tabs">
-        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">{{ textMsg }}</span>
+        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">{{ textMsg }} - teste</span>
       </div>
 
       <div v-if="headerTab === 'plainText'">
         <div class="form-group">
-          <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.text" :placeholder="textMsg" />
+          <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.title" :placeholder="textMsg" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
-        </div>
-
-        <input id="showPayload" type="checkbox"  v-model="showPayload"><label for="showPayload">{{ setPayloadMsg }}</label>
-        <div class="line"></div>
-
-        <div v-show="showPayload">
-          <div class="form-group">
-            <input type="text" name="type" v-validate="showPayload ? 'required|mime' : ''"  class="form-control" v-model="selectedOption.type" :placeholder="postbackMimetypeMsg" />
-            <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
-          </div>
-          <div class="form-group">
-            <textarea @keydown.enter="saveOption($event)" v-if="selectedOption.type && selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" :placeholder="postbackValueMsg" />
-            <textarea @keydown.enter="saveOption($event)" v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" :placeholder="postbackValueMsg" />
-            <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
-          </div>
         </div>
       </div>
 
@@ -111,7 +111,7 @@
 import { default as base } from '../../mixins/baseComponent.js'
 import { linkify, guid, isFailedMessage } from '../../utils/misc'
 import debounce from 'lodash/debounce'
-// const optionSize = 34
+const optionSize = 34
 
 export default {
   name: 'menu-list',
@@ -148,10 +148,6 @@ export default {
       type: String,
       default: 'Text'
     },
-    setPayloadMsg: {
-      type: String,
-      default: 'Set payload'
-    },
     applyMsg: {
       type: String,
       default: 'Apply'
@@ -176,7 +172,6 @@ export default {
   data: function() {
     return {
       addOption: undefined,
-      showPayload: undefined,
       headerTab: undefined,
       selectedOption: undefined,
       hide: undefined,
@@ -223,7 +218,6 @@ export default {
       this.slideIndex = 1
       this.endOfSlider = false
       this.addOption = false
-      this.showPayload = false
       this.headerTab = 'plainText'
       this.selectedOption = { value: {} }
       this.hide = this.hideOptions
@@ -298,15 +292,15 @@ export default {
     setTab: function(name) {
       this.headerTab = name
     },
-    deleteOption: function(index, $event) {
-      // if ($event) {
-      //   $event.stopPropagation()
-      // }
-      // if (this.options.length < 2) {
-      //   this.hasDeleteOptionError = true
-      //   return
-      // }
-      // this.options.splice(index, 1)
+    deleteOption: function(indexSection, indexRow, $event) {
+      if ($event) {
+        $event.stopPropagation()
+      }
+      if (this.sections[indexSection].rows.length < 2) {
+        this.hasDeleteOptionError = true
+        return
+      }
+      this.sections[indexSection].rows.splice(indexRow, 1)
     },
     cancelOption: function(item) {
       this.errors.clear()
@@ -327,17 +321,15 @@ export default {
       }
 
       this.addOption = false
-      // this.selectedOption.previewText =
-      //   this.selectedOption.text.length > optionSize
-      //     ? this.selectedOption.text.substring(0, optionSize) + '...'
-      //     : this.selectedOption.text
-      if (!this.showPayload) {
-        this.selectedOption.value = this.selectedOption.type = null
-      }
-      if (this.selectedOption.index === -1) {
-        this.options.push(this.selectedOption)
+      this.selectedOption.title =
+        this.selectedOption.title.length > optionSize
+          ? this.selectedOption.title.substring(0, optionSize) + '...'
+          : this.selectedOption.title
+
+      if (this.selectedOption.indexRow === -1) {
+        this.sections[this.selectedOption.indexSection].rows.push(this.selectedOption)
       } else {
-        this.options.splice(this.selectedOption.index, 1, this.selectedOption)
+        this.sections[this.selectedOption.indexSection].rows.splice(this.selectedOption.indexRow, 1, this.selectedOption)
       }
 
       this.selectedOption = {}
@@ -345,21 +337,15 @@ export default {
       this.$validator.reset()
       this.addOption = false
     },
-    editOption: function(item, index, $event) {
+    editOption: function(item, indexSection, indexRow, $event) {
       this.hasDeleteOptionError = false
       this.addOption = true
 
       this.selectedOption = { ...item }
-
-      if (!this.selectedOption.value || !this.selectedOption.type) {
-        this.showPayload = false
-      } else {
-        this.showPayload = true
-      }
-
-      this.selectedOption.index = index
+      this.selectedOption.indexSection = indexSection
+      this.selectedOption.indexRow = indexRow
     },
-    selectSave: function(text, $event) {
+    selectSave: function(buttonText, $event) {
       this.hasDeleteOptionError = false
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
@@ -377,25 +363,8 @@ export default {
         this.addOption = false
 
         this.save({
-          ...this.document,
-          text: this.text,
-          options: this.options.map(function(x) {
-            let value
-            if (x.value) {
-              if (x.type.includes('json')) {
-                value = JSON.parse(x.value)
-              } else {
-                value = x.value
-              }
-            } else {
-              value = null
-            }
-
-            return {
-              ...x,
-              value
-            }
-          })
+          ...this.document.interactive.action,
+          button: buttonText
         })
       })
     },
@@ -592,9 +561,16 @@ export default {
   border-bottom: 0.5px solid #e4e2e2;
 }
 
-.blip-card .left .fixed-options li li:first-child, 
-.middle .fixed-options li:first-child, 
-.right .fixed-options li:first-child {
+.blip-card .left .fixed-options li li:first, 
+.middle .fixed-options li:first, 
+.right .fixed-options li:first {
+  border-top: none!important;
+  border-bottom: none!important;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.section-title {
   border-top: none!important;
   border-bottom: none!important;
   padding-top: 0px;
