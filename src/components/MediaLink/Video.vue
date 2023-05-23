@@ -93,6 +93,9 @@
             </svg>
           </div>
         </div>
+        <div v-if="this.text" class="video-description">
+          <bds-typo tag="p" variant="fs-16" bold="regular" margin="false" v-html="sanitize(this.text)"></bds-typo>
+        </div>
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
@@ -105,6 +108,7 @@
           <div class="form-group">
             <input type="text" name="video" class="form-control" v-model="videoUri" :placeholder="videoUriMsg" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
             <span v-if="errors.has('video')" class="help input-error">{{ errors.first('video') }}</span>
+            <input type="text" name="text" class="form-control text" v-model="text" placeholder="Text"/>
           </div>
           <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-media-link-metadata" @click="editMetadata(fullDocument)">
             {{ metadataButtonText }}
@@ -143,7 +147,8 @@ export default {
       volumeSliderWrapper: undefined,
       videoPlayerWrapper: undefined,
       inactivityTimeout: undefined,
-      animation: undefined
+      animation: undefined,
+      text: undefined
     }
   },
   mounted: function() {
@@ -172,6 +177,7 @@ export default {
   methods: {
     init: function() {
       this.videoUri = this.document.uri
+      this.text = this.document.text
       this.isPlaying = false
       this.isFullScreen = false
       this.video = undefined
@@ -408,6 +414,9 @@ export default {
     form {
       width: auto;
     }
+    .form-group .form-control.text {
+      margin-top: 10px;
+    }
   }
 
   .notification {
@@ -566,6 +575,11 @@ export default {
           box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);
         }
       }
+    }
+
+    .video-description {
+      text-align: left;
+      padding: 0.5rem 1rem;
     }
   }
 
