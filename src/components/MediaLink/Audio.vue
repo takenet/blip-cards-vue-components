@@ -1,12 +1,20 @@
 <template>
   <div>
     <div :class="'bubble ' + position">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" alt />
-      </div>
-      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img class="loadinIcon" :src="editSvg" alt />
-      </div>
+      <bds-button-icon v-if="deletable && !isEditing"
+        class="editIco trashIco"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable && !isEditing" 
+        class="editIco"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon> 
       <div class="audio-player-wrapper" v-if="!isEditing">
         <div class="audio-player-controls">
           <div v-if="!isLoading" class="audio-play-pause">
@@ -92,16 +100,21 @@
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button class="btn saveIco closeIco" @click="cancel()">
-            <img :src="closeSvg" alt />
-          </button>
-          <button
+          <bds-button-icon 
+            class="btn saveIco closeIco"
+            icon="close"
+            variant="ghost"
+            size="short"
+            v-on:click="cancel()"
+          ></bds-button-icon>
+          <bds-button-icon 
             class="btn saveIco"
-            @click="audioSave()"
-            :class="{ 'is-disabled': errors.any() }"
-          >
-            <img :src="approveSvg" alt />
-          </button>
+            icon="check"
+            variant="primary"
+            size="short"
+            :disabled="errors.any()"
+            v-on:click="audioSave()"
+          ></bds-button-icon>
           <div class="form-group">
             <input
               type="text"

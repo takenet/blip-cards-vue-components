@@ -1,12 +1,20 @@
 <template>
   <div class="application">
     <div :class="'bubble ' + position">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
-      </div>
-      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img :src="editSvg" />
-      </div>
+      <bds-button-icon v-if="deletable && !isEditing"
+        class="editIco trashIco"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable && !isEditing"
+        class="editIco"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon> 
       <div v-if="!isEditing" :class="`file-${position}`">
         <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
           <div class="file-icon-wrapper">
@@ -23,12 +31,21 @@
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="cancel()" >
-            <img :src="closeSvg" />
-          </button>
-          <button type="submit" class="btn saveIco" @click="fileSave()" :class="{'is-disabled': errors.any() }">
-            <img :src="approveSvg" />
-          </button>
+          <bds-button-icon 
+            class="btn saveIco closeIco"
+            icon="close"
+            variant="ghost"
+            size="short"
+            v-on:click="cancel()"
+          ></bds-button-icon>
+          <bds-button-icon 
+            class="btn saveIco"
+            icon="check"
+            variant="primary"
+            size="short"
+            :disabled="errors.any()"
+            v-on:click="fileSave()"
+          ></bds-button-icon>
           <div class="form-group">
             <input type="text" name="file" class="form-control uri" v-model="uri" :placeholder="fileUrlMsg" :class="{'input-error': errors.has('file') }" v-validate="'required|url'"/>
             <span v-if="errors.has('file')" class="help input-error">{{ errors.first('file') }}</span>

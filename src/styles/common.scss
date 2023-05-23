@@ -234,7 +234,6 @@
   .editIco { cursor: pointer; }
 
   .editIco {
-    background-color: $color-primary;
     padding: 3px;
     border-radius: 50%;
     width: 30px;
@@ -242,28 +241,21 @@
     text-align: center;
     position: absolute;
     display: none;
-    top: -17px;
-    right: -17px;
+    top: -24px;
+    right: -68px;
     z-index: 1;
-
-    &:hover {
-      background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), $color-primary;
-    }
   }
 
   .saveIco {
     z-index: 1;
-    background-color: $color-success;
     padding: 5px;
     border-radius: 50%;
     width: 30px;
     height: 30px;
     text-align: center;
     position: absolute;
-    top: -17px;
-    right: -17px;
-
-    &:hover { background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), $color-success }
+    top: -25px;
+    right: -57px;
   }
 
   .saveIco img {
@@ -277,16 +269,11 @@
   }
 
   .closeIco {
-    background-color: $color-error;
-    right: 17px;
-    &:hover { background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), $color-error }
+    right: -10px;
   }
 
   .trashIco {
-    right: 17px;
-    background-color: $color-delete;
-
-    &:hover { background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), $color-delete }
+    right: -17px;
   }
 
   .form-group {

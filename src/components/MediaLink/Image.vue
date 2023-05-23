@@ -1,12 +1,20 @@
 <template>
   <div>
     <div :class="'bubble ' + position">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg">
-      </div>
-      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img :src="editSvg">
-      </div>
+      <bds-button-icon v-if="deletable && !isEditing"
+        class="editIco trashIco"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable && !isEditing"
+        class="editIco"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon> 
       <div class="header" :id="id" v-if="!isEditing">
         <div
           :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')"
@@ -22,12 +30,21 @@
 
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="cancel()">
-            <img :src="closeSvg">
-          </button>
-          <button class="btn saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
-            <img :src="approveSvg">
-          </button>
+          <bds-button-icon 
+            class="btn saveIco closeIco"
+            icon="close"
+            variant="ghost"
+            size="short"
+            v-on:click="cancel()"
+          ></bds-button-icon>
+          <bds-button-icon 
+            class="btn saveIco"
+            icon="check"
+            variant="primary"
+            size="short"
+            :disabled="errors.any()"
+            v-on:click="imgSave()">
+          </bds-button-icon>
           <div class="form-group">
             <input
               type="text"

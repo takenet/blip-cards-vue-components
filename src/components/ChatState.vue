@@ -6,12 +6,20 @@
       :class="isFailedMessage(status, position)"
     >
       <div :class="'bubble ' + position">
-        <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-          <img :src="trashSvg">
-        </div>
-        <div v-if="editable" class="editIco" @click="toggleEdit">
-          <img :src="editSvg">
-        </div>
+        <bds-button-icon v-if="deletable"
+          class="editIco trashIco"
+          icon="trash"
+          variant="delete"
+          size="short"
+          v-on:click="trash(document)"
+        ></bds-button-icon>
+        <bds-button-icon v-if="editable"
+          class="editIco"
+          icon="edit"
+          variant="primary"
+          size="short"
+          v-on:click="toggleEdit"
+        ></bds-button-icon> 
         <div class="typing">
           <div class="typing-dot"></div>
           <div class="typing-dot"></div>
@@ -24,12 +32,21 @@
   <div class="blip-container" v-else>
     <div :class="'bubble ' + position">
       <form novalidate v-on:submit.prevent>
-        <button type="button" class="btn saveIco closeIco" @click="cancel()">
-          <img :src="closeSvg">
-        </button>
-        <button class="btn saveIco" @click="saveState()" :class="{'is-disabled': errors.any() }">
-          <img :src="approveSvg">
-        </button>
+        <bds-button-icon 
+          class="btn saveIco closeIco"
+          icon="close"
+          variant="ghost"
+          size="short"
+          v-on:click="cancel()">
+        </bds-button-icon>
+        <bds-button-icon 
+          class="btn saveIco"
+          icon="check"
+          variant="primary"
+          size="short"
+          :disabled="errors.any()"
+          v-on:click="saveState()"
+        ></bds-button-icon>
         <div class="form-group">
           <input
             type="text"
