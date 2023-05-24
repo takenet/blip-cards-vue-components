@@ -12,16 +12,16 @@
         <div class="fixed-options disable-selection">
           <ul>
             <div class="button-text">
-              <bds-typo variant="fs-16" bold="regular" italic="true" class="disable-selection" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
+              <bds-typo variant="fs-16" bold="regular" italic="true" class="disable-selection menu-list-option" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
             </div>
             <li v-for="(section, index) in sections" v-bind:key="index" class="disable-selection" v-bind:class="{ readonly: readonly }">
               <div>
                 <li v-if="section.title" class="section-title" v-bind:class="{ readonly: readonly }">
-                  <bds-typo variant="fs-16" bold="semi-bold">{{ sanitize(section.title) }}</bds-typo>
+                  <bds-typo variant="fs-16" bold="semi-bold" class="menu-list-option">{{ sanitize(section.title) }}</bds-typo>
                 </li>
                 <li v-for="(row, index) in section.rows" v-bind:key="index" class="disable-selection" v-bind:class="{ readonly: readonly }">
                   <div>
-                    <bds-typo variant="fs-16" bold="regular">{{ sanitize(row.title) }}</bds-typo>
+                    <bds-typo variant="fs-16" bold="regular" class="menu-list-option">{{ sanitize(row.title) }}</bds-typo>
                   </div>
                 </li>
               </div>
@@ -50,12 +50,12 @@
           <li v-for="(section, indexSection) in sections" v-bind:key="indexSection">
             <div>
               <li v-if="section.title" class="section-title" @click="editOption(section, index, $event)">
-                <bds-typo variant="fs-16" bold="semi-bold">{{ sanitize(section.title) }}</bds-typo>
+                <bds-typo variant="fs-16" bold="semi-bold" class="menu-list-option">{{ sanitize(section.title) }}</bds-typo>
               </li>
               <li v-for="(row, indexRow) in section.rows" v-bind:key="indexRow" @click="editOption(row, indexSection, indexRow, $event)">
                 <div>
-                  <bds-typo variant="fs-16" bold="regular">{{ sanitize(row.title) }}</bds-typo>
-                  <bds-typo variant="fs-16" @click="deleteOption(indexSection, indexRow, $event)" class="remove-option">
+                  <bds-typo variant="fs-16" bold="regular" class="menu-list-option">{{ sanitize(row.title) }}</bds-typo>
+                  <bds-typo variant="fs-16" @click="deleteOption(indexSection, indexRow, $event)" class="remove-option menu-list-option">
                     <img :src="(position !== 'right')? closeBlueSvg : closeSvg">
                   </bds-typo>
                 </div>
@@ -146,6 +146,10 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    position: {
+      type: String,
+      default: 'right'
     }
   },
   data: function() {
@@ -281,8 +285,12 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import '../../styles/variables.scss';
+
+.menu-list-option {
+  color: $vue-white; // verificar cor para o rebranding
+}
 
 .menu-list .bubble {
   padding: $bubble-padding;
