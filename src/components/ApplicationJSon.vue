@@ -1,7 +1,5 @@
 <template>
   <div class="blip-container">
-  <!-- <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)"> -->
-
     <menu-list
         v-if="document.type === 'interactive' && document.interactive.type === 'list'"
         class="blip-card"
@@ -10,26 +8,17 @@
         :add-button-msg="translations.addButton"
         :not-enough-options-msg="translations.notEnoughOptions"
         :text-msg="translations.text"
-        :set-payload-msg="translations.setPayload"
         :apply-msg="translations.apply"
         :cancel-msg="translations.cancel"
-        :postback-mimetype-msg="translations.postbackMimetype"
         :postback-value-msg="translations.postbackValue"
         :status="status"
         :position="position"
         :document="fullDocument.content"
-        :full-document="fullDocument"
-        :date="date"
-        :on-selected="onSelected"
-        :on-save="saveCard"
         :editable="editable"
         :on-deleted="onDeleted"
-        :on-metadata-edit="isMetadataReady"
         :deletable="deletable"
-        :hide-options="hideOptions"
-        :editing="isCardEditing"
-        :on-cancel="cancel"
-        :readonly="readonly"/>
+        :readonly="readonly"
+        @updated="emitUpdate"/>
 
     <div class="flex" :class="'notification ' + position" v-if="date">
       <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
@@ -57,9 +46,6 @@ export default {
       type: String,
       default: ''
     },
-    onMediaSelected: {
-      type: Function
-    },
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem'
@@ -68,22 +54,8 @@ export default {
       type: Object,
       default: () => ({})
     },
-    onSelected: {
-      type: Function
-    },
-    saveCard: {
-      type: Function
-    },
     onDeleted: {
       type: Function
-    },
-    hideOptions: {
-      type: Boolean,
-      default: false
-    },
-    isCardEditing: {
-      type: Boolean,
-      default: false
     },
     readonly: {
       type: Boolean,
@@ -92,16 +64,6 @@ export default {
     deletable: {
       type: Boolean,
       default: true
-    },
-    aspectRatioMsg: String,
-    supportedFormatsMsg: String,
-    fileUrlMsg: String,
-    imageUriMsg: String,
-    videoUriMsg: String,
-    titleMsg: String,
-    textMsg: String,
-    onAudioValidateUri: {
-      type: Function
     }
   },
   data: function() {

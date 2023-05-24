@@ -340,19 +340,11 @@
           class="blip-card"
           @updated="updatedPhotoMargin"
           :failed-to-send-msg="translations.failedToSend"
-          :aspect-ratio-msg="translations.aspectRatio"
-          :supported-formats-msg="translations.supportedFormats"
-          :file-url-msg="translations.fileUrl"
-          :title-msg="translations.title"
-          :image-uri-msg="translations.imageUri"
-          :text-msg="translations.text"
-          :video-uri-msg="translations.videoUri"
           :status="status"
           :position="position"
           :document="editableDocument.content"
           :full-document="editableDocument"
           :date="date"
-          :on-media-selected="onMediaSelected"
           :on-save="saveCard"
           :editable="editable"
           :on-deleted="deleteCard"
@@ -360,9 +352,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :on-audio-validate-uri="onAudioValidateUri"
-          :translations="translations"
-          :on-selected="onSelected" />
+          :translations="translations" />
 
         <unsuported-content
           v-else
