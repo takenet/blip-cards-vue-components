@@ -2,14 +2,14 @@
   <div v-if="!isEditing" class="blip-container request-location" :class="isFailedMessage(status, position)">
     <div :class="`bubble ${position}`">
       <bds-button-icon v-if="deletable"
-        class="editIco trashIco"
+        class="editIco trashIco icon-button-margin icon-button-top"
         icon="trash"
         variant="delete"
         size="short"
         v-on:click="trash(document)"
       ></bds-button-icon>
       <bds-button-icon v-if="editable"
-        class="editIco"
+        class="editIco icon-button-margin icon-button-top"
         icon="edit"
         variant="primary"
         size="short"

@@ -242,7 +242,7 @@
     position: absolute;
     display: none;
     top: -24px;
-    right: -68px;
+    right: -65px;
     z-index: 1;
   }
 
@@ -559,3 +559,11 @@
 .disable-selection {
   -webkit-user-select: none;
 }
+.icon-button-margin {
+  margin-right: 10%;
+}
+.icon-button-top {
+  top: -30px !important;
+}
+
+

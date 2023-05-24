@@ -7,14 +7,14 @@
     >
       <div :class="'bubble ' + position">
         <bds-button-icon v-if="deletable"
-          class="editIco trashIco"
+          class="editIco trashIco icon-button-margin icon-button-top"
           icon="trash"
           variant="delete"
           size="short"
           v-on:click="trash(document)"
         ></bds-button-icon>
         <bds-button-icon v-if="editable"
-          class="editIco"
+          class="editIco icon-button-margin icon-button-top"
           icon="edit"
           variant="primary"
           size="short"
@@ -69,7 +69,7 @@
           variant="primary"
           size="short"
           :disabled="errors.any()"
-          v-on:click="toggleEdit"
+          v-on:click="saveText()"
         ></bds-button-icon>
         <div class="form-group">
           <textarea

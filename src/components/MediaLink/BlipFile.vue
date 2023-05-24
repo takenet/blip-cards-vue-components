@@ -2,14 +2,14 @@
   <div class="application">
     <div :class="'bubble ' + position">
       <bds-button-icon v-if="deletable && !isEditing"
-        class="editIco trashIco"
+        class="editIco trashIco icon-button-margin"
         icon="trash"
         variant="delete"
         size="short"
         v-on:click="trash(document)"
       ></bds-button-icon>
       <bds-button-icon v-if="editable && !isEditing"
-        class="editIco"
+        class="editIco icon-button-margin"
         icon="edit"
         variant="primary"
         size="short"

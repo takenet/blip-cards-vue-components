@@ -6,14 +6,14 @@
   >
     <div :class="'bubble ' + position">
       <bds-button-icon v-if="deletable && !isEditing"
-        class="editIco trashIco"
+        class="editIco trashIco icon-margin"
         icon="trash"
         variant="delete"
         size="short"
         v-on:click="trash(document)"
       ></bds-button-icon>
       <bds-button-icon v-if="editable && !isEditing"
-        class="editIco"
+        class="editIco icon-margin"
         icon="edit"
         variant="primary"
         size="short"
@@ -871,6 +871,9 @@ export default {
   .blip-document-select-metadata {
     padding: 10px 5px 0 0;
     text-align: right;
+  }
+  .icon-margin{
+    margin-right: 30%;
   }
 }
 </style>

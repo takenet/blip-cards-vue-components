@@ -349,6 +349,9 @@ export default {
       border: 1px solid $color-disabled-bg;
     }
   }
+  .icon-margin {
+    margin-right: 7%;
+  }
 
 }
 </style>
@@ -368,7 +371,7 @@ export default {
       "
     >
       <bds-button-icon v-if="deletable"
-        class="editIco trashIco"
+        class="editIco trashIco icon-margin"
         icon="trash"
         variant="delete"
         size="short"
@@ -376,7 +379,7 @@ export default {
         v-on:click="trash(document)"
       ></bds-button-icon>
       <bds-button-icon v-if="editable"
-        class="editIco"
+        class="editIco icon-margin"
         icon="edit"
         variant="primary"
         :disabled="isScoreFormFinished"

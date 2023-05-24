@@ -2,14 +2,14 @@
   <div>
     <div :class="'bubble ' + position">
       <bds-button-icon v-if="deletable && !isEditing"
-        class="editIco trashIco"
+        class="editIco trashIco icon-button-margin icon-button-top"
         icon="trash"
         variant="delete"
         size="short"
         v-on:click="trash(document)"
       ></bds-button-icon>
       <bds-button-icon v-if="editable && !isEditing" 
-        class="editIco"
+        class="icon-button-margin editIco icon-button-top"
         icon="edit"
         variant="primary"
         size="short"
@@ -101,14 +101,14 @@
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
           <bds-button-icon 
-            class="btn saveIco closeIco"
+            class="btn saveIco closeIco icon-button-margin icon-button-top"
             icon="close"
             variant="ghost"
             size="short"
             v-on:click="cancel()"
           ></bds-button-icon>
           <bds-button-icon 
-            class="btn saveIco"
+            class="btn saveIco icon-button-margin icon-button-top"
             icon="check"
             variant="primary"
             size="short"
