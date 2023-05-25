@@ -1,10 +1,21 @@
 <template>
   <div class="blip-container">
+    <menu-list-prompt
+        v-if="document.type === 'interactive' && document.interactive.type === 'list'"
+        class="blip-card"
+        :postback-value-msg="translations.postbackValue"
+        :status="status"
+        :position="position"
+        :document="fullDocument.content"
+        :editable="editable"
+        :on-deleted="onDeleted"
+        :deletable="deletable"
+        :readonly="readonly"
+        @updated="emitUpdate"/>
+
     <menu-list
         v-if="document.type === 'interactive' && document.interactive.type === 'list'"
         class="blip-card"
-        :failed-to-send-msg="translations.failedToSend"
-        :add-option-msg="translations.addOption"
         :add-button-msg="translations.addButton"
         :not-enough-options-msg="translations.notEnoughOptions"
         :text-msg="translations.text"
@@ -38,6 +49,7 @@
 import MenuList from './ApplicationJSon/MenuList'
 import { default as base } from '../mixins/baseComponent.js'
 import { isFailedMessage } from '../utils/misc'
+import MenuListPrompt from './ApplicationJSon/MenuListPrompt.vue'
 
 export default {
   name: 'application-json',
@@ -75,7 +87,8 @@ export default {
     base
   ],
   components: {
-    MenuList
+    MenuList,
+    MenuListPrompt
   },
   methods: {
     emitUpdate () {

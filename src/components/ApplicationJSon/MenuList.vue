@@ -42,7 +42,7 @@
       </button>
       <div class="form-group">
         <textarea @keydown.enter="menuListSave(buttonText, $event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="buttonText" />
-        <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
+        <bds-typo variant="fs-12" v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</bds-typo>
       </div>
 
       <div class="text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
@@ -60,9 +60,9 @@
                   </bds-typo>
                 </div>
               </li>
-              <span v-show="hasDeleteOptionError" class="remove-option-error">{{ notEnoughOptionsMsg }}</span>
+              <bds-typo variant="fs-12" v-show="hasDeleteOptionError" class="remove-option-error">{{ notEnoughOptionsMsg }}</bds-typo>
               <div @click="editOption({}, indexSection, -1, $event)" :class="'btn-dashed primary-color ' + (position !== 'right'? 'btn': 'btn-white pointer')" style="margin-top: 10px; width: 100%;">
-                <span>{{ addButtonMsg }}</span>
+                <bds-typo variant="fs-12">{{ addButtonMsg }}</bds-typo>
               </div>
             </div>
           </li>
@@ -75,13 +75,13 @@
   <div class="blip-container" v-else>
     <form novalidate v-on:submit.prevent :class="'bubble ' + position">
       <div class="tabs">
-        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">{{ textMsg }}</span>
+        <bds-typo variant="fs-12" :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">{{ textMsg }}</bds-typo>
       </div>
 
       <div v-if="headerTab === 'plainText'">
         <div class="form-group">
           <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.title" :placeholder="textMsg" />
-          <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
+          <bds-typo variant="fs-12" v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</bds-typo>
         </div>
       </div>
 
@@ -99,7 +99,7 @@
 
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
-import { guid, isFailedMessage } from '../../utils/misc'
+import { isFailedMessage } from '../../utils/misc'
 import Editable from '../Editable'
 const optionSize = 34
 
@@ -107,21 +107,9 @@ export default {
   name: 'menu-list',
   mixins: [base],
   props: {
-    hideOptions: {
-      type: Boolean,
-      default: false
-    },
     status: {
       type: String,
       default: ''
-    },
-    failedToSendMsg: {
-      type: String,
-      default: 'Falha ao enviar a mensagem.'
-    },
-    addOptionMsg: {
-      type: String,
-      default: 'Add option'
     },
     addButtonMsg: {
       type: String,
@@ -157,14 +145,10 @@ export default {
       addOption: undefined,
       headerTab: undefined,
       selectedOption: undefined,
-      hide: undefined,
       text: undefined,
       options: undefined,
       sections: undefined,
       buttonText: undefined,
-      id: undefined,
-      slideIndex: undefined,
-      endOfSlider: undefined,
       hasDeleteOptionError: false,
       isFailedMessage
     }
@@ -175,20 +159,11 @@ export default {
   mounted: function() {
     this.updateImageMarginTop()
   },
-  watch: {
-    hideOptions: function() {
-      this.hide = this.hideOptions
-    }
-  },
   methods: {
     init: function() {
-      this.id = guid()
-      this.slideIndex = 1
-      this.endOfSlider = false
       this.addOption = false
       this.headerTab = 'plainText'
       this.selectedOption = { value: {} }
-      this.hide = this.hideOptions
       this.text = this.document.text
       this.sections = this.document.interactive.action.sections
       this.buttonText = this.document.interactive.action.button
@@ -259,7 +234,7 @@ export default {
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
       }
-      this.slideIndex = 1
+
       if ($event) {
         $event.stopPropagation()
         $event.preventDefault()
@@ -294,8 +269,14 @@ export default {
 
 .menu-list .bubble {
   padding: $bubble-padding;
+  padding-left: 0px;
+  padding-right: 0px;
   min-width: 206px;
   text-align: left;
+  border-top: 1px solid #6E7B91!important;
+  border-left: 1px solid #6E7B91!important;
+  border-bottom: 1px solid #6E7B91!important;
+  border-right: 1px solid #6E7B91!important;
 }
 
 .menu-list .fixed-options li:last-child {
@@ -319,19 +300,23 @@ export default {
 }
 
 .section-title {
-  border-top: none!important;
-  border-bottom: none!important;
+  border-top: none;
+  border-bottom: 1px solid #6E7B91!important;
+  padding-left: 10px!important;
   padding-top: 0px;
   padding-bottom: 0px;
 }
 
 .blip-card .fixed-options li {
-  padding-right: 5px;
-  padding-left: 5px;
+  padding-right: 0px;
+  padding-left: 0px;
+  margin: 0px;
 }
 
 .blip-card .fixed-options ul {
   margin-top: 0px!important;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .blip-card .left .fixed-options li, 
@@ -339,7 +324,7 @@ export default {
 .right .fixed-options li {
   color: $vue-light-blip;
   border-top: none!important;
-  border-bottom: 0.5px solid #e4e2e2;
+  border-bottom: 1px solid #6E7B91!important;
 }
 
 .blip-card .left .fixed-options li li:first, 
