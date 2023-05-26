@@ -23,6 +23,8 @@ import Ticket from './components/Ticket'
 import Editable from './components/Editable'
 import Survey from './components/Survey'
 import Contact from './components/Contact'
+import InteractiveButton from './components/InteractiveButton'
+import BlipCardDate from './components/BlipCardDate'
 
 // Validators
 import JsonValidator from './validators/jsonValidator'
@@ -63,6 +65,8 @@ function install(Vue) {
   components.push(Vue.component(ChatState.name, ChatState))
   components.push(Vue.component(Survey.name, Survey))
   components.push(Vue.component(Contact.name, Contact))
+  components.push(Vue.component(InteractiveButton.name, InteractiveButton))
+  components.push(Vue.component(BlipCardDate.name, BlipCardDate))
 
   Vue.component(Editable.name, Editable)
 
