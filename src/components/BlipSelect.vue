@@ -2,12 +2,20 @@
   <div v-if="!isEditing" @show="checkForEndOfSlider" class="blip-container select">
     <div v-if="document.scope === 'immediate'" :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
-        <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-          <img :src="trashSvg" />
-        </div>
-        <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-          <img :src="editSvg" />
-        </div>
+        <bds-button-icon v-if="deletable"
+          class="editIco trashIco"
+          icon="trash"
+          variant="delete"
+          size="short"
+          v-on:click="trash(document)"
+        ></bds-button-icon>
+        <bds-button-icon v-if="editable"
+          class="editIco"
+          icon="edit"
+          variant="primary"
+          size="short"
+          v-on:click="toggleEdit"
+        ></bds-button-icon> 
         <div v-html="sanitize(computedText)" v-if="computedText"></div>
       </div>
 
@@ -44,12 +52,20 @@
 
     <div v-else :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
-        <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-          <img :src="trashSvg" />
-        </div>
-        <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-          <img :src="editSvg" />
-        </div>
+        <bds-button-icon v-if="deletable"
+          class="editIco trashIco"
+          icon="trash"
+          variant="delete"
+          size="short"
+          v-on:click="trash(document)">
+        </bds-button-icon>
+        <bds-button-icon v-if="editable"
+          class="editIco"
+          icon="edit"
+          variant="primary"
+          size="short"
+          v-on:click="toggleEdit">
+        </bds-button-icon> 
         <div class="text-left" v-html="sanitize(computedText)"></div>
         <div class="fixed-options disable-selection">
           <ul>
@@ -75,12 +91,21 @@
 
   <div class="blip-container select" v-else-if="!addOption">
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
-      <button class="btn saveIco closeIco" @click="selectCancel()" >
-        <img :src="closeSvg" />
-      </button>
-      <button class="btn saveIco" :class="{'is-disabled': errors.any() }" @click="selectSave(text)">
-        <img :src="approveSvg" />
-      </button>
+      <bds-button-icon
+        class="btn saveIco closeIco icon-button-margin"
+        icon="close"
+        variant="ghost"
+        size="short"
+        v-on:click="selectCancel()"
+      ></bds-button-icon>
+      <bds-button-icon 
+        class="btn saveIco icon-button-margin"
+        icon="check"
+        variant="primary"
+        size="short"
+        :disabled="errors.any()"
+        v-on:click="selectSave(text)"
+      ></bds-button-icon>
       <div class="form-group">
         <textarea @keydown.enter="selectSave(text, $event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="text" />
         <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>

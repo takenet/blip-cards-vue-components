@@ -3,12 +3,20 @@
     <div
       :class="'bubble ' + position + (this.title == null && this.text == null ? ' text-link': '' )"
     >
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg">
-      </div>
-      <div v-if="editable" class="editIco" @click="toggleEdit">
-        <img :src="editSvg">
-      </div>
+      <bds-button-icon v-if="deletable && !isEditing"
+          class="editIco trashIco icon-button-margin"
+          icon="trash"
+          variant="delete"
+          size="short"
+          v-on:click="trash(document)"
+        ></bds-button-icon>
+        <bds-button-icon v-if="editable"
+          class="editIco icon-button-margin"
+          icon="edit"
+          variant="primary"
+          size="short"
+          v-on:click="toggleEdit"
+        ></bds-button-icon>
       <span
         v-if="this.previewTitle || this.previewText"
         class="link web-link-wrapper"
@@ -47,12 +55,21 @@
   </div>
   <div v-else class="blip-container web-link">
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
-      <button class="btn saveIco" @click="webLinkSave()" :class="{'is-disabled': errors.any() }">
-        <img :src="approveSvg">
-      </button>
-      <button class="btn saveIco closeIco" @click="cancel()">
-        <img :src="closeSvg">
-      </button>
+      <bds-button-icon 
+        class="btn saveIco closeIco"
+        icon="close"
+        variant="ghost"
+        size="short"
+        v-on:click="cancel()"
+      ></bds-button-icon>
+      <bds-button-icon 
+        class="btn saveIco"
+        icon="check"
+        variant="primary"
+        size="short"
+        :disabled="errors.any()"
+        v-on:click="webLinkSave()"
+      ></bds-button-icon>
       <div class="form-group">
         <input
           type="text"

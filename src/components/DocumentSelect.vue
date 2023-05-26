@@ -5,12 +5,20 @@
     :class="isFailedMessage(status, position)"
   >
     <div :class="'bubble ' + position">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg">
-      </div>
-      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img :src="editSvg">
-      </div>
+      <bds-button-icon v-if="deletable && !isEditing"
+        class="editIco trashIco icon-margin"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable && !isEditing"
+        class="editIco icon-margin"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon> 
       <div class="header">
         <div
           v-if="this.document.header.value.uri"
@@ -83,16 +91,21 @@
       novalidate
       v-on:submit.prevent
     >
-      <button
-        class="btn saveIco"
-        @click="documentSelectSave()"
-        :class="{'is-disabled': errors.any() }"
-      >
-        <img :src="approveSvg">
-      </button>
-      <button class="btn saveIco closeIco" @click="cancel()">
-        <img :src="closeSvg">
-      </button>
+    <bds-button-icon 
+      class="btn saveIco closeIco"
+      icon="close"
+      variant="ghost"
+      size="short"
+      v-on:click="cancel()"
+    ></bds-button-icon>
+    <bds-button-icon 
+      class="btn saveIco"
+      icon="check"
+      variant="primary"
+      size="short"
+      :disabled="errors.any()"
+      v-on:click="documentSelectSave()"
+    ></bds-button-icon>
       <div class="header">
         <div class="form-group">
           <input
@@ -858,6 +871,9 @@ export default {
   .blip-document-select-metadata {
     padding: 10px 5px 0 0;
     text-align: right;
+  }
+  .icon-margin{
+    margin-right: 30%;
   }
 }
 </style>
