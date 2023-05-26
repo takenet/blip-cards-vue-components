@@ -101,12 +101,6 @@
         </div>
       </div>
     </div>
-    <blip-card-date
-      :status="status"
-      :position="position"
-      :date="date"
-      :failed-to-send-msg="failedToSendMsg"
-    ></blip-card-date>
   </div>
 </template>
 
@@ -119,16 +113,6 @@ import Broken from '../assets/img/Broken.svg'
 export default {
   name: 'interactive-button',
   mixins: [base],
-  props: {
-    status: {
-      type: String,
-      default: ''
-    },
-    failedToSendMsg: {
-      type: String,
-      default: 'Falha ao enviar a mensagem.'
-    }
-  },
   computed: {
     buttons() {
       return this.document.interactive.action.buttons

@@ -128,6 +128,9 @@
         <button class="button" @click="sendMenuListMultiSection">
           ENVIAR Menu List Multi Section
         </button>
+        <button class="button" @click="sendQuickReply">
+          ENVIAR Quick Reply
+        </button>
       </div>
 
       <div v-else>
@@ -708,6 +711,60 @@ export default {
                   ]
                 }
               ]
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendQuickReply: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'button',
+            body: {
+              text: 'conteúdo de teste'
+            },
+            action: {
+              buttons: [
+                {
+                  type: 'reply',
+                  reply: {
+                    id: '1',
+                    title: 'botão 1'
+                  }
+                },
+                {
+                  type: 'reply',
+                  reply: {
+                    id: '2',
+                    title: 'botão 2'
+                  }
+                },
+                {
+                  type: 'reply',
+                  reply: {
+                    id: '3',
+                    title: 'botão 3'
+                  }
+                }
+              ]
+            },
+            header: {
+              type: 'image',
+              text: 'take image',
+              image: {
+                link:
+                  'https://sindinfor.org.br/wp-content/uploads/2020/10/take-og-image.png'
+              }
+            },
+            footer: {
+              text: 'rodapé de testes'
             }
           }
         }
