@@ -94,7 +94,7 @@
           </div>
         </div>
         <div v-if="this.text" class="video-description">
-          <bds-typo tag="p" variant="fs-16" bold="regular" margin="false" v-html="sanitize(this.text)"></bds-typo>
+          <bds-typo tag="p" variant="fs-16" bold="regular" margin="false" :class="{ 'video-description-ligth': position === 'right' }">{{ this.text }}</bds-typo>
         </div>
       </div>
       <div class="form" v-else>
@@ -384,6 +384,10 @@ export default {
 
 #blipVideo {
   max-height: 300px;
+}
+
+.video-description-ligth {
+  color: $vue-white; // Verificar cor para o rebranding
 }
 
 .media-link.video {
