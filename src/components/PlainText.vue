@@ -10,7 +10,7 @@
           class="editIco trashIco icon-button-margin icon-button-top"
           icon="trash"
           variant="delete"
-          size="short"
+          size="standard"
           v-on:click="trash(document)"
         ></bds-button-icon>
         <bds-button-icon v-if="editable"

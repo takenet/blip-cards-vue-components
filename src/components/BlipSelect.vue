@@ -92,14 +92,14 @@
   <div class="blip-container select" v-else-if="!addOption">
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <bds-button-icon
-        class="btn saveIco closeIco"
+        class="btn saveIco closeIco icon-button-margin"
         icon="close"
         variant="ghost"
         size="short"
         v-on:click="selectCancel()"
       ></bds-button-icon>
       <bds-button-icon 
-        class="btn saveIco"
+        class="btn saveIco icon-button-margin"
         icon="check"
         variant="primary"
         size="short"
