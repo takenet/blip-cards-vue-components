@@ -11,16 +11,18 @@
         </div>
         <div class="fixed-options disable-selection">
           <ul>
-            <div class="button-text">
+            <div class="menu-list-padding">
               <bds-typo variant="fs-16" bold="regular" italic="true" class="disable-selection menu-list-option" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
             </div>
             <li v-for="(section, index) in sections" v-bind:key="index" class="disable-selection" v-bind:class="{ readonly: readonly }">
               <div>
                 <li v-if="section.title" class="section-title" v-bind:class="{ readonly: readonly }">
-                  <bds-typo variant="fs-16" bold="semi-bold" class="menu-list-option">{{ sanitize(section.title) }}</bds-typo>
+                  <div class="menu-list-padding">
+                    <bds-typo variant="fs-16" bold="semi-bold" class="menu-list-option">{{ sanitize(section.title) }}</bds-typo>
+                  </div>
                 </li>
                 <li v-for="(row, index) in section.rows" v-bind:key="index" class="disable-selection" v-bind:class="{ readonly: readonly }">
-                  <div>
+                  <div class="menu-list-padding">
                     <bds-typo variant="fs-16" bold="regular" class="menu-list-option">{{ sanitize(row.title) }}</bds-typo>
                   </div>
                 </li>
@@ -267,6 +269,12 @@ export default {
   color: $vue-white; // verificar cor para o rebranding
 }
 
+.menu-list-padding {
+  padding: $bubble-padding;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
 .menu-list .bubble {
   padding: $bubble-padding;
   padding-left: 0px;
@@ -293,18 +301,15 @@ export default {
   margin-top: -10px;
 }
 
-.button-text {
-  padding-top: 0px!important;
-  padding-bottom: 0px!important;
-  padding-left: 10px;
-}
-
 .section-title {
   border-top: none;
   border-bottom: 1px solid #6E7B91!important;
-  padding-left: 10px!important;
   padding-top: 0px;
   padding-bottom: 0px;
+
+  div {
+    text-align: left!important;
+  }
 }
 
 .blip-card .fixed-options li {
