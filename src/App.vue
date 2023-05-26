@@ -128,8 +128,8 @@
         <button class="button" @click="sendMenuListMultiSection">
           ENVIAR Menu List Multi Section
         </button>
-        <button class="button" @click="sendQuickReply">
-          ENVIAR Quick Reply
+        <button class="button" @click="sendReplyButton">
+          ENVIAR Reply Button
         </button>
       </div>
 
@@ -717,7 +717,7 @@ export default {
       })
       this.send()
     },
-    sendQuickReply: function() {
+    sendReplyButton: function() {
       this.json = JSON.stringify({
         id: '16b0d902-7487-4c5c-b49c-8103558621e7',
         direction: 'sent',
