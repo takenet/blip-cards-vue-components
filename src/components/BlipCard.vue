@@ -335,6 +335,25 @@
           :mail-label="translations.mailLabel"
           :address-label="translations.addressLabel" />
 
+        <application-json
+          v-else-if="document.type === 'application/json'"
+          class="blip-card"
+          @updated="updatedPhotoMargin"
+          :failed-to-send-msg="translations.failedToSend"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :translations="translations" />
+
         <unsuported-content
           v-else
           class="blip-card"

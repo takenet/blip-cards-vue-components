@@ -25,6 +25,9 @@ import Survey from './components/Survey'
 import Contact from './components/Contact'
 import InteractiveButton from './components/InteractiveButton'
 import BlipCardDate from './components/BlipCardDate'
+import ApplicationJSon from './components/ApplicationJSon'
+import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
+import MenuList from './components/ApplicationJSon/MenuList'
 
 // Validators
 import JsonValidator from './validators/jsonValidator'
@@ -67,6 +70,9 @@ function install(Vue) {
   components.push(Vue.component(Contact.name, Contact))
   components.push(Vue.component(InteractiveButton.name, InteractiveButton))
   components.push(Vue.component(BlipCardDate.name, BlipCardDate))
+  components.push(Vue.component(ApplicationJSon.name, ApplicationJSon))
+  components.push(Vue.component(MenuListPrompt.name, MenuListPrompt))
+  components.push(Vue.component(MenuList.name, MenuList))
 
   Vue.component(Editable.name, Editable)
 
