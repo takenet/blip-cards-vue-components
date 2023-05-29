@@ -31,16 +31,28 @@
         :readonly="readonly"
         @updated="emitUpdate"/>
 
-    <div class="flex" :class="'notification ' + position" v-if="date">
-      <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
-      <img v-else-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
-      <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
-      <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
-      <div v-else-if="this.status === 'failed' && this.position === 'right'" class="failure">
-          {{ failedToSendMsg }}
-        </div>
-      {{ date }}
-    </div>
+    <interactive-button
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'button'"
+      class="blip-card"
+      :document="document"
+      :full-document="fullDocument"
+      :position="position"
+      :date="date"
+      :on-save="onSave"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="onMetadataEdit"
+      :on-cancel="onCancel"
+      :editable="editable"
+      :deletable="deletable"
+      :editing="editing"
+    />
+
+    <blip-card-date
+      :status="status"
+      :position="position"
+      :date="date"
+      :failed-to-send-msg="failedToSendMsg"
+    ></blip-card-date>
   </div>
 </template>
 
