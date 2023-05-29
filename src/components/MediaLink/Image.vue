@@ -20,8 +20,8 @@
           :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')"
           :style="styleObject"
           @click="(editable ? null : handleImageLink())"
-        ></div>
-
+        >
+        </div>
         <div class="title" v-if="document.title || document.text">
           <strong v-if="document.title" v-html="sanitize(document.title)"></strong>
           <span v-if="document.text" v-html="sanitize(document.text)"></span>
