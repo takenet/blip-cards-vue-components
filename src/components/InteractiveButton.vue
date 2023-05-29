@@ -2,7 +2,7 @@
   <div class="blip-container interactive-button">
     <div :class="'bubble ' + position">
       <div class="interactive-button-container">
-        <div class="interactive-header">
+        <div v-if="header" class="interactive-header">
           <div v-if="header.type === 'document'" class="interactive-file" @click="handleFileLink(header.document.link)">
             <div class="file-icon-wrapper">
               <img class="file-icon" :src="mimeType | fileIconFilter" />
@@ -63,7 +63,7 @@
             </video>
           </div>
         </div>
-        <div class="align-text">
+        <div v-if="body" class="align-text">
           <bds-typo
             v-if="body.text"
             tag="p"
@@ -74,7 +74,7 @@
             v-html="sanitize(body.text)"
           ></bds-typo>
         </div>
-        <div v-if="footer.text" class="align-text">
+        <div v-if="footer" class="align-text">
           <bds-typo
             v-if="footer.text"
             tag="span"
