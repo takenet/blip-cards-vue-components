@@ -15,7 +15,7 @@
                   margin="false"
                   variant="fs-16"
                   bold="regular"
-                  class="dark-color truncate"
+                  class="color-content-default truncate"
                   v-html="sanitize(header.document.filename)"
                 ></bds-typo>
                 <bds-typo
@@ -24,7 +24,7 @@
                   margin="false"
                   variant="fs-16"
                   bold="regular"
-                  class="dark-color truncate"
+                  class="color-content-default truncate"
                   v-html="sanitize(header.document.link)"
                 ></bds-typo>
               </div>
@@ -53,7 +53,7 @@
               margin="false"
               variant="fs-16"
               bold="bold"
-              class="color-white"
+              class="color-content-default"
               v-html="sanitize(header.text)"
             ></bds-typo>
           </div>
@@ -70,7 +70,7 @@
             margin="false"
             variant="fs-16"
             bold="regular"
-            class="color-white"
+            class="color-content-default"
             v-html="sanitize(body.text)"
           ></bds-typo>
         </div>
@@ -81,7 +81,7 @@
             margin="false"
             variant="fs-14"
             bold="regular"
-            class="color-white"
+            class="color-content-default"
             v-html="sanitize(footer.text)"
           ></bds-typo>
         </div>
@@ -93,7 +93,7 @@
                 margin="true"
                 variant="fs-16"
                 bold="regular"
-                class="color-white"
+                class="color-primary"
                 v-html="sanitize(item.reply.title)"
               ></bds-typo>
             </li>
@@ -201,24 +201,24 @@ $hard-round: 13px;
   list-style: none;
   padding: 0;
   margin: 0;
-  background: #313846;
+  background: $color-surface-3;
   text-align: center;
   border-bottom-left-radius: $hard-round;
 
   li {
     padding: 0.5rem;
     &:not(:last-child) {
-      border-bottom: 1px solid $vue-desk; // verificar cor para o rebranding
+      border-bottom: 1px solid $color-content-ghost;
     }
   }
 }
 
-.color-white {
-  color: $vue-white; // verificar cor para o rebranding
+.color-content-default {
+  color: $color-content-default;
 }
 
-.dark-color {
-  color: #3D4554; // verificar cor para o rebranding
+.color-primary {
+  color: $color-primary;
 }
 
 .interactive-header {
@@ -247,7 +247,7 @@ $hard-round: 13px;
 }
 
 .interactive-file {
-  background-color: #F4F7F8; // verificar cor para o rebranding
+  background-color: $color-surface-1;
   padding: 0;
   height: 80px;
   text-decoration: inherit;
@@ -261,6 +261,8 @@ $hard-round: 13px;
     display: flex;
     padding: 20px;
     padding-right: 10px;
+    background-color: $color-surface-2;
+    border-top-left-radius: $hard-round;
 
     .file-icon {
       display: flex;
