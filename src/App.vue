@@ -799,7 +799,10 @@ export default {
       disableLink: false,
       editable: true,
       deletable: true,
-      readonly: false
+      readonly: false,
+      translations: {
+        failedToSend: 'Falha ao enviar a mensagem.'
+      }
     }
   },
   components: {}
@@ -809,6 +812,10 @@ export default {
 
 <style lang="scss">
 @import 'styles/variables.scss';
+
+.light-theme {
+  background-color: $color-surface-2;
+}
 
 .float {
   float: left;

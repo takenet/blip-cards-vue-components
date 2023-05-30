@@ -1,12 +1,20 @@
 <template>
   <div>
     <div :class="'bubble ' + position">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
-      </div>
-      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img :src="editSvg" />
-      </div>
+      <bds-button-icon v-if="deletable && !isEditing"
+        class="editIco trashIco"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable && !isEditing"
+        class="editIco"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon> 
       <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!isEditing">
         <div class="video-player">
           <div class="sk-circle-wrapper" id="animation">
@@ -99,12 +107,21 @@
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button class="btn saveIco closeIco" @click="cancel()">
-            <img :src="closeSvg" />
-          </button>
-          <button class="btn saveIco" @click="videoSave()" :class="{'is-disabled': errors.any() }">
-            <img :src="approveSvg" />
-          </button>
+          <bds-button-icon 
+            class="btn saveIco closeIco"
+            icon="close"
+            variant="ghost"
+            size="short"
+            v-on:click="cancel()"
+          ></bds-button-icon>
+          <bds-button-icon 
+            class="btn saveIco"
+            icon="check"
+            variant="primary"
+            size="short"
+            :disabled="errors.any()"
+            v-on:click="videoSave()"
+          ></bds-button-icon>
           <div class="form-group">
             <input type="text" name="video" class="form-control" v-model="videoUri" :placeholder="videoUriMsg" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
             <span v-if="errors.has('video')" class="help input-error">{{ errors.first('video') }}</span>
@@ -394,23 +411,29 @@ export default {
   .bubble {
     max-width: $bubble-width;
     padding: 0;
-    color: $vue-london;
+    color: $color-content-default;
   }
   .left, .middle {
+    .slider {
+      background-color: $color-surface-3;
+    }
     .progress .pin {
-      background-color: $vue-neon-blip;
+      background-color: $color-content-default;
     }
     .video-player-button {
-      fill: $vue-london;
+      fill: $color-content-default;
     }
   }
   .right {
+    .slider {
+      background-color: $color-content-ghost;
+    }
     color: $vue-cotton;
     .progress .pin {
-      background-color: $vue-white;
+      background-color: $color-content-default;
     }
     .video-player-button {
-      fill: $vue-white;
+      fill: $color-content-default;
     }
   }
 
@@ -424,7 +447,7 @@ export default {
   }
 
   .notification {
-    color: $vue-london;
+    color: $color-content-disable;
   }
 
   .video-player-wrapper {
@@ -557,13 +580,12 @@ export default {
       border-radius: 1.5px;
       height: 3px;
       flex-grow: 1;
-      background-color: $vue-cotton;
       position: relative;
 
       .progress {
         width: 0;
         height: 100%;
-        background-color: $vue-neon-blip;
+        background-color: $color-primary;
         border-radius: inherit;
         position: absolute;
         pointer-events: none;

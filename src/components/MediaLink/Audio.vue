@@ -1,12 +1,20 @@
 <template>
   <div>
     <div :class="'bubble ' + position">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" alt />
-      </div>
-      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img class="loadinIcon" :src="editSvg" alt />
-      </div>
+      <bds-button-icon v-if="deletable && !isEditing"
+        class="editIco trashIco icon-button-margin icon-button-top"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable && !isEditing" 
+        class="icon-button-margin editIco icon-button-top"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon> 
       <div class="audio-player-wrapper" v-if="!isEditing">
         <div class="audio-player-controls">
           <div v-if="!isLoading" class="audio-play-pause">
@@ -83,7 +91,7 @@
 
           </div>
 
-          <div> 
+          <div>
              <button class="blip-change-playback-rate" @click="changePlaybackRate">
                x{{ this.playbackRate }}
               </button>
@@ -92,16 +100,21 @@
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button class="btn saveIco closeIco" @click="cancel()">
-            <img :src="closeSvg" alt />
-          </button>
-          <button
-            class="btn saveIco"
-            @click="audioSave()"
-            :class="{ 'is-disabled': errors.any() }"
-          >
-            <img :src="approveSvg" alt />
-          </button>
+          <bds-button-icon 
+            class="btn saveIco closeIco icon-button-margin icon-button-top"
+            icon="close"
+            variant="ghost"
+            size="short"
+            v-on:click="cancel()"
+          ></bds-button-icon>
+          <bds-button-icon 
+            class="btn saveIco icon-button-margin icon-button-top"
+            icon="check"
+            variant="primary"
+            size="short"
+            :disabled="errors.any()"
+            v-on:click="audioSave()"
+          ></bds-button-icon>
           <div class="form-group">
             <input
               type="text"
@@ -293,39 +306,45 @@ export default {
   .bubble {
     padding: 0;
     width: $bubble-width;
-    color: $vue-london;
+    color: $color-content-default;
   }
 
   .left,
   .middle {
+    .slider {
+      background-color: $color-surface-3;
+    }
     .progress .pin {
-      background-color: $vue-neon-blip;
+      background-color: $color-content-default;
     }
     .audio-player-button {
-      fill: $vue-london;
+      fill: $color-content-default;
     }
-     .blip-change-playback-rate {	
-      border-color: $vue-light-gray;      
-      color: $vue-light-gray; 
+     .blip-change-playback-rate {
+      border-color: $color-content-ghost;
+      color: $color-content-default;
     }
   }
   .right {
     color: $vue-cotton;
+    .slider {
+      background-color: $color-content-ghost;
+    }
     .progress .pin {
-      background-color: $vue-white;
+      background-color: $color-content-default;
     }
     .audio-player-button {
-      fill: $vue-white;
+      fill: $color-content-default;
     }
 
-     .blip-change-playback-rate {	
-      border-color: $vue-white;      
-      color: $vue-white; 
+     .blip-change-playback-rate {
+      border-color: $color-content-ghost;
+      color: $color-content-default;
 	  }
   }
 
   .notification {
-    color: $vue-london;
+    color: $color-content-disable;
   }
 
   .form {
@@ -350,7 +369,7 @@ export default {
       cursor: pointer;
     }
 
-     .blip-change-playback-rate {	
+     .blip-change-playback-rate {
       display: inline-block;
       cursor: pointer;
       margin: 0;
@@ -358,14 +377,13 @@ export default {
       text-align: center;
       white-space: nowrap;
       font-weight: 600;
-      font-family: 'Nunito sans' !important;
 	    background-color: transparent;
       border-width: 1px;
 	    border-style: solid;
 	    border-radius: 8px;
 	    outline: none;
-      text-decoration: none;   
-      width: 2.75rem; 
+      text-decoration: none;
+      width: 2.75rem;
 	    height: 2rem;
 	  }
 
@@ -384,7 +402,6 @@ export default {
     .audio-player-time {
       display: flex;
       justify-content: space-between;
-      font-family: 'Nunito', sans-serif;
       font-size: x-small;
       line-height: 10px;
       color: inherit;
@@ -413,13 +430,12 @@ export default {
     .slider {
       border-radius: 1.5px;
       height: 3px;
-      background-color: $vue-cotton;
       position: relative;
 
       .progress {
         width: 0;
         height: 100%;
-        background-color: $vue-neon-blip;
+        background-color: $color-primary;
         border-radius: inherit;
         position: absolute;
         pointer-events: none;
@@ -435,12 +451,12 @@ export default {
           box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);
         }
       }
-    } 
+    }
   }
 
   .blip-media-link-metadata {
     margin-top: -10px;
     padding: 0 10px 5px 0;
-  } 
+  }
 }
 </style>

@@ -337,13 +337,12 @@ export default {
     margin-top: -22px;
     padding: 8px 16px;
     opacity: 0.8;
-    color: $vue-light-blip;
+    color: $color-primary;
     font-weight: bold;
     font-size: 18px;
     transition: 0.6s ease;
     border-radius: 5px 0 0 5px;
-    box-shadow: -2px 2px 20px 0 rgba(51, 60, 74, 0.4);
-    background-color: #ffffff;
+    background-color: $color-surface-1;
   }
 
   .prev {

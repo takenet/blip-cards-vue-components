@@ -1,19 +1,27 @@
 <template>
   <div>
     <div :class="'bubble ' + position">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg">
-      </div>
-      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img :src="editSvg">
-      </div>
+      <bds-button-icon v-if="deletable && !isEditing"
+        class="editIco trashIco"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable && !isEditing"
+        class="editIco"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon> 
       <div class="header" :id="id" v-if="!isEditing">
         <div
           :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')"
           :style="styleObject"
           @click="(editable ? null : handleImageLink())"
-        ></div>
-
+        >
+        </div>
         <div class="title" v-if="document.title || document.text">
           <strong v-if="document.title" v-html="sanitize(document.title)"></strong>
           <span v-if="document.text" v-html="sanitize(document.text)"></span>
@@ -22,12 +30,21 @@
 
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="cancel()">
-            <img :src="closeSvg">
-          </button>
-          <button class="btn saveIco" @click="imgSave()" :class="{'is-disabled': errors.any() }">
-            <img :src="approveSvg">
-          </button>
+          <bds-button-icon 
+            class="btn saveIco closeIco"
+            icon="close"
+            variant="ghost"
+            size="short"
+            v-on:click="cancel()"
+          ></bds-button-icon>
+          <bds-button-icon 
+            class="btn saveIco"
+            icon="check"
+            variant="primary"
+            size="short"
+            :disabled="errors.any()"
+            v-on:click="imgSave()">
+          </bds-button-icon>
           <div class="form-group">
             <input
               type="text"
@@ -285,7 +302,6 @@ export default {
 
   .form-check {
     padding: 0 10px;
-    color: $vue-cloud;
     margin: 0;
 
     input[type='radio'] {
@@ -311,7 +327,7 @@ export default {
     .check {
       display: block;
       position: absolute;
-      border: 1px solid $vue-time;
+      border: 1px solid $color-content-default;
       border-radius: 100%;
       height: 16px;
       width: 16px;
@@ -338,11 +354,11 @@ export default {
       -ms-transition: background 0.25s linear;
     }
     input[type='radio']:checked ~ .check {
-      border: 1px solid $vue-light-blip;
+      border: 1px solid $color-content-default;
     }
 
     input[type='radio']:checked ~ .check::before {
-      background: $vue-light-blip;
+      background: $color-primary;
     }
   }
 

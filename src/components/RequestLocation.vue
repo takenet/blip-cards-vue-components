@@ -1,13 +1,20 @@
 <template>
   <div v-if="!isEditing" class="blip-container request-location" :class="isFailedMessage(status, position)">
     <div :class="`bubble ${position}`">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
-      </div>
-      <div v-if="editable" class="editIco" @click="toggleEdit">
-        <img :src="editSvg" />
-      </div>
-
+      <bds-button-icon v-if="deletable"
+        class="editIco trashIco icon-button-margin icon-button-top"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable"
+        class="editIco icon-button-margin icon-button-top"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon>
       <div v-if="!previewDocument.hasPreview" class="label-wrappper">
         <span>{{ previewDocument.content }}</span>
       </div>
@@ -41,13 +48,7 @@
           <li @click="select()">
             <div class="wrapper disable-selection">
               <div class="locationIcon">
-                <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g id="pinIcon">
-                        <path d="M0,12 C0,5.372583 5.37112582,0 12,0 C18.627417,0 24,5.37112582 24,12 C24,18.627417 18.6288742,24 12,24 C5.372583,24 0,18.6288742 0,12 Z M12,12 C10.8956,12 10,11.1044 10,10 C10,8.8952 10.8956,8 12,8 C13.1044,8 14,8.8952 14,10 C14,11.1044 13.1044,12 12,12 Z M7,10.0017561 C7,10.9978049 7.327,11.9392195 7.82066667,12.7099024 C8.83966667,14.3000976 12,19 12,19 C12,19 15.1603333,14.3000976 16.1793333,12.7099024 C16.673,11.9392195 17,10.9978049 17,10.0017561 C17,7.24443902 14.768,5 12,5 C9.232,5 7,7.24443902 7,10.0017561 Z" id="Combined-Shape"></path>
-                    </g>
-                  </g>
-              </svg>
+                <bds-icon name="localization"></bds-icon>
               </div>
               <div class="text">
                 <span v-text="buttonLabelMsg"></span>
@@ -62,12 +63,21 @@
     <div class="blip-container">
       <div :class="`bubble ${position}`">
         <form novalidate v-on:submit.prevent>
-          <button class="btn saveIco closeIco" @click="cancel()">
-            <img :src="closeSvg" />
-          </button>
-          <button class="btn saveIco" @click="saveLocation()" :class="{'is-disabled': errors.any() }">
-            <img :src="approveSvg" />
-          </button>
+          <bds-button-icon 
+            class="btn saveIco closeIco"
+            icon="close"
+            variant="ghost"
+            size="short"
+            v-on:click="cancel()"
+          ></bds-button-icon>
+          <bds-button-icon 
+            class="btn saveIco"
+            icon="check"
+            variant="primary"
+            size="short"
+            :disabled="errors.any()"
+            v-on:click="saveLocation()"
+          ></bds-button-icon>
           <div class="form-group">
             <textarea @keydown.enter="saveLocation($event)" name="text" class="form-control" v-validate="'required'" :class="{'input-error': errors.has('text') }" v-model="text"></textarea>
             <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
@@ -225,13 +235,12 @@ export default {
       cursor: pointer;
       display: inline-flex;
       align-items: end;
-      background-color: #daf2f4;
-      border: 1px solid #0cc8cc;
-      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+      background-color: $color-system;
+      border: 1px solid $color-content-ghost;
       border-radius: 20px;
       padding: 7px 10px;
       margin: 2px;
-      color: #0cc8cc;
+      color: $color-content-default;
       font-size: 16px;
       font-weight: 500;
       min-width: 70px;
