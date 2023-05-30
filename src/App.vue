@@ -119,6 +119,18 @@
         <button class="button" @click="toogleBlipGroupCard">
           CRIAR/DESTRUIR scroll
         </button>
+        <button class="button" @click="sendContact">
+          ENVIAR Contato
+        </button>
+        <button class="button" @click="sendMenuList">
+          ENVIAR Menu List
+        </button>
+        <button class="button" @click="sendMenuListMultiSection">
+          ENVIAR Menu List Multi Section
+        </button>
+        <button class="button" @click="sendReplyButton">
+          ENVIAR Reply Button
+        </button>
       </div>
 
       <div v-else>
@@ -551,6 +563,210 @@ export default {
           scale: 'numeric5',
           question: 'Would you recommend our product? Rate us',
           score: 0
+        }
+      })
+      this.send()
+    },
+    sendContact: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@wa.gw.msging.net',
+        type: 'application/vnd.lime.contact+json',
+        content: {
+          name: 'My Test Contact Name',
+          email: 'mycontact@take.net',
+          phoneNumber: '+55 33 3131-3131',
+          cellPhoneNumber: '+55 33 93131-3131',
+          address: 'Contact Address, 1000',
+          extras: {
+            org: 'Take Blip'
+          },
+          firstName: 'Contact',
+          lastName: 'Last Name'
+        }
+      })
+      this.send()
+    },
+    sendMenuList: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@wa.gw.msging.net',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'list',
+            header: {
+              type: 'text',
+              text: 'E então, com qual assunto posso te ajudar?'
+            },
+            body: {
+              text: 'Clique para abrir as opções 👇'
+            },
+            action: {
+              button: 'Escolher assunto',
+              sections: [
+                {
+                  rows: [
+                    {
+                      id: 'id:1.0',
+                      title: '🤖 Como funciona?',
+                      description: 'Entender como o Blip funciona, seus benefícios, preços e mais'
+                    },
+                    {
+                      id: 'id:1.1',
+                      title: '🤝 Contratar Take Blip',
+                      description: 'Quero conversar com o time de vendas para tirar dúvidas e contratar'
+                    },
+                    {
+                      id: 'id:1.2',
+                      title: '💬 Já uso o Blip',
+                      description: 'Se você é cliente Take Blip e precisa de ajuda ou suporte, clique aqui'
+                    },
+                    {
+                      id: 'id:1.3',
+                      title: '👥 Parceria',
+                      description: 'Tenho interesse em ser uma empresa parceira'
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendMenuListMultiSection: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@wa.gw.msging.net',
+        type: 'application/json',
+        content: {
+          type: 'interactive',
+          interactive: {
+            type: 'list',
+            header: {
+              type: 'text',
+              text: 'header-content'
+            },
+            body: {
+              text: 'text-body-content'
+            },
+            footer: {
+              text: 'footer-content'
+            },
+            action: {
+              button: 'Choose subject',
+              sections: [
+                {
+                  title: 'Section 1',
+                  rows: [
+                    {
+                      id: '1',
+                      title: '💬 My row 1',
+                      description: 'My row 1 description'
+                    },
+                    {
+                      id: '2',
+                      title: '🤖 My row 2',
+                      description: 'My row 2 description'
+                    },
+                    {
+                      id: '3',
+                      title: 'My row 3',
+                      description: 'My row 3 description'
+                    },
+                    {
+                      id: '4',
+                      title: 'My row 4',
+                      description: 'My row 4 description'
+                    }
+                  ]
+                },
+                {
+                  title: 'Section 2',
+                  rows: [
+                    {
+                      id: '5',
+                      title: '💬 My row 5',
+                      description: 'My row 5 description'
+                    },
+                    {
+                      id: '6',
+                      title: '🤖 My row 6',
+                      description: 'My row 6 description'
+                    },
+                    {
+                      id: '7',
+                      title: 'My row 7',
+                      description: 'My row 7 description'
+                    },
+                    {
+                      id: '8',
+                      title: 'My row 8',
+                      description: 'My row 8 description'
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyButton: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'button',
+            body: {
+              text: 'conteúdo de teste'
+            },
+            action: {
+              buttons: [
+                {
+                  type: 'reply',
+                  reply: {
+                    id: '1',
+                    title: 'botão 1'
+                  }
+                },
+                {
+                  type: 'reply',
+                  reply: {
+                    id: '2',
+                    title: 'botão 2'
+                  }
+                },
+                {
+                  type: 'reply',
+                  reply: {
+                    id: '3',
+                    title: 'botão 3'
+                  }
+                }
+              ]
+            },
+            header: {
+              type: 'image',
+              text: 'take image',
+              image: {
+                link:
+                  'https://sindinfor.org.br/wp-content/uploads/2020/10/take-og-image.png'
+              }
+            },
+            footer: {
+              text: 'rodapé de testes'
+            }
+          }
         }
       })
       this.send()
