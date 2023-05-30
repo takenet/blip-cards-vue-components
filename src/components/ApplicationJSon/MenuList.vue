@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isEditing" class="blip-container menu-list">
-    
+
     <div :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
@@ -12,13 +12,13 @@
         <div class="fixed-options disable-selection">
           <ul>
             <div class="menu-list-padding">
-              <bds-typo variant="fs-16" bold="regular" italic="true" class="disable-selection menu-list-option" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
+              <bds-typo variant="fs-16" bold="regular" italic="true" class="disable-selection color-content-ghost" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
             </div>
             <li v-for="(section, index) in sections" v-bind:key="index" class="disable-selection" v-bind:class="{ readonly: readonly }">
               <div>
                 <li v-if="section.title" class="section-title" v-bind:class="{ readonly: readonly }">
                   <div class="menu-list-padding">
-                    <bds-typo variant="fs-16" bold="semi-bold" class="menu-list-option">{{ sanitize(section.title) }}</bds-typo>
+                    <bds-typo variant="fs-16" bold="semi-bold" class="color-content-default">{{ sanitize(section.title) }}</bds-typo>
                   </div>
                 </li>
                 <li v-for="(row, index) in section.rows" v-bind:key="index" class="disable-selection" v-bind:class="{ readonly: readonly }">
@@ -52,7 +52,7 @@
           <li v-for="(section, indexSection) in sections" v-bind:key="indexSection">
             <div>
               <li v-if="section.title" class="section-title" @click="editOption(section, index, $event)">
-                <bds-typo variant="fs-16" bold="semi-bold" class="menu-list-option">{{ sanitize(section.title) }}</bds-typo>
+                <bds-typo variant="fs-16" bold="semi-bold" class="color-content-default">{{ sanitize(section.title) }}</bds-typo>
               </li>
               <li v-for="(row, indexRow) in section.rows" v-bind:key="indexRow" @click="editOption(row, indexSection, indexRow, $event)">
                 <div>
@@ -266,7 +266,15 @@ export default {
 @import '../../styles/variables.scss';
 
 .menu-list-option {
-  color: $vue-white; // verificar cor para o rebranding
+  color: $color-primary;
+}
+
+.color-content-default {
+  color: $color-content-default;
+}
+
+.color-content-ghost {
+  color: $color-content-ghost;
 }
 
 .menu-list-padding {
@@ -281,10 +289,6 @@ export default {
   padding-right: 0px;
   min-width: 206px;
   text-align: left;
-  border-top: 1px solid #6E7B91!important;
-  border-left: 1px solid #6E7B91!important;
-  border-bottom: 1px solid #6E7B91!important;
-  border-right: 1px solid #6E7B91!important;
 }
 
 .menu-list .fixed-options li:last-child {
@@ -303,7 +307,7 @@ export default {
 
 .section-title {
   border-top: none;
-  border-bottom: 1px solid #6E7B91!important;
+  border-bottom: 1px solid $color-content-ghost !important;
   padding-top: 0px;
   padding-bottom: 0px;
 
@@ -324,16 +328,16 @@ export default {
   margin-right: 0px;
 }
 
-.blip-card .left .fixed-options li, 
-.middle .fixed-options li, 
+.blip-card .left .fixed-options li,
+.middle .fixed-options li,
 .right .fixed-options li {
   color: $vue-light-blip;
   border-top: none!important;
-  border-bottom: 1px solid #6E7B91!important;
+  border-bottom: 1px solid $color-content-ghost !important;
 }
 
-.blip-card .left .fixed-options li li:first, 
-.middle .fixed-options li:first, 
+.blip-card .left .fixed-options li li:first,
+.middle .fixed-options li:first,
 .right .fixed-options li:first {
   border-top: none!important;
   border-bottom: none!important;
@@ -341,8 +345,8 @@ export default {
   padding-bottom: 0px;
 }
 
-.blip-card .left .fixed-options li:last-child, 
-.middle .fixed-options li:last-child, 
+.blip-card .left .fixed-options li:last-child,
+.middle .fixed-options li:last-child,
 .right .fixed-options li:last-child {
   border-top: none!important;
   border-bottom: none!important;

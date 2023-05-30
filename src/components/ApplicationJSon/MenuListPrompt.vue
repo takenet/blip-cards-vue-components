@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isEditing" class="blip-container menu-list-prompt">
-    
+
     <div :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
@@ -11,10 +11,10 @@
         </div>
         <div class="disable-selection">
           <div class="header-text">
-            <bds-typo variant="fs-16" bold="bold" line-height="plus" class="disable-selection menu-list-prompt-option" v-bind:class="{ readonly: readonly }">{{ headerText }}</bds-typo>
+            <bds-typo variant="fs-16" bold="bold" line-height="plus" class="disable-selection color-content-default" v-bind:class="{ readonly: readonly }">{{ headerText }}</bds-typo>
           </div>
           <div class="body-text">
-            <bds-typo variant="fs-16" bold="regular" line-height="plus" class="disable-selection menu-list-prompt-option" v-bind:class="{ readonly: readonly }">{{ bodyText }}</bds-typo>
+            <bds-typo variant="fs-16" bold="regular" line-height="plus" class="disable-selection color-content-default" v-bind:class="{ readonly: readonly }">{{ bodyText }}</bds-typo>
           </div>
           <div class="button-text text-center pointer">
             <div>
@@ -142,8 +142,12 @@ export default {
 <style scoped lang="scss">
 @import '../../styles/variables.scss';
 
+.color-content-default {
+  color: $color-content-default;
+}
+
 .menu-list-prompt-option {
-  color: $vue-white; // verificar cor para o rebranding
+  color: $color-primary;
 }
 
 .menu-list-prompt .bubble {
@@ -152,10 +156,6 @@ export default {
   padding-right: 0px;
   min-width: 206px;
   text-align: left;
-  border-top: 1px solid #6E7B91!important;
-  border-left: 1px solid #6E7B91!important;
-  border-bottom: 1px solid #6E7B91!important;
-  border-right: 1px solid #6E7B91!important;
 }
 
 .header-text {
@@ -174,7 +174,7 @@ export default {
   padding-top: 0px!important;
   padding-bottom: 0px!important;
   padding: $bubble-padding;
-  border-top: 0.5px solid #6E7B91;
+  border-top: 0.5px solid $color-content-ghost;
 
   div:first-child {
     text-align: center;
@@ -189,6 +189,7 @@ export default {
   }
 
   .menu-list-options-button-icon {
+    color: $color-primary;
     margin-top: 12px;
   }
 }
