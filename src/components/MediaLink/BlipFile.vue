@@ -1,12 +1,20 @@
 <template>
   <div class="application">
     <div :class="'bubble ' + position">
-      <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-        <img :src="trashSvg" />
-      </div>
-      <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-        <img :src="editSvg" />
-      </div>
+      <bds-button-icon v-if="deletable && !isEditing"
+        class="editIco trashIco icon-button-margin"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable && !isEditing"
+        class="editIco icon-button-margin"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon> 
       <div v-if="!isEditing" :class="`file-${position}`">
         <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
           <div class="file-icon-wrapper">
@@ -23,12 +31,21 @@
       </div>
       <div v-else>
         <form novalidate v-on:submit.prevent>
-          <button type="button" class="btn saveIco closeIco" @click="cancel()" >
-            <img :src="closeSvg" />
-          </button>
-          <button type="submit" class="btn saveIco" @click="fileSave()" :class="{'is-disabled': errors.any() }">
-            <img :src="approveSvg" />
-          </button>
+          <bds-button-icon 
+            class="btn saveIco closeIco"
+            icon="close"
+            variant="ghost"
+            size="short"
+            v-on:click="cancel()"
+          ></bds-button-icon>
+          <bds-button-icon 
+            class="btn saveIco"
+            icon="check"
+            variant="primary"
+            size="short"
+            :disabled="errors.any()"
+            v-on:click="fileSave()"
+          ></bds-button-icon>
           <div class="form-group">
             <input type="text" name="file" class="form-control uri" v-model="uri" :placeholder="fileUrlMsg" :class="{'input-error': errors.has('file') }" v-validate="'required|url'"/>
             <span v-if="errors.has('file')" class="help input-error">{{ errors.first('file') }}</span>
@@ -121,18 +138,35 @@ export default {
   .bubble {
     &.left, &.middle {
       .description-wrapper {
-        color: $vue-gray;
+        color: $color-content-default;
       }
     }
 
     &.right {
       .file-icon-wrapper {
-        background-color: $vue-white;
+        background-color: $color-surface-3;
         padding-right: 20px !important;
+        border-radius: 13px 0 0 13px;
       }
       .description-wrapper {
-        color: $vue-white;
+        background-color: $color-surface-2;
+        color: $color-content-default;
         padding-left: 20px !important;
+        border-radius: 0 2px 2px 0;
+      }
+    }
+
+    &.left {
+      .file-icon-wrapper {
+        background-color: $color-surface-2;
+        padding-right: 20px !important;
+        border-radius: 13px 0 0 2px;
+      }
+      .description-wrapper {
+        background-color: $color-surface-1;
+        color: $color-content-default;
+        padding-left: 20px !important;
+        border-radius: 0 13px 13px 0;
       }
     }
 
@@ -190,7 +224,7 @@ export default {
     .file-text {
       text-align: left;
       strong {
-        color: $vue-dark-gray;
+        color: $color-content-default;
         display: block;
       }
 
@@ -201,8 +235,6 @@ export default {
 
   .file-left{
     border-radius: 8px;
-    background-color: #f2f7fa;
-    margin: 5px 5px;
   }
 
   .form-group {

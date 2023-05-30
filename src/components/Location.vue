@@ -2,12 +2,20 @@
   <div v-if="!isEditing" class="blip-container location" :class="isFailedMessage(status, position)">
     <div>
       <div :class="'bubble ' + position" :style="'width: ' + bubbleWidth">
-        <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-          <img :src="trashSvg">
-        </div>
-        <div v-if="editable" class="editIco" @click="toggleEdit">
-          <img :src="editSvg">
-        </div>
+        <bds-button-icon v-if="deletable"
+          class="editIco trashIco icon-button-margin"
+          icon="trash"
+          variant="delete"
+          size="short"
+          v-on:click="trash(document)"
+        ></bds-button-icon>
+        <bds-button-icon v-if="editable"
+          class="editIco icon-button-margin"
+          icon="edit"
+          variant="primary"
+          size="short"
+          v-on:click="toggleEdit"
+        ></bds-button-icon> 
         <div class="header">
           <div
             class="ratio ratio1-1"
@@ -38,12 +46,21 @@
   </div>
   <div v-else class="blip-container location">
     <form :class="'editing bubble ' + position" novalidate v-on:submit.prevent>
-      <button class="btn saveIco" @click="locationSave()" :class="{'is-disabled': errors.any() }">
-        <img :src="approveSvg">
-      </button>
-      <button class="btn saveIco closeIco" @click="cancel()">
-        <img :src="closeSvg">
-      </button>
+      <bds-button-icon
+        class="btn saveIco closeIco"
+        icon="close"
+        variant="ghost"
+        size="short"
+        v-on:click="cancel()"
+      ></bds-button-icon>
+      <bds-button-icon 
+        class="btn saveIco"
+        icon="check"
+        variant="primary"
+        size="short"
+        :disabled="errors.any()"
+        v-on:click="locationSave()"
+      ></bds-button-icon>
       <div class="form-group">
         <input type="text" name="text" class="form-control" v-model="text" :placeholder="textMsg">
       </div>
@@ -235,17 +252,17 @@ export default {
 
 .select .options li {
   cursor: pointer;
-  display: inline-block;
-  background-color: #daf2f4;
-  border: 1px solid #0cc8cc;
-  box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  background-color: $color-system;
+  border: 1px solid $color-content-ghost;
   border-radius: 19px;
   padding: 10px 16px;
-  margin: 2px;
-  color: #0cc8cc;
+  margin: 4px;
+  color: $color-content-default;
   font-size: 16px;
   font-weight: 500;
-  min-width: 70px;
 }
 
 .select .fixed-options li:last-child {

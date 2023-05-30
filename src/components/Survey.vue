@@ -349,6 +349,9 @@ export default {
       border: 1px solid $color-disabled-bg;
     }
   }
+  .icon-margin {
+    margin-right: 7%;
+  }
 
 }
 </style>
@@ -367,17 +370,22 @@ export default {
         (this.title == null && this.text == null ? ' text-link' : '')
       "
     >
-      <div v-if="deletable" 
-        class="editIco trashIco"
-        :class="{ 'is-disabled' : isScoreFormFinished}" 
-        @click="trash(document)">
-        <img :src="trashSvg" />
-      </div>
-      <div v-if="editable" class="editIco" @click="toggleEdit"
-        :class="{ 'is-disabled' : isScoreFormFinished}"
-      >
-        <img :src="editSvg" />
-      </div>
+      <bds-button-icon v-if="deletable"
+        class="editIco trashIco icon-margin"
+        icon="trash"
+        variant="delete"
+        size="short"
+        :disabled="isScoreFormFinished"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable"
+        class="editIco icon-margin"
+        icon="edit"
+        variant="primary"
+        :disabled="isScoreFormFinished"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon> 
       <div v-if="this.type || this.question || this.scale">
         <div class="container-survey">
           <h1 class="container-title">{{ getTitlePreview(type) }}</h1>
@@ -431,20 +439,21 @@ export default {
   <!-- Editing mode -->
   <div v-else class="blip-container survey">
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
-      <button
+      <bds-button-icon 
+        class="btn saveIco closeIco"
+        icon="close"
+        variant="ghost"
+        size="short"
+        v-on:click="cancel()"
+      ></bds-button-icon>
+      <bds-button-icon 
         class="btn saveIco"
-        :class="{ 'is-disabled': errors.any() || isScoreFormFinished }"
-        @click="editingModeSave()"
-      >
-        <img :src="approveSvg" />
-      </button>
-      <button 
-        class="btn saveIco closeIco" 
-        :class="{ 'is-disabled' : isScoreFormFinished }"
-        @click="cancel()"
-      >
-        <img :src="closeSvg" />
-      </button>
+        icon="check"
+        variant="primary"
+        size="short"
+        :disabled="errors.any()"
+        v-on:click="editingModeSave()">
+      </bds-button-icon>
       <div class="form-group">
         <div class="container-survey">
           <span class="message--label">{{ surveyTypeLabel }}</span>

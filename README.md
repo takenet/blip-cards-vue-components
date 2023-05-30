@@ -101,13 +101,13 @@ e.g.:
 
 ### Steps to generate a version manually: #
 
-1 - Create a Branch with the name following the semantic releases pattern (https://github.com/semantic-release/semantic-release/blob/master/docs/usage/configuration.md#branches) to generate versions from any branch.       
+1 - Create a Branch with the name following the semantic releases pattern (https://github.com/semantic-release/semantic-release/blob/master/docs/usage/configuration.md#branches) to generate versions from any branch.
 e.g.: 2.11.x
 
-  
+
 2 - Make your changes on the project
 
-  
+
 3 - Add the semantic releases configurations on the project's package.json file. e.g.:
 ```json
 "release": {
@@ -115,24 +115,23 @@ e.g.: 2.11.x
 }
 ```
 
-  
+
 4 - Commit then using the semantic release as showed above. e.g:
-  
+
   ```shell
   git commit "fix(BlipCards): text component should accept hiphen"
   ```
 
-  
+
 5 - Push your changes.
 
-  
+
 6 - Run your pipeline manually using your branch as origin
 
-  
+
 7 - If succeed your build will run correctly and the version will be generated following the version sequence.
-  
+
   e.g.: Previous Version: 2.11.3. New Version: 2.11.4.
 
-  
-8 - After generate your version, before merge into the master, undo the modification on the **package.json** file, because the semantic release branch configuration can not be send to the master branch.
 
+8 - After generate your version, before merge into the master, undo the modification on the **package.json** file, because the semantic release branch configuration can not be send to the master branch.

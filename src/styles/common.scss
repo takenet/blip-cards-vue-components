@@ -3,12 +3,16 @@
 @import 'utils';
 @import 'simple-scrollbar';
 
+* {
+  font-family: 'Carbona', 'Nunito', sans-serif;
+}
+
 .flex {
   display: flex;
 }
 
 .failure {
-  color: $vue-warning;
+  color: $color-error;
   font-size: 10px;
   margin-right: 5px;
 }
@@ -16,7 +20,6 @@
 .blip-container {
   margin-bottom: 10px;
   width: 100%;
-  font-family: 'Nunito', sans-serif;
   position: relative;
 
   text-align: center;
@@ -32,18 +35,12 @@
 
 .blip-card {
   width: 100%;
-  font-family: 'Nunito', sans-serif;
 
   *, ::after, ::before {
     box-sizing: border-box;
   }
 
-  input, textarea, label {
-    font-family: 'Nunito', sans-serif;
-  }
-
   .bubble {
-      font-family: 'Nunito', sans-serif;
       position: relative;
       margin-bottom: 5px;
       width: auto;
@@ -54,21 +51,20 @@
       font-weight: 300;
       line-height: 20px;
       white-space: pre-line;
+      border: 1px solid $color-content-ghost;
   }
 
   .bubble.left {
       border-radius: 13px 13px 13px 2px;
-      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
-      background-color: $vue-white;
-      color: $vue-gray;
+      background-color: $color-surface-1;
+      color: $color-content-default;
       float: left;
   }
 
   .bubble.middle {
     border-radius: 13px 13px 13px 13px;
-    box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
-    background-color: $vue-white;
-    color: $vue-gray;
+    background-color: $color-surface-1;
+    color: $color-content-default;
     margin-left: auto;
     margin-right: auto;
     display: inline-block;
@@ -80,15 +76,14 @@
 
   .bubble.right {
       border-radius: 13px 2px 13px 13px;
-      box-shadow: 0 -1px 12px 0 rgba(0, 0, 0, 0.1);
-      background-color: $vue-light-blip;
-      color: $vue-white;
+      background-color: $color-surface-3;
+      color: $color-content-default;
       float: right;
   }
 
   .notification {
     font-size: 10px;
-    color: $vue-light-gray;
+    color: $color-content-disable;
     line-height: 14px;
     clear: both;
   }
@@ -107,29 +102,17 @@
   }
 
   .left a {
-    color: $vue-light-blip;
+    color: $color-primary;
   }
-
-  .left a:visited {color: $vue-light-blip;}  /* visited link */
-  .left a:hover {color: $vue-light-blip;}  /* mouse over link */
-  .left a:active {color: $vue-light-blip;}  /* selected link */
 
   .middle a {
-    color: $vue-light-blip;
+    color: $color-primary;
   }
-
-  .middle a:visited {color: $vue-light-blip;}  /* visited link */
-  .middle a:hover {color: $vue-light-blip;}  /* mouse over link */
-  .middle a:active {color: $vue-light-blip;}  /* selected link */
 
   .right a {
   font-weight: bold;
-  color: $vue-white;
+  color: $color-primary;
   }
-
-  .right a:visited {color: $vue-white;}  /* visited link */
-  .right a:hover {color: $vue-white;}  /* mouse over link */
-  .right a:active {color: $vue-white;}  /* selected link */
 
   form {
     .fixed-options {
@@ -153,6 +136,7 @@
     li {
       cursor: pointer;
       text-align: center;
+      align-items: center;
       padding: 10px;
       margin: 2px;
       font-size: 16px;
@@ -166,6 +150,7 @@
       }
 
       .remove-option {
+        color: $color-primary;
         width: 17px;
         text-align: right;
         margin-left: 0;
@@ -184,13 +169,13 @@
   }
 
   .left .fixed-options li, .middle .fixed-options li {
-    color: $vue-light-blip;
-    border-top: 0.5px solid #e4e2e2;
+    color: $color-primary;
+    border-top: 0.5px solid $color-content-ghost;
   }
 
   .right .fixed-options li {
-    color: $vue-white;
-    border-top: 0.5px solid $vue-white;
+    color: $color-primary;
+    border-top: 0.5px solid $color-content-ghost;
   }
 
   .header {
@@ -236,7 +221,7 @@
     .title {
       text-align: left;
       strong {
-        color: $vue-dark-gray;
+        color: $color-content-default;
         display: block;
       }
 
@@ -249,7 +234,6 @@
   .editIco { cursor: pointer; }
 
   .editIco {
-    background-color: $vue-light-blip;
     padding: 3px;
     border-radius: 50%;
     width: 30px;
@@ -257,26 +241,21 @@
     text-align: center;
     position: absolute;
     display: none;
-    top: -17px;
-    right: -17px;
+    top: -24px;
+    right: -65px;
     z-index: 1;
-
-    &:hover { background-color: darken($vue-light-blip, 9%) }
   }
 
   .saveIco {
     z-index: 1;
-    background-color: $vue-light-blip;
     padding: 5px;
     border-radius: 50%;
     width: 30px;
     height: 30px;
     text-align: center;
     position: absolute;
-    top: -17px;
-    right: -17px;
-
-    &:hover { background-color: darken($vue-light-blip, 9%) }
+    top: -25px;
+    right: -57px;
   }
 
   .saveIco img {
@@ -290,41 +269,38 @@
   }
 
   .closeIco {
-    right: 17px;
+    right: -10px;
   }
 
   .trashIco {
-    right: 17px;
-    background-color: $vue-delete;
-
-    &:hover { background-color: darken($vue-delete, 9%) }
+    right: -17px;
   }
 
   .form-group {
     margin-bottom: 0.3rem;
     padding: $bubble-padding;
-    color: $vue-london;
+    color: $color-content-default;
     .input-error {
-      color: $vue-delete;
+      color: $color-error;
     }
     .help {
       padding: 5px;
       font-size: 11px;
     }
     ::-webkit-input-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
     ::-moz-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
     :-ms-input-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
     :-moz-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
   }
@@ -333,11 +309,11 @@
     display: block;
     width: 100%;
     padding: .375rem .75rem;
-    color: #495057;
-    background-color: #fff;
+    color: $color-content-default;
+    background-color: $color-surface-1;
     background-image: none;
     background-clip: padding-box;
-    border: 1px solid #ced4da;
+    border: 1px solid $color-content-ghost;
     border-radius: .25rem;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
   }
@@ -350,6 +326,7 @@
   }
 
   .form-check {
+    color: $color-content-default;
     position: relative;
     display: block;
     margin-bottom: .5rem;
@@ -368,7 +345,7 @@
   }
 
   .input-error {
-    border-color: $vue-warning;
+    border-color: $color-error;
   }
 
   input:focus, textarea:focus {
@@ -376,11 +353,11 @@
   }
 
   .input-error:invalid {
-    border-color: $vue-warning;
+    border-color: $color-error;
   }
 
   .help.input-error {
-    color: $vue-warning;
+    color: $color-error;
   }
 
   .is-disabled {
@@ -398,19 +375,19 @@
 
 
   .dashed-border {
-    border: 1px dashed $vue-time;
+    border: 1px dashed $color-content-ghost;
   }
 
   .primary-color {
-    color: $vue-light-blip;
+    color: $color-primary;
   }
 
   .delete-color {
-    color: $vue-delete;
+    color: $color-delete;
   }
 
   .color-gray {
-    color: $vue-city;
+    color: $color-content-ghost;
   }
 
   .btn {
@@ -420,11 +397,16 @@
   }
 
   .btn-white {
-    background-color: $vue-white !important;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: $color-surface-1;
+    border: 1px solid $color-primary;
   }
 
   .btn-dashed {
-    border: 1px dashed $vue-light-gray !important;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px dashed $color-primary;
   }
 
   .w-49 {
@@ -440,7 +422,7 @@
   }
 
   .tabs {
-    color: $vue-gray;
+    color: $color-content-default;
     font-weight: bold;
     margin: 10px;
     margin-bottom: 20px;
@@ -452,14 +434,14 @@
   }
 
   .tabs .active {
-    border-bottom: 4px solid $vue-dark-blip;
+    border-bottom: 4px solid $color-primary;
   }
 
   .line {
-    background-color: $vue-light-gray;
+    background-color: $color-content-disable;
     width: 100%;
     height: 1px;
-    margin: 5px 0;
+    margin: 10px 0;
   }
 
   video {
@@ -477,6 +459,7 @@
       color: $vue-delete;
     }
     .upload-intructions {
+      color: $color-content-disable;
       padding: 5px;
       padding-bottom: 0px;
       font-size: 12px;
@@ -576,3 +559,11 @@
 .disable-selection {
   -webkit-user-select: none;
 }
+.icon-button-margin {
+  margin-right: 10%;
+}
+.icon-button-top {
+  top: -30px !important;
+}
+
+
