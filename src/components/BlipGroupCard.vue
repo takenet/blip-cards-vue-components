@@ -13,6 +13,7 @@
           :editing="editing"
           :hide-options="hideOptions || message.hideOptions"
           :on-save="onSave"
+          :open-msg-failed-modal="openMsgFailedModal"
           :status="message.status"
           :on-deleted="onDeleted"
           :on-cancel="onCancel"
@@ -116,6 +117,9 @@ export default {
     },
     readonly: {
       type: Boolean
+    },
+    openMsgFailedModal: {
+      type: Function
     }
   },
   data() {

@@ -1,5 +1,8 @@
 <template>
   <div class="blip-container unsuported-content">
+    <a @click="callOpenFailedModal">
+      <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.openMsgFailedModal" class="icon-active-message-failed" name="info" theme="solid" aria-label="Active message failed reason"></bds-icon>
+    </a>
     <div :class="'bubble ' + position">
       <div class="unsuported-content-icons">
         <bds-icon v-if="fromMessageTemplate == true" size="small" alt="Alert" name="megaphone"></bds-icon>
@@ -55,6 +58,9 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem'
+    },
+    openMsgFailedModal: {
+      type: Function
     }
   },
   data: function () {
@@ -63,12 +69,23 @@ export default {
       alertWhiteSvg,
       megaphoneSvg
     }
+  },
+  methods: {
+    callOpenFailedModal() {
+      this.openMsgFailedModal()
+    }
   }
 }
 </script>
 
 <style lang="scss">
 @import '../styles/variables.scss';
+
+.icon-active-message-failed {
+  float: right;
+  margin-top: 5px;
+  color: #E60F0F
+}
 
 .blip-container.unsuported-content .alert-icon {
   height: 20px;
