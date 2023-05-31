@@ -79,7 +79,8 @@ export default {
 .icon-active-message-failed {
   float: right;
   margin-top: 5px;
-  color: #E60F0F
+  color: #E60F0F;
+  cursor: pointer;
 }
 
 .blip-container.unsuported-content .alert-icon {
