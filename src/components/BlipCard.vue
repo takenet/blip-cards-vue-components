@@ -309,6 +309,7 @@
           :status="status"
           :position="position"
           :document="editableDocument.content"
+          :full-document="editableDocument"
           :date="date"
           :on-save="saveCard"
           :editable="editable"
