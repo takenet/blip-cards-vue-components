@@ -1,6 +1,6 @@
 <template>
   <div class="blip-container unsuported-content">
-    <a @click="failedClickIcon(fullDocument)">
+    <a @click="onFailedClickIcon(fullDocument)">
       <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon" class="icon-active-message-failed" name="info" theme="solid" aria-label="Active message failed reason"></bds-icon>
     </a>
     <div :class="'bubble ' + position">
@@ -68,11 +68,6 @@ export default {
       alertSvg,
       alertWhiteSvg,
       megaphoneSvg
-    }
-  },
-  methods: {
-    failedClickIcon(document) {
-      this.onFailedClickIcon(document)
     }
   }
 }
