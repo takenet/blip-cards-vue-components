@@ -81,6 +81,7 @@ export default {
   position: relative;
   margin-left: 7px;
   margin-right: -2px;
+  margin-top: -5px;
   color: #E60F0F;
   cursor: pointer;  
 }
