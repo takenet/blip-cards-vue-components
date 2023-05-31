@@ -1,8 +1,5 @@
 <template>
   <div class="blip-container unsuported-content">
-    <a @click="onFailedClickIcon(fullDocument)">
-      <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon" class="icon-active-message-failed" name="info" theme="solid" aria-label="Active message failed reason"></bds-icon>
-    </a>
     <div :class="'bubble ' + position">
       <div class="unsuported-content-icons">
         <bds-icon v-if="fromMessageTemplate == true" size="small" alt="Alert" name="megaphone"></bds-icon>
@@ -13,7 +10,11 @@
         </span>
       </div>
     </div>
-
+    <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon"
+        name="info" theme="solid" 
+        aria-label="Active message failed reason" 
+        class="icon-active-message-failed" 
+        @click="onFailedClickIcon(fullDocument)"></bds-icon>
     <div class="flex" :class="'notification ' + position" v-if="date">
       <span v-if="this.position === 'right'">
         <img v-if="this.status === 'waiting'" :src="clockSvg">
@@ -77,10 +78,19 @@ export default {
 @import '../styles/variables.scss';
 
 .icon-active-message-failed {
-  float: right;
-  margin-top: 5px;
+  position: relative;
+  margin-left: 7px;
+  margin-right: -2px;
   color: #E60F0F;
-  cursor: pointer;
+  cursor: pointer;  
+}
+
+.unsuported-content {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: right;
 }
 
 .blip-container.unsuported-content .alert-icon {
