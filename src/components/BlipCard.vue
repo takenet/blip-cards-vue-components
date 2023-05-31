@@ -305,7 +305,7 @@
           :from-message-template="true"
           :failed-to-send-msg="translations.failedToSend"
           :unsupported-content-msg="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
-          :open-msg-failed-modal="openMsgFailedModal"
+          :on-failed-click-icon="onFailedClickIcon"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -426,7 +426,7 @@ export default {
       type: Boolean,
       default: false
     },
-    openMsgFailedModal: {
+    onFailedClickIcon: {
       type: Function
     }
   },

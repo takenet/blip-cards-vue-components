@@ -1,7 +1,7 @@
 <template>
   <div class="blip-container unsuported-content">
     <a @click="callOpenFailedModal">
-      <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.openMsgFailedModal" class="icon-active-message-failed" name="info" theme="solid" aria-label="Active message failed reason"></bds-icon>
+      <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon" class="icon-active-message-failed" name="info" theme="solid" aria-label="Active message failed reason"></bds-icon>
     </a>
     <div :class="'bubble ' + position">
       <div class="unsuported-content-icons">
@@ -59,7 +59,7 @@ export default {
       type: String,
       default: 'Falha ao enviar a mensagem'
     },
-    openMsgFailedModal: {
+    onFailedClickIcon: {
       type: Function
     }
   },
@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     callOpenFailedModal() {
-      this.openMsgFailedModal()
+      this.onFailedClickIcon()
     }
   }
 }
