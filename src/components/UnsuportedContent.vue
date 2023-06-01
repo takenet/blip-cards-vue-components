@@ -1,5 +1,5 @@
 <template>
-  <div class="blip-container unsuported-content">
+  <div :class="'blip-container unsuported-content ' + position">
     <div :class="'bubble ' + position">
       <div class="unsuported-content-icons">
         <bds-icon v-if="fromMessageTemplate == true" size="small" alt="Alert" name="megaphone"></bds-icon>
@@ -79,8 +79,8 @@ export default {
 
 .icon-active-message-failed {
   position: relative;
-  margin-left: 7px;
-  margin-right: -2px;
+  margin-left: 10px;
+  margin-right: -5px;
   margin-top: -5px;
   color: #E60F0F;
   cursor: pointer;  
@@ -91,7 +91,14 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: right;
+}
+
+.unsuported-content.right {
+    justify-content: right;
+}
+
+.unsuported-content.left {
+    justify-content: left;
 }
 
 .blip-container.unsuported-content .alert-icon {
@@ -119,6 +126,7 @@ export default {
 .blip-container.unsuported-content .bubble.right {
   background-color: $color-surface-3;
   color: $color-content-default;
+  margin-right: -4px;
 
   .unsuported-content-icons {
     display: flex;
