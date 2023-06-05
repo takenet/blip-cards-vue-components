@@ -6,7 +6,7 @@
           <bds-icon name="undo" theme="outline" aria-label="Reply icon"></bds-icon>
           <bds-typo tag="p" variant="fs-14" bold="regular" italic="true">{{ translations.reply || 'Resposta' }}</bds-typo>
         </div>
-        <in-reply-to-base :inReplyTo="inReplyTo" :isOwnMessage="isOwnMessage" />
+        <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" />
         <replied-base :replied="replied" />
       </div>
     </div>

@@ -1,15 +1,13 @@
 <template>
-    <div>
-        <bds-typo tag="span" variant="fs-16" margin="false">{{ repliedText }}</bds-typo>
-    </div>
+  <div>
+    <bds-typo tag="span" variant="fs-16" margin="false">{{ repliedText }}</bds-typo>
+  </div>
 </template>
   
-  <script>
-  import { default as base } from '../../../mixins/baseComponent.js'
-  
+<script>
   export default {
     name: 'replied-with-text',
-    mixins: [base],
+    mixins: [],
     props: {
       text: {
         type: String,
@@ -27,9 +25,5 @@
     methods: {
     }
   }
-  </script>
-  
-  <style lang="scss" scoped>
-  @import '../../../styles/variables.scss';
-  </style>
+</script>
   

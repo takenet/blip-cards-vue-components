@@ -370,9 +370,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :translations="translations"
-        >
-        </reply-card>
+          :translations="translations" />
 
         <unsuported-content
           v-else

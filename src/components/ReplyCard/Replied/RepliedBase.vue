@@ -1,18 +1,16 @@
 <template>
-    <div>
-        <replied-with-text 
-            v-if="replied.type === 'text/plain'"
-            :text="repliedValue"
-        />
-    </div>
+  <div>
+    <replied-with-text 
+      v-if="replied.type === 'text/plain'"
+      :text="repliedValue"
+    />
+  </div>
 </template>
   
-  <script>
-  import { default as base } from '../../../mixins/baseComponent.js'
-  
+<script>
   export default {
     name: 'replied-base',
-    mixins: [base],
+    mixins: [],
     props: {
       replied: {
         type: Object,
@@ -30,9 +28,5 @@
     methods: {
     }
   }
-  </script>
-  
-  <style lang="scss" scoped>
-  @import '../../../styles/variables.scss';
-  </style>
+</script>
   
