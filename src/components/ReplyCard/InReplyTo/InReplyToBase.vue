@@ -1,0 +1,71 @@
+<template>
+  <div class="in-reply-to-message-container">
+    <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
+    <div class="in-reply-to-message">
+      <in-reply-to-text 
+        v-if="inReplyTo.type === 'text/plain'"
+        :text="inReplyToValue"
+      />
+    </div>
+  </div>
+</template>
+  
+  <script>
+  import { default as base } from '../../../mixins/baseComponent.js'
+  
+  export default {
+    name: 'in-reply-to-base',
+    mixins: [base],
+    props: {
+      inReplyTo: {
+        type: Object,
+        default: {}
+      },
+      isOwnMessage: {
+        type: Boolean,
+        default: false
+      }
+    },
+    computed: {
+      inReplyToValue() {
+        return this.inReplyTo.value
+      }
+    },
+    created() {
+      console.log(this.inReplyTo)
+    },
+    methods: {
+    }
+  }
+  </script>
+  
+  <style lang="scss" scoped>
+  @import '../../../styles/variables.scss';
+
+  .in-reply-to-message-bar {
+  flex: none;
+  width: 4px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  background-color: $color-primary;
+
+
+  &.own-message {
+    background-color: $color-content-ghost;
+  }
+}
+
+.in-reply-to-message-container {
+  display: flex;
+  overflow: hidden;
+  background-color: #E0E0E0;
+  border: 1px solid #949494;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.in-reply-to-message {
+  padding: 0.5rem;
+}
+</style>
+  
