@@ -14,47 +14,47 @@
 </template>
 
 <script>
-import { default as base } from '../../mixins/baseComponent.js'
+  import { default as base } from '../../mixins/baseComponent.js'
 
-export default {
-  name: 'reply-card',
-  mixins: [base],
-  props: {
-    translations: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  computed: {
-    isOwnMessage() {
-      return this.fullDocument.direction === this.fullDocument.content.inReplyTo.direction
+  export default {
+    name: 'reply-card',
+    mixins: [base],
+    props: {
+      translations: {
+        type: Object,
+        default: () => ({})
+      }
     },
-    replied() {
-      return this.document.replied
+    computed: {
+      isOwnMessage() {
+        return this.fullDocument.direction === this.fullDocument.content.inReplyTo.direction
+      },
+      replied() {
+        return this.document.replied
+      },
+      inReplyTo() {
+        return this.document.inReplyTo
+      }
     },
-    inReplyTo() {
-      return this.document.inReplyTo
+    created() {
+      console.log(this.document)
+    },
+    methods: {
     }
-  },
-  created() {
-    console.log(this.document)
-  },
-  methods: {
   }
-}
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/variables.scss';
+  @import '../../styles/variables.scss';
 
-.reply-container {
-  text-align: left;
-  padding: 1rem;
-}
+  .reply-container {
+    text-align: left;
+    padding: 1rem;
+  }
 
-.reply-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+  .reply-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 </style>
