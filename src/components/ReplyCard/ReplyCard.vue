@@ -10,9 +10,11 @@
         <replied-base :replied="replied" />
       </div>
     </div>
-    <div class="flex" :class="'notification ' + position" v-if="date">
-      {{ date }}
-    </div>
+    <blip-card-date
+      :status="status"
+      :position="position"
+      :date="date"
+      :failed-to-send-msg="failedToSendMsg" />
   </div>
 </template>
 
