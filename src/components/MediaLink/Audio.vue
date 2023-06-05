@@ -8,13 +8,13 @@
         size="short"
         v-on:click="trash(document)"
       ></bds-button-icon>
-      <bds-button-icon v-if="editable && !isEditing" 
+      <bds-button-icon v-if="editable && !isEditing"
         class="icon-button-margin editIco icon-button-top"
         icon="edit"
         variant="primary"
         size="short"
         v-on:click="toggleEdit"
-      ></bds-button-icon> 
+      ></bds-button-icon>
       <div class="audio-player-wrapper" v-if="!isEditing">
         <div class="audio-player-controls">
           <div v-if="!isLoading" class="audio-play-pause">
@@ -100,14 +100,14 @@
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <bds-button-icon 
+          <bds-button-icon
             class="btn saveIco closeIco icon-button-margin icon-button-top"
             icon="close"
             variant="ghost"
             size="short"
             v-on:click="cancel()"
           ></bds-button-icon>
-          <bds-button-icon 
+          <bds-button-icon
             class="btn saveIco icon-button-margin icon-button-top"
             icon="check"
             variant="primary"
@@ -326,7 +326,6 @@ export default {
     }
   }
   .right {
-    color: $vue-cotton;
     .slider {
       background-color: $color-content-ghost;
     }
