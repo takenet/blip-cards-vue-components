@@ -6,6 +6,11 @@
         v-if="inReplyTo.type === 'text/plain'"
         :text="inReplyToValue"
       />
+
+      <in-reply-to-text 
+        v-else-if="inReplyTo.type === 'application/vnd.lime.select+json'"
+        :text="menuValue"
+      />
     </div>
   </div>
 </template>
@@ -27,6 +32,9 @@
     computed: {
       inReplyToValue() {
         return this.inReplyTo.value
+      },
+      menuValue() {
+        return this.inReplyTo.value.text
       }
     },
     created() {

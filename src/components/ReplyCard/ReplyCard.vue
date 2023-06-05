@@ -10,6 +10,9 @@
         <replied-base :replied="replied" />
       </div>
     </div>
+    <div class="flex" :class="'notification ' + position" v-if="date">
+      {{ date }}
+    </div>
   </div>
 </template>
 

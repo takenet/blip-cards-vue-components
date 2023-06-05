@@ -134,6 +134,9 @@
         <button class="button" @click="sendReplyMessage">
           ENVIAR Reply Message
         </button>
+        <button class="button" @click="sendReplyMessageInReplyToMenu">
+          ENVIAR Reply Message de Menu
+        </button>
       </div>
 
       <div v-else>
@@ -789,6 +792,39 @@ export default {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
             type: 'text/plain',
             value: 'in reply to text'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyMessageInReplyToMenu: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.select+json',
+            value: {
+              scope: 'immediate',
+              text: 'Choose an option',
+              options: [
+                { text: 'First option' },
+                { order: '2', text: 'Second option' },
+                {
+                  order: '3',
+                  text: 'Third option',
+                  type: 'application/json',
+                  value: { key1: 'value1', key2: '2' }
+                }
+              ]
+            }
           }
         }
       })
