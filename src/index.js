@@ -28,6 +28,7 @@ import BlipCardDate from './components/BlipCardDate'
 import ApplicationJSon from './components/ApplicationJSon'
 import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
 import MenuList from './components/ApplicationJSon/MenuList'
+import ReplyCard from './components/ReplyCard/ReplyCard'
 
 // Validators
 import JsonValidator from './validators/jsonValidator'
@@ -73,6 +74,7 @@ function install(Vue) {
   components.push(Vue.component(ApplicationJSon.name, ApplicationJSon))
   components.push(Vue.component(MenuListPrompt.name, MenuListPrompt))
   components.push(Vue.component(MenuList.name, MenuList))
+  components.push(Vue.component(ReplyCard.name, ReplyCard))
 
   Vue.component(Editable.name, Editable)
 

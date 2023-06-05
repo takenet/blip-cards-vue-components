@@ -131,6 +131,9 @@
         <button class="button" @click="sendReplyButton">
           ENVIAR Reply Button
         </button>
+        <button class="button" @click="sendReplyMessage">
+          ENVIAR Reply Message
+        </button>
       </div>
 
       <div v-else>
@@ -766,6 +769,26 @@ export default {
             footer: {
               text: 'rodapé de testes'
             }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyMessage: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'text/plain',
+            value: 'text'
           }
         }
       })
