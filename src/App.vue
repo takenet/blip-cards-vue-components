@@ -783,12 +783,12 @@ export default {
         content: {
           replied: {
             type: 'text/plain',
-            value: 'text'
+            value: 'replied text'
           },
           inReplyTo: {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
             type: 'text/plain',
-            value: 'text'
+            value: 'in reply to text'
           }
         }
       })
