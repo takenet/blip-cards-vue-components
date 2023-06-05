@@ -36,11 +36,6 @@
       menuValue() {
         return this.inReplyTo.value.text
       }
-    },
-    created() {
-      console.log(this.inReplyTo)
-    },
-    methods: {
     }
   }
 </script>

@@ -16,11 +16,6 @@
       inReplyToText() {
         return this.text
       }
-    },
-    created() {
-      console.log(this.text)
-    },
-    methods: {
     }
   }
 </script>

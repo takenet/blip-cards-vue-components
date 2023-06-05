@@ -18,11 +18,6 @@
       repliedText() {
         return this.text
       }
-    },
-    created() {
-      console.log(this.document)
-    },
-    methods: {
     }
   }
 </script>

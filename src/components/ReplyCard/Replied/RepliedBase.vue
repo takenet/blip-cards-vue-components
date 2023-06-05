@@ -21,11 +21,6 @@
       repliedValue() {
         return this.replied.value
       }
-    },
-    created() {
-      console.log(this.replied)
-    },
-    methods: {
     }
   }
 </script>

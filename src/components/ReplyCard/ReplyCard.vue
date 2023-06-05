@@ -28,6 +28,14 @@
       translations: {
         type: Object,
         default: () => ({})
+      },
+      failedToSendMsg: {
+        type: String,
+        default: 'Falha ao enviar a mensagem'
+      },
+      status: {
+        type: String,
+        default: ''
       }
     },
     computed: {
@@ -40,11 +48,6 @@
       inReplyTo() {
         return this.document.inReplyTo
       }
-    },
-    created() {
-      console.log(this.document)
-    },
-    methods: {
     }
   }
 </script>
