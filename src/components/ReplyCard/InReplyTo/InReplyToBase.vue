@@ -59,8 +59,8 @@
   .in-reply-to-message-container {
     display: flex;
     overflow: hidden;
-    background-color: #E0E0E0;
-    border: 1px solid #949494;
+    background-color: $color-surface-3;
+    border: 1px solid $color-content-ghost;
     border-radius: 0.5rem;
     margin: 1rem 0;
   }
