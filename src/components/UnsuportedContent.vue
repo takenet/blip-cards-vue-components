@@ -82,7 +82,7 @@ export default {
 }
 
 .blip-container.unsuported-content .bubble.left {
-  background-color: $color-surface-3;
+  background-color: $color-surface-1;
   color: $color-content-default;
 
   .unsuported-content-icons {
