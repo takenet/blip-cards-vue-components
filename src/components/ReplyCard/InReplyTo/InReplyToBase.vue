@@ -4,12 +4,18 @@
     <div class="in-reply-to-message">
       <in-reply-to-text 
         v-if="inReplyTo.type === 'text/plain'"
-        :text="inReplyToValue"
+        :text="textValue"
       />
 
       <in-reply-to-text 
         v-else-if="inReplyTo.type === 'application/vnd.lime.select+json'"
-        :text="menuValue"
+        :text="menuTextValue"
+      />
+
+      <in-reply-to-text 
+        v-else-if="inReplyTo.type === 'application/json' && (isInteractiveTypeListWithTextHeader || isInteractiveTypeButtonWithTextHeader)"
+        :text="applicationJsonTitleTextValue"
+        :description="applicationJsonDescriptionTextValue"
       />
     </div>
   </div>
@@ -30,11 +36,23 @@
       }
     },
     computed: {
-      inReplyToValue() {
+      textValue() {
         return this.inReplyTo.value
       },
-      menuValue() {
+      menuTextValue() {
         return this.inReplyTo.value.text
+      },
+      applicationJsonTitleTextValue() {
+        return this.inReplyTo.value.interactive.header.text
+      },
+      applicationJsonDescriptionTextValue() {
+        return this.inReplyTo.value.interactive.body.text
+      },
+      isInteractiveTypeButtonWithTextHeader() {
+        return this.inReplyTo.value.interactive.type === 'button' && this.inReplyTo.value.interactive.header.type === 'text'
+      },
+      isInteractiveTypeListWithTextHeader() {
+        return this.inReplyTo.value.interactive.type === 'list' && this.inReplyTo.value.interactive.header.type === 'text'
       }
     }
   }
