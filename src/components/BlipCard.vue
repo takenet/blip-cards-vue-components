@@ -354,6 +354,24 @@
           :on-cancel="cancel"
           :translations="translations" />
 
+        <reply-card
+          v-else-if="document.type === 'application/vnd.lime.reply+json'"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :translations="translations" />
+
         <unsuported-content
           v-else
           class="blip-card"
