@@ -13,9 +13,16 @@
       />
 
       <in-reply-to-text 
-        v-else-if="inReplyTo.type === 'application/json' && (isInteractiveTypeListWithTextHeader || isInteractiveTypeButtonWithTextHeader)"
-        :text="applicationJsonTitleTextValue"
-        :description="applicationJsonDescriptionTextValue"
+        v-else-if="
+          inReplyTo.type === 'application/json' &&
+          (
+            isInteractiveTypeListWithTextHeader ||
+            isInteractiveTypeButtonWithTextHeader ||
+            isInteractiveTypeButtonWithoutTextHeader
+          )
+        "
+        :text="isInteractiveTypeButtonWithoutTextHeader ? applicationJsonDescriptionTextValue : applicationJsonTitleTextValue"
+        :description="isInteractiveTypeButtonWithoutTextHeader ? '' : applicationJsonDescriptionTextValue"
       />
     </div>
   </div>
@@ -49,10 +56,18 @@
         return this.inReplyTo.value.interactive.body.text
       },
       isInteractiveTypeButtonWithTextHeader() {
-        return this.inReplyTo.value.interactive.type === 'button' && this.inReplyTo.value.interactive.header.type === 'text'
+        return this.inReplyTo.value.interactive.type === 'button' &&
+          this.inReplyTo.value.interactive.header &&
+          this.inReplyTo.value.interactive.header.type === 'text'
+      },
+      isInteractiveTypeButtonWithoutTextHeader() {
+        return this.inReplyTo.value.interactive.type === 'button' &&
+          !this.inReplyTo.value.interactive.header &&
+          Boolean(this.inReplyTo.value.interactive.body.text)
       },
       isInteractiveTypeListWithTextHeader() {
-        return this.inReplyTo.value.interactive.type === 'list' && this.inReplyTo.value.interactive.header.type === 'text'
+        return this.inReplyTo.value.interactive.type === 'list' &&
+          this.inReplyTo.value.interactive.header.type === 'text'
       }
     }
   }

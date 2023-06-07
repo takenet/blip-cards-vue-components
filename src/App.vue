@@ -146,6 +146,9 @@
         <button class="button" @click="sendReplyMessageInReplyToReplyButton">
           ENVIAR Reply Message de Reply Buttton
         </button>
+        <button class="button" @click="sendReplyMessageInReplyToReplyButtonWithoutHeader">
+          ENVIAR Reply Message de Reply Buttton sem header
+        </button>
       </div>
 
       <div v-else>
@@ -991,6 +994,55 @@ export default {
                 header: {
                   type: 'text',
                   text: 'header de teste'
+                },
+                footer: {
+                  text: 'rodapé de testes'
+                }
+              }
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyMessageInReplyToReplyButtonWithoutHeader: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            type: 'application/json',
+            value: {
+              recipient_type: 'individual',
+              type: 'interactive',
+              interactive: {
+                type: 'button',
+                body: {
+                  text: 'conteúdo de teste'
+                },
+                action: {
+                  buttons: [
+                    {
+                      type: 'reply',
+                      reply: {
+                        id: '1',
+                        title: 'botão 1'
+                      }
+                    },
+                    {
+                      type: 'reply',
+                      reply: {
+                        id: '2',
+                        title: 'botão 2'
+                      }
+                    }
+                  ]
                 },
                 footer: {
                   text: 'rodapé de testes'
