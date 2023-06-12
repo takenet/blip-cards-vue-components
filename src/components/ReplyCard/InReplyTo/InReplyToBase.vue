@@ -95,7 +95,7 @@
     background-color: $color-surface-3;
     border: 1px solid $color-content-ghost;
     border-radius: 0.5rem;
-    margin: 1rem 0;
+    margin-bottom: 1rem;
   }
 
   .in-reply-to-message {
