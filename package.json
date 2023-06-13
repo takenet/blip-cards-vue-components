@@ -34,6 +34,9 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs",
     "semantic-release": "semantic-release"
   },
+  "release": {
+    "branches": [{ "name" : "main-freezing-rebrading", "prerelease": true }]
+  },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
@@ -87,7 +90,7 @@
     "portfinder": "^1.0.13",
     "rimraf": "^2.6.0",
     "sass-loader": "^6.0.6",
-    "semantic-release": "^15.2.0",
+    "semantic-release": "^19.0.5",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
     "sinon": "^4.0.0",
