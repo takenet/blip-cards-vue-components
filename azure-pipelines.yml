@@ -22,7 +22,7 @@ resources:
 extends:
   template: template-pipeline.yml@templates
   parameters:
-    nodeVersion: 16.x
+    nodeVersion: 14.x
     packagename: blip-cards-vue-components
     type: javascript
     to: semantic-release

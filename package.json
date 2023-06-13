@@ -35,7 +35,12 @@
     "semantic-release": "semantic-release"
   },
   "release": {
-    "branches": [{ "name" : "main-freezing-rebrading", "prerelease": true }]
+    "branches": [
+      {
+        "name": "main-freezing-rebrading",
+        "prerelease": true
+      }
+    ]
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
