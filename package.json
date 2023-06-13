@@ -36,6 +36,7 @@
   },
   "release": {
     "branches": [
+      "master",
       {
         "name": "main-freezing-rebrading",
         "prerelease": true
