@@ -14,7 +14,7 @@
         variant="primary"
         size="short"
         v-on:click="toggleEdit"
-      ></bds-button-icon> 
+      ></bds-button-icon>
       <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!isEditing">
         <div class="video-player">
           <div class="sk-circle-wrapper" id="animation">
@@ -107,14 +107,14 @@
       </div>
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <bds-button-icon 
+          <bds-button-icon
             class="btn saveIco closeIco"
             icon="close"
             variant="ghost"
             size="short"
             v-on:click="cancel()"
           ></bds-button-icon>
-          <bds-button-icon 
+          <bds-button-icon
             class="btn saveIco"
             icon="check"
             variant="primary"
@@ -424,7 +424,6 @@ export default {
     .slider {
       background-color: $color-content-ghost;
     }
-    color: $vue-cotton;
     .progress .pin {
       background-color: $color-content-default;
     }
