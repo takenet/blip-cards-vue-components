@@ -79,8 +79,8 @@ export default {
 
 .icon-active-message-failed {
   position: relative;
-  margin-left: 10px;
-  margin-right: -5px;
+  margin-left: 5px;
+  margin-right: -1px;
   margin-top: -5px;
   color: #E60F0F;
   cursor: pointer;  
@@ -95,6 +95,7 @@ export default {
 
 .unsuported-content.right {
     justify-content: right;
+    margin-left: 0.5em;
 }
 
 .unsuported-content.left {
@@ -126,7 +127,6 @@ export default {
 .blip-container.unsuported-content .bubble.right {
   background-color: $color-surface-3;
   color: $color-content-default;
-  margin-right: -4px;
 
   .unsuported-content-icons {
     display: flex;
