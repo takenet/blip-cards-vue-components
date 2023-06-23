@@ -13,6 +13,7 @@
           :editing="editing"
           :hide-options="hideOptions || message.hideOptions"
           :on-save="onSave"
+          :on-failed-click-icon="onFailedClickIcon"
           :status="message.status"
           :on-deleted="onDeleted"
           :on-cancel="onCancel"
@@ -116,6 +117,9 @@ export default {
     },
     readonly: {
       type: Boolean
+    },
+    onFailedClickIcon: {
+      type: Function
     }
   },
   data() {
