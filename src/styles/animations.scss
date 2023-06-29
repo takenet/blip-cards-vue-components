@@ -59,3 +59,17 @@
 .back {
 	transform: rotateY(180deg);
 }
+
+.skeleton {
+  animation: skeleton-loading 1s linear infinite alternate;
+  width: 100%;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: #c2cfd6;
+  }
+  100% {
+    background-color: #f0f3f5;
+  }
+}

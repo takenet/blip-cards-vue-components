@@ -29,6 +29,13 @@ import ApplicationJSon from './components/ApplicationJSon'
 import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
 import MenuList from './components/ApplicationJSon/MenuList'
 
+// Reply components
+import ReplyCard from './components/ReplyCard/ReplyCard'
+import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
+import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
+import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
+import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
+
 // Validators
 import JsonValidator from './validators/jsonValidator'
 import MimeValidator from './validators/mimeValidator'
@@ -73,6 +80,15 @@ function install(Vue) {
   components.push(Vue.component(ApplicationJSon.name, ApplicationJSon))
   components.push(Vue.component(MenuListPrompt.name, MenuListPrompt))
   components.push(Vue.component(MenuList.name, MenuList))
+
+  // Reply components
+  components.push(Vue.component(ReplyCard.name, ReplyCard))
+  // Replied
+  components.push(Vue.component(RepliedBase.name, RepliedBase))
+  components.push(Vue.component(RepliedWithText.name, RepliedWithText))
+  // In Reply To
+  components.push(Vue.component(InReplyToBase.name, InReplyToBase))
+  components.push(Vue.component(InReplyToText.name, InReplyToText))
 
   Vue.component(Editable.name, Editable)
 

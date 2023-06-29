@@ -13,15 +13,16 @@ variables:
 - group: npmjs-sample-variables
 
 resources:
-  repositories:   
+  repositories:
   - repository: templates
     type: git
     name: Operações/template-take-blip
     ref: refs/tags/v1.3.2
 
 extends:
-  template: template-pipeline.yml@templates    
-  parameters:    
+  template: template-pipeline.yml@templates
+  parameters:
+    nodeVersion: 14.x
     packagename: blip-cards-vue-components
     type: javascript
     to: semantic-release

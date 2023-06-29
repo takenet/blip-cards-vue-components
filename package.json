@@ -30,6 +30,7 @@
     "dev": "node build/dev-server.js --host 0.0.0.0",
     "start": "npm run dev",
     "bundle:min": "cross-env MINIFY=true webpack --progress --config build/webpack.build.config.js",
+    "bundle:watch": "cross-env MINIFY=true webpack --watch --progress --config build/webpack.build.config.js",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
     "semantic-release": "semantic-release"
   },
@@ -86,7 +87,7 @@
     "portfinder": "^1.0.13",
     "rimraf": "^2.6.0",
     "sass-loader": "^6.0.6",
-    "semantic-release": "^15.2.0",
+    "semantic-release": "^19.0.5",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
     "sinon": "^4.0.0",
