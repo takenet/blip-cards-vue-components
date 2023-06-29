@@ -305,8 +305,11 @@
           :from-message-template="true"
           :failed-to-send-msg="translations.failedToSend"
           :unsupported-content-msg="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
+          :on-failed-click-icon="onFailedClickIcon"
+          :status="status"
           :position="position"
           :document="editableDocument.content"
+          :full-document="editableDocument"
           :date="date"
           :on-save="saveCard"
           :editable="editable"
@@ -441,6 +444,9 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    onFailedClickIcon: {
+      type: Function
     }
   },
   data() {

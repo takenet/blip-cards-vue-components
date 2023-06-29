@@ -1,5 +1,5 @@
 <template>
-  <div class="blip-container unsuported-content">
+  <div :class="'blip-container unsuported-content ' + position">
     <div :class="'bubble ' + position">
       <div class="unsuported-content-icons">
         <bds-icon v-if="fromMessageTemplate == true" size="small" alt="Alert" name="megaphone"></bds-icon>
@@ -10,7 +10,11 @@
         </span>
       </div>
     </div>
-
+    <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon"
+        name="info" theme="solid" 
+        aria-label="Active message failed reason" 
+        class="icon-active-message-failed" 
+        @click="onFailedClickIcon(fullDocument)"></bds-icon>
     <div class="flex" :class="'notification ' + position" v-if="date">
       <span v-if="this.position === 'right'">
         <img v-if="this.status === 'waiting'" :src="clockSvg">
@@ -55,6 +59,9 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem'
+    },
+    onFailedClickIcon: {
+      type: Function
     }
   },
   data: function () {
@@ -70,6 +77,31 @@ export default {
 <style lang="scss">
 @import '../styles/variables.scss';
 
+.icon-active-message-failed {
+  position: relative;
+  margin-left: 5px;
+  margin-right: -1px;
+  margin-top: -5px;
+  color: #E60F0F;
+  cursor: pointer;  
+}
+
+.unsuported-content {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.unsuported-content.right {
+    justify-content: right;
+    margin-left: 0.5em;
+}
+
+.unsuported-content.left {
+    justify-content: left;
+}
+
 .blip-container.unsuported-content .alert-icon {
   height: 20px;
   margin-right: 2px;
@@ -82,7 +114,7 @@ export default {
 }
 
 .blip-container.unsuported-content .bubble.left {
-  background-color: $color-surface-3;
+  background-color: $color-surface-1;
   color: $color-content-default;
 
   .unsuported-content-icons {
