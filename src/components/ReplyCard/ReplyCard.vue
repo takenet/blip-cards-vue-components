@@ -2,8 +2,8 @@
   <div class="blip-container reply-card">
     <div :class="'bubble ' + position">
       <div class="reply-container">
-        <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" />
-        <replied-base :replied="replied" />
+        <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" :failed-message="translations.failedToLoad" />
+        <replied-base v-if="replied" :replied="replied" />
       </div>
     </div>
     <blip-card-date

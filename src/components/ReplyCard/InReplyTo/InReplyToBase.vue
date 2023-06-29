@@ -1,33 +1,28 @@
 <template>
-  <div class="in-reply-to-message-container">
-    <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
-    <div class="in-reply-to-message">
-      <in-reply-to-text 
-        v-if="inReplyTo.type === 'text/plain'"
-        :text="textValue"
-      />
-
-      <in-reply-to-text 
-        v-else-if="inReplyTo.type === 'application/vnd.lime.select+json'"
-        :text="menuTextValue"
-      />
-
-      <in-reply-to-text 
-        v-else-if="
-          inReplyTo.type === 'application/json' &&
-          (
-            isInteractiveTypeListWithTextHeader ||
-            isInteractiveTypeButtonWithTextHeader ||
-            isInteractiveTypeButtonWithoutTextHeader
-          )
-        "
-        :text="isInteractiveTypeButtonWithoutTextHeader ? applicationJsonDescriptionTextValue : applicationJsonTitleTextValue"
-        :description="isInteractiveTypeButtonWithoutTextHeader ? '' : applicationJsonDescriptionTextValue"
-      />
+  <div v-if="isLoadingMessage || isAcceptableTextType || hasFailedToLoad" class="in-reply-to-message-container">
+    <div v-if="isLoadingMessage" class="skeleton"></div>
+    <template v-else-if="isAcceptableTextType">
+      <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
+      <div class="in-reply-to-message">
+        <in-reply-to-text
+          :in-reply-to="inReplyTo"
+        />
+      </div>
+    </template>
+    <div class="failed-message" v-else-if="hasFailedToLoad">
+      <bds-icon name="warning" theme="outline" aria-label="Warning"></bds-icon>
+      <bds-typo
+        tag="p"
+        variant="fs-16"
+        bold="regular"
+        margin="false"
+        italic="true"
+        >{{ failedMessage }}
+      </bds-typo>
     </div>
   </div>
 </template>
-  
+
 <script>
   export default {
     name: 'in-reply-to-base',
@@ -35,26 +30,18 @@
     props: {
       inReplyTo: {
         type: Object,
-        default: {}
+        default: () => ({})
       },
       isOwnMessage: {
         type: Boolean,
         default: false
+      },
+      failedMessage: {
+        type: String,
+        default: 'Falha ao carregar mensagem'
       }
     },
     computed: {
-      textValue() {
-        return this.inReplyTo.value
-      },
-      menuTextValue() {
-        return this.inReplyTo.value.text
-      },
-      applicationJsonTitleTextValue() {
-        return this.inReplyTo.value.interactive.header.text
-      },
-      applicationJsonDescriptionTextValue() {
-        return this.inReplyTo.value.interactive.body.text
-      },
       isInteractiveTypeButtonWithTextHeader() {
         return this.inReplyTo.value.interactive.type === 'button' &&
           this.inReplyTo.value.interactive.header &&
@@ -68,11 +55,34 @@
       isInteractiveTypeListWithTextHeader() {
         return this.inReplyTo.value.interactive.type === 'list' &&
           this.inReplyTo.value.interactive.header.type === 'text'
+      },
+      isLoadingMessage() {
+        return this.inReplyTo.type === undefined && this.inReplyTo.failedToLoad === undefined
+      },
+      isTextPlain() {
+        return this.inReplyTo.type === 'text/plain'
+      },
+      isSelectType() {
+        return this.inReplyTo.type === 'application/vnd.lime.select+json'
+      },
+      isAcceptableInteractiveType() {
+        return (
+          this.inReplyTo.type === 'application/json' &&
+          (this.isInteractiveTypeListWithTextHeader ||
+            this.isInteractiveTypeButtonWithTextHeader ||
+            this.isInteractiveTypeButtonWithoutTextHeader)
+        )
+      },
+      isAcceptableTextType() {
+        return this.isTextPlain || this.isSelectType || this.isAcceptableInteractiveType
+      },
+      hasFailedToLoad() {
+        return Boolean(this.inReplyTo.failedToLoad)
       }
     }
   }
 </script>
-  
+
 <style lang="scss" scoped>
   @import '../../../styles/variables.scss';
 
@@ -82,7 +92,6 @@
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
     background-color: $color-primary;
-
 
     &.own-message {
       background-color: $color-content-ghost;
@@ -96,10 +105,19 @@
     border: 1px solid $color-content-ghost;
     border-radius: 0.5rem;
     margin-bottom: 1rem;
+
+    .skeleton {
+      height: 2.5rem;
+    }
   }
 
   .in-reply-to-message {
     padding: 0.5rem;
   }
+
+.failed-message {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
 </style>
-  
