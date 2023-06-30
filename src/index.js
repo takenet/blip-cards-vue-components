@@ -33,6 +33,7 @@ import MenuList from './components/ApplicationJSon/MenuList'
 import ReplyCard from './components/ReplyCard/ReplyCard'
 import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
 import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
+import RepliedWithDocument from './components/ReplyCard/Replied/RepliedWithDocument'
 import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
 import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
 
@@ -86,6 +87,7 @@ function install(Vue) {
   // Replied
   components.push(Vue.component(RepliedBase.name, RepliedBase))
   components.push(Vue.component(RepliedWithText.name, RepliedWithText))
+  components.push(Vue.component(RepliedWithDocument.name, RepliedWithDocument))
   // In Reply To
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))

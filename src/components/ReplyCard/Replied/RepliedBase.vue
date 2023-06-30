@@ -4,6 +4,10 @@
       v-if="replied.type === 'text/plain'"
       :text="repliedValue"
     />
+    <replied-with-document 
+      v-if="replied.type.indexOf('application') != -1"
+      :document="repliedValue"
+    />
   </div>
 </template>
   
