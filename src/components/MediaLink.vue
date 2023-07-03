@@ -21,7 +21,8 @@
       :on-metadata-edit="isMetadataReady"
       :deletable="deletable"
       :on-cancel="onCancel"
-      :editing="editing"/>
+      :editing="editing"
+      :async-fetch-media="asyncFetchMedia"/>
     <blip-audio
       :file-url-msg="fileUrlMsg"
       :document="document"
@@ -38,7 +39,8 @@
       :deletable="deletable"
       :on-cancel="onCancel"
       :editing="editing"
-      :on-audio-validate-uri="onAudioValidateUri" />
+      :on-audio-validate-uri="onAudioValidateUri"
+      :async-fetch-media="asyncFetchMedia"/>
     <blip-video
       :video-uri-msg="videoUriMsg"
       :document="document"
@@ -55,7 +57,8 @@
       :on-metadata-edit="isMetadataReady"
       :deletable="deletable"
       :on-cancel="onCancel"
-      :editing="editing"/>
+      :editing="editing"
+      :async-fetch-media="asyncFetchMedia"/>
     <blip-file
       :title-msg="titleMsg"
       :document="document"
@@ -70,7 +73,8 @@
       :on-metadata-edit="isMetadataReady"
       :deletable="deletable"
       :on-cancel="onCancel"
-      :editing="editing"/>
+      :editing="editing"
+      :async-fetch-media="asyncFetchMedia"/>
 
     <div class="flex" :class="'notification ' + position" v-if="date">
       <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
@@ -116,6 +120,9 @@ export default {
     titleMsg: String,
     textMsg: String,
     onAudioValidateUri: {
+      type: Function
+    },
+    asyncFetchMedia: {
       type: Function
     }
   },
