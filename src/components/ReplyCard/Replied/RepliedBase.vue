@@ -6,7 +6,7 @@
     />
     <replied-with-document 
       v-if="replied.type.indexOf('application') != -1"
-      :document="repliedValue"
+      :document="replied"
     />
   </div>
 </template>
