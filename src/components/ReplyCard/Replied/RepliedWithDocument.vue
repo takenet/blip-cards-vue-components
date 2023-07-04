@@ -5,10 +5,31 @@
     </div>
     <div class="description-wrapper">
       <div class="link-description">
-        <span v-if="repliedDocumentTitle" :title="repliedDocumentTitle" class="text">{{ repliedDocumentTitle }}</span>
-        <span v-else :title="repliedDocumentUri" class="text">{{ repliedDocumentUri }}</span>
+        <bds-typo
+          v-if="repliedDocumentTitle"
+          tag="span"
+          bold="regular"
+          variant="fs-16"
+          class="text"
+          :title="repliedDocumentTitle"
+        >{{ sanitize(repliedDocumentTitle) | limitContentFilter(60) }}</bds-typo>
+        <bds-typo
+          v-else
+          tag="span"
+          bold="regular"
+          variant="fs-16"
+          class="text"
+          can-grow
+          :title="repliedDocumentUri"
+        >{{ sanitize(repliedDocumentUri) | limitContentFilter(60) }}</bds-typo>
       </div>
-      <span v-if="repliedDocumentSize" class="text small-text">{{ repliedDocumentSize | sizeInBytesFilter }}</span>
+      <bds-typo
+        v-if="repliedDocumentSize"
+        tag="span"
+        bold="regular"
+        variant="fs-12"
+        class="text small-text"
+      >{{ sanitize(repliedDocumentSize) | sizeInBytesFilter }}</bds-typo>
     </div>
   </div>
 </template>
@@ -97,8 +118,6 @@
       flex-direction: column;
       flex-grow: 1;
       .text {
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
       }
     }
