@@ -44,6 +44,9 @@
       document: {
         type: Object,
         default: () => ({})
+      },
+      onMediaSelected: {
+        type: Function
       }
     },
     computed: {
@@ -119,6 +122,7 @@
       flex-grow: 1;
       .text {
         white-space: nowrap;
+        color: $color-content-default;
       }
     }
 
@@ -126,6 +130,7 @@
       font-size: 10px;
       font-weight: 100;
       display: flex;
+      color: $color-content-default;
     }
   }
 }

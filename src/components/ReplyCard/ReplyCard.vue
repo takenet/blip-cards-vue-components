@@ -3,7 +3,7 @@
     <div :class="'bubble ' + position">
       <div class="reply-container">
         <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" :failed-message="translations.failedToLoad" />
-        <replied-base v-if="replied" :replied="replied" />
+        <replied-base v-if="replied" :replied="replied" :on-media-selected="onMediaSelected" />
       </div>
     </div>
     <blip-card-date
@@ -32,6 +32,9 @@
       status: {
         type: String,
         default: ''
+      },
+      onMediaSelected: {
+        type: Function
       }
     },
     computed: {
