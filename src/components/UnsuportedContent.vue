@@ -113,6 +113,10 @@ export default {
   align-items: center;
 }
 
+.unsuported-content-icons span{
+  max-width: calc(100% - 30px);
+}
+
 .blip-container.unsuported-content .bubble.left {
   background-color: $color-surface-1;
   color: $color-content-default;
