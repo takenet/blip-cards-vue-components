@@ -185,7 +185,7 @@ export default {
     this.audio.removeEventListener('loadedmetadata', this.audioLoaded)
     this.audio.removeEventListener('ended', this.resetPlay)
     this.audio.addEventListener('canplaythrough', this.audioReadyToPlay, false)
-    this.useMediaLocalUri && URL.revokeObjectURL(this.audioUri)
+    this.asyncFetchMedia && URL.revokeObjectURL(this.audioUri)
   },
   methods: {
     init: async function () {

@@ -274,7 +274,7 @@ export default {
     }
   },
   destroyed: function() {
-    this.useMediaLocalUri && URL.revokeObjectURL(this.imageUri)
+    this.asyncFetchMedia && URL.revokeObjectURL(this.imageUri)
   }
 }
 </script>

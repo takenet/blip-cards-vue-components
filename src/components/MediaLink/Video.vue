@@ -191,7 +191,7 @@ export default {
     this.video.removeEventListener('seeked', this.readyToPlay)
     this.video.removeEventListener('canplay', this.readyToPlay)
     this.video.removeEventListener('ended', this.resetPlay)
-    this.useMediaLocalUri && URL.revokeObjectURL(this.videoUri)
+    this.asyncFetchMedia && URL.revokeObjectURL(this.videoUri)
   },
   updated: function() {
     this.initVideo()

@@ -139,7 +139,7 @@ export default {
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
       window.open(uri, '_blank', 'noopener')
-      this.useMediaLocalUri && URL.revokeObjectURL(uri)
+      this.asyncFetchMedia && URL.revokeObjectURL(uri)
     }
   }
 }
