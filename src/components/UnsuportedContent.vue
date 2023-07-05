@@ -114,7 +114,7 @@ export default {
 }
 
 .unsuported-content-icons span{
-  max-width: calc(100% - 30px);
+  max-width: calc(100% - 25px);
 }
 
 .blip-container.unsuported-content .bubble.left {
