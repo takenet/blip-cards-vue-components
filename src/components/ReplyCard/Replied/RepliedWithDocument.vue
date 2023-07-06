@@ -12,7 +12,7 @@
           variant="fs-16"
           class="text"
           :title="repliedDocumentTitle"
-        >{{ sanitize(repliedDocumentTitle) | limitContentFilter(60) }}</bds-typo>
+        >{{ sanitize(repliedDocumentTitle) }}</bds-typo>
         <bds-typo
           v-else
           tag="span"
@@ -21,7 +21,7 @@
           class="text"
           can-grow
           :title="repliedDocumentUri"
-        >{{ sanitize(repliedDocumentUri) | limitContentFilter(60) }}</bds-typo>
+        >{{ sanitize(repliedDocumentUri) | limitContentFilter(40) }}</bds-typo>
       </div>
       <bds-typo
         v-if="repliedDocumentSize"
@@ -120,7 +120,10 @@
       display: flex;
       flex-direction: column;
       flex-grow: 1;
+      max-width: 100%;
       .text {
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
         color: $color-content-default;
       }
