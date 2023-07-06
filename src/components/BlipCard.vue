@@ -400,7 +400,7 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 
-const supportedRepliedTypes = ['text/plain']
+const supportedRepliedTypes = ['text/plain', 'application/vnd.lime.media-link+json']
 
 export default {
   name: 'blip-card',
