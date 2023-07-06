@@ -400,6 +400,8 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 
+const supportedRepliedTypes = ['text/plain']
+
 export default {
   name: 'blip-card',
   mixins: [base],
@@ -464,9 +466,11 @@ export default {
   },
   updated() {
     this.updatedPhotoMargin()
+    this.resolveUnsupportedRepliedType()
   },
   mounted() {
     this.updatedPhotoMargin()
+    this.resolveUnsupportedRepliedType()
   },
   methods: {
     editCard() {
@@ -519,6 +523,17 @@ export default {
       const photoHeight = 25
 
       return bubbleHeight - photoHeight
+    },
+    resolveUnsupportedRepliedType() {
+      if (this.document.type === 'application/vnd.lime.reply+json') {
+        const { replied } = this.document.content
+        const isUnsupportedRepliedType = !supportedRepliedTypes.includes(replied.type)
+
+        if (isUnsupportedRepliedType) {
+          this.document.type = replied.type
+          this.document.content = replied.value
+        }
+      }
     },
     unsupportedType(document) {
       if (this.onUnsupportedType) {
