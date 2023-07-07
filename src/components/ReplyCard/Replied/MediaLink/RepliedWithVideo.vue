@@ -1,7 +1,5 @@
 <template>
   <div>
-    <bds-typo bold="bold" variant="fs-12" margin="false">Video</bds-typo>
-    <bds-typo tag="span" variant="fs-16" margin="false">{{ video.type }}</bds-typo>
     <bds-typo tag="span" variant="fs-16" margin="false">{{ video.uri }}</bds-typo>
   </div>
 </template>
