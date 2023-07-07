@@ -534,7 +534,7 @@ export default {
         const { replied } = this.document.content
         let isSupportedRepliedType = supportedRepliedTypes.includes(replied.type)
 
-       if (replied.type === MessageTypesConstants.MEDIALINK_MESSAGE) {
+        if (replied.type === MessageTypesConstants.MEDIALINK_MESSAGE) {
           const repliedMediaType = replied.value.type
           isSupportedRepliedType = supportedRepliedMediaTypes.some(type => repliedMediaType.includes(type))
         }
