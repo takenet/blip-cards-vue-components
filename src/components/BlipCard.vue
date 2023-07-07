@@ -399,8 +399,10 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
+import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 
-const supportedRepliedTypes = ['text/plain']
+const supportedRepliedTypes = [MessageTypesConstants.TEXT_MESSAGE]
+const supportedRepliedMediaTypes = []
 
 export default {
   name: 'blip-card',
@@ -530,9 +532,15 @@ export default {
     resolveUnsupportedRepliedType() {
       if (this.document.type === 'application/vnd.lime.reply+json') {
         const { replied } = this.document.content
-        const isUnsupportedRepliedType = !supportedRepliedTypes.includes(replied.type)
+        let isSupportedRepliedType = supportedRepliedTypes.includes(replied.type)
 
-        if (isUnsupportedRepliedType) {
+        if (isSupportedRepliedType &&
+            replied.type === MessageTypesConstants.MEDIALINK_MESSAGE) {
+          isSupportedRepliedType = supportedRepliedMediaTypes
+            .findIndex(type => replied.value.type.indexOf(type) !== -1) !== -1
+        }
+
+        if (!isSupportedRepliedType) {
           this.document.type = replied.type
           this.document.content = replied.value
         }
