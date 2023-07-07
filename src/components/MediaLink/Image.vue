@@ -121,6 +121,7 @@ import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 import BrokenWhite from '../../assets/img/BrokenWhite.svg'
 import Broken from '../../assets/img/Broken.svg'
+import { tryCreateLocalMediaUri } from '../../utils/media.js'
 
 export default {
   mixins: [base],
@@ -147,6 +148,9 @@ export default {
     textMsg: {
       type: String,
       default: 'Text'
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data: function() {
@@ -156,12 +160,13 @@ export default {
       title: undefined,
       text: undefined,
       image: undefined,
-      aspect: undefined
+      aspect: undefined,
+      imageUri: undefined
     }
   },
   watch: {
     document: function() {
-      this.checkImage(this.document.uri)
+      this.init()
     }
   },
   computed: {
@@ -175,8 +180,11 @@ export default {
     }
   },
   methods: {
-    init: function() {
-      this.checkImage(this.document.uri)
+    init: async function() {
+      this.imageUri = this.asyncFetchMedia
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
+      this.checkImage(this.imageUri)
       this.id = guid()
       this.title = this.document.title
       this.text = this.document.text
@@ -213,9 +221,9 @@ export default {
     },
     handleImageLink: function() {
       if (this.onMediaSelected) {
-        this.onMediaSelected(this.document.uri)
+        this.onMediaSelected(this.imageUri)
       } else {
-        window.open(this.document.uri, '_blank', 'noopener')
+        window.open(this.imageUri, '_blank', 'noopener')
       }
     },
     checkImage(url) {
@@ -264,6 +272,9 @@ export default {
     } else {
       bubble.style.width = width / 4 + 'px'
     }
+  },
+  destroyed: function() {
+    this.asyncFetchMedia && URL.revokeObjectURL(this.imageUri)
   }
 }
 </script>

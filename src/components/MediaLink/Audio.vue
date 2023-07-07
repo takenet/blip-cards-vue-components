@@ -144,6 +144,7 @@
 
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
+import { tryCreateLocalMediaUri } from '../../utils/media.js'
 import mime from 'mime-types'
 
 export default {
@@ -154,6 +155,9 @@ export default {
       default: 'File URL'
     },
     onAudioValidateUri: {
+      type: Function
+    },
+    asyncFetchMedia: {
       type: Function
     }
   },
@@ -171,8 +175,8 @@ export default {
       playbackRate: undefined
     }
   },
-  mounted: function () {
-    this.init()
+  mounted: async function () {
+    await this.init()
     this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
@@ -181,10 +185,13 @@ export default {
     this.audio.removeEventListener('loadedmetadata', this.audioLoaded)
     this.audio.removeEventListener('ended', this.resetPlay)
     this.audio.addEventListener('canplaythrough', this.audioReadyToPlay, false)
+    this.asyncFetchMedia && URL.revokeObjectURL(this.audioUri)
   },
   methods: {
-    init: function () {
-      this.audioUri = this.document.uri
+    init: async function () {
+      this.audioUri = this.asyncFetchMedia
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
       this.isPlaying = false
       this.audio = Audio
       this.currentTime = 0

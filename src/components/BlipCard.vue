@@ -69,7 +69,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :on-audio-validate-uri="onAudioValidateUri" />
+          :on-audio-validate-uri="onAudioValidateUri"
+          :async-fetch-media="asyncFetchMedia"/>
 
         <document-select
           v-else-if="document.type === 'application/vnd.lime.document-select+json'"
@@ -448,6 +449,9 @@ export default {
       default: false
     },
     onFailedClickIcon: {
+      type: Function
+    },
+    asyncFetchMedia: {
       type: Function
     }
   },
