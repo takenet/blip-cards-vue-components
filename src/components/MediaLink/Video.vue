@@ -140,6 +140,7 @@
 <script>
 
 import { default as base } from '../../mixins/baseComponent.js'
+import { tryCreateLocalMediaUri } from '../../utils/media.js'
 import mime from 'mime-types'
 
 export default {
@@ -148,6 +149,9 @@ export default {
     videoUriMsg: {
       type: String,
       default: 'Video Uri'
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data: function() {
@@ -187,13 +191,16 @@ export default {
     this.video.removeEventListener('seeked', this.readyToPlay)
     this.video.removeEventListener('canplay', this.readyToPlay)
     this.video.removeEventListener('ended', this.resetPlay)
+    this.asyncFetchMedia && URL.revokeObjectURL(this.videoUri)
   },
   updated: function() {
     this.initVideo()
   },
   methods: {
-    init: function() {
-      this.videoUri = this.document.uri
+    init: async function() {
+      this.videoUri = this.asyncFetchMedia
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
       this.text = this.document.text
       this.isPlaying = false
       this.isFullScreen = false

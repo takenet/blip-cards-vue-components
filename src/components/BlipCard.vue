@@ -69,7 +69,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :on-audio-validate-uri="onAudioValidateUri" />
+          :on-audio-validate-uri="onAudioValidateUri"
+          :async-fetch-media="asyncFetchMedia"/>
 
         <document-select
           v-else-if="document.type === 'application/vnd.lime.document-select+json'"
@@ -399,8 +400,10 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
+import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 
-const supportedRepliedTypes = ['text/plain', 'application/vnd.lime.media-link+json']
+const supportedRepliedTypes = [MessageTypesConstants.TEXT_MESSAGE]
+const supportedRepliedMediaTypes = []
 
 export default {
   name: 'blip-card',
@@ -449,6 +452,9 @@ export default {
       default: false
     },
     onFailedClickIcon: {
+      type: Function
+    },
+    asyncFetchMedia: {
       type: Function
     }
   },
@@ -527,9 +533,14 @@ export default {
     resolveUnsupportedRepliedType() {
       if (this.document.type === 'application/vnd.lime.reply+json') {
         const { replied } = this.document.content
-        const isUnsupportedRepliedType = !supportedRepliedTypes.includes(replied.type)
+        let isSupportedRepliedType = supportedRepliedTypes.includes(replied.type)
 
-        if (isUnsupportedRepliedType) {
+        if (replied.type === MessageTypesConstants.MEDIALINK_MESSAGE) {
+          const repliedMediaType = replied.value.type
+          isSupportedRepliedType = supportedRepliedMediaTypes.some(type => repliedMediaType.includes(type))
+        }
+
+        if (!isSupportedRepliedType) {
           this.document.type = replied.type
           this.document.content = replied.value
         }

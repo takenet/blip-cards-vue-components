@@ -16,9 +16,10 @@
         v-on:click="toggleEdit"
       ></bds-button-icon> 
       <div v-if="!isEditing" :class="`file-${position}`">
-        <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
+        <div class="file-wrapper" @click="(editable || isLoading ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
           <div class="file-icon-wrapper">
-            <img class="file-icon" :src="mimeType | fileIconFilter"/>
+            <img v-if="isLoading" :src="loadingGif" alt />
+            <img v-else class="file-icon" :src="mimeType | fileIconFilter"/>
           </div>
           <div class="description-wrapper">
             <div class="link-description">
@@ -65,6 +66,7 @@
 
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
+import { tryCreateLocalMediaUri } from '../../utils/media.js'
 import mime from 'mime-types'
 
 export default {
@@ -80,6 +82,9 @@ export default {
     },
     onMediaSelected: {
       type: Function
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data: function() {
@@ -87,7 +92,8 @@ export default {
       title: undefined,
       uri: undefined,
       type: undefined,
-      size: undefined
+      size: undefined,
+      isLoading: false
     }
   },
   computed: {
@@ -119,12 +125,21 @@ export default {
         type: mime.lookup(this.uri) ? mime.lookup(this.uri) : 'application/pdf'
       })
     },
-    handleFileLink: function () {
+    handleFileLink: async function () {
       if (this.onMediaSelected) {
         this.onMediaSelected(this.document.uri)
       } else {
-        window.open(this.document.uri, '_blank', 'noopener')
+        this.isLoading = true
+        await this.openFileInNewTab()
+        this.isLoading = false
       }
+    },
+    openFileInNewTab: async function() {
+      const uri = this.asyncFetchMedia
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
+      window.open(uri, '_blank', 'noopener')
+      this.asyncFetchMedia && URL.revokeObjectURL(uri)
     }
   }
 }
