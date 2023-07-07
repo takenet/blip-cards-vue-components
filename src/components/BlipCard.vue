@@ -405,7 +405,7 @@ import { MediaLinkTypesConstants } from '../utils/MediaLinkTypesConstants.js'
 
 const supportedRepliedTypes = [MessageTypesConstants.TEXT_MESSAGE,
   MessageTypesConstants.MEDIALINK_MESSAGE]
-const supportedRepliedMediaTypes = [MediaLinkTypesConstants.VIDEO]
+const supportedRepliedMediaTypes = [MediaLinkTypesConstants.VIDEO, MediaLinkTypesConstants.APPLICATION]
 
 export default {
   name: 'blip-card',
@@ -539,6 +539,7 @@ export default {
 
         if (replied.type === MessageTypesConstants.MEDIALINK_MESSAGE) {
           const repliedMediaType = replied.value.type
+          isSupportedRepliedType = true
           isSupportedRepliedType = supportedRepliedMediaTypes.some(type => repliedMediaType.includes(type))
         }
 

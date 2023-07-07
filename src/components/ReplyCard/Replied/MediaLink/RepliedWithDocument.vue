@@ -80,7 +80,7 @@
 </script>
 
 <style lang="scss">
-@import '../../../styles/variables.scss';
+@import '../../../../styles/variables.scss';
 
 .file-wrapper {
   padding: 0;

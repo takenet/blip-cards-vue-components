@@ -1,22 +1,21 @@
 <template>
   <div>
-    <replied-with-text 
-      v-if="replied.type === 'text/plain'"
-      :text="repliedValue"
-    />
-    <replied-with-media-link
-      v-if="replied.type === 'application/vnd.lime.media-link+json'"
-      :replied="repliedValue"
-      :on-media-selected="onMediaSelected"
+    <replied-with-video
+      v-if="replied.type.indexOf('video') != -1"
+      :video="replied"
       :video-uri-msg="translations.videoUri"
     />
-
+    <replied-with-document 
+      v-else
+      :document="replied"
+      :on-media-selected="onMediaSelected"
+    />
   </div>
 </template>
   
 <script>
   export default {
-    name: 'replied-base',
+    name: 'replied-with-media-link',
     mixins: [],
     props: {
       replied: {
@@ -29,11 +28,6 @@
       translations: {
         type: Object,
         default: () => ({})
-      }
-    },
-    computed: {
-      repliedValue() {
-        return this.replied.value
       }
     }
   }
