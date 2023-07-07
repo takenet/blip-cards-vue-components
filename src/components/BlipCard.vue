@@ -391,7 +391,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"/>
       </div>
-      <div :class="'blip-card-photo ' + position" v-if="photo && position === 'right'" :style="{ top: photoMargin + 'px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
+      <div :class="'blip-card-photo' + position" v-if="photo && position === 'right'" :style="{ top: photoMargin + 'px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
       </div>
     </div>
   </div>
