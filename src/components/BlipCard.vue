@@ -367,6 +367,7 @@
           :document="editableDocument.content"
           :full-document="editableDocument"
           :date="date"
+          :on-media-selected="onMediaSelected"
           :on-save="saveCard"
           :editable="editable"
           :on-deleted="deleteCard"

@@ -4,6 +4,11 @@
       v-if="replied.type === 'text/plain'"
       :text="repliedValue"
     />
+    <replied-with-document 
+      v-if="replied.type.indexOf('application') != -1"
+      :document="repliedValue"
+      :on-media-selected="onMediaSelected"
+    />
   </div>
 </template>
   
@@ -15,6 +20,9 @@
       replied: {
         type: Object,
         default: {}
+      },
+      onMediaSelected: {
+        type: Function
       }
     },
     computed: {
