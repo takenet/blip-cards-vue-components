@@ -401,9 +401,10 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
+import { MediaLinkTypesConstants } from '../utils/MediaLinkTypesConstants.js'
 
 const supportedRepliedTypes = [MessageTypesConstants.TEXT_MESSAGE]
-const supportedRepliedMediaTypes = []
+const supportedRepliedMediaTypes = [MediaLinkTypesConstants.APPLICATION]
 
 export default {
   name: 'blip-card',
