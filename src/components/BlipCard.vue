@@ -361,7 +361,8 @@
         <reply-card
           v-else-if="document.type === 'application/vnd.lime.reply+json'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
+          :failed-to-send-msg="translations.failedToSend"          
+          :updatedPhotoMargin="updatedPhotoMargin"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -376,7 +377,15 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :translations="translations"
-          :async-fetch-media="asyncFetchMedia" />
+          :async-fetch-media="asyncFetchMedia"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :supported-formats-msg="translations.supportedFormats"
+          :file-url-msg="translations.fileUrl"
+          :title-msg="translations.title"
+          :image-uri-msg="translations.imageUri"
+          :text-msg="translations.text"
+          :video-uri-msg="translations.videoUri"
+          :on-audio-validate-uri="onAudioValidateUri"/>
 
         <unsuported-content
           v-else
@@ -402,11 +411,10 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
-import { MediaLinkTypesConstants } from '../utils/MediaLinkTypesConstants.js'
 
 const supportedRepliedTypes = [MessageTypesConstants.TEXT_MESSAGE,
   MessageTypesConstants.MEDIALINK_MESSAGE]
-const unSupportedRepliedMediaTypes = [MediaLinkTypesConstants.AUDIO, MediaLinkTypesConstants.IMAGE]
+const unSupportedRepliedMediaTypes = []
 
 export default {
   name: 'blip-card',

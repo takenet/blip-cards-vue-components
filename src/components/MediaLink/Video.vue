@@ -1,21 +1,20 @@
 <template>
   <div>
-    <div :class="'bubble ' + position">
-      <bds-button-icon v-if="deletable && !isEditing"
+    <bds-button-icon v-if="deletable && !isEditing"
         class="editIco trashIco"
         icon="trash"
         variant="delete"
         size="short"
         v-on:click="trash(document)"
-      ></bds-button-icon>
-      <bds-button-icon v-if="editable && !isEditing"
+    ></bds-button-icon>
+    <bds-button-icon v-if="editable && !isEditing"
         class="editIco"
         icon="edit"
         variant="primary"
         size="short"
         v-on:click="toggleEdit"
-      ></bds-button-icon>
-      <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!isEditing">
+    ></bds-button-icon>
+    <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!isEditing">
         <div class="video-player">
           <div class="sk-circle-wrapper" id="animation">
             <div class="sk-circle" id="animation">
@@ -104,8 +103,8 @@
         <div v-if="this.text" class="video-description">
           <bds-typo tag="p" variant="fs-16" bold="regular" margin="false">{{ this.text }}</bds-typo>
         </div>
-      </div>
-      <div class="form" v-else>
+    </div>
+    <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
           <bds-button-icon
             class="btn saveIco closeIco"
@@ -131,8 +130,7 @@
             {{ metadataButtonText }}
           </button>
         </form>
-      </div>
-    </div>
+    </div>    
   </div>
 </template>
 
