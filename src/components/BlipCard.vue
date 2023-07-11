@@ -375,7 +375,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :translations="translations" />
+          :translations="translations"
+          :async-fetch-media="asyncFetchMedia" />
 
         <unsuported-content
           v-else

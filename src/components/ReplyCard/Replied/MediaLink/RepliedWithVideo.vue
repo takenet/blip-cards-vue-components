@@ -1,6 +1,6 @@
 <template>
   <div>
-    <bds-typo tag="span" variant="fs-16" margin="false">{{ video.uri }}</bds-typo>
+    <bds-typo tag="span" variant="fs-16" margin="false">{{ repliedVideo.uri }}</bds-typo>
   </div>
 </template>
   
@@ -9,7 +9,7 @@
     name: 'replied-with-video',
     mixins: [],
     props: {
-      video: {
+      repliedVideo: {
         type: Object,
         default: () => ({})
       },
@@ -17,6 +17,9 @@
       translations: {
         type: Object,
         default: () => ({})
+      },
+      asyncFetchMedia: {
+        type: Function
       }
     },
     computed: {

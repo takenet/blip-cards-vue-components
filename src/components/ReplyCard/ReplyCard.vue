@@ -3,7 +3,11 @@
     <div :class="'bubble ' + position">
       <div class="reply-container">
         <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" :failed-message="translations.failedToLoad" />
-        <replied-base v-if="replied" :replied="replied" :on-media-selected="onMediaSelected" :translations="translations" />
+        <replied-base v-if="replied" 
+          :replied="replied" 
+          :on-media-selected="onMediaSelected" 
+          :translations="translations"
+          :async-fetch-media="asyncFetchMedia"  />
       </div>
     </div>
     <blip-card-date
@@ -28,6 +32,9 @@
       failedToSendMsg: {
         type: String,
         default: 'Falha ao enviar a mensagem'
+      },
+      asyncFetchMedia: {
+        type: Function
       },
       status: {
         type: String,

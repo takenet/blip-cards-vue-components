@@ -9,6 +9,7 @@
       :replied="repliedValue"
       :on-media-selected="onMediaSelected"
       :video-uri-msg="translations.videoUri"
+      :async-fetch-media="asyncFetchMedia"
     />
 
   </div>
@@ -24,6 +25,9 @@
         default: {}
       },
       onMediaSelected: {
+        type: Function
+      },
+      asyncFetchMedia: {
         type: Function
       },
       translations: {
