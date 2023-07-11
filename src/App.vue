@@ -137,6 +137,9 @@
         <button class="button" @click="sendReplyTextMessageWithDocument">
           ENVIAR Reply Message de Texto com Documento
         </button>
+        <button class="button" @click="sendReplyTextMessageWithVideo">
+          ENVIAR Reply Message de Texto com Video
+        </button>
         <button class="button" @click="sendReplyMessageInReplyToMenu">
           ENVIAR Reply Message de Menu
         </button>
@@ -826,6 +829,29 @@ export default {
               uri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
               title: 'my_pdf.pdf',
               size: '5540'
+            }
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'text/plain',
+            value: 'in reply to text'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyTextMessageWithVideo: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'video/mp4',
+              uri: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'
             }
           },
           inReplyTo: {
