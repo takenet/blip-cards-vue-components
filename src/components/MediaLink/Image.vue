@@ -253,7 +253,7 @@ export default {
   mounted: function() {
     let element = this.$el
     let bubbleReplied = element.parentNode
-    let container = bubbleReplied.parentNode
+    let container = bubbleReplied.parentNode.parentNode.parentNode.parentNode.parentNode
     let width = parseInt(
       window
         .getComputedStyle(container)
