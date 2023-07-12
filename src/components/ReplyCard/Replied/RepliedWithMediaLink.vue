@@ -1,6 +1,6 @@
 <template>
   <div :class="'media-link ' + replied.type.split('/')[0] ">
-    <div :class="'replied ' + position">
+    <div :class="'replied ' + position" id='replied'>
       <blip-image
       :image-uri-msg="titleMsg"
       :title-msg="titleMsg"
