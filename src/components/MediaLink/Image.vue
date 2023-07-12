@@ -110,7 +110,7 @@
           >{{ metadataButtonText }}</button>
         </form>
       </div>
-    </div>  
+    </div>
   </div>
 </template>
 
