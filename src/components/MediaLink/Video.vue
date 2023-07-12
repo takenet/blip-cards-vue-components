@@ -413,6 +413,9 @@ export default {
     max-width: $bubble-width;
     padding: 0;
     color: $color-content-default;
+    .video-player-wrapper .video-player-controls {
+      padding: $bubble-padding;
+    }
   }
   .left, .middle {
     .slider {
@@ -486,7 +489,6 @@ export default {
     }
 
     .video-player-controls {
-      padding: $bubble-padding;
       display: flex;
       justify-content: space-around;
       align-items: center;

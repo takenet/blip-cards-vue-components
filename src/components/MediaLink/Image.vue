@@ -252,9 +252,8 @@ export default {
   },
   mounted: function() {
     let element = this.$el
-    console.log('element')
-    console.log(element)
-    let container = element.parentNode
+    let bubbleReplied = element.parentNode
+    let container = bubbleReplied.parentNode
     let width = parseInt(
       window
         .getComputedStyle(container)
@@ -263,11 +262,11 @@ export default {
     )
 
     if (width <= 400) {
-      container.style.width = width + 'px'
+      bubbleReplied.style.width = width + 'px'
     } else if (width < 800) {
-      container.style.width = width / 3 + 'px'
+      bubbleReplied.style.width = width / 3 + 'px'
     } else {
-      container.style.width = width / 4 + 'px'
+      bubbleReplied.style.width = width / 4 + 'px'
     }
   },
   destroyed: function() {

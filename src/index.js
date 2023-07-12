@@ -34,8 +34,6 @@ import ReplyCard from './components/ReplyCard/ReplyCard'
 import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
 import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
 import RepliedWithMediaLink from './components/ReplyCard/Replied/RepliedWithMediaLink'
-import RepliedWithDocument from './components/ReplyCard/Replied/MediaLink/RepliedWithDocument'
-import RepliedWithVideo from './components/ReplyCard/Replied/MediaLink/RepliedWithVideo'
 import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
 import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
 
@@ -90,8 +88,6 @@ function install(Vue) {
   components.push(Vue.component(RepliedBase.name, RepliedBase))
   components.push(Vue.component(RepliedWithText.name, RepliedWithText))
   components.push(Vue.component(RepliedWithMediaLink.name, RepliedWithMediaLink))
-  components.push(Vue.component(RepliedWithDocument.name, RepliedWithDocument))
-  components.push(Vue.component(RepliedWithVideo.name, RepliedWithVideo))
   // In Reply To
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))

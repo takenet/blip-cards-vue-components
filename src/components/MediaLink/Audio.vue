@@ -311,6 +311,9 @@ export default {
     padding: 0;
     width: $bubble-width;
     color: $color-content-default;
+    .audio-player-wrapper {
+      padding: $bubble-padding;
+    }
   }
 
   .left,
@@ -357,7 +360,6 @@ export default {
   }
 
   .audio-player-wrapper {
-    padding: $bubble-padding;
     .audio-player-controls {
       display: flex;
       justify-content: space-around;

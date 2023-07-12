@@ -1,5 +1,5 @@
 <template>
-  <div class="application">
+  <div>
     <bds-button-icon v-if="deletable && !isEditing"
       class="editIco trashIco icon-button-margin"
       icon="trash"
@@ -150,26 +150,25 @@ export default {
 .media-link {
   .bubble {
     &.left, &.middle {
-      .application .description-wrapper {
+      .description-wrapper {
         color: $color-content-default;
       }
     }
 
     &.right {
-      .application{
-        .file-icon-wrapper {
-          background-color: $color-surface-3;
-          padding-right: 20px !important;
-          border-radius: 13px 0 0 13px;
-        }
-        .description-wrapper {
-          background-color: $color-surface-2;
-          color: $color-content-default;
-          padding-left: 20px !important;
-          border-radius: 0 2px 2px 0;
-        }
+      .file-icon-wrapper {
+        background-color: $color-surface-3;
+        padding-right: 20px !important;
+        border-radius: 13px 0 0 13px;
+      }
+      .description-wrapper {
+        background-color: $color-surface-2;
+        color: $color-content-default;
+        padding-left: 20px !important;
+        border-radius: 0 2px 2px 0;
       }
     }
+    
 
     &.left {
       .file-icon-wrapper {
@@ -245,6 +244,64 @@ export default {
 
       margin: 0;
       padding: 10px 20px;
+    }
+  }
+
+  .replied{
+    .file-wrapper {
+      padding: 0;
+      height: 80px;
+      text-decoration: inherit;
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      justify-content: flex-start;
+      background: $color-surface-3;
+
+      .file-icon-wrapper {
+        display: flex;
+        padding: 20px;
+        background: $color-surface-2;
+
+        .file-icon {
+          display: flex;
+          flex-direction: horizontal;
+          flex-grow: 1;
+          max-height: 40px;
+          max-width: 40px;
+          object-fit: contain;
+        }
+      }
+
+      .description-wrapper {
+        overflow: hidden;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 206px;
+        width: 100%;
+
+        .link-description {
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          max-width: 100%;
+          .text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: $color-content-default;
+          }
+        }
+
+        .small-text {
+          font-size: 10px;
+          font-weight: 100;
+          display: flex;
+          color: $color-content-default;
+        }
+      }
     }
   }
 

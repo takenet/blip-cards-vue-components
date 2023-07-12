@@ -1,7 +1,7 @@
 <template>
-  <div :class="'blip-container media-link ' + replied.type.split('/')[0] ">
-  <div :class="position">
-    <blip-image
+  <div :class="'media-link ' + replied.type.split('/')[0] ">
+    <div :class="'replied ' + position">
+      <blip-image
       :image-uri-msg="titleMsg"
       :title-msg="titleMsg"
       :text-msg="textMsg"
@@ -20,8 +20,8 @@
       :deletable="deletable"
       :on-cancel="onCancel"
       :editing="editing"
-      :async-fetch-media="asyncFetchMedia"/>
-    <blip-audio
+        :async-fetch-media="asyncFetchMedia"/>
+      <blip-audio
       :file-url-msg="fileUrlMsg"
       :document="replied"
       :full-document="replied"
@@ -36,8 +36,8 @@
       :on-cancel="onCancel"
       :editing="editing"
       :on-audio-validate-uri="onAudioValidateUri"
-      :async-fetch-media="asyncFetchMedia"/>
-    <blip-video
+        :async-fetch-media="asyncFetchMedia"/>
+      <blip-video
       :video-uri-msg="videoUriMsg"
       :document="replied"
       :full-document="replied"
@@ -52,24 +52,24 @@
       :deletable="deletable"
       :on-cancel="onCancel"
       :editing="editing"
-      :async-fetch-media="asyncFetchMedia"/>
-    <blip-file
-      :title-msg="titleMsg"
-      :document="replied"
-      :full-document="replied"
-      :position="position"
-      :date="date"
-      v-else
-      :editable="editable"
-      :on-media-selected="onMediaSelected"
-      :on-save="save"
-      :on-deleted="onDeleted"
-      :on-metadata-edit="isMetadataReady"
-      :deletable="deletable"
-      :on-cancel="onCancel"
-      :editing="editing"
-      :async-fetch-media="asyncFetchMedia"/>
-  </div>
+        :async-fetch-media="asyncFetchMedia"/>
+      <blip-file
+        :title-msg="titleMsg"
+        :document="replied"
+        :full-document="replied"
+        :position="position"
+        :date="date"
+        v-else
+        :editable="editable"
+        :on-media-selected="onMediaSelected"
+        :on-save="save"
+        :on-deleted="onDeleted"
+        :on-metadata-edit="isMetadataReady"
+        :deletable="deletable"
+        :on-cancel="onCancel"
+        :editing="editing"
+        :async-fetch-media="asyncFetchMedia"/>
+    </div>
   </div>
 </template>
   
@@ -134,4 +134,3 @@ export default {
   }
 }
 </script>
-  
