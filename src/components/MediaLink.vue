@@ -1,5 +1,6 @@
 <template>
-  <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)">
+  <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)"
+    id="blip-container">
     <div :class="'bubble ' + position" id='media-link'>
       <blip-image
       :image-uri-msg="titleMsg"

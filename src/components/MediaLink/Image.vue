@@ -250,15 +250,23 @@ export default {
         }
       }
       img.src = url
+    },
+    getBlipContainer(element) {
+      let container = element
+      while (container.id !== 'blip-container') {
+        if (!container.parentNode) {
+          return container
+        }
+        container = container.parentNode
+      }
+      return container
     }
   },
   mounted: function() {
     let element = this.$el
     let bubbleReplied = element.parentNode
-    let container = bubbleReplied.parentNode
-    if (bubbleReplied.id === 'replied') {
-      container = bubbleReplied.parentNode.parentNode.parentNode.parentNode.parentNode
-    }
+    let container = this.getBlipContainer(bubbleReplied)
+
     let width = parseInt(
       window
         .getComputedStyle(container)
@@ -266,14 +274,14 @@ export default {
         .replace('px', '')
     )
 
-    var bubble = element.querySelector('.image')
+    var imageElement = element.querySelector('.image')
 
     if (width <= 400) {
-      bubble.style.width = width + 'px'
+      imageElement.style.width = width + 'px'
     } else if (width < 800) {
-      bubble.style.width = width / 3 + 'px'
+      imageElement.style.width = width / 3 + 'px'
     } else {
-      bubble.style.width = width / 4 + 'px'
+      imageElement.style.width = width / 4 + 'px'
     }
   },
   destroyed: function() {

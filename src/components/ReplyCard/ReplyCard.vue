@@ -1,5 +1,6 @@
 <template>
-  <div class="blip-container reply-card">
+  <div class="blip-container reply-card"
+    id="blip-container">
     <div :class="'bubble ' + position">
       <div class="reply-container">
         <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" :failed-message="translations.failedToLoad" />
