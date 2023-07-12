@@ -414,7 +414,6 @@ import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 
 const supportedRepliedTypes = [MessageTypesConstants.TEXT_MESSAGE,
   MessageTypesConstants.MEDIALINK_MESSAGE]
-const unSupportedRepliedMediaTypes = []
 
 export default {
   name: 'blip-card',
@@ -545,11 +544,6 @@ export default {
       if (this.document.type === 'application/vnd.lime.reply+json') {
         const { replied } = this.document.content
         let isSupportedRepliedType = supportedRepliedTypes.includes(replied.type)
-
-        if (replied.type === MessageTypesConstants.MEDIALINK_MESSAGE) {
-          const repliedMediaType = replied.value.type
-          isSupportedRepliedType = !unSupportedRepliedMediaTypes.some(type => repliedMediaType.includes(type))
-        }
 
         if (!isSupportedRepliedType) {
           this.document.type = replied.type
