@@ -361,12 +361,14 @@
         <reply-card
           v-else-if="document.type === 'application/vnd.lime.reply+json'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
+          :failed-to-send-msg="translations.failedToSend"          
+          :updatedPhotoMargin="updatedPhotoMargin"
           :status="status"
           :position="position"
           :document="editableDocument.content"
           :full-document="editableDocument"
           :date="date"
+          :on-media-selected="onMediaSelected"
           :on-save="saveCard"
           :editable="editable"
           :on-deleted="deleteCard"
@@ -374,7 +376,16 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :translations="translations" />
+          :translations="translations"
+          :async-fetch-media="asyncFetchMedia"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :supported-formats-msg="translations.supportedFormats"
+          :file-url-msg="translations.fileUrl"
+          :title-msg="translations.title"
+          :image-uri-msg="translations.imageUri"
+          :text-msg="translations.text"
+          :video-uri-msg="translations.videoUri"
+          :on-audio-validate-uri="onAudioValidateUri"/>
 
         <unsuported-content
           v-else
@@ -399,8 +410,10 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
+import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 
-const supportedRepliedTypes = ['text/plain']
+const supportedRepliedTypes = [MessageTypesConstants.TEXT_MESSAGE,
+  MessageTypesConstants.MEDIALINK_MESSAGE]
 
 export default {
   name: 'blip-card',
@@ -530,9 +543,9 @@ export default {
     resolveUnsupportedRepliedType() {
       if (this.document.type === 'application/vnd.lime.reply+json') {
         const { replied } = this.document.content
-        const isUnsupportedRepliedType = !supportedRepliedTypes.includes(replied.type)
+        let isSupportedRepliedType = supportedRepliedTypes.includes(replied.type)
 
-        if (isUnsupportedRepliedType) {
+        if (!isSupportedRepliedType) {
           this.document.type = replied.type
           this.document.content = replied.value
         }

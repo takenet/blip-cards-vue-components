@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="'bubble ' + position">
+    <div class="image">
       <bds-button-icon v-if="deletable && !isEditing"
         class="editIco trashIco"
         icon="trash"
@@ -17,7 +17,7 @@
       ></bds-button-icon> 
       <div class="header" :id="id" v-if="!isEditing">
         <div
-          :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')"
+          :class="'background ratio ratio' + documentAspect + (editable ? '' : ' pointer')"
           :style="styleObject"
           @click="(editable ? null : handleImageLink())"
         >
@@ -27,7 +27,6 @@
           <span v-if="document.text" v-html="sanitize(document.text)"></span>
         </div>
       </div>
-
       <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
           <bds-button-icon 
@@ -251,11 +250,23 @@ export default {
         }
       }
       img.src = url
+    },
+    getBlipContainer(element) {
+      let container = element
+      while (container.id !== 'blip-container') {
+        if (!container.parentNode) {
+          return container
+        }
+        container = container.parentNode
+      }
+      return container
     }
   },
   mounted: function() {
     let element = this.$el
-    let container = element.parentNode
+    let bubbleReplied = element.parentNode
+    let container = this.getBlipContainer(bubbleReplied)
+
     let width = parseInt(
       window
         .getComputedStyle(container)
@@ -263,14 +274,14 @@ export default {
         .replace('px', '')
     )
 
-    var bubble = element.querySelector('.bubble')
+    var imageElement = element.querySelector('.image')
 
     if (width <= 400) {
-      bubble.style.width = width + 'px'
+      imageElement.style.width = width + 'px'
     } else if (width < 800) {
-      bubble.style.width = width / 3 + 'px'
+      imageElement.style.width = width / 3 + 'px'
     } else {
-      bubble.style.width = width / 4 + 'px'
+      imageElement.style.width = width / 4 + 'px'
     }
   },
   destroyed: function() {
@@ -292,9 +303,6 @@ export default {
     img {
       width: 100%;
       display: block;
-    }
-    .img-border {
-      border-radius: inherit !important;
     }
     .background {
       background-position: center;
