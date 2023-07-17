@@ -4,7 +4,7 @@
 @import 'simple-scrollbar';
 
 * {
-  font-family: 'Carbona', 'Nunito', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 
 .flex {
@@ -12,7 +12,7 @@
 }
 
 .failure {
-  color: $color-error;
+  color: $color-extended-red;
   font-size: 10px;
   margin-right: 5px;
 }
@@ -76,8 +76,8 @@
 
   .bubble.right {
       border-radius: 13px 2px 13px 13px;
-      background-color: $color-surface-3;
-      color: $color-content-default;
+      background-color: $color-content-default;
+      color: $color-surface-1;
       float: right;
   }
 
@@ -221,7 +221,7 @@
     .title {
       text-align: left;
       strong {
-        color: $color-content-default;
+        color: $color-surface-1;
         display: block;
       }
 
@@ -465,19 +465,19 @@
       font-size: 12px;
     }
     ::-webkit-input-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
     ::-moz-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
     :-ms-input-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
     :-moz-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
   }
