@@ -337,15 +337,15 @@ export default {
       background-color: $color-content-ghost;
     }
     .progress .pin {
-      background-color: $color-content-default;
+      background-color: $color-surface-1;
     }
     .audio-player-button {
-      fill: $color-content-default;
+      fill: $color-surface-1;
     }
 
      .blip-change-playback-rate {
       border-color: $color-content-ghost;
-      color: $color-content-default;
+      color: $color-surface-1;
 	  }
   }
 
