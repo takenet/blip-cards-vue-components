@@ -9,7 +9,6 @@
         :supported-formats-msg="supportedFormatsMsg"
         :document="replied"
         :full-document="replied"
-        :position="position"
         :date="date"
         v-if="replied.type.indexOf('image') != -1"
         :editable="editable"
@@ -26,7 +25,6 @@
         :file-url-msg="fileUrlMsg"
         :document="replied"
         :full-document="replied"
-        :position="position"
         :date="date"
         v-else-if="replied.type.indexOf('audio') != -1"
         :editable="editable"
@@ -43,7 +41,6 @@
         :video-uri-msg="videoUriMsg"
         :document="replied"
         :full-document="replied"
-        :position="position"
         :date="date"
         @updated="emitUpdate"
         v-else-if="replied.type.indexOf('video') != -1"
@@ -115,6 +112,10 @@ export default {
     textMsg: String,
     onAudioValidateUri: {
       type: Function
+    },
+    position: {
+      type: String,
+      default: 'left'
     }
   },
   data: function() {
