@@ -278,28 +278,6 @@ export default {
       return container
     }
   },
-  mounted: function() {
-    let element = this.$el
-    let bubbleReplied = element.parentNode
-    let container = this.getBlipContainer(bubbleReplied)
-
-    let width = parseInt(
-      window
-        .getComputedStyle(container)
-        .width.toString()
-        .replace('px', '')
-    )
-
-    var imageElement = element.querySelector('.image')
-
-    if (width <= 400) {
-      imageElement.style.width = width + 'px'
-    } else if (width < 800) {
-      imageElement.style.width = width / 3 + 'px'
-    } else {
-      imageElement.style.width = width / 4 + 'px'
-    }
-  },
   destroyed: function() {
     this.asyncFetchMedia && URL.revokeObjectURL(this.imageUri)
   }

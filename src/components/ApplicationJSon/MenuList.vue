@@ -12,13 +12,13 @@
         <div class="fixed-options disable-selection">
           <ul>
             <div class="menu-list-padding">
-              <bds-typo variant="fs-16" bold="regular" italic="true" class="disable-selection color-content-ghost" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
+              <bds-typo variant="fs-16" bold="regular" italic="true" class="disable-selection typo-light" v-bind:class="{ readonly: readonly }">{{ buttonText }}</bds-typo>
             </div>
             <li v-for="(section, index) in sections" v-bind:key="index" class="disable-selection" v-bind:class="{ readonly: readonly }">
               <div>
                 <li v-if="section.title" class="section-title" v-bind:class="{ readonly: readonly }">
                   <div class="menu-list-padding">
-                    <bds-typo variant="fs-16" bold="semi-bold" class="color-content-default">{{ sanitize(section.title) }}</bds-typo>
+                    <bds-typo variant="fs-16" bold="semi-bold" class="typo">{{ sanitize(section.title) }}</bds-typo>
                   </div>
                 </li>
                 <li v-for="(row, index) in section.rows" v-bind:key="index" class="disable-selection" v-bind:class="{ readonly: readonly }">
@@ -52,7 +52,7 @@
           <li v-for="(section, indexSection) in sections" v-bind:key="indexSection">
             <div>
               <li v-if="section.title" class="section-title" @click="editOption(section, index, $event)">
-                <bds-typo variant="fs-16" bold="semi-bold" class="color-content-default">{{ sanitize(section.title) }}</bds-typo>
+                <bds-typo variant="fs-16" bold="semi-bold" class="color-surface-1">{{ sanitize(section.title) }}</bds-typo>
               </li>
               <li v-for="(row, indexRow) in section.rows" v-bind:key="indexRow" @click="editOption(row, indexSection, indexRow, $event)">
                 <div>
@@ -267,14 +267,6 @@ export default {
 
 .menu-list-option {
   color: $color-primary;
-}
-
-.color-content-default {
-  color: $color-content-default;
-}
-
-.color-content-ghost {
-  color: $color-content-ghost;
 }
 
 .menu-list-padding {

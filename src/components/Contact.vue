@@ -15,19 +15,19 @@
 
         <div>
           <div v-if="this.document.name" class="mb-name">
-            <bds-typo variant="fs-16" bold="semi-bold">{{ sanitizeText(this.document.name) | limitContentFilter(30) }}</bds-typo>
+            <bds-typo class="typo" variant="fs-16" bold="semi-bold">{{ sanitizeText(this.document.name) | limitContentFilter(30) }}</bds-typo>
           </div>
           <div v-if="this.document.cellPhoneNumber" class="mb-infos ml-infos">
-            <bds-typo tag="p" variant="fs-12" bold="regular">{{ phoneLabel }}</bds-typo>
-            <bds-typo tag="p" variant="fs-16" bold="regular">{{ sanitizeText(this.document.cellPhoneNumber) }}</bds-typo>
+            <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">{{ phoneLabel }}</bds-typo>
+            <bds-typo class="typo" tag="p" variant="fs-16" bold="regular">{{ sanitizeText(this.document.cellPhoneNumber) }}</bds-typo>
           </div>
           <div v-if="this.document.email" class="mb-infos ml-infos">
-            <bds-typo tag="p" variant="fs-12" bold="regular">{{ mailLabel }}</bds-typo>
-            <bds-typo tag="p" variant="fs-16" bold="regular">{{ sanitizeText(this.document.email) }}</bds-typo>
+            <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">{{ mailLabel }}</bds-typo>
+            <bds-typo class="typo" tag="p" variant="fs-16" bold="regular">{{ sanitizeText(this.document.email) }}</bds-typo>
           </div>
           <div v-if="this.document.address" class="mb-infos ml-infos">
-            <bds-typo tag="p" variant="fs-12" bold="regular">{{ addressLabel }}</bds-typo>
-            <bds-typo tag="p" variant="fs-16" bold="regular">{{ sanitizeText(this.document.address) }}</bds-typo>
+            <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">{{ addressLabel }}</bds-typo>
+            <bds-typo class="typo" tag="p" variant="fs-16" bold="regular">{{ sanitizeText(this.document.address) }}</bds-typo>
           </div>
         </div>
       </div>

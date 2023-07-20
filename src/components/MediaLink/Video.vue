@@ -101,7 +101,7 @@
           </div>
         </div>
         <div v-if="this.text" class="video-description">
-          <bds-typo tag="p" variant="fs-16" bold="regular" margin="false">{{ this.text }}</bds-typo>
+          <bds-typo class="typo" tag="p" variant="fs-16" bold="regular" margin="false">{{ this.text }}</bds-typo>
         </div>
     </div>
     <div class="form" v-else>
@@ -412,7 +412,6 @@ export default {
   .bubble {
     max-width: $bubble-width;
     padding: 0;
-    color: $color-content-default;
     .video-player-wrapper .video-player-controls {
       padding: $bubble-padding;
     }
@@ -427,16 +426,23 @@ export default {
     .video-player-button {
       fill: $color-content-default;
     }
+    
+    .video-player-time{
+      color: $color-content-default;
+    }
   }
   .right {
     .slider {
       background-color: $color-content-ghost;
     }
     .progress .pin {
-      background-color: $color-content-default;
+      background-color: $color-surface-1;
     }
     .video-player-button {
-      fill: $color-content-default;
+      fill: $color-surface-1;
+    }
+    .video-player-time{
+      color: $color-surface-1;
     }
   }
 
@@ -564,7 +570,6 @@ export default {
       font-family: 'Nunito Sans', sans-serif;
       font-size: x-small;
       line-height: 10px;
-      color: inherit;
     }
 
     .video-player-range {

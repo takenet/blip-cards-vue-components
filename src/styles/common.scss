@@ -59,6 +59,12 @@
       background-color: $color-surface-1;
       color: $color-content-default;
       float: left;
+      .typo{
+        color: $color-content-default;
+      }
+      .typo-light{
+        color: $color-content-ghost;
+      }
   }
 
   .bubble.middle {
@@ -70,6 +76,7 @@
     display: inline-block;
   }
 
+
   .ratio {
     border-radius: 0
   }
@@ -79,6 +86,12 @@
       background-color: $color-content-default;
       color: $color-surface-1;
       float: right;
+      .typo{
+        color: $color-surface-1;
+      }      
+      .typo-light{
+        color: $color-surface-2;
+      }
   }
 
   .notification {
@@ -221,7 +234,6 @@
     .title {
       text-align: left;
       strong {
-        color: $color-surface-1;
         display: block;
       }
 
