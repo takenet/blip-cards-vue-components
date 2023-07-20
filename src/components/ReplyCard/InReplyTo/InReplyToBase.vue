@@ -17,6 +17,7 @@
         bold="regular"
         margin="false"
         italic="true"
+        class="typo"
         >{{ failedMessage }}
       </bds-typo>
     </div>

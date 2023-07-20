@@ -310,7 +310,6 @@ export default {
   .bubble {
     padding: 0;
     width: $bubble-width;
-    color: $color-content-default;
     .audio-player-wrapper {
       padding: $bubble-padding;
     }
@@ -327,8 +326,11 @@ export default {
     .audio-player-button {
       fill: $color-content-default;
     }
-     .blip-change-playback-rate {
+    .blip-change-playback-rate {
       border-color: $color-content-ghost;
+      color: $color-content-default;
+    }
+    .video-player-time{
       color: $color-content-default;
     }
   }
@@ -341,6 +343,10 @@ export default {
     }
     .audio-player-button {
       fill: $color-surface-1;
+    }
+    
+    .video-player-time{
+      color: $color-surface-1;
     }
 
      .blip-change-playback-rate {

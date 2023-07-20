@@ -15,7 +15,7 @@
                   margin="false"
                   variant="fs-16"
                   bold="regular"
-                  class="color-content-default truncate"
+                  class="typo truncate"
                   v-html="sanitize(header.document.filename)"
                 ></bds-typo>
                 <bds-typo
@@ -24,7 +24,7 @@
                   margin="false"
                   variant="fs-16"
                   bold="regular"
-                  class="color-content-default truncate"
+                  class="color-surface-1 truncate"
                   v-html="sanitize(header.document.link)"
                 ></bds-typo>
               </div>
@@ -53,12 +53,12 @@
               margin="false"
               variant="fs-16"
               bold="bold"
-              class="color-content-default"
+              class="typo"
               v-html="sanitize(header.text)"
             ></bds-typo>
           </div>
           <div v-if="header.type === 'video'">
-            <video controls width="330" class="interactive-header-video">
+            <video controls width="300" class="interactive-header-video">
               <source :src="header.video.link" />
             </video>
           </div>
@@ -70,7 +70,7 @@
             margin="false"
             variant="fs-16"
             bold="regular"
-            class="color-content-default"
+            class="typo"
             v-html="sanitize(body.text)"
           ></bds-typo>
         </div>
@@ -81,7 +81,7 @@
             margin="false"
             variant="fs-14"
             bold="regular"
-            class="color-content-default"
+            class="typo"
             v-html="sanitize(footer.text)"
           ></bds-typo>
         </div>
@@ -162,7 +162,7 @@ export default {
       this.headerImgElement.style.height = `${newHeight}px`
     },
     fitLandscapeImage(aspectRatio) {
-      const IMG_LANDSCAPE_WIDTH = 330
+      const IMG_LANDSCAPE_WIDTH = 300
       const newHeight = aspectRatio * IMG_LANDSCAPE_WIDTH
 
       this.headerImgContainerElement.style.width = `${IMG_LANDSCAPE_WIDTH}px`
@@ -183,7 +183,7 @@ export default {
 $hard-round: 13px;
 
 .interactive-button-container {
-  max-width: 346px;
+  max-width: 316px;
   min-width: 256px;
   border-radius: inherit;
   text-align: left;
@@ -280,7 +280,7 @@ $hard-round: 13px;
     padding-left: 10px;
     display: flex;
     flex-direction: column;
-
+    
     .link-description {
       display: flex;
       flex-direction: column;

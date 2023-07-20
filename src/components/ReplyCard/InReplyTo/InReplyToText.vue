@@ -5,7 +5,7 @@
       variant="fs-16"
       :bold="hasDescription ? 'bold' : 'regular'"
       margin="false"
-      class="message-replied-text"
+      class="message-replied-text typo"
       :class="{ 'single': !hasDescription, 'title': hasDescription }">{{ inReplyToText }}</bds-typo>
     <bds-typo
       v-if="hasDescription"
