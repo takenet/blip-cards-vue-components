@@ -3,7 +3,11 @@
     <div :class="'bubble ' + position">
       <div class="interactive-button-container">
         <div v-if="header" class="interactive-header">
-          <div v-if="header.type === 'document'" class="interactive-file" @click="handleFileLink(header.document.link)">
+          <div
+            v-if="header.type === 'document'"
+            class="interactive-file"
+            @click="handleFileLink(header.document.link)"
+          >
             <div class="file-icon-wrapper">
               <img class="file-icon" :src="mimeType | fileIconFilter" />
             </div>
@@ -15,7 +19,7 @@
                   margin="false"
                   variant="fs-16"
                   bold="regular"
-                  class="typo truncate"
+                  class="truncate"
                   v-html="sanitize(header.document.filename)"
                 ></bds-typo>
                 <bds-typo
@@ -24,7 +28,7 @@
                   margin="false"
                   variant="fs-16"
                   bold="regular"
-                  class="color-surface-1 truncate"
+                  class=" truncate"
                   v-html="sanitize(header.document.link)"
                 ></bds-typo>
               </div>
@@ -181,6 +185,37 @@ export default {
 @import '../styles/variables.scss';
 
 $hard-round: 13px;
+.bubble {
+  &.left,
+  &.midlle {
+    .interactive-button-container {
+      .interactive-header {
+        .interactive-file {
+          .file-icon-wrapper {
+            background-color: $color-surface-2;
+          }
+          .description-wrapper {
+            background-color: $color-surface-1;
+          }
+        }
+      }
+    }
+  }
+  &.right {
+    .interactive-button-container {
+      .interactive-header {
+        .interactive-file {
+          .file-icon-wrapper {
+            background-color: $color-surface-3;
+          }
+          .description-wrapper {
+            background-color: $color-surface-2;
+          }
+        }
+      }
+    }
+  }
+}
 
 .interactive-button-container {
   max-width: 316px;
@@ -261,7 +296,6 @@ $hard-round: 13px;
     display: flex;
     padding: 20px;
     padding-right: 10px;
-    background-color: $color-surface-2;
     border-top-left-radius: $hard-round;
 
     .file-icon {
@@ -280,7 +314,8 @@ $hard-round: 13px;
     padding-left: 10px;
     display: flex;
     flex-direction: column;
-    
+    color: $color-content-default;
+
     .link-description {
       display: flex;
       flex-direction: column;
