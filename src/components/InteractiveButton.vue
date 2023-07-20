@@ -15,7 +15,7 @@
                   margin="false"
                   variant="fs-16"
                   bold="regular"
-                  class="color-content-default truncate"
+                  class="color-surface-1 truncate"
                   v-html="sanitize(header.document.filename)"
                 ></bds-typo>
                 <bds-typo
@@ -24,7 +24,7 @@
                   margin="false"
                   variant="fs-16"
                   bold="regular"
-                  class="color-content-default truncate"
+                  class="color-surface-1 truncate"
                   v-html="sanitize(header.document.link)"
                 ></bds-typo>
               </div>
@@ -53,7 +53,7 @@
               margin="false"
               variant="fs-16"
               bold="bold"
-              class="color-content-default"
+              class="color-surface-1"
               v-html="sanitize(header.text)"
             ></bds-typo>
           </div>
@@ -70,7 +70,7 @@
             margin="false"
             variant="fs-16"
             bold="regular"
-            class="color-content-default"
+            class="color-surface-1"
             v-html="sanitize(body.text)"
           ></bds-typo>
         </div>
@@ -81,7 +81,7 @@
             margin="false"
             variant="fs-14"
             bold="regular"
-            class="color-content-default"
+            class="color-surface-1"
             v-html="sanitize(footer.text)"
           ></bds-typo>
         </div>
@@ -280,7 +280,7 @@ $hard-round: 13px;
     padding-left: 10px;
     display: flex;
     flex-direction: column;
-
+    
     .link-description {
       display: flex;
       flex-direction: column;
