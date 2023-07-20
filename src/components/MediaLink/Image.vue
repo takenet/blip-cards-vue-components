@@ -266,7 +266,8 @@ export default {
     let element = this.$el
     let bubbleReplied = element.parentNode
     let container = this.getBlipContainer(bubbleReplied)
-
+    console.log('container')
+    console.log(container)
     let width = parseInt(
       window
         .getComputedStyle(container)
