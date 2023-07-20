@@ -186,7 +186,7 @@ export default {
 
 $hard-round: 13px;
 .bubble {
-  &.left,
+  &.left, 
   &.midlle {
     .interactive-button-container {
       .interactive-header {
