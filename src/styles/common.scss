@@ -4,7 +4,7 @@
 @import 'simple-scrollbar';
 
 * {
-  font-family: 'Carbona', 'Nunito', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 
 .flex {
@@ -12,7 +12,7 @@
 }
 
 .failure {
-  color: $color-error;
+  color: $color-extended-red;
   font-size: 10px;
   margin-right: 5px;
 }
@@ -48,7 +48,7 @@
       max-width: 90%;
       min-width: 160px;
       font-size: 16px;
-      font-weight: 300;
+      font-weight: 400;
       line-height: 20px;
       white-space: pre-line;
       border: 1px solid $color-content-ghost;
@@ -59,6 +59,12 @@
       background-color: $color-surface-1;
       color: $color-content-default;
       float: left;
+      .typo{
+        color: $color-content-default;
+      }
+      .typo-light{
+        color: $color-content-ghost;
+      }
   }
 
   .bubble.middle {
@@ -70,15 +76,22 @@
     display: inline-block;
   }
 
+
   .ratio {
     border-radius: 0
   }
 
   .bubble.right {
       border-radius: 13px 2px 13px 13px;
-      background-color: $color-surface-3;
-      color: $color-content-default;
+      background-color: $color-content-default;
+      color: $color-surface-1;
       float: right;
+      .typo{
+        color: $color-surface-1;
+      }      
+      .typo-light{
+        color: $color-surface-2;
+      }
   }
 
   .notification {
@@ -221,7 +234,6 @@
     .title {
       text-align: left;
       strong {
-        color: $color-content-default;
         display: block;
       }
 
@@ -465,19 +477,19 @@
       font-size: 12px;
     }
     ::-webkit-input-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
     ::-moz-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
     :-ms-input-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
     :-moz-placeholder {
-      color: $vue-time;
+      color: $color-content-ghost;
       font-size: 12px;
     }
   }

@@ -47,7 +47,7 @@ export default {
 @import '../styles/variables.scss';
 
 .ticket {
-  color: #8ca0b3;
+  color: $color-content-disable;
   text-align: center;
   overflow: hidden;
   padding-top: 5px;
@@ -68,7 +68,7 @@ export default {
     content: '';
     position: absolute;
     height: 5px;
-    border-bottom: 1px solid #e3ecec;
+    border-bottom: 1px solid $color-surface-3;
     top: 0;
     width: 600px;
   }

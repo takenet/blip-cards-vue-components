@@ -11,16 +11,16 @@
         </div>
         <div class="disable-selection">
           <div class="header-text">
-            <bds-typo variant="fs-16" bold="bold" line-height="plus" class="disable-selection color-content-default" v-bind:class="{ readonly: readonly }">{{ headerText }}</bds-typo>
+            <bds-typo variant="fs-16" bold="bold" line-height="plus" class="disable-selection typo" v-bind:class="{ readonly: readonly }">{{ headerText }}</bds-typo>
           </div>
           <div class="body-text">
-            <bds-typo variant="fs-16" bold="regular" line-height="plus" class="disable-selection color-content-default" v-bind:class="{ readonly: readonly }">{{ bodyText }}</bds-typo>
+            <bds-typo variant="fs-16" bold="regular" line-height="plus" class="disable-selection typo" v-bind:class="{ readonly: readonly }">{{ bodyText }}</bds-typo>
           </div>
           <div class="button-text text-center pointer">
             <div>
               <div class="menu-list-options-button">
                 <bds-icon name="list" theme="outline" class="menu-list-options-button-icon"></bds-icon>
-                <bds-typo variant="fs-16" bold="regular" line-height="simple" class="disable-selection menu-list-prompt-option menu-list-options-button-text" v-bind:class="{ readonly: readonly }">
+                <bds-typo variant="fs-16" bold="regular" line-height="simple" class="disable-selection menu-list-prompt-option menu-list-options-button-text typo" v-bind:class="{ readonly: readonly }">
                   {{ buttonText }}
                 </bds-typo>
               </div>
@@ -141,10 +141,6 @@ export default {
 
 <style scoped lang="scss">
 @import '../../styles/variables.scss';
-
-.color-content-default {
-  color: $color-content-default;
-}
 
 .menu-list-prompt-option {
   color: $color-primary;

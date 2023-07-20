@@ -1,116 +1,131 @@
 <template>
   <div>
-    <div :class="'bubble ' + position">
-      <bds-button-icon v-if="deletable && !isEditing"
-        class="editIco trashIco"
-        icon="trash"
-        variant="delete"
-        size="short"
-        v-on:click="trash(document)"
-      ></bds-button-icon>
-      <bds-button-icon v-if="editable && !isEditing"
-        class="editIco"
-        icon="edit"
-        variant="primary"
-        size="short"
-        v-on:click="toggleEdit"
-      ></bds-button-icon> 
-      <div class="header" :id="id" v-if="!isEditing">
-        <div
-          :class="'background img-border ratio ratio' + documentAspect + (editable ? '' : ' pointer')"
-          :style="styleObject"
-          @click="(editable ? null : handleImageLink())"
+    <bds-button-icon
+      v-if="deletable && !isEditing"
+      class="editIco trashIco"
+      icon="trash"
+      variant="delete"
+      size="short"
+      v-on:click="trash(document)"
+    ></bds-button-icon>
+    <bds-button-icon
+      v-if="editable && !isEditing"
+      class="editIco"
+      icon="edit"
+      variant="primary"
+      size="short"
+      v-on:click="toggleEdit"
+    ></bds-button-icon>
+    <div class="header" :id="id" v-if="!isEditing">
+      <div
+        :class="
+          'background ratio ratio' +
+            documentAspect +
+            (editable ? '' : ' pointer')
+        "
+        :style="styleObject"
+        @click="editable ? null : handleImageLink()"
+      ></div>
+      <div class="title" v-if="document.title || document.text">
+        <strong
+          v-if="document.title"
+          v-html="sanitize(document.title)"
+        ></strong>
+        <span v-if="document.text" v-html="sanitize(document.text)"></span>
+      </div>
+    </div>
+    <div class="form" v-else>
+      <form novalidate v-on:submit.prevent>
+        <bds-button-icon
+          class="btn saveIco closeIco"
+          icon="close"
+          variant="ghost"
+          size="short"
+          v-on:click="cancel()"
+        ></bds-button-icon>
+        <bds-button-icon
+          class="btn saveIco"
+          icon="check"
+          variant="primary"
+          size="short"
+          :disabled="errors.any()"
+          v-on:click="imgSave()"
         >
+        </bds-button-icon>
+        <div class="form-group">
+          <input
+            type="text"
+            name="image"
+            :class="{ 'input-error': errors.has('image') }"
+            v-validate="'required'"
+            class="form-control"
+            v-model="image"
+            :placeholder="imageUriMsg"
+          />
+          <span v-if="errors.has('image')" class="help input-error">{{
+            errors.first('image')
+          }}</span>
+          <div class="upload-intructions">
+            <span>{{ supportedFormatsMsg }}: JPEG,JPG,PNG,GIF.</span>
+          </div>
         </div>
-        <div class="title" v-if="document.title || document.text">
-          <strong v-if="document.title" v-html="sanitize(document.title)"></strong>
-          <span v-if="document.text" v-html="sanitize(document.text)"></span>
+        <div class="form-check">
+          <div>
+            <span>{{ aspectRatioMsg }}:</span>
+          </div>
+          <div class="form-check-wrapper">
+            <span class="form-check-container">
+              <label class="form-check-label" :for="_uid + '1-1'">
+                <input
+                  type="radio"
+                  name="aspect-selector"
+                  :id="_uid + '1-1'"
+                  class="form-check-input"
+                  v-model="aspect"
+                  value="1-1"
+                />
+                <span class="radio">1:1</span>
+                <div class="check"></div>
+              </label>
+            </span>
+            <span class="form-check-container">
+              <label class="form-check-label" :for="_uid + '2-1'">
+                <input
+                  type="radio"
+                  name="aspect-selector"
+                  :id="_uid + '2-1'"
+                  class="form-check-input"
+                  v-model="aspect"
+                  value="2-1"
+                />
+                <span class="radio">2:1</span>
+                <div class="check"></div>
+              </label>
+            </span>
+          </div>
         </div>
-      </div>
-
-      <div class="form" v-else>
-        <form novalidate v-on:submit.prevent>
-          <bds-button-icon 
-            class="btn saveIco closeIco"
-            icon="close"
-            variant="ghost"
-            size="short"
-            v-on:click="cancel()"
-          ></bds-button-icon>
-          <bds-button-icon 
-            class="btn saveIco"
-            icon="check"
-            variant="primary"
-            size="short"
-            :disabled="errors.any()"
-            v-on:click="imgSave()">
-          </bds-button-icon>
-          <div class="form-group">
-            <input
-              type="text"
-              name="image"
-              :class="{'input-error': errors.has('image') }"
-              v-validate="'required'"
-              class="form-control"
-              v-model="image"
-              :placeholder="imageUriMsg"
-            >
-            <span v-if="errors.has('image')" class="help input-error">{{ errors.first('image') }}</span>
-            <div class="upload-intructions">
-              <span>{{ supportedFormatsMsg }}: JPEG,JPG,PNG,GIF.</span>
-            </div>
-          </div>
-          <div class="form-check">
-            <div>
-              <span>{{ aspectRatioMsg }}:</span>
-            </div>
-            <div class="form-check-wrapper">
-              <span class="form-check-container">
-                <label class="form-check-label" :for="_uid+'1-1'">
-                  <input
-                    type="radio"
-                    name="aspect-selector"
-                    :id="_uid+'1-1'"
-                    class="form-check-input"
-                    v-model="aspect"
-                    value="1-1"
-                  >
-                  <span class="radio">1:1</span>
-                  <div class="check"></div>
-                </label>
-              </span>
-              <span class="form-check-container">
-                <label class="form-check-label" :for="_uid+'2-1'">
-                  <input
-                    type="radio"
-                    name="aspect-selector"
-                    :id="_uid+'2-1'"
-                    class="form-check-input"
-                    v-model="aspect"
-                    value="2-1"
-                  >
-                  <span class="radio">2:1</span>
-                  <div class="check"></div>
-                </label>
-              </span>
-            </div>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" v-model="title" :placeholder="titleMsg">
-            <textarea
-              @keydown.enter="imgSave($event)"
-              v-model="text"
-              class="form-control text"
-              :placeholder="textMsg"
-            />
-          </div>
-          <button
-            v-if="typeof onMetadataEdit === 'function'"
-            class="define-metadata blip-media-link-metadata"
-            @click="editMetadata(fullDocument)"
-          >{{ metadataButtonText }}</button>
-        </form>
-      </div>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            v-model="title"
+            :placeholder="titleMsg"
+          />
+          <textarea
+            @keydown.enter="imgSave($event)"
+            v-model="text"
+            class="form-control text"
+            :placeholder="textMsg"
+          />
+        </div>
+        <button
+          v-if="typeof onMetadataEdit === 'function'"
+          class="define-metadata blip-media-link-metadata"
+          @click="editMetadata(fullDocument)"
+        >
+          {{ metadataButtonText }}
+        </button>
+      </form>
     </div>
   </div>
 </template>
@@ -121,6 +136,7 @@ import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 import BrokenWhite from '../../assets/img/BrokenWhite.svg'
 import Broken from '../../assets/img/Broken.svg'
+import { tryCreateLocalMediaUri } from '../../utils/media.js'
 
 export default {
   mixins: [base],
@@ -147,6 +163,9 @@ export default {
     textMsg: {
       type: String,
       default: 'Text'
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data: function() {
@@ -156,12 +175,13 @@ export default {
       title: undefined,
       text: undefined,
       image: undefined,
-      aspect: undefined
+      aspect: undefined,
+      imageUri: undefined
     }
   },
   watch: {
     document: function() {
-      this.checkImage(this.document.uri)
+      this.init()
     }
   },
   computed: {
@@ -175,8 +195,11 @@ export default {
     }
   },
   methods: {
-    init: function() {
-      this.checkImage(this.document.uri)
+    init: async function() {
+      this.imageUri = this.asyncFetchMedia
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
+      this.checkImage(this.imageUri)
       this.id = guid()
       this.title = this.document.title
       this.text = this.document.text
@@ -213,9 +236,9 @@ export default {
     },
     handleImageLink: function() {
       if (this.onMediaSelected) {
-        this.onMediaSelected(this.document.uri)
+        this.onMediaSelected(this.imageUri)
       } else {
-        window.open(this.document.uri, '_blank', 'noopener')
+        window.open(this.imageUri, '_blank', 'noopener')
       }
     },
     checkImage(url) {
@@ -243,27 +266,20 @@ export default {
         }
       }
       img.src = url
+    },
+    getBlipContainer(element) {
+      let container = element
+      while (container.id !== 'blip-container') {
+        if (!container.parentNode) {
+          return container
+        }
+        container = container.parentNode
+      }
+      return container
     }
   },
-  mounted: function() {
-    let element = this.$el
-    let container = element.parentNode
-    let width = parseInt(
-      window
-        .getComputedStyle(container)
-        .width.toString()
-        .replace('px', '')
-    )
-
-    var bubble = element.querySelector('.bubble')
-
-    if (width <= 400) {
-      bubble.style.width = width + 'px'
-    } else if (width < 800) {
-      bubble.style.width = width / 3 + 'px'
-    } else {
-      bubble.style.width = width / 4 + 'px'
-    }
+  destroyed: function() {
+    this.asyncFetchMedia && URL.revokeObjectURL(this.imageUri)
   }
 }
 </script>
@@ -271,7 +287,7 @@ export default {
 <style lang="scss">
 @import '../../styles/variables.scss';
 
-.media-link.image {
+.media-link {
   .bubble {
     padding: 0;
     max-width: 350px;
@@ -281,9 +297,6 @@ export default {
     img {
       width: 100%;
       display: block;
-    }
-    .img-border {
-      border-radius: inherit !important;
     }
     .background {
       background-position: center;

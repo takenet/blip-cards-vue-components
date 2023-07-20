@@ -1,70 +1,70 @@
 <template>
-  <div class="application">
-    <div :class="'bubble ' + position">
-      <bds-button-icon v-if="deletable && !isEditing"
-        class="editIco trashIco icon-button-margin"
-        icon="trash"
-        variant="delete"
-        size="short"
-        v-on:click="trash(document)"
-      ></bds-button-icon>
-      <bds-button-icon v-if="editable && !isEditing"
-        class="editIco icon-button-margin"
-        icon="edit"
-        variant="primary"
-        size="short"
-        v-on:click="toggleEdit"
-      ></bds-button-icon> 
-      <div v-if="!isEditing" :class="`file-${position}`">
-        <div class="file-wrapper" @click="(editable ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
-          <div class="file-icon-wrapper">
-            <img class="file-icon" :src="mimeType | fileIconFilter"/>
+  <div>
+    <bds-button-icon v-if="deletable && !isEditing"
+      class="editIco trashIco icon-button-margin"
+      icon="trash"
+      variant="delete"
+      size="short"
+      v-on:click="trash(document)"
+    ></bds-button-icon>
+    <bds-button-icon v-if="editable && !isEditing"
+      class="editIco icon-button-margin"
+      icon="edit"
+      variant="primary"
+      size="short"
+      v-on:click="toggleEdit"
+    ></bds-button-icon> 
+    <div v-if="!isEditing" :class="`file-${position}`">
+      <div class="file-wrapper" @click="(editable || isLoading ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
+        <div class="file-icon-wrapper">
+          <img v-if="isLoading" :src="loadingGif" alt />
+          <img v-else class="file-icon" :src="mimeType | fileIconFilter"/>
+        </div>
+        <div class="description-wrapper">
+          <div class="link-description">
+            <span v-if="document.title" :title="document.title" class="text">{{ document.title }}</span>
+            <span v-else :title="document.uri" class="text">{{ document.uri }}</span>
           </div>
-          <div class="description-wrapper">
-            <div class="link-description">
-              <span v-if="document.title" :title="document.title" class="text">{{ document.title }}</span>
-              <span v-else :title="document.uri" class="text">{{ document.uri }}</span>
-            </div>
-            <span v-if="document.size" class="text small-text">{{ document.size | sizeInBytesFilter }}</span>
-          </div>
+          <span v-if="document.size" class="text small-text">{{ document.size | sizeInBytesFilter }}</span>
         </div>
       </div>
-      <div v-else>
-        <form novalidate v-on:submit.prevent>
-          <bds-button-icon 
-            class="btn saveIco closeIco"
-            icon="close"
-            variant="ghost"
-            size="short"
-            v-on:click="cancel()"
-          ></bds-button-icon>
-          <bds-button-icon 
-            class="btn saveIco"
-            icon="check"
-            variant="primary"
-            size="short"
-            :disabled="errors.any()"
-            v-on:click="fileSave()"
-          ></bds-button-icon>
-          <div class="form-group">
-            <input type="text" name="file" class="form-control uri" v-model="uri" :placeholder="fileUrlMsg" :class="{'input-error': errors.has('file') }" v-validate="'required|url'"/>
-            <span v-if="errors.has('file')" class="help input-error">{{ errors.first('file') }}</span>
-            <input type="text" class="form-control title" v-model="title" :placeholder="titleMsg"/>
-          </div>
-          <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-media-link-metadata" @click="editMetadata(fullDocument)">
-            {{ metadataButtonText }}
-          </button>
-        </form>
-      </div>
-      <div class="file-text" v-if="document.text">
-        <span v-if="document.text" v-html="sanitize(document.text)"></span>
-      </div>
+    </div>
+    <div v-else>
+      <form novalidate v-on:submit.prevent>
+        <bds-button-icon 
+          class="btn saveIco closeIco"
+          icon="close"
+          variant="ghost"
+          size="short"
+          v-on:click="cancel()"
+        ></bds-button-icon>
+        <bds-button-icon 
+          class="btn saveIco"
+          icon="check"
+          variant="primary"
+          size="short"
+          :disabled="errors.any()"
+          v-on:click="fileSave()"
+        ></bds-button-icon>
+        <div class="form-group">
+          <input type="text" name="file" class="form-control uri" v-model="uri" :placeholder="fileUrlMsg" :class="{'input-error': errors.has('file') }" v-validate="'required|url'"/>
+          <span v-if="errors.has('file')" class="help input-error">{{ errors.first('file') }}</span>
+          <input type="text" class="form-control title" v-model="title" :placeholder="titleMsg"/>
+        </div>
+        <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-media-link-metadata" @click="editMetadata(fullDocument)">
+          {{ metadataButtonText }}
+        </button>
+      </form>
+    </div>
+    <div class="file-text" v-if="document.text">
+      <span v-if="document.text" v-html="sanitize(document.text)"></span>
     </div>
   </div>
 </template>
 
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
+import { tryCreateLocalMediaUri } from '../../utils/media.js'
 import mime from 'mime-types'
 
 export default {
@@ -80,6 +80,9 @@ export default {
     },
     onMediaSelected: {
       type: Function
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data: function() {
@@ -87,7 +90,8 @@ export default {
       title: undefined,
       uri: undefined,
       type: undefined,
-      size: undefined
+      size: undefined,
+      isLoading: false
     }
   },
   computed: {
@@ -119,12 +123,21 @@ export default {
         type: mime.lookup(this.uri) ? mime.lookup(this.uri) : 'application/pdf'
       })
     },
-    handleFileLink: function () {
+    handleFileLink: async function () {
       if (this.onMediaSelected) {
         this.onMediaSelected(this.document.uri)
       } else {
-        window.open(this.document.uri, '_blank', 'noopener')
+        this.isLoading = true
+        await this.openFileInNewTab()
+        this.isLoading = false
       }
+    },
+    openFileInNewTab: async function() {
+      const uri = this.asyncFetchMedia
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
+      window.open(uri, '_blank', 'noopener')
+      this.asyncFetchMedia && URL.revokeObjectURL(uri)
     }
   }
 }
@@ -134,7 +147,7 @@ export default {
 <style lang="scss">
 @import '../../styles/variables.scss';
 
-.media-link .application {
+.media-link {
   .bubble {
     &.left, &.middle {
       .description-wrapper {
@@ -155,6 +168,7 @@ export default {
         border-radius: 0 2px 2px 0;
       }
     }
+    
 
     &.left {
       .file-icon-wrapper {
@@ -233,8 +247,62 @@ export default {
     }
   }
 
-  .file-left{
-    border-radius: 8px;
+  .replied{
+    .file-wrapper {
+      padding: 0;
+      height: 80px;
+      text-decoration: inherit;
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      justify-content: flex-start;
+      background: $color-surface-3;
+
+      .file-icon-wrapper {
+        display: flex;
+        padding: 20px;
+        background: $color-surface-2;
+
+        .file-icon {
+          display: flex;
+          flex-direction: horizontal;
+          flex-grow: 1;
+          max-height: 40px;
+          max-width: 40px;
+          object-fit: contain;
+        }
+      }
+
+      .description-wrapper {
+        overflow: hidden;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 206px;
+        width: 100%;
+
+        .link-description {
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          max-width: 100%;
+          .text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: $color-content-default;
+          }
+        }
+
+        .small-text {
+          font-size: 10px;
+          font-weight: 100;
+          display: flex;
+          color: $color-content-default;
+        }
+      }
+    }
   }
 
   .form-group {
@@ -249,4 +317,5 @@ export default {
     padding: 0 10px 10px 0;
   }
 }
+
 </style>

@@ -1,9 +1,34 @@
 <template>
-  <div class="blip-container reply-card">
+  <div class="blip-container reply-card"
+    id="blip-container">
     <div :class="'bubble ' + position">
       <div class="reply-container">
-        <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" />
-        <replied-base :replied="replied" />
+        <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" :failed-message="translations.failedToLoad" />
+        <replied-base v-if="replied" 
+          :replied="replied" 
+          :updatedPhotoMargin="updatedPhotoMargin"
+          :on-media-selected="onMediaSelected" 
+          :translations="translations"
+          :async-fetch-media="asyncFetchMedia"
+          :failed-to-send-msg="translations.failedToSend"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :supported-formats-msg="translations.supportedFormats"
+          :file-url-msg="translations.fileUrl"
+          :title-msg="translations.title"
+          :image-uri-msg="translations.imageUri"
+          :text-msg="translations.text"
+          :video-uri-msg="translations.videoUri"
+          :status="status"
+          :position="position"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :on-audio-validate-uri="onAudioValidateUri" />
       </div>
     </div>
     <blip-card-date
@@ -29,9 +54,21 @@
         type: String,
         default: 'Falha ao enviar a mensagem'
       },
+      asyncFetchMedia: {
+        type: Function
+      },
       status: {
         type: String,
         default: ''
+      },
+      onMediaSelected: {
+        type: Function
+      },
+      updatedPhotoMargin: {
+        type: Function
+      },
+      onAudioValidateUri: {
+        type: Function
       }
     },
     computed: {

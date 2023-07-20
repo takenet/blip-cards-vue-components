@@ -1,6 +1,6 @@
 <template>
   <div>
-    <bds-typo tag="span" variant="fs-16" margin="false">{{ repliedText }}</bds-typo>
+    <bds-typo class="typo" tag="span" variant="fs-16" margin="false">{{ repliedText }}</bds-typo>
   </div>
 </template>
   

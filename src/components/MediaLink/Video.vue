@@ -1,21 +1,20 @@
 <template>
   <div>
-    <div :class="'bubble ' + position">
-      <bds-button-icon v-if="deletable && !isEditing"
+    <bds-button-icon v-if="deletable && !isEditing"
         class="editIco trashIco"
         icon="trash"
         variant="delete"
         size="short"
         v-on:click="trash(document)"
-      ></bds-button-icon>
-      <bds-button-icon v-if="editable && !isEditing"
+    ></bds-button-icon>
+    <bds-button-icon v-if="editable && !isEditing"
         class="editIco"
         icon="edit"
         variant="primary"
         size="short"
         v-on:click="toggleEdit"
-      ></bds-button-icon> 
-      <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!isEditing">
+    ></bds-button-icon>
+    <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!isEditing">
         <div class="video-player">
           <div class="sk-circle-wrapper" id="animation">
             <div class="sk-circle" id="animation">
@@ -102,19 +101,19 @@
           </div>
         </div>
         <div v-if="this.text" class="video-description">
-          <bds-typo tag="p" variant="fs-16" bold="regular" margin="false">{{ this.text }}</bds-typo>
+          <bds-typo class="typo" tag="p" variant="fs-16" bold="regular" margin="false">{{ this.text }}</bds-typo>
         </div>
-      </div>
-      <div class="form" v-else>
+    </div>
+    <div class="form" v-else>
         <form novalidate v-on:submit.prevent>
-          <bds-button-icon 
+          <bds-button-icon
             class="btn saveIco closeIco"
             icon="close"
             variant="ghost"
             size="short"
             v-on:click="cancel()"
           ></bds-button-icon>
-          <bds-button-icon 
+          <bds-button-icon
             class="btn saveIco"
             icon="check"
             variant="primary"
@@ -131,8 +130,7 @@
             {{ metadataButtonText }}
           </button>
         </form>
-      </div>
-    </div>
+    </div>    
   </div>
 </template>
 
@@ -140,6 +138,7 @@
 <script>
 
 import { default as base } from '../../mixins/baseComponent.js'
+import { tryCreateLocalMediaUri } from '../../utils/media.js'
 import mime from 'mime-types'
 
 export default {
@@ -148,6 +147,9 @@ export default {
     videoUriMsg: {
       type: String,
       default: 'Video Uri'
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data: function() {
@@ -187,13 +189,16 @@ export default {
     this.video.removeEventListener('seeked', this.readyToPlay)
     this.video.removeEventListener('canplay', this.readyToPlay)
     this.video.removeEventListener('ended', this.resetPlay)
+    this.asyncFetchMedia && URL.revokeObjectURL(this.videoUri)
   },
   updated: function() {
     this.initVideo()
   },
   methods: {
-    init: function() {
-      this.videoUri = this.document.uri
+    init: async function() {
+      this.videoUri = this.asyncFetchMedia
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
       this.text = this.document.text
       this.isPlaying = false
       this.isFullScreen = false
@@ -407,7 +412,9 @@ export default {
   .bubble {
     max-width: $bubble-width;
     padding: 0;
-    color: $color-content-default;
+    .video-player-wrapper .video-player-controls {
+      padding: $bubble-padding;
+    }
   }
   .left, .middle {
     .slider {
@@ -419,17 +426,23 @@ export default {
     .video-player-button {
       fill: $color-content-default;
     }
+    
+    .video-player-time{
+      color: $color-content-default;
+    }
   }
   .right {
     .slider {
       background-color: $color-content-ghost;
     }
-    color: $vue-cotton;
     .progress .pin {
-      background-color: $color-content-default;
+      background-color: $color-surface-1;
     }
     .video-player-button {
-      fill: $color-content-default;
+      fill: $color-surface-1;
+    }
+    .video-player-time{
+      color: $color-surface-1;
     }
   }
 
@@ -482,7 +495,6 @@ export default {
     }
 
     .video-player-controls {
-      padding: $bubble-padding;
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -555,10 +567,9 @@ export default {
     .video-player-time {
       display: flex;
       justify-content: space-between;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Nunito Sans', sans-serif;
       font-size: x-small;
       line-height: 10px;
-      color: inherit;
     }
 
     .video-player-range {
