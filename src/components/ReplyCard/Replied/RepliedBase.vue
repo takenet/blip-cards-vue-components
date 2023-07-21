@@ -53,6 +53,10 @@
       translations: {
         type: Object,
         default: () => ({})
+      },
+      position: {
+        type: String,
+        default: 'left'
       }
     },
     computed: {

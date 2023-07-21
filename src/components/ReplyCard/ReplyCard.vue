@@ -69,6 +69,10 @@
       },
       onAudioValidateUri: {
         type: Function
+      },
+      position: {
+        type: String,
+        default: 'left'
       }
     },
     computed: {
