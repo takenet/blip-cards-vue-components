@@ -51,11 +51,11 @@
     <unsuported-content
       v-else
       class="blip-card"
+      style="margin-bottom: 0px"
       :failed-to-send-msg="translations.failedToSend"
       :unsupported-content-msg="translations.unsupportedContent"
       :position="position"
       :document="document"
-      :date="date"
       :on-save="saveCard"
       :editable="editable"
       :on-deleted="deleteCard"
