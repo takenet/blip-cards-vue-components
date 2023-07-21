@@ -1,38 +1,40 @@
 <template>
   <div class="blip-container">
     <menu-list-prompt
-        v-if="document.type === 'interactive' && document.interactive.type === 'list'"
-        class="blip-card"
-        :postback-value-msg="translations.postbackValue"
-        :status="status"
-        :position="position"
-        :document="fullDocument.content"
-        :editable="editable"
-        :on-deleted="onDeleted"
-        :deletable="deletable"
-        :readonly="readonly"
-        @updated="emitUpdate"/>
+      v-if="document.type === 'interactive' && document.interactive.type === 'list'"
+      class="blip-card"
+      :postback-value-msg="translations.postbackValue"
+      :status="status"
+      :position="position"
+      :document="fullDocument.content"
+      :editable="editable"
+      :on-deleted="onDeleted"
+      :deletable="deletable"
+      :readonly="readonly"
+      @updated="emitUpdate"
+    />
 
     <menu-list
-        v-if="document.type === 'interactive' && document.interactive.type === 'list'"
-        class="blip-card"
-        :add-button-msg="translations.addButton"
-        :not-enough-options-msg="translations.notEnoughOptions"
-        :text-msg="translations.text"
-        :apply-msg="translations.apply"
-        :cancel-msg="translations.cancel"
-        :postback-value-msg="translations.postbackValue"
-        :status="status"
-        :position="position"
-        :document="fullDocument.content"
-        :editable="editable"
-        :on-deleted="onDeleted"
-        :deletable="deletable"
-        :readonly="readonly"
-        @updated="emitUpdate"/>
+      v-if="document.type === 'interactive' && document.interactive.type === 'list'"
+      class="blip-card"
+      :add-button-msg="translations.addButton"
+      :not-enough-options-msg="translations.notEnoughOptions"
+      :text-msg="translations.text"
+      :apply-msg="translations.apply"
+      :cancel-msg="translations.cancel"
+      :postback-value-msg="translations.postbackValue"
+      :status="status"
+      :position="position"
+      :document="fullDocument.content"
+      :editable="editable"
+      :on-deleted="onDeleted"
+      :deletable="deletable"
+      :readonly="readonly"
+      @updated="emitUpdate"
+    />
 
     <interactive-button
-      v-else-if="document.type === 'interactive' && document.interactive.type === 'button'"
+      v-if="document.type === 'interactive' && document.interactive.type === 'button'"
       class="blip-card"
       :document="document"
       :full-document="fullDocument"
@@ -46,6 +48,21 @@
       :deletable="deletable"
       :editing="editing"
     />
+    <unsuported-content
+      v-else
+      class="blip-card"
+      :failed-to-send-msg="translations.failedToSend"
+      :unsupported-content-msg="translations.unsupportedContent"
+      :position="position"
+      :document="document"
+      :date="date"
+      :on-save="saveCard"
+      :editable="editable"
+      :on-deleted="deleteCard"
+      :deletable="deletable"
+      :editing="isCardEditing"
+      :on-cancel="cancel"
+    />
 
     <blip-card-date
       :status="status"
@@ -57,7 +74,6 @@
 </template>
 
 <script>
-
 import MenuList from './ApplicationJSon/MenuList'
 import { default as base } from '../mixins/baseComponent.js'
 import { isFailedMessage } from '../utils/misc'
@@ -95,15 +111,13 @@ export default {
       isFailedMessage
     }
   },
-  mixins: [
-    base
-  ],
+  mixins: [base],
   components: {
     MenuList,
     MenuListPrompt
   },
   methods: {
-    emitUpdate () {
+    emitUpdate() {
       this.$emit('updated')
     }
   }
