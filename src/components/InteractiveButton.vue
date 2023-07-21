@@ -186,7 +186,7 @@ export default {
 
 $hard-round: 13px;
 .bubble {
-  &.left, 
+  &.left,
   &.midlle {
     .interactive-button-container {
       .interactive-header {
@@ -198,6 +198,10 @@ $hard-round: 13px;
             background-color: $color-surface-1;
           }
         }
+      }
+
+      .interactive-btn-list {
+        border-bottom-right-radius: $hard-round;
       }
     }
   }
@@ -213,6 +217,10 @@ $hard-round: 13px;
           }
         }
       }
+    }
+
+    .interactive-btn-list {
+      border-bottom-left-radius: $hard-round;
     }
   }
 }
@@ -238,10 +246,10 @@ $hard-round: 13px;
   margin: 0;
   background: $color-surface-3;
   text-align: center;
-  border-bottom-left-radius: $hard-round;
 
   li {
     padding: 0.5rem;
+    margin: 0;
     &:not(:last-child) {
       border-bottom: 1px solid $color-content-ghost;
     }
