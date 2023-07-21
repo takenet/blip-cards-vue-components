@@ -1,13 +1,15 @@
 <template>
   <div>
-    <bds-button-icon v-if="deletable && !isEditing"
+    <bds-button-icon
+      v-if="deletable && !isEditing"
       class="editIco trashIco icon-button-margin icon-button-top"
       icon="trash"
       variant="delete"
       size="short"
       v-on:click="trash(document)"
     ></bds-button-icon>
-    <bds-button-icon v-if="editable && !isEditing"
+    <bds-button-icon
+      v-if="editable && !isEditing"
       class="icon-button-margin editIco icon-button-top"
       icon="edit"
       variant="primary"
@@ -27,12 +29,7 @@
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
             >
-              <g
-                id="Pause"
-                stroke="none"
-                stroke-width="1"
-                fill-rule="nonzero"
-              >
+              <g id="Pause" stroke="none" stroke-width="1" fill-rule="nonzero">
                 <path
                   d="M4.61538462,17.351355 C4.61538462,17.7095549 4.33986449,18 4,18 L0.615384615,18 C0.275520128,18 0,17.7095885 0,17.351355 L0,0.648645015 C0,0.290411481 0.275520128,0 0.615384615,0 L4,0 C4.33986449,0 4.61538462,0.290411481 4.61538462,0.648645015 L4.61538462,17.351355 Z"
                   id="Shape"
@@ -64,10 +61,7 @@
           </span>
         </div>
         <div v-else class="audio-play-pause">
-          <img
-            class="audio-player-loading"
-            :src="loadingGif"
-            alt />
+          <img class="audio-player-loading" :src="loadingGif" alt />
         </div>
         <div class="audio-player-bar">
           <div class="slider" data-direction="horizontal" ref="audioSlider">
@@ -89,9 +83,9 @@
           </div>
         </div>
         <div>
-           <button class="blip-change-playback-rate" @click="changePlaybackRate">
-             x{{ this.playbackRate }}
-            </button>
+          <button class="blip-change-playback-rate" @click="changePlaybackRate">
+            x{{ this.playbackRate }}
+          </button>
         </div>
       </div>
     </div>
@@ -135,7 +129,6 @@
         </button>
       </form>
     </div>
-    
   </div>
 </template>
 
@@ -158,7 +151,7 @@ export default {
       type: Function
     }
   },
-  data: function () {
+  data: function() {
     return {
       audioUri: undefined,
       isPlaying: undefined,
@@ -172,12 +165,12 @@ export default {
       playbackRate: undefined
     }
   },
-  mounted: async function () {
+  mounted: async function() {
     await this.init()
     this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
-  destroyed: function () {
+  destroyed: function() {
     this.audio.removeEventListener('timeupdate', this.audioTimeUpdated)
     this.audio.removeEventListener('loadedmetadata', this.audioLoaded)
     this.audio.removeEventListener('ended', this.resetPlay)
@@ -185,7 +178,7 @@ export default {
     this.asyncFetchMedia && URL.revokeObjectURL(this.audioUri)
   },
   methods: {
-    init: async function () {
+    init: async function() {
       this.audioUri = this.asyncFetchMedia
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
@@ -195,10 +188,10 @@ export default {
       this.totalTime = 0
       this.progress = undefined
       this.slider = undefined
-      this.possiblePlaybackRates = [ 1, 1.5, 2 ]
+      this.possiblePlaybackRates = [1, 1.5, 2]
       this.playbackRate = 1
     },
-    initAudio: function (uri) {
+    initAudio: function(uri) {
       this.audio = new Audio(uri)
       this.isLoading = true
       this.audio.addEventListener(
@@ -210,7 +203,7 @@ export default {
       this.audio.addEventListener('loadedmetadata', this.audioLoaded)
       this.audio.addEventListener('ended', this.resetPlay)
     },
-    toggleEdit: function () {
+    toggleEdit: function() {
       this.isEditing = !this.isEditing
 
       this.isPlaying = false
@@ -218,7 +211,7 @@ export default {
       this.audio.src = ''
       this.audio.load()
     },
-    audioSave: function () {
+    audioSave: function() {
       this.$validator.validateAll().then((result) => {
         if (!result) return
         this.progress = null
@@ -249,14 +242,14 @@ export default {
 
       this.isPlaying = !this.isPlaying
     },
-    resetPlay: function () {
+    resetPlay: function() {
       if (this.isPlaying && (this.audio.currentTime = this.totalTime)) {
         this.isPlaying = false
         this.audio.pause()
         this.audio.currentTime = 0
       }
     },
-    audioTimeUpdated: function () {
+    audioTimeUpdated: function() {
       if (!this.progress) {
         this.progress = this.$el.querySelector('.progress')
       }
@@ -269,14 +262,14 @@ export default {
         this.currentTime = this.audio.currentTime
       } catch (e) {}
     },
-    audioLoaded: function () {
+    audioLoaded: function() {
       this.totalTime = this.audio.duration
     },
-    setAudioPosition: function (event) {
+    setAudioPosition: function(event) {
       // srcElement is no supported in FF, but needed if working with IE6-8
       this.audio.currentTime = (event.target || event.srcElement).value
     },
-    getTimeFromSeconds: function (seconds) {
+    getTimeFromSeconds: function(seconds) {
       var timeMin = Math.floor(seconds / 60)
       var timeSec = Math.floor(seconds % 60)
       return (
@@ -285,13 +278,18 @@ export default {
         (timeSec < 10 ? '0' + timeSec : timeSec)
       )
     },
-    audioReadyToPlay: function () {
+    audioReadyToPlay: function() {
       this.isLoading = false
     },
     changePlaybackRate: function() {
-      let playbackRateIndex = this.possiblePlaybackRates.indexOf(this.playbackRate)
+      let playbackRateIndex = this.possiblePlaybackRates.indexOf(
+        this.playbackRate
+      )
 
-      if (++playbackRateIndex > this.possiblePlaybackRates.length - 1 || playbackRateIndex === -1) {
+      if (
+        ++playbackRateIndex > this.possiblePlaybackRates.length - 1 ||
+        playbackRateIndex === -1
+      ) {
         playbackRateIndex = 0
       }
 
@@ -301,7 +299,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="scss">
 @import '../../styles/variables.scss';
@@ -330,7 +327,7 @@ export default {
       border-color: $color-content-ghost;
       color: $color-content-default;
     }
-    .video-player-time{
+    .video-player-time {
       color: $color-content-default;
     }
   }
@@ -344,15 +341,15 @@ export default {
     .audio-player-button {
       fill: $color-surface-1;
     }
-    
-    .video-player-time{
+
+    .video-player-time {
       color: $color-surface-1;
     }
 
-     .blip-change-playback-rate {
+    .blip-change-playback-rate {
       border-color: $color-content-ghost;
       color: $color-surface-1;
-	  }
+    }
   }
 
   .notification {
@@ -380,23 +377,24 @@ export default {
       cursor: pointer;
     }
 
-     .blip-change-playback-rate {
+    .blip-change-playback-rate {
       display: inline-block;
       cursor: pointer;
       margin: 0;
+      padding: 0;
       overflow: hidden;
       text-align: center;
       white-space: nowrap;
       font-weight: 600;
-	    background-color: transparent;
+      background-color: transparent;
       border-width: 1px;
-	    border-style: solid;
-	    border-radius: 8px;
-	    outline: none;
+      border-style: solid;
+      border-radius: 8px;
+      outline: none;
       text-decoration: none;
       width: 2.75rem;
-	    height: 2rem;
-	  }
+      height: 2rem;
+    }
 
     .audio-play-pause {
       margin-top: 6px;
