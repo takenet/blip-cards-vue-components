@@ -6,6 +6,7 @@
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
         <blip-card
           v-for="message in group.msgs"
+          :id="message.id"
           :key="message.id"
           :document="message.document || message"
           :position="message.position"
