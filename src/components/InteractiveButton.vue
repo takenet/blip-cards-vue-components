@@ -97,7 +97,7 @@
                 margin="true"
                 variant="fs-16"
                 bold="regular"
-                class="color-primary"
+                class="typo"
                 v-html="sanitize(item.reply.title)"
               ></bds-typo>
             </li>
@@ -202,6 +202,7 @@ $hard-round: 13px;
 
       .interactive-btn-list {
         border-bottom-right-radius: $hard-round;
+        background: $color-surface-3;
       }
     }
   }
@@ -221,6 +222,7 @@ $hard-round: 13px;
 
     .interactive-btn-list {
       border-bottom-left-radius: $hard-round;
+      background: $color-content-disable;      
     }
   }
 }
@@ -244,7 +246,6 @@ $hard-round: 13px;
   list-style: none;
   padding: 0;
   margin: 0;
-  background: $color-surface-3;
   text-align: center;
 
   li {
@@ -254,14 +255,6 @@ $hard-round: 13px;
       border-bottom: 1px solid $color-content-ghost;
     }
   }
-}
-
-.color-content-default {
-  color: $color-content-default;
-}
-
-.color-primary {
-  color: $color-primary;
 }
 
 .interactive-header {
