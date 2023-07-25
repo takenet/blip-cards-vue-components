@@ -184,7 +184,6 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/variables.scss';
 
-$hard-round: 13px;
 .bubble {
   &.left,
   &.midlle {
@@ -222,7 +221,7 @@ $hard-round: 13px;
 
     .interactive-btn-list {
       border-bottom-left-radius: $hard-round;
-      background: $color-content-disable;      
+      background: $color-content-disable;
     }
   }
 }
