@@ -2,7 +2,7 @@
   <div class="blip-container-flex">
     <div class="blip-container-list-card wrap">
       <div class="blip-list-card wrap"
-        v-for="mediaLinkDocument in documents" 
+        v-for="mediaLinkDocument in documents"
         :key="mediaLinkDocument.id">
         <div :class="fileIconWrapper()">
           <img v-if="attachType.indexOf('image') != -1" class="file-icon"
@@ -76,8 +76,6 @@ export default {
 <style lang="scss">
 @import '../styles/common.scss';
 @import '../styles/variables.scss';
-$soft-round: 2px;
-$hard-round: 13px;
 
 .column-flex {
   display: flex;
@@ -115,7 +113,7 @@ $hard-round: 13px;
     flex-direction: column;
     flex: 1;
     width: 100%;
-    overflow-y:auto; 
+    overflow-y:auto;
     max-width: 592px;
     max-height: 318px;
 
@@ -128,7 +126,7 @@ $hard-round: 13px;
       padding: 8px;
 
       .file-icon-wrapper {
-        display: flex; 
+        display: flex;
         width: 32.5px;
         height: 38.37px;
         margin: auto;

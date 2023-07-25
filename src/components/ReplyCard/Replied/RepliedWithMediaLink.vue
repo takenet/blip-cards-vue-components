@@ -137,3 +137,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '../../../styles/variables.scss';
+
+.replied {
+  border-radius: $hard-round;
+}
+
+</style>

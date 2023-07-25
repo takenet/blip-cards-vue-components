@@ -174,8 +174,6 @@ export default {
 <style lang="scss">
 @import '../styles/common.scss';
 @import '../styles/variables.scss';
-$soft-round: 2px;
-$hard-round: 13px;
 
 .blip-message-group {
   position: relative;

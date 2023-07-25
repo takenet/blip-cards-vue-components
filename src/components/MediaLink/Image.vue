@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="image-container">
     <bds-button-icon
       v-if="deletable && !isEditing"
       class="editIco trashIco"
@@ -291,6 +291,10 @@ export default {
   .bubble {
     padding: 0;
     max-width: 350px;
+  }
+
+  .image-container {
+    border-radius: inherit;
   }
 
   .header {
