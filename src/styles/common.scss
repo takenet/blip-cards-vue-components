@@ -92,6 +92,12 @@
       .typo-light{
         color: $color-surface-2;
       }
+      .failed-message > bds-icon{
+        color: $color-surface-2;
+      }
+      .in-reply-to-message-container{
+        background-color: $color-content-disable;
+      }
   }
 
   .notification {
