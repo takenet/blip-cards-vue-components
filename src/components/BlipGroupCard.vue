@@ -1,11 +1,11 @@
 <template>
   <div class="blip-container">
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
-      <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
-      </div>
+      <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }"/>
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
         <blip-card
           v-for="message in group.msgs"
+          :id="message.id"
           :key="message.id"
           :document="message.document || message"
           :position="message.position"
