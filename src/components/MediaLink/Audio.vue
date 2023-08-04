@@ -192,7 +192,7 @@ export default {
       this.playbackRate = 1
     },
     initAudio: function(uri) {
-      this.audio = new Audio(uri)
+      this.audio = new Audio()
       this.isLoading = true
       this.audio.addEventListener(
         'canplaythrough',
@@ -202,6 +202,8 @@ export default {
       this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
       this.audio.addEventListener('loadedmetadata', this.audioLoaded)
       this.audio.addEventListener('ended', this.resetPlay)
+      this.audio.src = uri
+      this.audio.load()
     },
     toggleEdit: function() {
       this.isEditing = !this.isEditing
