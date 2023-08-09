@@ -1,7 +1,6 @@
 <template>
-  <div v-if="isLoadingMessage || isAcceptableTextType || hasFailedToLoad" class="in-reply-to-message-container">
-    <div v-if="isLoadingMessage" class="skeleton"></div>
-    <template v-else-if="isAcceptableTextType">
+  <div v-if="isAcceptableTextType || hasFailedToLoad" class="in-reply-to-message-container">
+    <template v-if="isAcceptableTextType">
       <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
       <div class="in-reply-to-message">
         <in-reply-to-text
@@ -57,9 +56,6 @@
         return this.inReplyTo.value.interactive.type === 'list' &&
           this.inReplyTo.value.interactive.header.type === 'text'
       },
-      isLoadingMessage() {
-        return this.inReplyTo.type === undefined && this.inReplyTo.failedToLoad === undefined
-      },
       isTextPlain() {
         return this.inReplyTo.type === 'text/plain'
       },
@@ -78,7 +74,7 @@
         return this.isTextPlain || this.isSelectType || this.isAcceptableInteractiveType
       },
       hasFailedToLoad() {
-        return Boolean(this.inReplyTo.failedToLoad)
+        return Boolean(this.inReplyTo.type === undefined || this.inReplyTo.value === undefined)
       }
     }
   }
