@@ -387,6 +387,27 @@
           :video-uri-msg="translations.videoUri"
           :on-audio-validate-uri="onAudioValidateUri"/>
 
+        <ticket-conversation-summary
+          v-else-if="document.type ==='application/vnd.iris.desk.ticket-conversation-summary+json'"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToLoadConversationSummary"
+          :show-more-msg="translations.showMore"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"          
+          :translations="translations"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :disable-link="disableLink" />
+
         <unsuported-content
           v-else
           class="blip-card"
