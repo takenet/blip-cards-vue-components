@@ -27,7 +27,7 @@
           :on-unsupported-type="onUnsupportedType"
           :on-location-error="onLocationError"
           :translations="translations"
-          :class="messageClass(message) + (message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : '')"
+          :class="messageClass(message) + isFailedMessageGroup(message,group)"
           :disable-link="disableLink"
           :on-audio-validate-uri="onAudioValidateUri"
           :readonly="readonly"
@@ -40,7 +40,7 @@
           <img v-else-if="group.status === 'received' && group.position === 'right'" class='received' :src="doubleCheckReceivedSvg" draggable="false"/>
           <img v-else-if="group.status === 'consumed' && group.position === 'right'" class='consumed' :src="doubleCheckReadSvg" draggable="false"/>
           <div v-else-if="group.status === 'failed' && group.position === 'right'" class="failure">
-            {{ failedToSendMsg }}
+            {{ failedMessageNotification(group.msgs[0].type) }}
           </div>
           <span>{{ group.date }}</span>
         </div>
@@ -56,6 +56,7 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
+import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 
 export default {
   name: 'blip-group-card',
@@ -167,6 +168,20 @@ export default {
       }
       groups.push(group)
       return groups
+    }
+  },
+  methods: {
+    isFailedMessageGroup(message, group) {
+      if (message.type === MessageTypesConstants.CONVERSATION_SUMMARY) {
+        return ''
+      }
+      return message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : ''
+    },
+    failedMessageNotification(type) {
+      if (type === MessageTypesConstants.CONVERSATION_SUMMARY) {
+        return this.translations.failedToLoadConversationSummary
+      }
+      return this.failedToSendMsg
     }
   }
 }
