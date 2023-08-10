@@ -5,7 +5,7 @@
         <div class="typing">
           <div class="typing-dot"></div>
           <div class="typing-dot"></div>
-          <div class="typing-dot"></div>        
+          <div class="typing-dot"></div>
         </div>
       </div>
       <div v-else>
