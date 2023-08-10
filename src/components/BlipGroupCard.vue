@@ -6,6 +6,7 @@
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
         <blip-card
           v-for="message in group.msgs"
+          :id="message.id"
           :key="message.id"
           :document="message.document || message"
           :position="message.position"
@@ -174,8 +175,6 @@ export default {
 <style lang="scss">
 @import '../styles/common.scss';
 @import '../styles/variables.scss';
-$soft-round: 2px;
-$hard-round: 13px;
 
 .blip-message-group {
   position: relative;

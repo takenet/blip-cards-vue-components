@@ -23,7 +23,7 @@
                 </li>
                 <li v-for="(row, index) in section.rows" v-bind:key="index" class="disable-selection" v-bind:class="{ readonly: readonly }">
                   <div class="menu-list-padding">
-                    <bds-typo variant="fs-16" bold="regular" class="menu-list-option">{{ sanitize(row.title) }}</bds-typo>
+                    <bds-typo variant="fs-16" bold="regular" class="typo">{{ sanitize(row.title) }}</bds-typo>
                   </div>
                 </li>
               </div>
@@ -56,8 +56,8 @@
               </li>
               <li v-for="(row, indexRow) in section.rows" v-bind:key="indexRow" @click="editOption(row, indexSection, indexRow, $event)">
                 <div>
-                  <bds-typo variant="fs-16" bold="regular" class="menu-list-option">{{ sanitize(row.title) }}</bds-typo>
-                  <bds-typo variant="fs-16" @click="deleteOption(indexSection, indexRow, $event)" class="remove-option menu-list-option">
+                  <bds-typo variant="fs-16" bold="regular" class="typo">{{ sanitize(row.title) }}</bds-typo>
+                  <bds-typo variant="fs-16" @click="deleteOption(indexSection, indexRow, $event)" class="remove-option typo">
                     <img :src="(position !== 'right')? closeBlueSvg : closeSvg">
                   </bds-typo>
                 </div>
@@ -264,10 +264,6 @@ export default {
 
 <style scoped lang="scss">
 @import '../../styles/variables.scss';
-
-.menu-list-option {
-  color: $color-primary;
-}
 
 .menu-list-padding {
   padding: $bubble-padding;

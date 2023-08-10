@@ -92,6 +92,12 @@
       .typo-light{
         color: $color-surface-2;
       }
+      .failed-message > bds-icon{
+        color: $color-surface-2;
+      }
+      .in-reply-to-message-container{
+        background-color: $color-content-disable;
+      }
   }
 
   .notification {
@@ -182,12 +188,12 @@
   }
 
   .left .fixed-options li, .middle .fixed-options li {
-    color: $color-primary;
+    color: $color-content-default;
     border-top: 0.5px solid $color-content-ghost;
   }
 
   .right .fixed-options li {
-    color: $color-primary;
+    color: $color-surface-2;
     border-top: 0.5px solid $color-content-ghost;
   }
 

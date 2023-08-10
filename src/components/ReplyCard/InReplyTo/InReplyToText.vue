@@ -13,7 +13,7 @@
       variant="fs-16"
       bold="regular"
       margin="false"
-      class="message-replied-text description">{{ inReplyToDescription }}</bds-typo>
+      class="message-replied-text description typo-light">{{ inReplyToDescription }}</bds-typo>
   </div>
 </template>
 

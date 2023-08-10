@@ -17,20 +17,7 @@
     <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!isEditing">
         <div class="video-player">
           <div class="sk-circle-wrapper" id="animation">
-            <div class="sk-circle" id="animation">
-              <div class="sk-circle1 sk-child"></div>
-              <div class="sk-circle2 sk-child"></div>
-              <div class="sk-circle3 sk-child"></div>
-              <div class="sk-circle4 sk-child"></div>
-              <div class="sk-circle5 sk-child"></div>
-              <div class="sk-circle6 sk-child"></div>
-              <div class="sk-circle7 sk-child"></div>
-              <div class="sk-circle8 sk-child"></div>
-              <div class="sk-circle9 sk-child"></div>
-              <div class="sk-circle10 sk-child"></div>
-              <div class="sk-circle11 sk-child"></div>
-              <div class="sk-circle12 sk-child"></div>
-            </div>
+            <bds-loading-spinner size="small" color="main"></bds-loading-spinner>
           </div>
           <video :src="videoUri" id="blipVideo"></video>
         </div>
@@ -471,7 +458,6 @@ export default {
       padding: 5px;
       border-radius: 100%;
       margin-left: -25px;
-      background-color: $vue-black-transparent-soft;
 
       .sk-circle {
         position: relative;
