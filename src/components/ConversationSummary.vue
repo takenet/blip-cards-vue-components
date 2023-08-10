@@ -1,7 +1,7 @@
 <template>
   <div class="blip-container summary">
     <div :class="'bubble ' + position">
-      <div v-if="document.isLoad">
+      <div v-if="document.isLoading">
         <div class="typing">
           <div class="typing-dot"></div>
           <div class="typing-dot"></div>
@@ -65,7 +65,7 @@
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
-  name: 'ticket-conversation-summary',
+  name: 'conversation-summary',
   mixins: [base],
   props: {
     document: {
@@ -94,7 +94,7 @@ export default {
     },
     failedToSendMsg: {
       type: String,
-      default: 'Bla bla bla'
+      default: 'Falha ao enviar a mensagem'
     }
   },
   data: function() {

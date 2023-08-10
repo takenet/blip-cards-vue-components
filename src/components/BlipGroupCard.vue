@@ -55,6 +55,7 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
+import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 
 export default {
   name: 'blip-group-card',
@@ -170,13 +171,13 @@ export default {
   },
   methods: {
     isFailedMessageGroup(message, group) {
-      if (message.type === 'application/vnd.iris.desk.ticket-conversation-summary+json') {
+      if (message.type === MessageTypesConstants.CONVERSATION_SUMMARY) {
         return ''
       }
       return message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : ''
     },
     failedMessageNotification(type) {
-      if (type === 'application/vnd.iris.desk.ticket-conversation-summary+json') {
+      if (type === MessageTypesConstants.CONVERSATION_SUMMARY) {
         return this.translations.failedToLoadConversationSummary
       }
       return this.failedToSendMsg
