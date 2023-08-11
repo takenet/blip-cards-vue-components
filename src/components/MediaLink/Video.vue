@@ -117,7 +117,7 @@
             {{ metadataButtonText }}
           </button>
         </form>
-    </div>    
+    </div>
   </div>
 </template>
 
@@ -125,7 +125,7 @@
 <script>
 
 import { default as base } from '../../mixins/baseComponent.js'
-import { tryCreateLocalMediaUri } from '../../utils/media.js'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 import mime from 'mime-types'
 
 export default {
@@ -183,7 +183,7 @@ export default {
   },
   methods: {
     init: async function() {
-      this.videoUri = this.asyncFetchMedia
+      this.videoUri = isAuthenticatedMediaLink(this.document)
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
       this.text = this.document.text
@@ -413,7 +413,7 @@ export default {
     .video-player-button {
       fill: $color-content-default;
     }
-    
+
     .video-player-time{
       color: $color-content-default;
     }
