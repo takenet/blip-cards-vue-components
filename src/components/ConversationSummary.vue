@@ -97,9 +97,6 @@ export default {
     }
   },
   methods: {
-    init: function() {
-      console.log('date ' + this.date)
-    },
     sanitizeText: function(text) {
       return linkify(this.sanitize(text), this.disableLink)
     }
