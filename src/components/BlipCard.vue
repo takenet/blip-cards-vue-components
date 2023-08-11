@@ -433,7 +433,6 @@
           :failed-to-send-msg="translations.failedToLoadConversationSummary"
           :show-more-msg="translations.showMore"
           :status="status"
-          :length="length"
           :position="position"
           :document="editableDocument.content"
           :full-document="editableDocument"
