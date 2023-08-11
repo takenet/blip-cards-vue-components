@@ -430,7 +430,7 @@
             document.type === MessageTypesConstants.CONVERSATION_SUMMARY
           "
           class="blip-card"
-          :failed-to-send-msg="translations.failedToLoadConversationSummary"
+          :failed-To-Load-Conversation-Summary="translations.failedToLoadConversationSummary"
           :show-more-msg="translations.showMore"
           :status="status"
           :position="position"

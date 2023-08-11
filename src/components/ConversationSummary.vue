@@ -62,7 +62,7 @@
         :status="status"
         :position="position"
         :date="date"
-        :failed-to-send-msg="failedToSendMsg"
+        :failed-to-send-msg="failedToLoadConversationSummary"
       />
   </div>
 </template>
@@ -91,9 +91,9 @@ export default {
       type: Boolean,
       default: false
     },
-    failedToSendMsg: {
+    failedToLoadConversationSummary: {
       type: String,
-      default: 'Falha ao enviar a mensagem'
+      default: 'Falha ao carregar o resumo da conversa'
     }
   },
   methods: {
