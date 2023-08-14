@@ -59,11 +59,11 @@
       </div>
     </div>
     <blip-card-date
-        :status="status"
-        :position="position"
-        :date="date"
-        :failed-to-send-msg="failedToLoadConversationSummary"
-      />
+      :status="status"
+      :position="position"
+      :date="date"
+      :failed-to-send-msg="failedToLoadConversationSummary"
+    />
   </div>
 </template>
 
