@@ -19,7 +19,7 @@
               <bds-icon
                 theme="outline"
                 name="robot"
-                style="margin-right: 8px;"
+                style="margin-right: 8px"
                 size="x-large"
               />
             </div>
@@ -97,7 +97,7 @@ export default {
     }
   },
   methods: {
-    sanitizeText: function(text) {
+    sanitizeText: function (text) {
       return linkify(this.sanitize(text), this.disableLink)
     }
   }
