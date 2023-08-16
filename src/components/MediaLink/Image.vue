@@ -136,7 +136,7 @@ import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 import BrokenWhite from '../../assets/img/BrokenWhite.svg'
 import Broken from '../../assets/img/Broken.svg'
-import { tryCreateLocalMediaUri } from '../../utils/media.js'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 
 export default {
   mixins: [base],
@@ -196,7 +196,7 @@ export default {
   },
   methods: {
     init: async function() {
-      this.imageUri = this.asyncFetchMedia
+      this.imageUri = isAuthenticatedMediaLink(this.document)
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
       this.checkImage(this.imageUri)
