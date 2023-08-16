@@ -139,7 +139,7 @@ export default {
         this.isLoading = false
       }
     },
-    openFileInNewTab: async function(uri) {
+    openFileInNewTab: function(uri) {
       window.open(uri, '_blank', 'noopener')
       this.asyncFetchMedia && URL.revokeObjectURL(uri)
     }
