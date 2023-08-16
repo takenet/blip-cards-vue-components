@@ -13,7 +13,7 @@
       variant="primary"
       size="short"
       v-on:click="toggleEdit"
-    ></bds-button-icon> 
+    ></bds-button-icon>
     <div v-if="!isEditing" :class="`file-${position}`">
       <div class="file-wrapper" @click="(editable || isLoading ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
         <div class="file-icon-wrapper">
@@ -31,14 +31,14 @@
     </div>
     <div v-else>
       <form novalidate v-on:submit.prevent>
-        <bds-button-icon 
+        <bds-button-icon
           class="btn saveIco closeIco"
           icon="close"
           variant="ghost"
           size="short"
           v-on:click="cancel()"
         ></bds-button-icon>
-        <bds-button-icon 
+        <bds-button-icon
           class="btn saveIco"
           icon="check"
           variant="primary"
@@ -64,7 +64,7 @@
 
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
-import { tryCreateLocalMediaUri } from '../../utils/media.js'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 import mime from 'mime-types'
 
 export default {
@@ -133,7 +133,7 @@ export default {
       }
     },
     openFileInNewTab: async function() {
-      const uri = this.asyncFetchMedia
+      const uri = isAuthenticatedMediaLink(this.document)
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
       window.open(uri, '_blank', 'noopener')
@@ -166,7 +166,7 @@ export default {
         border-radius: 0 2px 2px 0;
       }
     }
-    
+
 
     &.left {
       .file-icon-wrapper {

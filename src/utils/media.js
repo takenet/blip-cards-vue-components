@@ -10,3 +10,10 @@ export async function tryCreateLocalMediaUri(mediaDocument, asyncFetchMedia) {
     return uri
   }
 }
+
+export function isAuthenticatedMediaLink(document) {
+  return (
+    document.authorizationRealm &&
+    document.authorizationRealm === 'blip'
+  )
+}

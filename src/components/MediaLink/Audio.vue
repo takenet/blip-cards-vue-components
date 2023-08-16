@@ -134,7 +134,7 @@
 
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
-import { tryCreateLocalMediaUri } from '../../utils/media.js'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 import mime from 'mime-types'
 
 export default {
@@ -179,7 +179,7 @@ export default {
   },
   methods: {
     init: async function() {
-      this.audioUri = this.asyncFetchMedia
+      this.audioUri = isAuthenticatedMediaLink(this.document)
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
       this.isPlaying = false
