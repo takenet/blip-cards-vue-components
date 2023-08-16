@@ -97,7 +97,7 @@ export default {
     }
   },
   methods: {
-    sanitizeText: function (text) {
+    sanitizeText: function(text) {
       return linkify(this.sanitize(text), this.disableLink)
     }
   }
