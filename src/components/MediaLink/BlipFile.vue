@@ -123,19 +123,23 @@ export default {
         type: mime.lookup(this.uri) ? mime.lookup(this.uri) : 'application/pdf'
       })
     },
+    getFileUri: async function () {
+      return isAuthenticatedMediaLink(this.document)
+        ? tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
+    },
     handleFileLink: async function () {
+      const uri = await this.getFileUri()
+
       if (this.onMediaSelected) {
-        this.onMediaSelected(this.document.uri)
+        this.onMediaSelected(uri)
       } else {
         this.isLoading = true
-        await this.openFileInNewTab()
+        await this.openFileInNewTab(uri)
         this.isLoading = false
       }
     },
-    openFileInNewTab: async function() {
-      const uri = isAuthenticatedMediaLink(this.document)
-        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
-        : this.document.uri
+    openFileInNewTab: function(uri) {
       window.open(uri, '_blank', 'noopener')
       this.asyncFetchMedia && URL.revokeObjectURL(uri)
     }
