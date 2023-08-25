@@ -303,7 +303,6 @@
         <template-content
           v-else-if="document.content.type === 'template-content'"
           class="blip-card"
-          :from-message-template="true"
           :failed-to-send-msg="translations.failedToSend"
           :unsupported-content-msg="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
           :content-template-name="document.content.template.name"
@@ -323,7 +322,6 @@
         <unsuported-content
           v-else-if="document.content.type === 'template'"
           class="blip-card"
-          :from-message-template="true"
           :failed-to-send-msg="translations.failedToSend"
           :unsupported-content-msg="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
           :on-failed-click-icon="onFailedClickIcon"

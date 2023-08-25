@@ -196,22 +196,22 @@ export default {
     }
 
     // Bubble Right
-    > :first-child :not(.unsuported-content) :not(.template-content) > .bubble.right {
+    > :first-child :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $hard-round $soft-round $hard-round;
 
       .description-wrapper {
         border-radius: 0 $hard-round $soft-round 0;
       }
     }
-    > :not(:first-child) :not(.unsuported-content) :not(.template-content) > .bubble.right {
+    > :not(:first-child) :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $soft-round $soft-round $hard-round;
     }
 
     // Bubble Left
-    > :first-child :not(.unsuported-content) :not(.template-content) > .bubble.left {
+    > :first-child :not(.unsuported-content) > .bubble.left {
       border-radius: $hard-round $hard-round $hard-round $soft-round;
     }
-    > :not(:first-child) :not(.unsuported-content) :not(.template-content) > .bubble.left {
+    > :not(:first-child) :not(.unsuported-content) > .bubble.left {
       border-radius: $soft-round $hard-round $hard-round $soft-round;
     }
 

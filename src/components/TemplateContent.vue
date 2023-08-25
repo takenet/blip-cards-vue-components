@@ -2,20 +2,18 @@
   <div :class="'blip-container template-content ' + position">
     <div :class="'bubble ' + position">
       <div class="template-content-icons">
-        <bds-icon v-if="fromMessageTemplate == true && position === 'right'" size="small" color="white" alt="Alert" name="paperplane"></bds-icon>
-        <bds-icon v-else-if="fromMessageTemplate == true" size="small" alt="Alert" name="paperplane"></bds-icon>
-        <bds-icon v-else-if="position === 'right'" size="small" alt="Alert" name="warning"></bds-icon>
-        <bds-icon v-else size="small" alt="Alert" name="warning"></bds-icon>
+        <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane"></bds-icon>
+        <bds-icon v-else size="small" alt="paperplane" name="paperplane"></bds-icon>
         <span>
           {{ showTemplateContentTitle }}
         </span>
       </div>
-      <div class="flex flex-column justify-start">
-        <span v-for="(link, index) in showTemplateContentLinks" :key="index">
+      <div class="template-content-text flex flex-column">
+        <span v-for="(link, index) in showTemplateContentLinks()" :key="index">
           <a :href="link">{{ link }}</a>
         </span>
         <span>
-          {{ showTemplateContentBody }}
+          {{ showTemplateContentBody() }}
         </span>
       </div>
     </div>
@@ -65,10 +63,6 @@ export default {
       type: String,
       default: 'Unsuported Content'
     },
-    fromMessageTemplate: {
-      type: Boolean,
-      default: false
-    },
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem'
@@ -87,16 +81,18 @@ export default {
   computed: {
     showTemplateContentTitle() {
       return this.unsupportedContentMsg.replace(/_/g, ' ')
-    },
+    }
+  },
+  methods: {
     showTemplateContentBody() {
-      let componentTemplateBody = this.document.template_content.Components
-        .filter(m => m.Type === 'BODY')
+      let componentTemplateBody = this.document.templateContent.components
+        .filter(m => m.type === 'BODY')
 
       let bodyFilledVariables = this.document.template.components
         .filter(m => m.type === 'body')
 
       if (componentTemplateBody) {
-        componentTemplateBody = componentTemplateBody[0].Text
+        componentTemplateBody = componentTemplateBody[0].text
 
         if (bodyFilledVariables.length) {
           bodyFilledVariables = bodyFilledVariables[0].parameters
@@ -118,11 +114,12 @@ export default {
         const links = []
         attachments.forEach(item => {
           item.parameters.forEach(parameter => {
-            if (parameter.image) {
+            console.log('parameter: ', parameter)
+            if (parameter.type === 'image') {
               links.push(parameter.image.link)
-            } else if (parameter.video) {
+            } else if (parameter.type === 'video') {
               links.push(parameter.video.link)
-            } else if (parameter.audio) {
+            } else if (parameter.type === 'audio') {
               links.push(parameter.audio.link)
             }
           })
@@ -151,11 +148,20 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  font-size: 14px;
 }
 
 .template-content.right {
-    justify-content: right;
-    margin-left: 0.5em;
+  justify-content: right;
+  margin-left: 0.5em;
+}
+
+.template-content-text {
+  max-width: calc(100% - 25px);
+  flex-wrap: wrap;
+  align-items: start;
+  row-gap: 1em;
+  font-size: 15px;
 }
 
 .template-content.left {
@@ -175,21 +181,23 @@ export default {
 
 .template-content-icons span{
   max-width: calc(100% - 25px);
+  font-size: 15px;
 }
 
-.blip-container.template-content .bubble.left {
-  .template-content-icons {
+.blip-container.template-content .bubble {
+  &.left,
+  &.right {
     display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-}
-
-.blip-container.template-content .bubble.right {
-  .template-content-icons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+    flex-direction: column;
+    align-content: start;
+    row-gap: 1em;
+    flex-wrap: wrap;
+    word-wrap: break-word;
+    .template-content-icons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
   }
 }
 
@@ -198,6 +206,6 @@ export default {
   word-wrap: break-word;
   border-radius: 15px;
   white-space: normal;
-  font-size: 13px;
+  font-size: 15px;
 }
 </style>
