@@ -300,6 +300,26 @@
           :editing="isCardEditing"
           :on-cancel="cancel"/>
 
+        <template-content
+          v-else-if="document.content.type === 'template-content'"
+          class="blip-card"
+          :from-message-template="true"
+          :failed-to-send-msg="translations.failedToSend"
+          :unsupported-content-msg="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
+          :content-template-name="document.content.template.name"
+          :on-failed-click-icon="onFailedClickIcon"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
+
         <unsuported-content
           v-else-if="document.content.type === 'template'"
           class="blip-card"
@@ -361,7 +381,7 @@
         <reply-card
           v-else-if="document.type === 'application/vnd.lime.reply+json'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"          
+          :failed-to-send-msg="translations.failedToSend"
           :updatedPhotoMargin="updatedPhotoMargin"
           :status="status"
           :position="position"
