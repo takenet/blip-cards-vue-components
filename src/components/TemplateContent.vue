@@ -1,20 +1,16 @@
 <template>
   <div :class="'blip-container template-content ' + position">
     <div :class="'bubble ' + position">
-      <div class="template-content-icons">
+      <div class="template-content-header">
         <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane"></bds-icon>
         <bds-icon v-else size="small" alt="paperplane" name="paperplane"></bds-icon>
-        <span>
-          {{ showTemplateContentTitle }}
-        </span>
+        <bds-typo :class="'typo template-content-text-body ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
       </div>
       <div class="template-content-text flex flex-column">
-        <span v-for="(link, index) in showTemplateContentLinks()" :key="index">
-          <a :href="link">{{ link }}</a>
-        </span>
-        <span>
-          {{ showTemplateContentBody() }}
-        </span>
+        <bds-typo class="span" variant="fs-16" bold="semi-bold"  v-for="(link, index) in showTemplateContentLinks()" :key="index">
+          <a :href="link" target="_blank">{{ link }}</a>
+        </bds-typo>
+        <bds-typo :class="'span template-content-text-body ' + position" variant="fs-16" bold="regular" v-html="formatText(showTemplateContentBody(), 'template-content-text-body ' + position)"/>
       </div>
     </div>
     <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon"
@@ -43,6 +39,7 @@ import { default as base } from '../mixins/baseComponent.js'
 import alertSvg from '../assets/img/alert.svg'
 import alertWhiteSvg from '../assets/img/alertWhite.svg'
 import paperplaneSvg from '../assets/img/paperplane.svg'
+import { formatText } from '@/utils/FormatTextUtils'
 
 export default {
   name: 'template-content',
@@ -96,8 +93,8 @@ export default {
 
         if (bodyFilledVariables.length) {
           bodyFilledVariables = bodyFilledVariables[0].parameters
-
-          componentTemplateBody = componentTemplateBody.replace(/\{\{(\d+)\}\}/g, (match, index) => {
+          const regexFindVariablesInText = /\{\{(\d+)\}\}/g
+          componentTemplateBody = componentTemplateBody.replace(regexFindVariablesInText, (match, index) => {
             const value = bodyFilledVariables[index - 1].text
             return value !== undefined ? value : match
           })
@@ -114,7 +111,6 @@ export default {
         const links = []
         attachments.forEach(item => {
           item.parameters.forEach(parameter => {
-            console.log('parameter: ', parameter)
             if (parameter.type === 'image') {
               links.push(parameter.image.link)
             } else if (parameter.type === 'video') {
@@ -126,6 +122,12 @@ export default {
         })
         return links
       }
+    },
+    formatText(text, style) {
+      if (!text) {
+        return ''
+      }
+      return formatText(text, style)
     }
   }
 }
@@ -148,7 +150,7 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .template-content.right {
@@ -159,13 +161,13 @@ export default {
 .template-content-text {
   max-width: calc(100% - 25px);
   flex-wrap: wrap;
-  align-items: start;
+  text-align: left;
   row-gap: 1em;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .template-content.left {
-    justify-content: left;
+  justify-content: left;
 }
 
 .blip-container.template-content .alert-icon {
@@ -173,15 +175,10 @@ export default {
   margin-right: 2px;
 }
 
-.template-content-icons {
+.template-content-header {
   display: flex;
   gap: 8px;
-  align-items: center;
-}
-
-.template-content-icons span{
-  max-width: calc(100% - 25px);
-  font-size: 15px;
+  align-self: flex-start;
 }
 
 .blip-container.template-content .bubble {
@@ -193,19 +190,32 @@ export default {
     row-gap: 1em;
     flex-wrap: wrap;
     word-wrap: break-word;
-    .template-content-icons {
+    .template-content-header {
       display: flex;
       gap: 8px;
-      align-items: center;
+      align-self: flex-start;
     }
   }
 }
 
 .blip-container.template-content.blip-card .bubble {
-  padding: 4px 16px;
+  padding: 10px 16px;
   word-wrap: break-word;
   border-radius: 15px;
   white-space: normal;
-  font-size: 15px;
+  text-align: left;
+  font-size: 16px;
+}
+
+.text-line-through {
+  text-decoration: line-through;
+}
+
+.template-content-text-body.right {
+  color: $color-surface-1;
+}
+
+.template-content-text-body.left {
+  color: $color-content-default;
 }
 </style>
