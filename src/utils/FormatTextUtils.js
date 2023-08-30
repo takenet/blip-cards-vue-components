@@ -6,7 +6,6 @@ export const constants = {
 }
 
 export const formatText = (text, style) => {
-  console.log('style ', style)
   if (!text) {
     return ''
   }

@@ -1,16 +1,16 @@
 <template>
   <div :class="'blip-container template-content ' + position">
     <div :class="'bubble ' + position">
-      <div class="template-content-header">
-        <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane"></bds-icon>
-        <bds-icon v-else size="small" alt="paperplane" name="paperplane"></bds-icon>
-        <bds-typo :class="'typo template-content-text-body ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
-      </div>
       <div class="template-content-text flex flex-column">
-        <bds-typo class="span" variant="fs-16" bold="semi-bold"  v-for="(link, index) in showTemplateContentLinks()" :key="index">
+        <div class="template-content-header">
+          <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane"></bds-icon>
+          <bds-icon v-else size="small" alt="paperplane" name="paperplane"></bds-icon>
+          <bds-typo :class="'typo template-content-text-body ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
+        </div>
+        <bds-typo class="span" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
           <a :href="link" target="_blank">{{ link }}</a>
         </bds-typo>
-        <bds-typo :class="'span template-content-text-body ' + position" variant="fs-16" bold="regular" v-html="formatText(showTemplateContentBody(), 'template-content-text-body ' + position)"/>
+        <bds-typo :class="'span template-content-text-body ' + position" variant="fs-16" bold="regular" v-if="hasTemplateContentBody" v-html="formatText(showTemplateContentBody(), 'template-content-text-body ' + position)"/>
       </div>
     </div>
     <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon"
@@ -18,18 +18,11 @@
         aria-label="Active message failed reason"
         class="icon-active-message-failed"
         @click="onFailedClickIcon(fullDocument)"></bds-icon>
-    <div class="flex" :class="'notification ' + position" v-if="date">
-      <span v-if="this.position === 'right'">
-        <img v-if="this.status === 'waiting'" :src="clockSvg">
-        <img v-else-if="this.status === 'accepted'" :src="checkSentSvg">
-        <img v-else-if="this.status === 'received'" :src="doubleCheckReceivedSvg">
-        <img v-else-if="this.status === 'consumed'" :src="doubleCheckReadSvg">
-        <div v-else-if="this.status === 'failed'" class="failure">
-          {{ failedToSendMsg }}
-        </div>
-      </span>
-      <div>{{ date }}</div>
-    </div>
+    <blip-card-date
+      :status="status"
+      :position="position"
+      :date="date"
+      :failed-to-send-msg="failedToSendMsg" />
   </div>
 </template>
 
@@ -52,7 +45,7 @@ export default {
       type: String,
       default: ''
     },
-    unsupportedContentMsg: {
+    messageTemplateTitle: {
       type: String,
       default: 'Unsuported Content'
     },
@@ -77,7 +70,13 @@ export default {
   },
   computed: {
     showTemplateContentTitle() {
-      return this.unsupportedContentMsg.replace(/_/g, ' ')
+      return this.messageTemplateTitle.replace(/_/g, ' ')
+    },
+    hasTemplateContentBody() {
+      return this.document.templateContent && this.document.templateContent.components
+    },
+    hasTemplateContentHeader() {
+      return this.document.template && this.document.template.components
     }
   },
   methods: {
@@ -104,6 +103,10 @@ export default {
       return componentTemplateBody
     },
     showTemplateContentLinks() {
+      if (!this.hasTemplateContentHeader) {
+        return
+      }
+
       const attachments = this.document.template.components
         .filter((m) => (m.type === 'header'))
 
@@ -111,12 +114,9 @@ export default {
         const links = []
         attachments.forEach(item => {
           item.parameters.forEach(parameter => {
-            if (parameter.type === 'image') {
-              links.push(parameter.image.link)
-            } else if (parameter.type === 'video') {
-              links.push(parameter.video.link)
-            } else if (parameter.type === 'audio') {
-              links.push(parameter.audio.link)
+            const { type } = parameter
+            if (['image', 'video', 'audio'].includes(type)) {
+              links.push(parameter[type].link)
             }
           })
         })
@@ -159,7 +159,6 @@ export default {
 }
 
 .template-content-text {
-  max-width: calc(100% - 25px);
   flex-wrap: wrap;
   text-align: left;
   row-gap: 1em;
