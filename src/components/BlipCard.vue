@@ -322,6 +322,7 @@
         <unsuported-content
           v-else-if="document.content.type === 'template'"
           class="blip-card"
+          :from-message-template="true"
           :failed-to-send-msg="translations.failedToSend"
           :unsupported-content-msg="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
           :on-failed-click-icon="onFailedClickIcon"
