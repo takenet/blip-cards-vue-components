@@ -161,6 +161,9 @@
         <button class="button" @click="sendReplyMessageInReplyToReplyButtonWithoutHeader">
           ENVIAR Reply Message de Reply Buttton sem header
         </button>
+        <button class="button" @click="sendConversationSummary">
+          ENVIAR Resumo da conversa
+        </button>
       </div>
 
       <div v-else>
@@ -1156,6 +1159,30 @@ export default {
               }
             }
           }
+        }
+      })
+      this.send()
+    },
+    sendConversationSummary: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.iris.desk.conversation-summary+json',
+        content: {
+          id: '44528dc9-3174-41f1-8188-0189ae0666d2',
+          sequentialId: 11,
+          ownerIdentity: 'whatsappcloudapi@msging.net',
+          customerIdentity: '5531992722620@wa.gw.msging.net',
+          team: 'Maria',
+          parentSequentialId: 10,
+          priority: 6,
+          isLoading: false,
+          summary: [
+            'Cliente entrou em contato e iniciou atendimento pelo bot, selecionando as opções de atendimento e cancelamento.',
+            'Inicialmente, a empresa ofereceu um desconto de 10%, mas o cliente não considerou suficiente.',
+            'Após nova negociação, chegaram a um acordo de 20% de desconto, com a condição de fidelidade de 6 meses.'
+          ]
         }
       })
       this.send()

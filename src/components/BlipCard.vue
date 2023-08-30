@@ -1,10 +1,17 @@
 <template>
   <div v-if="editableDocument" class="blip-relative" @dblclick="editCard">
-    <div :class="'blip-card-photo ' + position" v-if="photo && position === 'left'" :style="{ top: photoMargin + 'px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
-    </div>
-    <div :class="{'blip-container--with-photo': photo, [position]: true}">
+    <div
+      :class="'blip-card-photo ' + position"
+      v-if="photo && position === 'left'"
+      :style="{
+        top: photoMargin + 'px',
+        width: '25px',
+        height: '25px',
+        'background-image': 'url(&quot;' + photo + '&quot;)'
+      }"
+    ></div>
+    <div :class="{ 'blip-container--with-photo': photo, [position]: true }">
       <div class="blip-card-container">
-
         <plain-text
           v-if="document.metadata && document.metadata['#blip.payload.text']"
           class="blip-card"
@@ -22,10 +29,11 @@
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <plain-text
-          v-else-if="document.type ==='text/plain'"
+          v-else-if="document.type === 'text/plain'"
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :show-more-msg="translations.showMore"
@@ -42,7 +50,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :disable-link="disableLink" />
+          :disable-link="disableLink"
+        />
 
         <media-link
           v-else-if="document.type === 'application/vnd.lime.media-link+json'"
@@ -70,10 +79,13 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :on-audio-validate-uri="onAudioValidateUri"
-          :async-fetch-media="asyncFetchMedia"/>
+          :async-fetch-media="asyncFetchMedia"
+        />
 
         <document-select
-          v-else-if="document.type === 'application/vnd.lime.document-select+json'"
+          v-else-if="
+            document.type === 'application/vnd.lime.document-select+json'
+          "
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :apply-msg="translations.apply"
@@ -105,7 +117,8 @@
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <collection
           v-else-if="document.type === 'application/vnd.lime.collection+json'"
@@ -125,7 +138,8 @@
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <blip-select
           v-else-if="document.type === 'application/vnd.lime.select+json'"
@@ -154,7 +168,8 @@
           :hide-options="hideOptions"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :readonly="readonly"/>
+          :readonly="readonly"
+        />
 
         <web-link
           class="blip-card"
@@ -175,13 +190,16 @@
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <survey
           class="blip-card"
-          v-else-if="document.type === 'application/vnd.lime.satisfaction-survey+json'"
+          v-else-if="
+            document.type === 'application/vnd.lime.satisfaction-survey+json'
+          "
           :failed-to-send-msg="translations.failedToSend"
-          :introduction-msg='translations.introduction'
+          :introduction-msg="translations.introduction"
           :status="status"
           :on-save="saveCard"
           :editable="editable"
@@ -189,7 +207,8 @@
           :document="editableDocument.content"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <location
           class="blip-card"
@@ -209,10 +228,16 @@
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <request-location
-          v-else-if="document.type === 'application/vnd.lime.input+json' && document.content.validation && document.content.validation.type === 'application/vnd.lime.location+json'"
+          v-else-if="
+            document.type === 'application/vnd.lime.input+json' &&
+              document.content.validation &&
+              document.content.validation.type ===
+                'application/vnd.lime.location+json'
+          "
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :show-more-msg="translations.showMore"
@@ -231,7 +256,8 @@
           :hide-options="hideOptions"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :on-location-error="onLocationError"/>
+          :on-location-error="onLocationError"
+        />
 
         <lime-input
           v-else-if="document.type === 'application/vnd.lime.input+json'"
@@ -250,7 +276,8 @@
           :hide-options="hideOptions"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :on-location-error="onLocationError"/>
+          :on-location-error="onLocationError"
+        />
 
         <chat-state
           v-else-if="document.type === 'application/vnd.lime.chatstate+json'"
@@ -267,7 +294,8 @@
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <blip-redirect
           v-else-if="document.type === 'application/vnd.lime.redirect+json'"
@@ -281,7 +309,8 @@
           :on-deleted="deleteCard"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <ticket
           v-else-if="document.type === 'application/vnd.iris.ticket+json'"
@@ -298,14 +327,19 @@
           :on-deleted="deleteCard"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <unsuported-content
           v-else-if="document.content.type === 'template'"
           class="blip-card"
           :from-message-template="true"
           :failed-to-send-msg="translations.failedToSend"
-          :unsupported-content-msg="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
+          :unsupported-content-msg="
+            translations.messageTemplate
+              ? translations.messageTemplate + document.content.template.name
+              : translations.unsupportedContent
+          "
           :on-failed-click-icon="onFailedClickIcon"
           :status="status"
           :position="position"
@@ -317,7 +351,8 @@
           :on-deleted="deleteCard"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
 
         <contact
           v-else-if="document.type === 'application/vnd.lime.contact+json'"
@@ -337,7 +372,8 @@
           :on-cancel="cancel"
           :phone-label="translations.phoneLabel"
           :mail-label="translations.mailLabel"
-          :address-label="translations.addressLabel" />
+          :address-label="translations.addressLabel"
+        />
 
         <application-json
           v-else-if="document.type === 'application/json'"
@@ -356,12 +392,13 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :translations="translations" />
+          :translations="translations"
+        />
 
         <reply-card
           v-else-if="document.type === 'application/vnd.lime.reply+json'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"          
+          :failed-to-send-msg="translations.failedToSend"
           :updatedPhotoMargin="updatedPhotoMargin"
           :status="status"
           :position="position"
@@ -385,7 +422,31 @@
           :image-uri-msg="translations.imageUri"
           :text-msg="translations.text"
           :video-uri-msg="translations.videoUri"
-          :on-audio-validate-uri="onAudioValidateUri"/>
+          :on-audio-validate-uri="onAudioValidateUri"
+        />
+
+        <conversation-summary
+          v-else-if="
+            document.type === MessageTypesConstants.CONVERSATION_SUMMARY
+          "
+          class="blip-card"
+          :failed-To-Load-Conversation-Summary="translations.failedToLoadConversationSummary"
+          :show-more-msg="translations.showMore"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :translations="translations"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :disable-link="disableLink"
+        />
 
         <unsuported-content
           v-else
@@ -400,10 +461,20 @@
           :on-deleted="deleteCard"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+        />
       </div>
-      <div :class="'blip-card-photo ' + position" v-if="photo && position === 'right'" :style="{ top: photoMargin + 'px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + photo + '&quot;)' }">
-      </div>
+      <div
+        :class="'blip-card-photo ' + position"
+        v-if="photo && position === 'right'"
+        :style="{
+          top: photoMargin + 'px',
+          right: '0%',
+          width: '25px',
+          height: '25px',
+          'background-image': 'url(&quot;' + photo + '&quot;)'
+        }"
+      ></div>
     </div>
   </div>
 </template>
@@ -412,8 +483,10 @@
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 
-const supportedRepliedTypes = [MessageTypesConstants.TEXT_MESSAGE,
-  MessageTypesConstants.MEDIALINK_MESSAGE]
+const supportedRepliedTypes = [
+  MessageTypesConstants.TEXT_MESSAGE,
+  MessageTypesConstants.MEDIALINK_MESSAGE
+]
 
 export default {
   name: 'blip-card',
@@ -543,7 +616,9 @@ export default {
     resolveUnsupportedRepliedType() {
       if (this.document.type === 'application/vnd.lime.reply+json') {
         const { replied } = this.document.content
-        let isSupportedRepliedType = supportedRepliedTypes.includes(replied.type)
+        let isSupportedRepliedType = supportedRepliedTypes.includes(
+          replied.type
+        )
 
         if (!isSupportedRepliedType) {
           this.document.type = replied.type
@@ -555,6 +630,11 @@ export default {
       if (this.onUnsupportedType) {
         this.onUnsupportedType(this.editableDocument)
       }
+    }
+  },
+  computed: {
+    MessageTypesConstants() {
+      return MessageTypesConstants
     }
   }
 }
