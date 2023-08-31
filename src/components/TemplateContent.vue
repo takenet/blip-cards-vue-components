@@ -8,7 +8,7 @@
           <bds-typo :class="'typo template-content-text-body ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
         </div>
         <bds-typo class="span template-content-text-header" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
-          <a style="display: block;" :href="link" target="_blank">{{ link }}</a>
+          <a :href="link" target="_blank">{{ link }}</a>
         </bds-typo>
         <bds-typo :class="'span template-content-text-body ' + position" variant="fs-16" bold="regular" v-if="hasTemplateContentBody" v-html="formatText(showTemplateContentBody(), 'template-content-text-body ' + position)"/>
       </div>
