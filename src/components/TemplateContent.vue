@@ -185,14 +185,13 @@ export default {
   &.right {
     display: flex;
     flex-direction: column;
-    align-content: start;
+    justify-content: start;
     row-gap: 1em;
-    flex-wrap: wrap;
-    word-wrap: break-word;
     .template-content-header {
       display: flex;
       gap: 8px;
       align-self: flex-start;
+      max-width: calc(100% - 25px);
     }
   }
 }
