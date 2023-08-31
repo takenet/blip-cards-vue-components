@@ -330,6 +330,25 @@
           :on-cancel="cancel"
         />
 
+        <template-content
+          v-else-if="document.content.type === 'template-content'"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :message-template-title="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
+          :content-template-name="document.content.template.name"
+          :on-failed-click-icon="onFailedClickIcon"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"/>
+
         <unsuported-content
           v-else-if="document.content.type === 'template'"
           class="blip-card"

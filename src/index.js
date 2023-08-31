@@ -16,6 +16,7 @@ import WebLink from './components/WebLink'
 import Location from './components/Location'
 import RequestLocation from './components/RequestLocation'
 import LimeInput from './components/LimeInput'
+import TemplateContent from './components/TemplateContent'
 import UnsuportedContent from './components/UnsuportedContent'
 import ChatState from './components/ChatState'
 import Redirect from './components/Redirect'
@@ -73,6 +74,7 @@ function install(Vue) {
   components.push(Vue.component(Location.name, Location))
   components.push(Vue.component(RequestLocation.name, RequestLocation))
   components.push(Vue.component(LimeInput.name, LimeInput))
+  components.push(Vue.component(TemplateContent.name, TemplateContent))
   components.push(Vue.component(UnsuportedContent.name, UnsuportedContent))
   components.push(Vue.component(ChatState.name, ChatState))
   components.push(Vue.component(Survey.name, Survey))
@@ -136,6 +138,7 @@ export default {
   WebLink,
   Location,
   RequestLocation,
+  TemplateContent,
   UnsuportedContent,
   install
 }
