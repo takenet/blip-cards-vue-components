@@ -8,7 +8,7 @@
           <bds-typo :class="'typo template-content-text-body ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
         </div>
         <bds-typo class="span template-content-text-header" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
-          <a :href="link" target="_blank">{{ link }}</a>
+          <a style="display: block;" :href="link" target="_blank">{{ link }}</a>
         </bds-typo>
         <bds-typo :class="'span template-content-text-body ' + position" variant="fs-16" bold="regular" v-if="hasTemplateContentBody" v-html="formatText(showTemplateContentBody(), 'template-content-text-body ' + position)"/>
       </div>
@@ -191,7 +191,6 @@ export default {
       display: flex;
       gap: 8px;
       align-self: flex-start;
-      max-width: calc(100% - 25px);
     }
   }
 }
@@ -211,19 +210,14 @@ export default {
 
 .template-content-text-body.right {
   color: $color-surface-1;
-  max-width: calc(100% - 25px);
 }
 
 .template-content-text-body.left {
   color: $color-content-default;
-  max-width: calc(100% - 25px);
 }
 
 .template-content-text-header {
   max-width: calc(100% - 25px);
-}
-
-span {
-  max-width: calc(100% - 25px);
+  white-space: break-spaces;
 }
 </style>
