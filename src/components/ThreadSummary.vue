@@ -98,15 +98,13 @@ export default {
   },
   methods: {
     sanitizeText: function(text) {
-      console.log(text)
-      console.log(this.sanitize(text))
       return linkify(this.sanitize(text), this.disableLink)
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import '../styles/variables.scss';
 
 .summary .bubble {
