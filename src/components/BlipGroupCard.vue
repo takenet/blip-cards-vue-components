@@ -172,14 +172,14 @@ export default {
   },
   methods: {
     isFailedMessageGroup(message, group) {
-      if (message.type === MessageTypesConstants.CONVERSATION_SUMMARY) {
+      if (message.type === MessageTypesConstants.THREAD_SUMMARY) {
         return ''
       }
       return message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : ''
     },
     failedMessageNotification(type) {
-      if (type === MessageTypesConstants.CONVERSATION_SUMMARY) {
-        return this.translations.failedToLoadConversationSummary
+      if (type === MessageTypesConstants.THREAD_SUMMARY) {
+        return this.translations.failedToLoadThreadSummary
       }
       return this.failedToSendMsg
     }

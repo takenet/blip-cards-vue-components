@@ -119,7 +119,9 @@ export default {
   padding: $bubble-padding;
   word-wrap: break-word;
   min-width: auto;
-
+  .summary{
+    background-color: $color-warning !important;
+  }
   .typing {
     display: inline-block;
   }

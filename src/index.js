@@ -29,7 +29,7 @@ import BlipCardDate from './components/BlipCardDate'
 import ApplicationJSon from './components/ApplicationJSon'
 import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
 import MenuList from './components/ApplicationJSon/MenuList'
-import ConversationSummary from './components/ConversationSummary.vue'
+import ThreadSummary from './components/ThreadSummary.vue'
 
 // Reply components
 import ReplyCard from './components/ReplyCard/ReplyCard'
@@ -84,7 +84,7 @@ function install(Vue) {
   components.push(Vue.component(ApplicationJSon.name, ApplicationJSon))
   components.push(Vue.component(MenuListPrompt.name, MenuListPrompt))
   components.push(Vue.component(MenuList.name, MenuList))
-  components.push(Vue.component(ConversationSummary.name, ConversationSummary))
+  components.push(Vue.component(ThreadSummary.name, ThreadSummary))
 
   // Reply components
   components.push(Vue.component(ReplyCard.name, ReplyCard))

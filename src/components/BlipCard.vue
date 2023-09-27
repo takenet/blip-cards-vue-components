@@ -444,12 +444,12 @@
           :on-audio-validate-uri="onAudioValidateUri"
         />
 
-        <conversation-summary
+        <thread-summary
           v-else-if="
-            document.type === MessageTypesConstants.CONVERSATION_SUMMARY
+            document.type === MessageTypesConstants.THREAD_SUMMARY
           "
           class="blip-card"
-          :failed-To-Load-Conversation-Summary="translations.failedToLoadConversationSummary"
+          :failed-To-Load-thread-summary="translations.failedToLoadThreadSummary"
           :show-more-msg="translations.showMore"
           :status="status"
           :position="position"
