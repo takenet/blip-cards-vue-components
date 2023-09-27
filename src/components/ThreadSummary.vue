@@ -122,7 +122,6 @@ export default {
       font-size: 24px;
       margin-block: 0px;
       padding-left: 35px;
-      color: red !important;
     }
     padding-top: 8px;
   }
