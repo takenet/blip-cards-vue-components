@@ -47,8 +47,7 @@
             <ul>
               <li
                 v-for="(item, index) in this.document.summary"
-                v-bind:key="index"
-              >
+                v-bind:key="index">
                 <bds-typo variant="fs-16" bold="regular">
                   <span v-html="sanitizeText(item)"></span>
                 </bds-typo>
