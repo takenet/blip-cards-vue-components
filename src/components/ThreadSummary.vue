@@ -30,7 +30,7 @@
                 tag="h1"
                 style="margin: 4px 8px 0px 0px"
               >
-                {{ this.translations.titleConversationSummary }}
+                {{ this.translations.titleThreadSummary }}
               </bds-typo>
               <bds-chip-tag color="outline">
                 Ticket #{{
@@ -47,11 +47,10 @@
             <ul>
               <li
                 v-for="(item, index) in this.document.summary"
-                v-bind:key="index"
-              >
-                <bds-typo variant="fs-16" bold="regular">{{
-                  sanitizeText(item)
-                }}</bds-typo>
+                v-bind:key="index">
+                <bds-typo variant="fs-16" bold="regular">
+                  <span v-html="sanitizeText(item)"></span>
+                </bds-typo>
               </li>
             </ul>
           </div>
@@ -62,7 +61,7 @@
       :status="status"
       :position="position"
       :date="date"
-      :failed-to-send-msg="failedToLoadConversationSummary"
+      :failed-to-send-msg="failedToLoadThreadSummary"
     />
   </div>
 </template>
@@ -72,7 +71,7 @@ import { default as base } from '../mixins/baseComponent.js'
 import { linkify } from '../utils/misc'
 
 export default {
-  name: 'conversation-summary',
+  name: 'thread-summary',
   mixins: [base],
   props: {
     document: {
@@ -91,7 +90,7 @@ export default {
       type: Boolean,
       default: false
     },
-    failedToLoadConversationSummary: {
+    failedToLoadThreadSummary: {
       type: String,
       default: 'Falha ao carregar o resumo da conversa'
     }
@@ -114,35 +113,35 @@ export default {
   text-align: left;
   background-color: $color-warning !important;
   color: $color-content-default !important;
-}
 
-ul {
-  font-size: 24px;
-  margin-block: 0px;
-  padding-left: 35px;
-}
-.itens-summary {
-  padding-top: 8px;
-}
-.title-summary {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0px;
-  .title-icon {
+  .itens-summary {
+    ul {
+      font-size: 24px;
+      margin-block: 0px;
+      padding-left: 35px;
+    }
+    padding-top: 8px;
+  }
+  .title-summary {
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
     padding: 0px;
-    gap: 8px;
-  }
-  .title-text {
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    align-items: center;
+    .title-icon {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 0px;
+      gap: 8px;
+    }
+    .title-text {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      align-items: center;
+    }
   }
 }
 </style>

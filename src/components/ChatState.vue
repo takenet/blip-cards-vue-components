@@ -115,11 +115,14 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/variables.scss';
 
+.summary .chat-state .bubble {
+  background-color: $color-warning !important;
+}
+
 .chat-state .bubble {
   padding: $bubble-padding;
   word-wrap: break-word;
   min-width: auto;
-
   .typing {
     display: inline-block;
   }
