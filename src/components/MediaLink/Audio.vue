@@ -166,7 +166,10 @@ export default {
     }
   },
   mounted: async function() {
-    await this.initAudio()
+    this.audioUri = isAuthenticatedMediaLink(this.document)
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
+    this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
   destroyed: function() {
@@ -187,11 +190,7 @@ export default {
       this.possiblePlaybackRates = [1, 1.5, 2]
       this.playbackRate = 1
     },
-    initAudio: async function() {
-      this.audioUri = isAuthenticatedMediaLink(this.document)
-        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
-        : this.document.uri
-
+    initAudio: function(uri) {
       this.audio = new Audio()
       this.isLoading = true
       this.audio.addEventListener(
@@ -202,7 +201,7 @@ export default {
       this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
       this.audio.addEventListener('loadedmetadata', this.audioLoaded)
       this.audio.addEventListener('ended', this.resetPlay)
-      this.audio.src = this.audioUri
+      this.audio.src = uri
       this.audio.load()
     },
     toggleEdit: function() {
