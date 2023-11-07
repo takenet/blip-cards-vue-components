@@ -166,7 +166,10 @@ export default {
   },
   destroyed: function() {
     document.removeEventListener('fullscreenchange', this.fullScreenChange)
-    document.removeEventListener('webkitfullscreenchange', this.fullScreenChange)
+    document.removeEventListener(
+      'webkitfullscreenchange',
+      this.fullScreenChange
+    )
     document.removeEventListener('mozfullscreenchange', this.fullScreenChange)
     document.removeEventListener('MSFullscreenChange', this.fullScreenChange)
     this.video.removeEventListener('timeupdate', this.videoTimeUpdated)
