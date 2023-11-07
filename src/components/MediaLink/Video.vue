@@ -258,6 +258,7 @@ export default {
         this.animation = null
         this.save({
           ...this.document,
+          text: this.text,
           uri: this.videoUri,
           type: mime.lookup(this.videoUri)
             ? mime.lookup(this.videoUri)
