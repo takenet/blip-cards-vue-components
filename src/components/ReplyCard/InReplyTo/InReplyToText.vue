@@ -6,14 +6,14 @@
       :bold="hasDescription ? 'bold' : 'regular'"
       margin="false"
       class="message-replied-text typo"
-      :class="{ 'single': !hasDescription, 'title': hasDescription }">{{ inReplyToText }}</bds-typo>
+      :class="{ 'single': !hasDescription, 'title': hasDescription }" v-html="sanitize(inReplyToText)"></bds-typo>
     <bds-typo
       v-if="hasDescription"
       tag="p"
       variant="fs-16"
       bold="regular"
       margin="false"
-      class="message-replied-text description typo-light">{{ inReplyToDescription }}</bds-typo>
+      class="message-replied-text description typo-light" v-html="sanitize(inReplyToDescription)"></bds-typo>
   </div>
 </template>
 
