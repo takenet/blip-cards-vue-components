@@ -19,7 +19,7 @@
           <div class="sk-circle-wrapper" id="animation">
             <bds-loading-spinner size="small" color="main"></bds-loading-spinner>
           </div>
-          <video :src="videoUri" id="blipVideo"></video>
+          <video id="blipVideo"></video>
         </div>
         <div class="video-player-controls" id="videoPlayerControls">
           <span v-if="isPlaying" @click="togglePlay">
@@ -181,9 +181,6 @@ export default {
     this.video.removeEventListener('ended', this.resetPlay)
     this.asyncFetchMedia && URL.revokeObjectURL(this.videoUri)
   },
-  updated: function() {
-    this.initVideo()
-  },
   methods: {
     init: async function() {
       this.videoUri = isAuthenticatedMediaLink(this.document)
@@ -241,6 +238,10 @@ export default {
       this.video.addEventListener('seeked', this.readyToPlay)
       this.video.addEventListener('canplay', this.readyToPlay)
       this.video.addEventListener('ended', this.resetPlay)
+
+      this.video.src = this.videoUri
+
+      this.video.load()
     },
     toggleEdit: function() {
       this.isEditing = !this.isEditing
@@ -270,12 +271,13 @@ export default {
       })
     },
     togglePlay: function() {
-      this.isPlaying = !this.isPlaying
       if (this.isPlaying) {
-        this.video.play()
-      } else {
         this.video.pause()
+      } else {
+        this.video.play()
       }
+
+      this.isPlaying = !this.isPlaying
     },
     resetPlay: function() {
       if (this.isPlaying && (this.video.currentTime = this.totalTime)) {
@@ -300,7 +302,6 @@ export default {
     },
     videoLoaded: function() {
       this.totalTime = this.video.duration
-      this.$emit('updated')
     },
     setVideoPosition: function(event) {
       // srcElement is no supported in FF, but needed if working with IE6-8
