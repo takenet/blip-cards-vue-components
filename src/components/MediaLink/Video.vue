@@ -182,10 +182,8 @@ export default {
     this.asyncFetchMedia && URL.revokeObjectURL(this.videoUri)
   },
   methods: {
-    init: async function() {
-      this.videoUri = isAuthenticatedMediaLink(this.document)
-        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
-        : this.document.uri
+    init: function() {
+      this.videoUri = undefined
       this.text = this.document.text
       this.isPlaying = false
       this.isFullScreen = false
@@ -200,7 +198,13 @@ export default {
       this.inactivityTimeout = undefined
       this.animation = undefined
     },
-    initVideo: function() {
+    initVideo: async function() {
+      this.videoUri = isAuthenticatedMediaLink(this.document)
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
+
+      this.video = this.$el.querySelector('#blipVideo')
+
       if (!this.video) {
         this.video = this.$el.querySelector('#blipVideo')
       }
