@@ -203,8 +203,6 @@ export default {
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
 
-      this.video = this.$el.querySelector('#blipVideo')
-
       if (!this.video) {
         this.video = this.$el.querySelector('#blipVideo')
       }
