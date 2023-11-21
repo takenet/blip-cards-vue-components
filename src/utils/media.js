@@ -5,6 +5,11 @@ export async function tryCreateLocalMediaUri(mediaDocument, asyncFetchMedia) {
     const localUri = URL.createObjectURL(
       new Blob([await result.arrayBuffer()], { type: mediaDocument.type })
     )
+
+    if (!localUri) {
+      return uri
+    }
+
     return localUri
   } catch (error) {
     return uri
