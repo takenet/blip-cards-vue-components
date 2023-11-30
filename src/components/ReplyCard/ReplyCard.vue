@@ -3,6 +3,10 @@
     id="blip-container">
     <div :class="'bubble ' + position">
       <div class="reply-container">
+        <bds-grid direction="row" align-items="flex-start" gap="half" margin="b-half">
+          <bds-icon name="redo" size="small" type="icon"></bds-icon>
+          <bds-typo variant="fs-14" italic="true">{{ replyText }}</bds-typo>
+        </bds-grid>
         <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" :failed-message="translations.failedToLoad" />
         <replied-base v-if="replied" 
           :replied="replied" 
@@ -73,6 +77,10 @@
       position: {
         type: String,
         default: 'left'
+      },
+      replyText: {
+        type: String,
+        default: 'Resposta'
       }
     },
     computed: {

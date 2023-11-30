@@ -442,6 +442,38 @@
           :text-msg="translations.text"
           :video-uri-msg="translations.videoUri"
           :on-audio-validate-uri="onAudioValidateUri"
+          :reply-text="translations.replyText"
+        />
+
+        <reaction-card
+          v-else-if="document.type === 'application/vnd.lime.reaction+json'"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :updatedPhotoMargin="updatedPhotoMargin"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-media-selected="onMediaSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :translations="translations"
+          :async-fetch-media="asyncFetchMedia"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :supported-formats-msg="translations.supportedFormats"
+          :file-url-msg="translations.fileUrl"
+          :title-msg="translations.title"
+          :image-uri-msg="translations.imageUri"
+          :text-msg="translations.text"
+          :video-uri-msg="translations.videoUri"
+          :on-audio-validate-uri="onAudioValidateUri"
+          :reaction-text="translations.reactionText"
         />
 
         <thread-summary
