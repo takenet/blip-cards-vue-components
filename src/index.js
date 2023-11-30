@@ -39,6 +39,12 @@ import RepliedWithMediaLink from './components/ReplyCard/Replied/RepliedWithMedi
 import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
 import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
 
+// Reaction components
+import ReactionCard from './components/ReactionCard/ReactionCard'
+import ReactionBase from './components/ReactionCard/Reaction/ReactionBase'
+import InReactionToBase from './components/ReactionCard/InReactionTo/InReactionToBase'
+import InReactionToText from './components/ReactionCard/InReactionTo/InReactionToText'
+
 // Validators
 import JsonValidator from './validators/jsonValidator'
 import MimeValidator from './validators/mimeValidator'
@@ -95,6 +101,12 @@ function install(Vue) {
   // In Reply To
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))
+
+  // Reaction components
+  components.push(Vue.component(ReactionCard.name, ReactionCard))
+  components.push(Vue.component(ReactionBase.name, ReactionBase))
+  components.push(Vue.component(InReactionToBase.name, InReactionToBase))
+  components.push(Vue.component(InReactionToText.name, InReactionToText))
 
   Vue.component(Editable.name, Editable)
 

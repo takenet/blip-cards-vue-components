@@ -161,6 +161,9 @@
         <button class="button" @click="sendReplyMessageInReplyToReplyButtonWithoutHeader">
           ENVIAR Reply Message de Reply Buttton sem header
         </button>
+        <button class="button" @click="sendReactionToText">
+          ENVIAR Reaction de texto
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -1183,6 +1186,29 @@ export default {
             'Inicialmente, a empresa ofereceu um desconto de 10%, mas o cliente não considerou suficiente.',
             'Após nova negociação, chegaram a um acordo de 20% de desconto, com a condição de fidelidade de 6 meses.'
           ]
+        }
+      })
+      this.send()
+    },
+    sendReactionToText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          emoji: {
+            // \ud83d\udc4d\ud83c\udffd
+            values: [55357, 56397, 55356, 57341]
+            // \u2B06\uFE0F]
+            // values: [11014, 65039]
+          },
+          inReactionTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'text/plain',
+            value: 'teste',
+            direction: 'sent'
+          }
         }
       })
       this.send()
