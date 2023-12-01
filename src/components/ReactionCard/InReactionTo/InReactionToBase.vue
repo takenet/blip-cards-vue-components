@@ -1,14 +1,37 @@
 <template>
-  <div v-if="isAcceptableTextType || hasFailedToLoad" class="in-reaction-to-message-container">
-    <template v-if="isAcceptableTextType">
-      <span class="in-reaction-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
-      <div class="in-reaction-to-message">
-        <in-reaction-to-text
-          :in-reaction-to="inReactionTo"
-        />
-      </div>
-    </template>
-    <div class="failed-message" v-else-if="hasFailedToLoad">
+  <div class="in-reaction-to-message-container">
+    <span class="in-reaction-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
+    <div v-if="!hasFailedToLoad" class="in-reaction-to-message">
+      <in-reaction-to-text
+        v-if="inReactionTo.type === 'text/plain'"
+        :in-reaction-to="inReactionTo"
+      />
+      <in-reaction-to-media-link
+        v-if="inReactionTo.type === 'application/vnd.lime.media-link+json'"
+        :in-reaction-to="inReactionToValue"
+        :on-media-selected="onMediaSelected"
+        :video-uri-msg="translations.videoUri"
+        :async-fetch-media="asyncFetchMedia"
+        @updated="updatedPhotoMargin"
+        :failed-to-send-msg="translations.failedToSend"
+        :aspect-ratio-msg="translations.aspectRatio"
+        :supported-formats-msg="translations.supportedFormats"
+        :file-url-msg="translations.fileUrl"
+        :title-msg="translations.title"
+        :image-uri-msg="translations.imageUri"
+        :text-msg="translations.text"
+        :position="position"
+        :on-save="saveCard"
+        :editable="editable"
+        :on-deleted="deleteCard"
+        :on-metadata-edit="isMetadataReady"
+        :deletable="deletable"
+        :editing="isCardEditing"
+        :on-cancel="cancel"
+        :on-audio-validate-uri="onAudioValidateUri"
+      />
+    </div>
+    <div class="failed-message" v-if="hasFailedToLoad">
       <bds-icon name="warning" theme="outline" aria-label="Warning"></bds-icon>
       <bds-typo
         tag="p"
@@ -39,6 +62,23 @@
       failedMessage: {
         type: String,
         default: 'Falha ao carregar mensagem'
+      },
+      onMediaSelected: {
+        type: Function
+      },
+      asyncFetchMedia: {
+        type: Function
+      },
+      updatedPhotoMargin: {
+        type: Function
+      },
+      translations: {
+        type: Object,
+        default: () => ({})
+      },
+      position: {
+        type: String,
+        default: 'left'
       }
     },
     computed: {
@@ -75,6 +115,10 @@
       },
       hasFailedToLoad() {
         return Boolean(this.inReactionTo.type === undefined || this.inReactionTo.value === undefined)
+      },
+      inReactionToValue() {
+        console.info('computed inReactionToValue', this.inReactionTo.value)
+        return this.inReactionTo.value
       }
     }
   }

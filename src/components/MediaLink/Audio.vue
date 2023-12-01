@@ -17,7 +17,14 @@
       v-on:click="toggleEdit"
     ></bds-button-icon>
     <div class="audio-player-wrapper" v-if="!isEditing">
-      <div class="audio-player-controls">
+      <div v-if="simplified">
+        <bds-grid align-items="center" gap="1">
+          <bds-icon size="small" name="audio" theme="solid"></bds-icon>
+          <bds-typo v-if="!isLoading" tag="span">{{ getTimeFromSeconds(this.totalTime) }}</bds-typo>
+          <bds-loading-spinner v-if="isLoading" size="extra-small" color="light"></bds-loading-spinner>
+        </bds-grid>
+      </div>
+      <div v-if="!simplified" class="audio-player-controls">
         <div v-if="!isLoading" class="audio-play-pause">
           <span v-if="isPlaying" @click="togglePlay">
             <svg
@@ -149,6 +156,10 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    simplified: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {

@@ -44,6 +44,7 @@ import ReactionCard from './components/ReactionCard/ReactionCard'
 import ReactionBase from './components/ReactionCard/Reaction/ReactionBase'
 import InReactionToBase from './components/ReactionCard/InReactionTo/InReactionToBase'
 import InReactionToText from './components/ReactionCard/InReactionTo/InReactionToText'
+import InReactionToMediaLink from './components/ReactionCard/InReactionTo/InReactionToMediaLink'
 
 // Validators
 import JsonValidator from './validators/jsonValidator'
@@ -107,6 +108,7 @@ function install(Vue) {
   components.push(Vue.component(ReactionBase.name, ReactionBase))
   components.push(Vue.component(InReactionToBase.name, InReactionToBase))
   components.push(Vue.component(InReactionToText.name, InReactionToText))
+  components.push(Vue.component(InReactionToMediaLink.name, InReactionToMediaLink))
 
   Vue.component(Editable.name, Editable)
 

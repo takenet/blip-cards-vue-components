@@ -164,6 +164,15 @@
         <button class="button" @click="sendReactionToText">
           ENVIAR Reaction de texto
         </button>
+        <button class="button" @click="sendReactionToAudio">
+          ENVIAR Reaction de áudio
+        </button>
+        <button class="button" @click="sendReactionToVideo">
+          ENVIAR Reaction de vídeo
+        </button>
+        <button class="button" @click="sendReactionRemoved">
+          ENVIAR remover reação
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -863,7 +872,7 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'video/mp4',
-              uri: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'
+              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
             }
           },
           inReplyTo: {
@@ -1198,16 +1207,75 @@ export default {
         type: 'application/vnd.lime.reaction+json',
         content: {
           emoji: {
-            // \ud83d\udc4d\ud83c\udffd
             values: [55357, 56397, 55356, 57341]
-            // \u2B06\uFE0F]
-            // values: [11014, 65039]
           },
           inReactionTo: {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
             type: 'text/plain',
             value: 'teste',
             direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionRemoved: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'text/plain',
+            value: 'teste',
+            direction: 'sent'
+          },
+          emoji: undefined
+        }
+      })
+      this.send()
+    },
+    sendReactionToAudio: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'audio/mp3',
+              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToVideo: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'video/mp4',
+              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
           }
         }
       })

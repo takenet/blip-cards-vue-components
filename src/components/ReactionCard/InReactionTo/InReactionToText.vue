@@ -1,21 +1,21 @@
 <template>
-    <div>
-      <bds-typo
-        tag="p"
-        variant="fs-16"
-        :bold="hasDescription ? 'bold' : 'regular'"
-        margin="false"
-        class="message-replied-text typo"
-        :class="{ 'single': !hasDescription, 'title': hasDescription }" v-html="sanitize(inReactionToText)"></bds-typo>
-      <bds-typo
-        v-if="hasDescription"
-        tag="p"
-        variant="fs-16"
-        bold="regular"
-        margin="false"
-        class="message-replied-text description typo-light" v-html="sanitize(inReactionToDescription)"></bds-typo>
-    </div>
-  </template>
+  <div>
+    <bds-typo
+      tag="p"
+      variant="fs-16"
+      :bold="hasDescription ? 'bold' : 'regular'"
+      margin="false"
+      class="message-reacted-text typo"
+      :class="{ 'single': !hasDescription, 'title': hasDescription }" v-html="sanitize(inReactionToText)"></bds-typo>
+    <bds-typo
+      v-if="hasDescription"
+      tag="p"
+      variant="fs-16"
+      bold="regular"
+      margin="false"
+      class="message-reacted-text description typo-light" v-html="sanitize(inReactionToDescription)"></bds-typo>
+  </div>
+</template>
   
   <script>
     export default {
@@ -65,7 +65,7 @@
   <style lang="scss" scoped>
     @import '../../../styles/variables.scss';
   
-    .message-replied-text {
+    .message-reacted-text {
       display: -webkit-box;
       overflow: hidden;
       text-overflow: ellipsis;
