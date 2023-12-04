@@ -85,11 +85,9 @@
           return this.fullDocument.direction === this.fullDocument.content.inReactionTo.direction
         },
         emoji() {
-          console.info('emoji', this.document.emoji.values)
           return this.document.emoji.values
         },
         inReactionTo() {
-          console.info('in reaction to', this.document.inReactionTo)
           return this.document.inReactionTo
         },
         hasEmoji() {

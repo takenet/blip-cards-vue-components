@@ -131,7 +131,6 @@
         return Boolean(this.inReactionTo.type === undefined || this.inReactionTo.value === undefined)
       },
       inReactionToValue() {
-        console.info('computed inReactionToValue', this.inReactionTo.value)
         return this.inReactionTo.value
       }
     }
