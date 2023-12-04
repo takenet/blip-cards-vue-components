@@ -1,7 +1,7 @@
 <template>
-  <bds-grid class="emoji-container">
+  <bds-grid :class="'emoji-container ' + position">
     <bds-typo variant="fs-14" tag="span" margin="false">{{ parsedEmoji }}</bds-typo>
-</bds-grid>
+  </bds-grid>
 </template>
 
 <script>
@@ -12,6 +12,10 @@
       emoji: {
         type: [],
         default: undefined
+      },
+      position: {
+        type: String,
+        default: 'left'
       }
     },
     computed: {
@@ -31,14 +35,23 @@
 
   .emoji-container {
       border-radius: 50%;
-      background-color: $color-surface-1;
       position: absolute;
       border: 1px solid $color-content-ghost;
       width: 28px;
       height: 28px;
       justify-content: center;
-      bottom: -14px;
-      right: 4px;
+
+      &.left,&.middle {
+        bottom: -14px;
+        right: 4px;
+        background-color: $color-surface-1;
+      }
+
+      &.right {
+        bottom: -14px;
+        left: 4px;
+        background-color: $color-content-default;
+      }
     }
 </style>
   

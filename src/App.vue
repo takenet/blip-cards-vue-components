@@ -170,8 +170,17 @@
         <button class="button" @click="sendReactionToVideo">
           ENVIAR Reaction de vídeo
         </button>
+        <button class="button" @click="sendReactionToImage">
+          ENVIAR Reaction de imagem
+        </button>
+        <button class="button" @click="sendReactionToFile">
+          ENVIAR Reaction de arquivo
+        </button>
         <button class="button" @click="sendReactionRemoved">
           ENVIAR remover reação
+        </button>
+        <button class="button" @click="sendReactionToUnsuportedContent">
+          ENVIAR reação conteúdo não suportado
         </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
@@ -1271,6 +1280,74 @@ export default {
             value: {
               type: 'video/mp4',
               uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToImage: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
+              title: 'texto de exemplo'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToUnsuportedContent: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        direction: 'sent',
+        content: {
+          inReactionTo: {
+            type: 'application/x+json',
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToFile: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              uri:
+                'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+              title: 'pdf_open_parameters.pdf',
+              type: 'application/pdf',
+              size: '5540'
             },
             direction: 'sent'
           },

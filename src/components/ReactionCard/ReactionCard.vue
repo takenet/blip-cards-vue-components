@@ -4,9 +4,8 @@
       <div :class="'bubble ' + position">
         <div class="reaction-container">
           <bds-grid direction="row" align-items="flex-start" gap="half" margin="b-half">
-            <bds-icon name="like" size="small" type="icon"></bds-icon>
-            <bds-typo v-if="hasEmoji" variant="fs-14" italic="true">{{ reactionText }}</bds-typo>
-            <bds-typo v-if="!hasEmoji" variant="fs-14" italic="true">{{ removedReactionText }}</bds-typo>
+            <bds-icon class="typo" name="like" size="small" type="icon"></bds-icon>
+            <bds-typo class="typo" variant="fs-14" italic="true">{{ hasEmoji ? reactionText : removedReactionText }}</bds-typo>
           </bds-grid>
           <in-reaction-to-base 
             :in-reaction-to="inReactionTo" 
@@ -27,7 +26,7 @@
             :position="position"
             :date="date"
             :failed-message="translations.failedToLoad" />
-          <reaction-base v-if="hasEmoji" :emoji="emoji" />
+          <reaction-base v-if="hasEmoji" :emoji="emoji" :position="position" />
         </div>
       </div>
       <blip-card-date

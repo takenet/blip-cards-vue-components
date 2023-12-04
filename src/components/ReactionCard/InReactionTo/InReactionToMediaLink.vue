@@ -1,12 +1,34 @@
 <template>
     <div :class="'media-link ' + inReactionTo.type.split('/')[0]">
       <div :class="'inReactionTo ' + position" id="inReactionTo">
+          <blip-image
+            :image-uri-msg="titleMsg"
+            :title-msg="titleMsg"
+            :text-msg="textMsg"
+            :aspect-ratio-msg="aspectRatioMsg"
+            :supported-formats-msg="supportedFormatsMsg"
+            :document="inReactionTo"
+            :full-document="inReactionTo"
+            :date="date"
+            v-if="inReactionTo.type.indexOf('image') != -1"
+            :editable="editable"
+            :on-media-selected="onMediaSelected"
+            :on-save="save"
+            :on-deleted="onDeleted"
+            :on-metadata-edit="isMetadataReady"
+            :deletable="deletable"
+            :on-cancel="onCancel"
+            :editing="editing"
+            :async-fetch-media="asyncFetchMedia"
+            :simplified="true"
+            class="in-reaction-to-with-preview"
+          />
           <blip-audio
             :file-url-msg="fileUrlMsg"
             :document="inReactionTo"
             :full-document="inReactionTo"
             :date="date"
-            v-if="inReactionTo.type.indexOf('audio') != -1"
+            v-else-if="inReactionTo.type.indexOf('audio') != -1"
             :editable="editable"
             :on-save="save"
             :on-deleted="onDeleted"
@@ -17,6 +39,44 @@
             :on-audio-validate-uri="onAudioValidateUri"
             :async-fetch-media="asyncFetchMedia"
             :simplified="true" 
+            class="in-reaction-to-audio"
+          />
+          <blip-video
+            :video-uri-msg="videoUriMsg"
+            :document="inReactionTo"
+            :full-document="inReactionTo"
+            :date="date"
+            @updated="emitUpdate"
+            v-else-if="inReactionTo.type.indexOf('video') != -1"
+            :editable="editable"
+            :on-save="save"
+            :on-deleted="onDeleted"
+            :on-metadata-edit="isMetadataReady"
+            :deletable="deletable"
+            :on-cancel="onCancel"
+            :editing="editing"
+            :async-fetch-media="asyncFetchMedia"
+            :simplified="true"
+            class="in-reaction-to-with-preview"
+          />
+          <blip-file
+            :title-msg="titleMsg"
+            :document="inReactionTo"
+            :full-document="inReactionTo"
+            :position="position"
+            :date="date"
+            v-else
+            :editable="editable"
+            :on-media-selected="onMediaSelected"
+            :on-save="save"
+            :on-deleted="onDeleted"
+            :on-metadata-edit="isMetadataReady"
+            :deletable="deletable"
+            :on-cancel="onCancel"
+            :editing="editing"
+            :async-fetch-media="asyncFetchMedia"
+            :simplified="true"
+            class="in-reaction-to-with-preview"
           />
       </div>
     </div>
@@ -83,6 +143,14 @@
   
     .inReactionTo {
       border-radius: $hard-round;
+    }
+
+    .in-reaction-to-audio {
+      padding: 0.5rem;
+    }
+
+    .in-reaction-to-with-preview {
+      padding-left: 0.5rem;
     }
   </style>
   

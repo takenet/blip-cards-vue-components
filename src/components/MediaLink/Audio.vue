@@ -19,8 +19,8 @@
     <div class="audio-player-wrapper" v-if="!isEditing">
       <div v-if="simplified">
         <bds-grid align-items="center" gap="1">
-          <bds-icon size="small" name="audio" theme="solid"></bds-icon>
-          <bds-typo v-if="!isLoading" tag="span">{{ getTimeFromSeconds(this.totalTime) }}</bds-typo>
+          <bds-icon class="typo" size="small" name="audio" theme="solid"></bds-icon>
+          <bds-typo class="typo" v-if="!isLoading" tag="span">{{ getTimeFromSeconds(this.totalTime) }}</bds-typo>
           <bds-loading-spinner v-if="isLoading" size="extra-small" color="light"></bds-loading-spinner>
         </bds-grid>
       </div>

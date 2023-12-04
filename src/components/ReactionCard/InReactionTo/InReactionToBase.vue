@@ -7,7 +7,7 @@
         :in-reaction-to="inReactionTo"
       />
       <in-reaction-to-media-link
-        v-if="inReactionTo.type === 'application/vnd.lime.media-link+json'"
+        v-else-if="inReactionTo.type === 'application/vnd.lime.media-link+json'"
         :in-reaction-to="inReactionToValue"
         :on-media-selected="onMediaSelected"
         :video-uri-msg="translations.videoUri"
@@ -29,6 +29,20 @@
         :editing="isCardEditing"
         :on-cancel="cancel"
         :on-audio-validate-uri="onAudioValidateUri"
+      />
+      <unsuported-content
+        v-else
+        style="margin-bottom: 0px"
+        :failed-to-send-msg="translations.failedToSend"
+        :unsupported-content-msg="translations.unsupportedContent"
+        :position="position"
+        :document="document"
+        :on-save="saveCard"
+        :editable="editable"
+        :on-deleted="deleteCard"
+        :deletable="deletable"
+        :editing="isCardEditing"
+        :on-cancel="cancel"
       />
     </div>
     <div class="failed-message" v-if="hasFailedToLoad">
@@ -149,10 +163,6 @@
     .skeleton {
       height: 2.5rem;
     }
-  }
-
-  .in-reaction-to-message {
-    padding: 0.5rem;
   }
 
   .failed-message {

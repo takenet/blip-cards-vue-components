@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="reaction-text-container">
     <bds-typo
       tag="p"
       variant="fs-16"
@@ -64,6 +64,10 @@
   
   <style lang="scss" scoped>
     @import '../../../styles/variables.scss';
+
+    .reaction-text-container {
+      padding: 0.5rem;
+    }
   
     .message-reacted-text {
       display: -webkit-box;
