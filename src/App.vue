@@ -176,6 +176,12 @@
         <button class="button" @click="sendReactionToFile">
           ENVIAR Reaction de arquivo
         </button>
+        <button class="button" @click="sendReactionToLocation">
+          ENVIAR Reaction de location
+        </button>
+        <button class="button" @click="sendReactionToWebLink">
+          ENVIAR Reaction de web link
+        </button>
         <button class="button" @click="sendReactionRemoved">
           ENVIAR remover reação
         </button>
@@ -1348,6 +1354,53 @@ export default {
               title: 'pdf_open_parameters.pdf',
               type: 'application/pdf',
               size: '5540'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToLocation: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.location+json',
+            value: {
+              latitude: -19.918899,
+              longitude: -43.959275,
+              altitude: 853,
+              text: 'Takes place'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToWebLink: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.web-link+json',
+            value: {
+              uri: 'http://limeprotocol.org/content-types.html#web-link',
+              target: 'self',
+              text: 'Segue documentação do web-link'
             },
             direction: 'sent'
           },

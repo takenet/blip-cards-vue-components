@@ -30,6 +30,49 @@
         :on-cancel="cancel"
         :on-audio-validate-uri="onAudioValidateUri"
       />
+      <location
+        class="blip-card in-reaction-to-location"
+        v-else-if="inReactionTo.type === 'application/vnd.lime.location+json'"
+        :failed-to-send-msg="translations.failedToSend"
+        :latitude-msg="translations.latitude"
+        :longitude-msg="translations.longitude"
+        :text-msg="translations.text"
+        :status="status"
+        :position="position"
+        :document="inReactionToValue"
+        :full-document="inReactionTo"
+        :date="date"
+        :on-save="saveCard"
+        :editable="editable"
+        :on-deleted="deleteCard"
+        :on-metadata-edit="isMetadataReady"
+        :deletable="deletable"
+        :editing="isCardEditing"
+        :on-cancel="cancel"
+        :simplified="true"
+      />
+      <web-link
+        class="blip-card in-reaction-to-web-link"
+        v-else-if="inReactionTo.type === 'application/vnd.lime.web-link+json'"
+        :page-url-msg="translations.pageUrl"
+        :title-msg="translations.title"
+        :description-msg="translations.description"
+        :failed-to-send-msg="translations.failedToSend"
+        :status="status"
+        :position="position"
+        :document="inReactionToValue"
+        :full-document="inReactionTo"
+        :date="date"
+        :on-save="saveCard"
+        :editable="editable"
+        :on-open-link="onOpenLink"
+        :on-deleted="deleteCard"
+        :on-metadata-edit="isMetadataReady"
+        :deletable="deletable"
+        :editing="isCardEditing"
+        :on-cancel="cancel"
+        :simplified="true"
+      />
       <unsuported-content
         v-else
         style="margin-bottom: 0px"
@@ -169,4 +212,12 @@
     gap: 0.5rem;
     padding: 0.5rem;
   }
+
+  .in-reaction-to-location {
+    padding-left: 0.5rem;
+  }
+
+  .in-reaction-to-web-link {
+      padding: 0.5rem;
+    }
 </style>

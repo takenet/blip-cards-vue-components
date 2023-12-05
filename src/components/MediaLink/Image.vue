@@ -21,6 +21,12 @@
         <bds-grid gap="4" align-items="center" justify-content="space-between">
           <bds-grid margin="r-1" align-items="center" gap="1">
             <bds-icon class="typo" size="small" name="file-image" theme="outline"></bds-icon>
+            <bds-typo
+              tag="span"
+              margin="false"
+              class="image-simplified-text typo"
+              v-html="sanitize(document.title)">
+            </bds-typo>
           </bds-grid>
           <bds-grid>
             <div class="image-preview-container">
@@ -330,7 +336,7 @@ export default {
   padding-top: 20px;
 }
 
-.message-simplified-text {
+.image-simplified-text {
   display: -webkit-box;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -338,6 +344,7 @@ export default {
   margin: 0;
   text-align: left;
   -webkit-line-clamp: 1;
+  max-width: 150px;
 }
 
 .media-link {
