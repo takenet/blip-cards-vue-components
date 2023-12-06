@@ -3,7 +3,7 @@
     <span class="in-reaction-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
     <div v-if="!hasFailedToLoad" class="in-reaction-to-message">
       <in-reaction-to-text
-        v-if="inReactionTo.type === 'text/plain'"
+        v-if="inReactionTo.type === 'text/plain' || inReactionTo.type === 'application/json'"
         :in-reaction-to="inReactionTo"
       />
       <in-reaction-to-media-link
@@ -52,7 +52,7 @@
         :simplified="true"
       />
       <web-link
-        class="blip-card in-reaction-to-web-link"
+        class="blip-card in-reaction-to-padding"
         v-else-if="inReactionTo.type === 'application/vnd.lime.web-link+json'"
         :page-url-msg="translations.pageUrl"
         :title-msg="translations.title"
@@ -88,7 +88,7 @@
         :on-cancel="cancel"
       />
     </div>
-    <div class="failed-message" v-if="hasFailedToLoad">
+    <div class="failed-message in-reaction-to-padding" v-if="hasFailedToLoad">
       <bds-icon name="warning" theme="outline" aria-label="Warning"></bds-icon>
       <bds-typo
         tag="p"
@@ -217,7 +217,10 @@
     padding-left: 0.5rem;
   }
 
-  .in-reaction-to-web-link {
-      padding: 0.5rem;
-    }
+  .in-reaction-to-padding {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 </style>

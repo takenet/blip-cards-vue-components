@@ -1,7 +1,7 @@
 <template>
-    <div class="blip-container reaction-card" id="reaction-container" :class="isGrouped && hasEmoji ? 'reaction-grouped' : ''">
+    <div class="blip-container reaction-card" id="reaction-container">
       <div :class="'bubble ' + position">
-        <div class="reaction-container">
+        <div class="reaction-container" :class="hasEmoji ? 'reaction-bottom-padding' : ''">
           <bds-grid direction="row" align-items="flex-start" gap="half" margin="b-half">
             <bds-icon class="typo" name="like" size="small" type="icon"></bds-icon>
             <bds-typo class="typo" variant="fs-14" italic="true">{{ hasEmoji ? reactionText : removedReactionText }}</bds-typo>
@@ -77,10 +77,6 @@
         removedReactionText: {
           type: String,
           default: 'Reação removida'
-        },
-        isGrouped: {
-          type: Boolean,
-          default: false
         }
       },
       computed: {
@@ -108,8 +104,8 @@
       padding: 1rem;
     }
 
-    .reaction-grouped {
-      padding-bottom: 12px;
+    .reaction-bottom-padding {
+      padding-bottom: 1.5rem;
     }
   </style>
   

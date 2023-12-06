@@ -66,7 +66,10 @@
     @import '../../../styles/variables.scss';
 
     .reaction-text-container {
-      padding: 0.5rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
     }
   
     .message-reacted-text {

@@ -43,14 +43,14 @@
       align-items: center;
 
       &.left,&.middle {
-        bottom: -14px;
-        right: 4px;
+        bottom: 12px;
+        left: 24px;
         background-color: $color-surface-1;
       }
 
       &.right {
-        bottom: -14px;
-        left: 4px;
+        bottom: 12px;
+        right: 24px;
         background-color: $color-content-default;
       }
     }

@@ -474,7 +474,6 @@
           :video-uri-msg="translations.videoUri"
           :on-audio-validate-uri="onAudioValidateUri"
           :reaction-text="translations.reactionText"
-          :is-grouped="isGrouped"
         />
 
         <thread-summary
@@ -591,10 +590,6 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
-    },
-    isGrouped: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
