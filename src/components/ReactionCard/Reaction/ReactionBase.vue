@@ -23,9 +23,9 @@
         return Boolean(this.emoji)
       },
       parsedEmoji() {
-        const e = this.emoji.map(e => { return '\\u' + e.toString(16).toUpperCase() }).join('')
-        return e.replace(/\\u(....)/g, (_, p1) => String.fromCharCode(parseInt(p1, 16)))
-          .replace(/\\(\d{3})/g, (_, p1) => String.fromCharCode(parseInt(p1, 8)))
+        const emojiCodePoints = this.emoji.map((code) => String.fromCodePoint(code))
+        const parsedEmoji = emojiCodePoints.join('')
+        return parsedEmoji
       }
     }
   }
@@ -40,6 +40,7 @@
       width: 28px;
       height: 28px;
       justify-content: center;
+      align-items: center;
 
       &.left,&.middle {
         bottom: -14px;

@@ -32,6 +32,7 @@
           :on-audio-validate-uri="onAudioValidateUri"
           :readonly="readonly"
           :async-fetch-media="asyncFetchMedia"
+          :is-grouped="true"
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">

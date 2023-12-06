@@ -1222,7 +1222,7 @@ export default {
         type: 'application/vnd.lime.reaction+json',
         content: {
           emoji: {
-            values: [55357, 56397, 55356, 57341]
+            values: [128077]
           },
           inReactionTo: {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',

@@ -1,6 +1,5 @@
 <template>
-    <div class="blip-container reaction-card"
-      id="reaction-container">
+    <div class="blip-container reaction-card" id="reaction-container" :class="isGrouped && hasEmoji ? 'reaction-grouped' : ''">
       <div :class="'bubble ' + position">
         <div class="reaction-container">
           <bds-grid direction="row" align-items="flex-start" gap="half" margin="b-half">
@@ -78,6 +77,10 @@
         removedReactionText: {
           type: String,
           default: 'Reação removida'
+        },
+        isGrouped: {
+          type: Boolean,
+          default: false
         }
       },
       computed: {
@@ -103,6 +106,10 @@
     .reaction-container {
       text-align: left;
       padding: 1rem;
+    }
+
+    .reaction-grouped {
+      padding-bottom: 12px;
     }
   </style>
   

@@ -18,7 +18,7 @@
       <div v-if="simplified">
         <bds-grid align-items="center" gap="1">
           <bds-icon class="typo" size="small" name="file-empty-file" theme="outline"></bds-icon>
-          <bds-typo v-if="document.title" class="text" tag="span">{{ document.title }}</bds-typo>
+          <bds-typo v-if="document.title" class="typo" tag="span">{{ document.title }}</bds-typo>
           <bds-loading-spinner v-if="isLoading" size="extra-small" color="light"></bds-loading-spinner>
           <img height="56px" width="56px" v-if="!isLoading" :src="mimeType | fileIconFilter"/>
         </bds-grid>
