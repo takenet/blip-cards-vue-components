@@ -474,6 +474,7 @@
           :video-uri-msg="translations.videoUri"
           :on-audio-validate-uri="onAudioValidateUri"
           :reaction-text="translations.reactionText"
+          :removed-reaction-text="translations.removedReactionText"
         />
 
         <thread-summary
