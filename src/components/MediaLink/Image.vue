@@ -22,6 +22,7 @@
           <bds-grid margin="r-1" align-items="center" gap="1">
             <bds-icon class="typo" size="small" name="file-image" theme="outline"></bds-icon>
             <bds-typo
+              v-if="document.title"
               tag="span"
               margin="false"
               class="image-simplified-text typo"
