@@ -1,31 +1,47 @@
 <template>
-  <div v-if="!isEditing" class="blip-container location" :class="isFailedMessage(status, position)">
-    <div>
-      <div :class="'bubble ' + position" :style="'width: ' + bubbleWidth">
-        <bds-button-icon v-if="deletable"
-          class="editIco trashIco icon-button-margin"
-          icon="trash"
-          variant="delete"
-          size="short"
-          v-on:click="trash(document)"
-        ></bds-button-icon>
-        <bds-button-icon v-if="editable"
-          class="editIco icon-button-margin"
-          icon="edit"
-          variant="primary"
-          size="short"
-          v-on:click="toggleEdit"
-        ></bds-button-icon> 
-        <div class="header">
-          <div
-            class="ratio ratio1-1"
-            :style="styleObject"
-            @click="(editable ? null : handleLocationLink())"
-            :class="editable ? '' : ' pointer'"
-          ></div>
-          <div class="title" v-if="document.text">
-            <span v-if="document.text" v-html="sanitize(document.text)"></span>
-          </div>
+  <div v-if="!isEditing" class="location" :class="isFailedMessage(status, position) + ' ' + getBlipContainer">
+    <div :class="simplified ? '' : 'bubble ' + position" :style=" simplified ? '' : 'width: ' + bubbleWidth">
+      <bds-button-icon v-if="deletable"
+        class="editIco trashIco icon-button-margin"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable"
+        class="editIco icon-button-margin"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon>
+      <div v-if="simplified" class="header">
+        <bds-grid gap="4" align-items="center" justify-content="space-between">
+          <bds-grid margin="r-1" align-items="center" gap="1">
+            <bds-icon class="typo" size="small" name="localization" theme="outline"></bds-icon>
+            <bds-typo
+              tag="span"
+              margin="false"
+              class="location-simplified-text typo"
+              v-html="sanitize(document.text)">
+            </bds-typo>
+          </bds-grid>
+          <bds-grid>
+            <div class="location-preview-container">
+              <div class="ratio ratio1-1 pointer" :style="styleObject" id="simplifiedLocation"></div>
+            </div>
+          </bds-grid>
+        </bds-grid>
+      </div>
+      <div v-if="!simplified" class="header">
+        <div
+          class="ratio ratio1-1"
+          :style="styleObject"
+          @click="(editable ? null : handleLocationLink())"
+          :class="editable ? '' : ' pointer'"
+        ></div>
+        <div class="title" v-if="document.text">
+          <span v-if="document.text" v-html="sanitize(document.text)"></span>
         </div>
       </div>
     </div>
@@ -129,6 +145,10 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem'
+    },
+    simplified: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {
@@ -170,6 +190,13 @@ export default {
       } else {
         return { 'background-image': 'url("' + DefaultMap + '")' }
       }
+    },
+    getBlipContainer: function() {
+      if (this.simplified) {
+        return ''
+      }
+
+      return 'blip-container'
     }
   },
   mounted: function() {
@@ -267,5 +294,28 @@ export default {
 
 .select .fixed-options li:last-child {
   padding-bottom: 0px;
+}
+
+#simplifiedLocation {
+  object-fit: fill;
+  border-radius: 0 !important;
+}
+
+.location-preview-container {
+  background-color: $color-surface-1;
+  width: 56px;
+  height: 56px;
+  align-items: center;
+}
+
+.location-simplified-text {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  margin: 0;
+  text-align: left;
+  -webkit-line-clamp: 1;
+  max-width: 150px;
 }
 </style>

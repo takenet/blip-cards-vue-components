@@ -15,7 +15,15 @@
       v-on:click="toggleEdit"
     ></bds-button-icon>
     <div v-if="!isEditing" :class="`file-${position}`">
-      <div class="file-wrapper" @click="(editable || isLoading ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
+      <div v-if="simplified">
+        <bds-grid align-items="center" gap="1">
+          <bds-icon class="typo" size="small" name="file-empty-file" theme="outline"></bds-icon>
+          <bds-typo v-if="document.title" class="typo" tag="span">{{ document.title }}</bds-typo>
+          <bds-loading-spinner v-if="isLoading" size="extra-small" color="light"></bds-loading-spinner>
+          <img height="56px" width="56px" v-if="!isLoading" :src="mimeType | fileIconFilter"/>
+        </bds-grid>
+      </div>
+      <div v-if="!simplified" class="file-wrapper" @click="(editable || isLoading ? null : handleFileLink())" :class="editable ? '' : ' pointer'">
         <div class="file-icon-wrapper">
           <img v-if="isLoading" :src="loadingGif" alt />
           <img v-else class="file-icon" :src="mimeType | fileIconFilter"/>
@@ -83,6 +91,10 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    simplified: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {
