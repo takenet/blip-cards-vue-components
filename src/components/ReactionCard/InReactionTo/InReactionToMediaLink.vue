@@ -88,7 +88,6 @@
     import BlipVideo from '../../MediaLink/Video'
     import BlipFile from '../../MediaLink/BlipFile'
     import { default as base } from '../../../mixins/baseComponent.js'
-    // import { isFailedMessage } from '../../../utils/misc'
 
     export default {
       name: 'in-reaction-to-media-link',
@@ -141,12 +140,15 @@
   <style lang="scss" scoped>
     @import '../../../styles/variables.scss';
   
-    .inReactionTo {
+    #inReactionTo {
       border-radius: $hard-round;
     }
 
     .in-reaction-to-audio {
-      padding: 0.5rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
     }
 
     .in-reaction-to-with-preview {
