@@ -28,7 +28,7 @@
             :document="inReactionTo"
             :full-document="inReactionTo"
             :date="date"
-            v-if="inReactionTo.type.indexOf('sticker') != -1"
+            v-else-if="inReactionTo.type.indexOf('sticker') != -1"
             :editable="editable"
             :on-media-selected="onMediaSelected"
             :on-save="save"
