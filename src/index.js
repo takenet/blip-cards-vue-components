@@ -21,6 +21,8 @@ import UnsuportedContent from './components/UnsuportedContent'
 import ChatState from './components/ChatState'
 import Redirect from './components/Redirect'
 import Ticket from './components/Ticket'
+import BlipCalls from './components/BlipCalls'
+import BlipCallsEndCard from './components/BlipCallsEndCard'
 import Editable from './components/Editable'
 import Survey from './components/Survey'
 import Contact from './components/Contact'
@@ -64,6 +66,8 @@ function install(Vue) {
   components.push(Vue.component(BlipGroupCard.name, BlipGroupCard))
   components.push(Vue.component(BlipListCard.name, BlipListCard))
   components.push(Vue.component(Ticket.name, Ticket))
+  components.push(Vue.component(BlipCalls.name, BlipCalls))
+  components.push(Vue.component(BlipCallsEndCard.name, BlipCallsEndCard))
   components.push(Vue.component(Redirect.name, Redirect))
   components.push(Vue.component(PlainText.name, PlainText))
   components.push(Vue.component(MediaLink.name, MediaLink))

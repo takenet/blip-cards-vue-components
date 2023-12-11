@@ -410,6 +410,10 @@ export default {
       padding: $bubble-padding;
     }
   }
+}
+
+.media-link.video,
+.calls-card {
   .left, .middle {
     .slider {
       background-color: $color-surface-3;
