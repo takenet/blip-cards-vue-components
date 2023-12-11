@@ -23,6 +23,24 @@
             :simplified="true"
             class="in-reaction-to-with-preview"
           />
+          <blip-sticker
+            :supported-formats-msg="supportedFormatsMsg"
+            :document="inReactionTo"
+            :full-document="inReactionTo"
+            :date="date"
+            v-else-if="inReactionTo.type.indexOf('sticker') != -1"
+            :editable="editable"
+            :on-media-selected="onMediaSelected"
+            :on-save="save"
+            :on-deleted="onDeleted"
+            :on-metadata-edit="isMetadataReady"
+            :deletable="deletable"
+            :on-cancel="onCancel"
+            :editing="editing"
+            :async-fetch-media="asyncFetchMedia"
+            :simplified="true"
+            class="in-reaction-to-with-preview"
+          />
           <blip-audio
             :file-url-msg="fileUrlMsg"
             :document="inReactionTo"
@@ -87,6 +105,7 @@
     import BlipAudio from '../../MediaLink/Audio'
     import BlipVideo from '../../MediaLink/Video'
     import BlipFile from '../../MediaLink/BlipFile'
+    import BlipSticker from '../../MediaLink/Sticker'
     import { default as base } from '../../../mixins/baseComponent.js'
 
     export default {
@@ -96,7 +115,8 @@
         BlipImage,
         BlipAudio,
         BlipVideo,
-        BlipFile
+        BlipFile,
+        BlipSticker
       },
       props: {
         inReactionTo: {

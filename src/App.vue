@@ -102,6 +102,7 @@
         </button>
         <button class="button" @click="sendCollection">ENVIAR Coleção</button>
         <button class="button" @click="sendImage">ENVIAR Imagem</button>
+        <button class="button" @click="sendSticker">ENVIAR Sticker</button>
         <button class="button" @click="sendAudio">ENVIAR Audio</button>
         <button class="button" @click="sendVideo">ENVIAR Video</button>
         <button class="button" @click="sendWebLink">ENVIAR WebLink</button>
@@ -172,6 +173,9 @@
         </button>
         <button class="button" @click="sendReactionToImage">
           ENVIAR Reaction de imagem
+        </button>
+        <button class="button" @click="sendReactionToSticker">
+          ENVIAR Reaction de sticker
         </button>
         <button class="button" @click="sendReactionToFile">
           ENVIAR Reaction de arquivo
@@ -478,6 +482,19 @@ export default {
           uri:
             'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
           size: '1'
+        }
+      })
+      this.send()
+    },
+    sendSticker: function () {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@messenger.gw.msging.net',
+        type: 'application/vnd.lime.media-link+json',
+        content: {
+          type: 'sticker/webp',
+          uri:
+            'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
         }
       })
       this.send()
@@ -1310,6 +1327,29 @@ export default {
               uri:
                 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
               title: 'texto de exemplo'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToSticker: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'sticker/webp',
+              uri:
+                'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
             },
             direction: 'sent'
           },
