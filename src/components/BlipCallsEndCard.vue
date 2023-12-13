@@ -19,7 +19,7 @@
           </div>
           <div v-if="document.status === 'success'" :class="`content__record ${document.type}`">
             <blip-video
-              v-if="document.type === 'meet'"
+              v-if="document.type === 'video'"
               video-uri-msg="videoUriMsg"
               :document="document.media.content"
               :full-document="fullDocument.media"
@@ -95,11 +95,11 @@ export default {
       type: String,
       default: 'Ver mais'
     },
-    meetMsg: {
+    videoCallMsg: {
       type: String,
       default: 'Chamada de vídeo'
     },
-    voiceMsg: {
+    voiceCallMsg: {
       type: String,
       default: 'Ligação'
     },
@@ -114,6 +114,10 @@ export default {
     cancelStatusMsg: {
       type: String,
       default: 'Cancelada'
+    },
+    notAnsweredStatusMsg: {
+      type: String,
+      default: 'Não atendida'
     },
     failedToSendMsg: {
       type: String,
@@ -138,10 +142,10 @@ export default {
       }
     },
     iconName: function () {
-      return this.document.type === 'meet' ? 'video' : 'voip'
+      return this.document.type === 'video' ? 'video' : 'voip'
     },
     titleText: function () {
-      return this.sanitize(this.document.type === 'meet' ? this.meetMsg : this.voiceMsg)
+      return this.sanitize(this.document.type === 'video' ? this.videoCallMsg : this.voiceCallMsg)
     },
     identificationText: function () {
       return this.sanitize(this.document.identification)
@@ -150,7 +154,8 @@ export default {
       const statusMessage = {
         success: this.successStatusMsg,
         failed: this.failedStatusMsg,
-        canceled: this.cancelStatusMsg
+        canceled: this.cancelStatusMsg,
+        notAnswered: this.notAnsweredStatusMsg
       }
 
       return this.sanitize(statusMessage[this.document.status])
@@ -315,7 +320,7 @@ $space-4: var(--space-4, 2rem);
 
         min-height: 60px;
 
-        &.meet {
+        &.video {
           padding: 0;
           background-color: transparent;
 

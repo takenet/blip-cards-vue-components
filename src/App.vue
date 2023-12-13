@@ -115,8 +115,8 @@
         <button class="button" @click="sendTicket">ENVIAR Ticket</button>
         <button class="button" @click="sendCallsVoiceStart">ENVIAR Inicio de chamada de áudio</button>
         <button class="button" @click="sendCallsVoiceEnd">ENVIAR Fim de chamada áudio</button>
-        <button class="button" @click="sendCallsMeetStart">ENVIAR Inicio de chamada de vídeo</button>
-        <button class="button" @click="sendCallsMeetEnd">ENVIAR Fim de chamada vídeo</button>
+        <button class="button" @click="sendCallsVideoStart">ENVIAR Inicio de chamada de vídeo</button>
+        <button class="button" @click="sendCallsVideoEnd">ENVIAR Fim de chamada vídeo</button>
         <button class="button" @click="sendRaw">
           ENVIAR Unsuportend Content
         </button>
@@ -613,25 +613,25 @@ export default {
       })
       this.send()
     },
-    sendCallsMeetStart() {
+    sendCallsVideoStart() {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
         type: 'application/vnd.iris.calls.media+json',
         content: {
-          type: 'meet',
+          type: 'video',
           status: 'started'
         }
       })
       this.send()
     },
-    sendCallsMeetEnd() {
+    sendCallsVideoEnd() {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
         type: 'application/vnd.iris.calls.media+json',
         content: {
-          type: 'meet',
+          type: 'video',
           status: 'success',
           identification: '#1234513',
           media: {

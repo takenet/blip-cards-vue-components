@@ -7,11 +7,12 @@
       :status="status"
       :position="position"
       :date="date"
-      :meet-msg="meetMsg"
-      :voice-msg="voiceMsg"
+      :video-call-msg="videoCallMsg"
+      :voice-call-msg="voiceCallMsg"
       :success-status-msg="successStatusMsg"
       :failed-status-msg="failedStatusMsg"
       :cancel-status-msg="cancelStatusMsg"
+      :not-answered-status-msg="notAnsweredStatusMsg"
       :failed-to-send-msg="failedToSendMsg"
       :async-fetch-media="asyncFetchMedia"
     />
@@ -50,11 +51,11 @@ export default {
       type: String,
       default: 'áudio'
     },
-    meetMsg: {
+    videoCallMsg: {
       type: String,
       default: 'Chamada de vídeo'
     },
-    voiceMsg: {
+    voiceCallMsg: {
       type: String,
       default: 'Ligação'
     },
@@ -70,6 +71,10 @@ export default {
       type: String,
       default: 'Cancelada'
     },
+    notAnsweredStatusMsg: {
+      type: String,
+      default: 'Não atendida'
+    },
     asyncFetchMedia: {
       type: Function
     }
@@ -79,7 +84,7 @@ export default {
       return (this.document.status === 'started' ? this.startCallMsg : this.endCallMsg).replace(/\{callType\}/g, this.callTypeText).replace(/\{callTime\}/g, this.callTimeText)
     },
     callTypeText() {
-      return this.document.type === 'meet' ? this.videoMsg : this.audioMsg
+      return this.document.type === 'video' ? this.videoMsg : this.audioMsg
     },
     callTimeText() {
       return this.date
