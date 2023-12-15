@@ -11,27 +11,22 @@ function linkify(inputText, disableLink) {
     return inputText
   }
 
-  /*
-    Validating url correct Pattern
-  */
+  // Validating url correct Pattern
   // http://, https://, ftp://
-  const urlValidPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#/%?=~_|!:,.;]*[a-z0-9-+&@#/%=~_|]/gim
+  // eslint-disable-next-line no-useless-escape
+  const urlValidPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim
 
-  /*
-    Pseudo URL correct Pattern
-  */
-  // www. sans http:// or https://
+  // Pseudo URL correct Pattern
+  // www. without http:// or https://
   const pseudoUrlValidPattern = /(^|[^/])(www\.[\S]+(\b|$))/gim
 
-  /*
-    Email address correct Pattern
-  */
+  // Email address correct Pattern
   // Email addresses
   const emailAddressValidPattern = /[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
 
   return inputText
     .replace(urlValidPattern, '<a href="$&" target="_blank">$&</a>')
-    .replace(pseudoUrlValidPattern, '$1<a href="http://$2" target="_blank">$2</a>')
+    .replace(pseudoUrlValidPattern, '$1<a href="https://$2" target="_blank">$2</a>')
     .replace(emailAddressValidPattern, '<a href="mailto:$&" target="_blank">$&</a>')
 }
 
