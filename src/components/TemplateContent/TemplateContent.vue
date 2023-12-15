@@ -11,28 +11,15 @@
           <bds-typo class="span" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
             <a :href="link" target="_blank">{{ link }}</a>
           </bds-typo>
-          <bds-typo :class="'typo ' + position" variant="fs-16" bold="regular" v-if="hasTemplateContentBody" v-html="formatText(showTemplateContentBody())" />
+          <bds-typo :class="'typo ' + position" variant="fs-16" bold="regular" v-if="hasTemplateContentBody" v-html="localFormatText(showTemplateContentBody())" />
         </bds-grid>
         <bds-grid
-          v-if="this.componentButtons.buttons.website || this.componentButtons.buttons.phoneNumber"
           direction="column"
           align-items="center"
           justify-content="center"
+          v-for="(button, index) in componentButtons" v-bind:key="index"
         >
-          <bds-grid
-            v-if="this.componentButtons.buttons.website"
-            class="website"
-            direction="row"
-            align-items="center"
-            justify-content="center"
-            gap="half"
-            padding="y-2"
-            @click="() => goToWebsite(this.componentButtons.buttons.website.url)"
-          >
-            <bds-icon v-if="position === 'right'" size="small" name="external-file" theme="outline" color="white" />
-            <bds-icon v-else size="small" name="external-file" theme="outline" />
-            <bds-typo variant="fs-16" bold="regular" :class="'typo ' + position">{{ this.componentButtons.buttons.website.text }}</bds-typo>
-          </bds-grid>
+          <website-button v-if="isWebsiteButton(button)" :button="button" :position="position" />
         </bds-grid>
       </bds-grid>
     </div>
@@ -53,18 +40,19 @@
 
 <script>
 
-import { default as base } from '../mixins/baseComponent.js'
-import alertSvg from '../assets/img/alert.svg'
-import alertWhiteSvg from '../assets/img/alertWhite.svg'
-import paperplaneSvg from '../assets/img/paperplane.svg'
+import { default as base } from '@/mixins/baseComponent.js'
 import { formatText } from '@/utils/FormatTextUtils'
-import { parseComponentButtons } from '@/utils/TemplateContentButtons'
+import { BUTTON_TYPE, parseComponentButtons } from '@/utils/TemplateContentButtons'
+import WebsiteButton from './Buttons/WebsiteButton.vue'
 
 export default {
   name: 'template-content',
   mixins: [
     base
   ],
+  components: {
+    WebsiteButton
+  },
   props: {
     document: {},
     status: {
@@ -89,10 +77,7 @@ export default {
   },
   data: function () {
     return {
-      alertSvg,
-      alertWhiteSvg,
-      paperplaneSvg,
-      componentButtons: undefined
+      componentButtons: []
     }
   },
   created() {
@@ -111,7 +96,7 @@ export default {
     bubbleClass() {
       const cssClass = ['bubble', this.position]
 
-      if (this.componentButtons.exists) {
+      if (this.componentButtons.length > 0) {
         cssClass.push('buttons')
       }
 
@@ -162,21 +147,27 @@ export default {
         return links
       }
     },
-    formatText(text, style) {
+    localFormatText(text, style) {
       if (!text) {
         return ''
       }
       return formatText(text, style)
     },
-    goToWebsite(link) {
-      window.open(link, '_blank')
+    isWebsiteButton(button) {
+      return button.type === BUTTON_TYPE.URL
+    },
+    isPhoneNumberButton(button) {
+      return button.type === BUTTON_TYPE.PHONE_NUMBER
+    },
+    isQuickReplyButton(button) {
+      return button.type === BUTTON_TYPE.QUICK_REPLY
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/variables.scss';
+@import '../../styles/variables.scss';
 
 .w-100 {
   width: 100%;
@@ -201,11 +192,5 @@ export default {
 
 .template-content-blocks {
   padding: 10px 20px;
-}
-
-.website {
-  width: 100%;
-  border-top: 1px solid $color-content-disable;
-  cursor: pointer;
 }
 </style>
