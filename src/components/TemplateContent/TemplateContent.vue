@@ -1,28 +1,36 @@
 <template>
   <div class="blip-container">
-    <div :class="bubbleClass">
-      <bds-grid direction="column" padding="x-2">
-        <bds-grid direction="row" justify-content="flex-start" padding="y-1" gap="1">
-          <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane" />
-          <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
-          <bds-typo :class="'typo ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
+    <bds-grid direction="column" :align-items="position === 'right' ? 'flex-end' : 'flex-start'">
+      <div :class="bubbleClass">
+        <bds-grid direction="column" padding="x-2">
+          <bds-grid direction="row" justify-content="flex-start" padding="y-1" gap="1">
+            <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane" />
+            <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
+            <bds-typo :class="'typo ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
+          </bds-grid>
+          <bds-grid direction="column" justify-content="flex-start" padding="y-1">
+            <bds-typo class="span" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
+              <a :href="link" target="_blank">{{ link }}</a>
+            </bds-typo>
+            <bds-typo :class="'typo ' + position" variant="fs-16" bold="regular" type="span" v-if="hasTemplateContentBody" v-html="showTemplateContentBody()" />
+          </bds-grid>
+          <bds-grid
+            direction="column"
+            align-items="center"
+            justify-content="center"
+            v-for="(button, index) in componentButtons" v-bind:key="index"
+          >
+            <website-button v-if="isWebsiteButton(button)" :button="button" :position="position" />
+            <phone-number-button v-if="isPhoneNumberButton(button)" :button="button" :position="position" />
+          </bds-grid>
         </bds-grid>
-        <bds-grid direction="column" justify-content="flex-start" padding="y-1">
-          <bds-typo class="span" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
-            <a :href="link" target="_blank">{{ link }}</a>
-          </bds-typo>
-          <bds-typo :class="'typo ' + position" variant="fs-16" bold="regular" v-if="hasTemplateContentBody" v-html="localFormatText(showTemplateContentBody())" />
-        </bds-grid>
-        <bds-grid
-          direction="column"
-          align-items="center"
-          justify-content="center"
-          v-for="(button, index) in componentButtons" v-bind:key="index"
-        >
-          <website-button v-if="isWebsiteButton(button)" :button="button" :position="position" />
-        </bds-grid>
+      </div>
+      <bds-grid flex-wrap="wrap" direction="row" align-items="center" justify-content="space-between" class="quick-reply-buttons" v-if="hasQuickReplyInComponentButtons()">
+        <div v-for="(button, index) in componentButtons" v-bind:key="index">
+          <span :class="buttonClass">{{ button.text }}</span>
+        </div>
       </bds-grid>
-    </div>
+    </bds-grid>
     <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon"
       name="info" theme="solid"
       aria-label="Active message failed reason"
@@ -39,20 +47,16 @@
 </template>
 
 <script>
-
-import { default as base } from '@/mixins/baseComponent.js'
+import base from '@/mixins/baseComponent.js'
 import { formatText } from '@/utils/FormatTextUtils'
+import { linkify } from '@/utils/misc'
 import { BUTTON_TYPE, parseComponentButtons } from '@/utils/TemplateContentButtons'
-import WebsiteButton from './Buttons/WebsiteButton.vue'
 
 export default {
   name: 'template-content',
   mixins: [
     base
   ],
-  components: {
-    WebsiteButton
-  },
   props: {
     document: {},
     status: {
@@ -73,6 +77,10 @@ export default {
     },
     onFailedClickIcon: {
       type: Function
+    },
+    disableLink: {
+      type: Boolean,
+      default: false
     }
   },
   data: function () {
@@ -94,13 +102,12 @@ export default {
       return this.document.template && this.document.template.components
     },
     bubbleClass() {
-      const cssClass = ['bubble', this.position]
-
-      if (this.componentButtons.length > 0) {
-        cssClass.push('buttons')
-      }
+      const cssClass = ['bubble', this.position, 'template-width']
 
       return cssClass.join(' ')
+    },
+    buttonClass() {
+      return this.position === 'right' ? 'right' : ''
     }
   },
   methods: {
@@ -123,6 +130,10 @@ export default {
           })
         }
       }
+
+      componentTemplateBody = formatText(componentTemplateBody, '')
+      componentTemplateBody = this.sanitize(componentTemplateBody)
+      componentTemplateBody = linkify(componentTemplateBody, this.disableLink)
 
       return componentTemplateBody
     },
@@ -147,20 +158,14 @@ export default {
         return links
       }
     },
-    localFormatText(text, style) {
-      if (!text) {
-        return ''
-      }
-      return formatText(text, style)
-    },
     isWebsiteButton(button) {
       return button.type === BUTTON_TYPE.URL
     },
     isPhoneNumberButton(button) {
       return button.type === BUTTON_TYPE.PHONE_NUMBER
     },
-    isQuickReplyButton(button) {
-      return button.type === BUTTON_TYPE.QUICK_REPLY
+    hasQuickReplyInComponentButtons() {
+      return this.componentButtons.some(button => button.type === BUTTON_TYPE.QUICK_REPLY)
     }
   }
 }
@@ -169,9 +174,7 @@ export default {
 <style lang="scss" scoped>
 @import '../../styles/variables.scss';
 
-.w-100 {
-  width: 100%;
-}
+$template-width: 368px;
 
 .icon-active-message-failed {
   position: relative;
@@ -185,12 +188,52 @@ export default {
 .bubble {
   text-align: left;
 
-  &.buttons {
-    width: 368px;
+  &.template-width {
+    width: $template-width;
   }
 }
 
 .template-content-blocks {
   padding: 10px 20px;
+}
+
+.quick-reply-buttons {
+  width: $template-width;
+  margin-top: 3px;
+  margin-bottom: 5px;
+  
+  > div {
+    flex: 1 0 calc(50%);
+    &:not(:only-child):nth-child(1) {
+      padding-right: 4px;
+    }
+
+    &:nth-child(2) {
+      padding-left: 4px;
+    }
+
+    &:nth-child(3) {
+      padding-top: 8px;
+    }
+
+    > span {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      border: 1px solid $color-content-ghost;
+      border-radius: 13px;
+      background-color: $color-surface-1;
+      color: $color-content-default;
+      cursor: pointer;
+
+      &.right {
+        background-color: $color-content-default;
+        color: $color-surface-1;
+      }
+    }
+  }
 }
 </style>
