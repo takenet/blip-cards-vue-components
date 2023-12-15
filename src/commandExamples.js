@@ -1031,6 +1031,33 @@ export const commandExamples = {
       ]
     }
   },
+  'template-content': {
+    id: '1',
+    direction: 'sent',
+    type: 'application/json',
+    content: {
+      name: 'test button web site',
+      type: 'template-content',
+      template: {
+        language: {
+          policy: 'deterministic',
+          code: 'pt_BR'
+        },
+        name: 'test_button_web_site',
+        components: []
+      },
+      templateContent: {
+        name: 'test_button_web_site',
+        language: 'pt_BR',
+        components: [
+          {
+            type: 'BODY',
+            text: 'Olá Usuário!\n\nCompre castanha de caju direto da fábrica!\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\n\n_Esta podendo falar?_\n\nhttps://url-link.com/p/ifCeg3.mp4'
+          }
+        ]
+      }
+    }
+  },
   'template-content-button-website': {
     id: '1',
     direction: 'sent',
@@ -1052,7 +1079,7 @@ export const commandExamples = {
         components: [
           {
             type: 'BODY',
-            text: 'Olá Usuário!\n\nCompre castanha de caju direto da fábrica!\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\n\nEsta podendo falar?'
+            text: 'Olá Usuário!\n\nCompre castanha de caju direto da fábrica!\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\n\n_Esta podendo falar?_\n\nhttps://url-link.com/p/ifCeg3.mp4'
           },
           {
             type: 'BUTTONS',
@@ -1067,5 +1094,131 @@ export const commandExamples = {
         ]
       }
     }
+  },
+  'template-content-button-phonenumber': {
+    id: '1',
+    direction: 'sent',
+    type: 'application/json',
+    content: {
+      type: 'template-content',
+      template: {
+        language: {
+          policy: 'deterministic',
+          code: 'pt_BR'
+        },
+        name: 'teste_button_phonenumber',
+        components: []
+      },
+      templateContent: {
+        name: 'teste_button_phonenumber',
+        language: 'pt_BR',
+        components: [
+          {
+            type: 'BODY',
+            text: 'Olá Usuário!\n\nCompre castanha de caju direto da fábrica!\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\n\n*Esta podendo falar?*\n\nhttps://url-link.com/p/ifCeg3.mp4'
+          },
+          {
+            type: 'BUTTONS',
+            buttons: [
+              {
+                type: 'PHONE_NUMBER',
+                text: 'Falar com o vendedor',
+                phoneNnumber: '+5531999998888'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    date: '2023-12-15T11:39:06.470Z',
+    status: 'accepted'
+  },
+  'template-content-button-website-and-phonenumber': {
+    id: '1',
+    direction: 'sent',
+    type: 'application/json',
+    content: {
+      type: 'template-content',
+      template: {
+        language: {
+          policy: 'deterministic',
+          code: 'pt_BR'
+        },
+        name: 'teste_button_website_and_phonenumber',
+        components: []
+      },
+      templateContent: {
+        name: 'teste_button_website_and_phonenumber',
+        language: 'pt_BR',
+        components: [
+          {
+            type: 'BODY',
+            text: 'Olá Usuário!\n\nCompre castanha de caju direto da fábrica!\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\n\n*Esta podendo falar?*\n\nhttps://url-link.com/p/ifCeg3.mp4'
+          },
+          {
+            type: 'BUTTONS',
+            buttons: [
+              {
+                type: 'URL',
+                text: 'Saiba mais',
+                url: 'https://blip.ai/'
+              },
+              {
+                type: 'PHONE_NUMBER',
+                text: 'Falar com o vendedor',
+                phoneNnumber: '+5531999998888'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    date: '2023-12-15T11:39:06.470Z',
+    status: 'accepted'
+  },
+  'template-content-button-quick-reply': {
+    id: '1',
+    direction: 'sent',
+    type: 'application/json',
+    content: {
+      type: 'template-content',
+      template: {
+        language: {
+          policy: 'deterministic',
+          code: 'pt_BR'
+        },
+        name: 'test_button_quick_reply_copia',
+        components: []
+      },
+      templateContent: {
+        name: 'test_button_quick_reply_copia',
+        language: 'pt_BR',
+        components: [
+          {
+            type: 'BODY',
+            text: 'Olá Usuário!\n\nCompre castanha de caju direto da fábrica!\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\n\n*Esta podendo falar?*\n\nhttps://url-link.com/p/ifCeg3.mp4'
+          },
+          {
+            type: 'BUTTONS',
+            buttons: [
+              {
+                type: 'QUICK_REPLY',
+                text: 'Sim'
+              },
+              {
+                type: 'QUICK_REPLY',
+                text: 'Não'
+              },
+              {
+                type: 'QUICK_REPLY',
+                text: 'Falar agora'
+              }
+            ]
+          }
+        ]
+      }
+    },
+    date: '2023-12-12T21:52:52.039Z',
+    status: 'accepted'
   }
 }

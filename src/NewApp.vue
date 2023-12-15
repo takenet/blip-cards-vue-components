@@ -121,6 +121,19 @@ export default {
 
 <style lang="scss">
 @import 'styles/variables.scss';
+* {
+  &::-webkit-scrollbar {
+    width: 16px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: 4px solid transparent;
+    border-radius: 10px;
+    background-clip: content-box;
+    background-color: #b9cbd3;
+  }
+}
 
 body {
   margin: 0;
@@ -155,6 +168,7 @@ body {
 
   > .left {
     border-right: 1px solid #A3A3A3;
+    overflow: auto;
   }
 
   > .middle {

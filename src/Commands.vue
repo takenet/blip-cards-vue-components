@@ -48,7 +48,11 @@
       <button @click="sendCommand('remove-reaction')">Remover reação</button>
       <button @click="sendCommand('unsupported-content-reaction')">Reação de conteúdo não suportado</button>
       <button @click="sendCommand('conversation-summary')">Resumo da conversa</button>
+      <button @click="sendCommand('template-content')">Template Message</button>
       <button @click="sendCommand('template-content-button-website')">Template Message - Botão Weblink</button>
+      <button @click="sendCommand('template-content-button-phonenumber')">Template Message - Botão Phone Number</button>
+      <button @click="sendCommand('template-content-button-website-and-phonenumber')">Template Message - Botão Weblink e Botão telefone</button>
+      <button @click="sendCommand('template-content-button-quick-reply')">Template Message - Botão QuickReply</button>
     </div>
     <div v-else>
       <h1>Custom JSON:</h1>
@@ -136,38 +140,5 @@ textarea {
 .commands-content-scroll {
   max-height: calc(100vh - 95px);
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #1968F0 #A4B4D0;
-
-  &::-webkit-scrollbar {
-    height: 10px;
-    width: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    border-radius: 5px;
-    background-color: #A4B4D0;
-  }
-
-  &::-webkit-scrollbar-track:hover {
-    background-color: #C5D9FB;
-  }
-
-  &::-webkit-scrollbar-track:active {
-    background-color: #C5D9FB;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background-color: #1968F0;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: #0096FA;
-  }
-
-  &::-webkit-scrollbar-thumb:active {
-    background-color: #0096FA;
-  }
 }
 </style>
