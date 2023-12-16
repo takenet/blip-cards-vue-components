@@ -4,7 +4,7 @@
       <Parameters :parameters="parameters" />
     </div>
     <div class="middle">
-      <div class="ss-container light-theme" v-chat-scroll="{ scrollToTop: false, onScroll }">
+      <div class="ss-container light-theme" v-chat-scroll="{ scrollToTop: false, onScroll }" ref="commandsThread">
         <blip-group-card
           v-if="parameters.group"
           :failed-to-send-msg="translations.failedToSend"
@@ -112,6 +112,13 @@ export default {
         position: this.parameters.position,
         status: this.parameters.msgStatus
       })
+
+      setTimeout(() => this.scrollCommandsThread(), 200)
+    },
+    scrollCommandsThread() {
+      const el = this.$refs.commandsThread
+      console.log(el)
+      el.scrollIntoView({ block: 'end', behavior: 'smooth' })
     },
     onScroll() {},
     onUnsupportedType() {}
@@ -121,6 +128,8 @@ export default {
 
 <style lang="scss">
 @import 'styles/variables.scss';
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,500;6..12,600;6..12,700&display=swap');
+
 * {
   &::-webkit-scrollbar {
     width: 16px;
@@ -136,11 +145,22 @@ export default {
 }
 
 body {
+  color: #2E3438;
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   max-width: 100vw;
+  background: rgb(255,255,255);
+  background: linear-gradient(156deg, rgba(255,255,255,1) 0%, rgba(197,217,251,1) 23%, rgba(255,255,255,1) 64%);
+}
+
+input[type="text"] {
+  box-sizing: border-box;
+  padding: 8px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #c4c4c4;
+  background-color: #ffffff;
 }
 
 .light-theme {
@@ -152,29 +172,24 @@ body {
   display: flex;
   height: 100vh;
   min-height: 100vh;
-  border-right: 1px solid #CFCFCF;
-  border-left: 1px solid #CFCFCF;
 
   > .left,
   > .right {
     width: 280px;
     padding: 8px;
-    background-color: #E0E0E0;
-  }
-
-  > .right {
-    border-left: 1px solid #A3A3A3;
   }
 
   > .left {
-    border-right: 1px solid #A3A3A3;
     overflow: auto;
   }
 
   > .middle {
+    margin: 10px 0;
     flex-grow: 1;
-    max-width: calc(100vw - 560px);
+    max-width: calc(100vw - 595px);
     overflow: auto;
+    border: 1px solid $color-light-surface-3;
+    border-radius: 8px;
     background-color: $color-surface-2;
   }
 }

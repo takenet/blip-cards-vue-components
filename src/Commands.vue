@@ -2,62 +2,25 @@
   <div>
     <div class="commands-content" v-if="isSample">
       <h1>Commands</h1>
-      <button @click="sendCommand('clear-all')" class="clear">Clear All</button>
+      <button @click="clearAll" class="clear">Clear all sent commands</button>
+      <input type="text" class="input-search" placeholder="Find your command" v-on:keyup="search" v-model="searchCriteria" />
     </div>
     <div class="commands-content-scroll" v-if="isSample">
-      <button @click="sendCommand('text')">Texto</button>
-      <button @click="sendCommand('text-with-email')">Texto contendo email</button>
-      <button @click="sendCommand('menu')">Menu</button>
-      <button @click="sendCommand('quick-reply')">QuickReply</button>
-      <button @click="sendCommand('multimedia-menu')">Menu Multimídia</button>
-      <button @click="sendCommand('collection')">Coleção</button>
-      <button @click="sendCommand('image')">Imagem</button>
-      <button @click="sendCommand('sticker')">Sticker</button>
-      <button @click="sendCommand('audio')">Audio</button>
-      <button @click="sendCommand('video')">Video</button>
-      <button @click="sendCommand('weblink')">WebLink</button>
-      <button @click="sendCommand('document')">Documento</button>
-      <button @click="sendCommand('location')">Location</button>
-      <button @click="sendCommand('ask-location')">Pedido de Localização</button>
-      <button @click="sendCommand('chat-state')">Chatstate</button>
-      <button @click="sendCommand('ticket')">Ticket</button>
-      <button @click="sendCommand('unsupported-content')">Unsupported Content</button>
-      <button @click="sendCommand('survey')">Survey</button>
-      <button @click="sendCommand('contact')">Contato</button>
-      <button @click="sendCommand('list-menu')">Menu List</button>
-      <button @click="sendCommand('multi-section-list-menu')">Menu List Multi Section</button>
-      <button @click="sendCommand('reply-button')">Reply Button</button>
-      <button @click="sendCommand('reply-message')">Reply Message</button>
-      <button @click="sendCommand('reply-text-message-with-document')">Reply Message de Texto com Documento</button>
-      <button @click="sendCommand('reply-text-message-with-video')">Reply Message de Texto com Video</button>
-      <button @click="sendCommand('reply-text-message-with-audio')">Reply Message de Texto com Audio</button>
-      <button @click="sendCommand('reply-text-message-with-image')">Reply Message de Texto com Imagem</button>
-      <button @click="sendCommand('reply-menu-message')">Reply Message de Menu</button>
-      <button @click="sendCommand('reply-list-menu-message')">Reply Message de Menu List</button>
-      <button @click="sendCommand('reply-multi-section-list-menu-message')">Reply Message de Menu List Multi Section</button>
-      <button @click="sendCommand('reply-message-with-button-reply')">Reply Message de Reply Buttton</button>
-      <button @click="sendCommand('reply-message-with-headerless-button-reply')">Reply Message de Reply Buttton sem header</button>
-      <button @click="sendCommand('text-reaction')">Reaction de texto</button>
-      <button @click="sendCommand('audio-reaction')">Reaction de áudio</button>
-      <button @click="sendCommand('video-reaction')">Reaction de vídeo</button>
-      <button @click="sendCommand('image-reaction')">Reaction de imagem</button>
-      <button @click="sendCommand('sticker-reaction')">Reaction de sticker</button>
-      <button @click="sendCommand('file-reaction')">Reaction de arquivo</button>
-      <button @click="sendCommand('location-reaction')">Reaction de location</button>
-      <button @click="sendCommand('website-reaction')">Reaction de web link</button>
-      <button @click="sendCommand('remove-reaction')">Remover reação</button>
-      <button @click="sendCommand('unsupported-content-reaction')">Reação de conteúdo não suportado</button>
-      <button @click="sendCommand('conversation-summary')">Resumo da conversa</button>
-      <button @click="sendCommand('template-content')">Template Message</button>
-      <button @click="sendCommand('template-content-button-website')">Template Message - Botão Weblink</button>
-      <button @click="sendCommand('template-content-button-phonenumber')">Template Message - Botão Phone Number</button>
-      <button @click="sendCommand('template-content-button-website-and-phonenumber')">Template Message - Botão Weblink e Botão telefone</button>
-      <button @click="sendCommand('template-content-button-quick-reply')">Template Message - Botão QuickReply</button>
+      <button
+        v-for="(commandKey, index) in Object.keys(commands)"
+        :key="index"
+        @click="() => sendCommand(commands[commandKey].command)"
+      >
+        {{ commands[commandKey].buttonLabel }}
+      </button>
+      <bds-grid v-if="commands.length === 0" xss="12" xs="12" sm="12" md="12" lg="12" align-items="center" justify-content="center" padding="3">
+        <h2>No commands found</h2>
+      </bds-grid>
     </div>
     <div v-else>
       <h1>Custom JSON:</h1>
       <textarea v-model="json"></textarea>
-      <button class="button" @click="sendCommand('custom-json')">ENVIAR JSON</button>
+      <button class="button" @click="sendCustomJson">ENVIAR JSON</button>
     </div>
   </div>
 </template>
@@ -75,22 +38,42 @@ export default {
   },
   data() {
     return {
-      json: ''
+      json: '',
+      searchCriteria: '',
+      commands: commandExamples
     }
   },
   methods: {
-    sendCommand(type) {
-      if (type === 'custom-json') {
-        try {
-          const customJsonParsed = JSON.parse(this.json)
-          this.$emit('send', customJsonParsed)
-        } catch (error) {
-          alert('JSON inválido')
-          return
-        }
+    sendCommand(command) {
+      this.$emit('send', command)
+    },
+    sendCustomJson() {
+      try {
+        const customJsonParsed = JSON.parse(this.json)
+        this.$emit('send', customJsonParsed)
+      } catch (error) {
+        alert('JSON inválido')
+      }
+    },
+    clearAll() {
+      this.$emit('send', 'clear-all')
+    },
+    search() {
+      const searchCriteria = this.searchCriteria.toLowerCase()
+      const localCommands = commandExamples
+
+      if (searchCriteria === '') {
+        this.commands = localCommands
+        return
       }
 
-      this.$emit('send', type === 'clear-all' ? 'clear-all' : commandExamples[type])
+      const filteredCommands = localCommands.filter(command => {
+        const commandLabel = command.buttonLabel.toLowerCase()
+
+        return commandLabel.includes(searchCriteria)
+      })
+
+      this.commands = filteredCommands
     }
   }
 }
@@ -134,11 +117,16 @@ textarea {
 }
 
 .commands-content {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .commands-content-scroll {
-  max-height: calc(100vh - 95px);
+  max-height: calc(100vh - 160px);
   overflow-y: auto;
+}
+.input-search {
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfmBgYLAxiS9tw3AAAAkUlEQVQ4y2NgGAWDATBiiGgypDOoMrxkWMOwDZsGZjS+EsNUhisMyxg+MqQwfGO4TtjGKoYOKCuIYT02BUxofBmGy1DWZQYBBj7CGh4yGEJZxgwfGD4T9sNDhhQGdQZWBleGaIYLDHsJa/jEcJTBhMGNgZ9hK4MbAz/DaVKC3IhhB0MWabFkxLCYgWM0sdIBAACXYRlR33ujEQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wNi0wNlQxMTowMzoyNCswMDowMPFFbRsAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDYtMDZUMTE6MDM6MjQrMDA6MDCAGNWnAAAAAElFTkSuQmCC') #ffffff no-repeat scroll 0px -1px;
+  background-size: 35px 35px;
+  padding-left: 30px;
 }
 </style>

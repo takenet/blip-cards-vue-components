@@ -1,5 +1,8 @@
 <template>
   <div class="parameters-content">
+    <div class="logo">
+      <bds-illustration type="brand" name="blip-ballon-blue-black-horizontal" />
+    </div>
     <h1>Parameters</h1>
     <div class="sub-content-column">
       <h3>Editing</h3>
@@ -107,12 +110,8 @@ h1, h2, h3, h4, h5 {
   margin: 0;
 }
 
-input[type="text"] {
-  box-sizing: border-box;
-  padding: 8px;
-  width: 100%;
-  border-radius: 5px;
-  border: 1px solid #c4c4c4;
+.logo {
+  width: 100px;
 }
 
 .parameters-content {
