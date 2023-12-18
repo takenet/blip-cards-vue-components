@@ -117,7 +117,6 @@ export default {
     },
     scrollCommandsThread() {
       const el = this.$refs.commandsThread
-      console.log(el)
       el.scrollIntoView({ block: 'end', behavior: 'smooth' })
     },
     onScroll() {},
