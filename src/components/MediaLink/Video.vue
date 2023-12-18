@@ -14,7 +14,20 @@
         size="short"
         v-on:click="toggleEdit"
     ></bds-button-icon>
-    <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!isEditing">
+    <div v-if="!isEditing">
+      <div v-if="simplified">
+        <bds-grid gap="3" align-items="center" justify-content="space-between">
+          <bds-grid align-items="center" gap="1">
+            <bds-icon class="typo" size="small" name="video" theme="outline"></bds-icon>
+            <bds-typo class="typo" v-if="!isLoading" tag="span">{{ getTimeFromSeconds(this.totalTime) }}</bds-typo>
+          </bds-grid>
+          <div class="video-preview-container">
+            <video width="56px" height="56px" v-if="!isLoading" id="simplifiedVideo"></video>
+            <bds-loading-spinner class="preview-loading" v-if="isLoading" size="extra-small" color="light"></bds-loading-spinner>
+          </div>
+        </bds-grid>
+      </div>
+      <div class="video-player-wrapper" id="blipVideoPlayerWrapper" v-if="!simplified">
         <div class="video-player">
           <div class="sk-circle-wrapper" id="animation">
             <bds-loading-spinner size="small" color="main"></bds-loading-spinner>
@@ -23,10 +36,10 @@
         </div>
         <div class="video-player-controls" id="videoPlayerControls">
           <span v-if="isPlaying" @click="togglePlay">
-            <svg  class="video-player-button player-button-left player-button" width="12px" height="18px" viewBox="0 0 12 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <svg class="video-player-button player-button-left player-button" width="12px" height="18px" viewBox="0 0 12 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g id="Pause" stroke="none" stroke-width="1" fill-rule="nonzero">
-                    <path d="M4.61538462,17.351355 C4.61538462,17.7095549 4.33986449,18 4,18 L0.615384615,18 C0.275520128,18 0,17.7095885 0,17.351355 L0,0.648645015 C0,0.290411481 0.275520128,0 0.615384615,0 L4,0 C4.33986449,0 4.61538462,0.290411481 4.61538462,0.648645015 L4.61538462,17.351355 Z" id="Shape"></path>
-                    <path d="M12,17.351355 C12,17.7095549 11.7244799,18 11.3846154,18 L8,18 C7.66013551,18 7.38461538,17.7095885 7.38461538,17.351355 L7.38461538,0.648645015 C7.38461538,0.290411481 7.66013551,0 8,0 L11.3846154,0 C11.7244799,0 12,0.290411481 12,0.648645015 L12,17.351355 Z" id="Shape"></path>
+                  <path d="M4.61538462,17.351355 C4.61538462,17.7095549 4.33986449,18 4,18 L0.615384615,18 C0.275520128,18 0,17.7095885 0,17.351355 L0,0.648645015 C0,0.290411481 0.275520128,0 0.615384615,0 L4,0 C4.33986449,0 4.61538462,0.290411481 4.61538462,0.648645015 L4.61538462,17.351355 Z" id="Shape"></path>
+                  <path d="M12,17.351355 C12,17.7095549 11.7244799,18 11.3846154,18 L8,18 C7.66013551,18 7.38461538,17.7095885 7.38461538,17.351355 L7.38461538,0.648645015 C7.38461538,0.290411481 7.66013551,0 8,0 L11.3846154,0 C11.7244799,0 12,0.290411481 12,0.648645015 L12,17.351355 Z" id="Shape"></path>
                 </g>
             </svg>
           </span>
@@ -53,7 +66,7 @@
             <span @click="toggleVolumeControl()">
               <svg class="video-player-button player-button-right player-button" width="24px" height="18px" viewBox="0 0 24 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <g id="Volume" stroke="none" stroke-width="1" fill-rule="evenodd">
-                    <path d="M10.9420052,14.5708313 C10.9420052,14.9579788 10.7192747,15.3094215 10.3704869,15.473192 C10.2362021,15.5378149 10.091633,15.5687985 9.94794531,15.5687985 C9.72198253,15.5687985 9.49690127,15.4906018 9.31442677,15.3383395 L3.88544324,10.8212247 L0.992884572,10.8212247 C0.444285728,10.8212247 0,10.3738805 0,9.82296245 L0,5.84968376 C0,5.29876573 0.444285728,4.85142146 0.992884572,4.85142146 L3.88544324,4.85142146 L9.31442677,0.333126381 C9.61179261,0.0864378564 10.0225806,0.0333231023 10.3716623,0.199159168 C10.7192747,0.36292966 10.9420052,0.714667365 10.9420052,1.10181491 L10.9420052,14.5708313 Z M17.3101537,13.5890087 C17.2860588,13.590189 17.2628455,13.5913693 17.2387506,13.5913693 C16.9760579,13.5913693 16.7233557,13.4877956 16.5364736,13.2998283 L16.4033642,13.1661562 C16.0554579,12.8167792 16.0140265,12.2635005 16.3078663,11.86573 C17.0518686,10.8595005 17.4444385,9.66530376 17.4444385,8.41356605 C17.4444385,7.06622179 16.997802,5.80297589 16.1553634,4.75956605 C15.8339027,4.36327097 15.8638744,3.78697589 16.2229466,3.42609064 L16.356056,3.29241851 C16.5546917,3.0929431 16.820029,2.98464802 17.107992,3.00176278 C17.3880212,3.01563163 17.6498325,3.14841851 17.8276055,3.366189 C18.9973817,4.80353327 19.6159144,6.54982835 19.6159144,8.41356605 C19.6159144,10.1495333 19.0684909,11.8014021 18.0341749,13.1915333 C17.8619848,13.4231726 17.5981167,13.5683529 17.3101537,13.5890087 Z M13.8949359,11.7253604 C13.8783247,11.7261101 13.8623213,11.7268597 13.8457102,11.7268597 C13.6646084,11.7268597 13.4903942,11.6610773 13.3615567,11.5416943 L13.2697904,11.4567956 C13.0299419,11.2348969 13.0013789,10.883495 13.2039536,10.6308604 C13.7168727,9.99177731 13.9875125,9.23331129 13.9875125,8.43829946 C13.9875125,7.58256536 13.679599,6.78024437 13.0988173,6.11754709 C12.8772006,5.86584957 12.8978632,5.49982927 13.1454095,5.27062147 L13.2371759,5.18572276 C13.3741163,5.05903063 13.5570413,4.99024955 13.7555645,5.00111959 C13.9486182,5.00992806 14.1291122,5.09426454 14.2516699,5.23257635 C15.0581197,6.14547184 15.4845394,7.25459018 15.4845394,8.43829946 C15.4845394,9.5408583 15.1071428,10.590004 14.3940799,11.4729132 C14.2753711,11.6200335 14.0934591,11.7122414 13.8949359,11.7253604 Z M20.9948997,17.0946346 C20.814776,17.3076838 20.5553154,17.4357493 20.2776369,17.4472575 C20.2638264,17.4484379 20.2500159,17.4484379 20.2350301,17.4484379 C19.9723373,17.4484379 19.7196351,17.3433887 19.5327531,17.1568969 L19.4028759,17.0252903 C19.0379269,16.6599788 19.013832,16.0745362 19.3444018,15.6779461 C20.94671,13.7655198 21.8294047,11.3358149 21.8294047,8.83676573 C21.8294047,6.23650343 20.8847098,3.73509359 19.1698609,1.79050343 C18.8222485,1.39538868 18.8392912,0.798142774 19.2089416,0.425749332 L19.3397003,0.294437856 C19.5327531,0.099683758 19.7839861,-0.00861132394 20.071949,0.000536217045 C20.34522,0.00850343016 20.6035052,0.130667365 20.7859797,0.336044414 C22.8578439,2.67929032 23.999999,5.69827392 23.999999,8.83676573 C24.0011744,11.8557493 22.9336545,14.7879788 20.9948997,17.0946346 Z" id="Fill-1"></path>
+                  <path d="M10.9420052,14.5708313 C10.9420052,14.9579788 10.7192747,15.3094215 10.3704869,15.473192 C10.2362021,15.5378149 10.091633,15.5687985 9.94794531,15.5687985 C9.72198253,15.5687985 9.49690127,15.4906018 9.31442677,15.3383395 L3.88544324,10.8212247 L0.992884572,10.8212247 C0.444285728,10.8212247 0,10.3738805 0,9.82296245 L0,5.84968376 C0,5.29876573 0.444285728,4.85142146 0.992884572,4.85142146 L3.88544324,4.85142146 L9.31442677,0.333126381 C9.61179261,0.0864378564 10.0225806,0.0333231023 10.3716623,0.199159168 C10.7192747,0.36292966 10.9420052,0.714667365 10.9420052,1.10181491 L10.9420052,14.5708313 Z M17.3101537,13.5890087 C17.2860588,13.590189 17.2628455,13.5913693 17.2387506,13.5913693 C16.9760579,13.5913693 16.7233557,13.4877956 16.5364736,13.2998283 L16.4033642,13.1661562 C16.0554579,12.8167792 16.0140265,12.2635005 16.3078663,11.86573 C17.0518686,10.8595005 17.4444385,9.66530376 17.4444385,8.41356605 C17.4444385,7.06622179 16.997802,5.80297589 16.1553634,4.75956605 C15.8339027,4.36327097 15.8638744,3.78697589 16.2229466,3.42609064 L16.356056,3.29241851 C16.5546917,3.0929431 16.820029,2.98464802 17.107992,3.00176278 C17.3880212,3.01563163 17.6498325,3.14841851 17.8276055,3.366189 C18.9973817,4.80353327 19.6159144,6.54982835 19.6159144,8.41356605 C19.6159144,10.1495333 19.0684909,11.8014021 18.0341749,13.1915333 C17.8619848,13.4231726 17.5981167,13.5683529 17.3101537,13.5890087 Z M13.8949359,11.7253604 C13.8783247,11.7261101 13.8623213,11.7268597 13.8457102,11.7268597 C13.6646084,11.7268597 13.4903942,11.6610773 13.3615567,11.5416943 L13.2697904,11.4567956 C13.0299419,11.2348969 13.0013789,10.883495 13.2039536,10.6308604 C13.7168727,9.99177731 13.9875125,9.23331129 13.9875125,8.43829946 C13.9875125,7.58256536 13.679599,6.78024437 13.0988173,6.11754709 C12.8772006,5.86584957 12.8978632,5.49982927 13.1454095,5.27062147 L13.2371759,5.18572276 C13.3741163,5.05903063 13.5570413,4.99024955 13.7555645,5.00111959 C13.9486182,5.00992806 14.1291122,5.09426454 14.2516699,5.23257635 C15.0581197,6.14547184 15.4845394,7.25459018 15.4845394,8.43829946 C15.4845394,9.5408583 15.1071428,10.590004 14.3940799,11.4729132 C14.2753711,11.6200335 14.0934591,11.7122414 13.8949359,11.7253604 Z M20.9948997,17.0946346 C20.814776,17.3076838 20.5553154,17.4357493 20.2776369,17.4472575 C20.2638264,17.4484379 20.2500159,17.4484379 20.2350301,17.4484379 C19.9723373,17.4484379 19.7196351,17.3433887 19.5327531,17.1568969 L19.4028759,17.0252903 C19.0379269,16.6599788 19.013832,16.0745362 19.3444018,15.6779461 C20.94671,13.7655198 21.8294047,11.3358149 21.8294047,8.83676573 C21.8294047,6.23650343 20.8847098,3.73509359 19.1698609,1.79050343 C18.8222485,1.39538868 18.8392912,0.798142774 19.2089416,0.425749332 L19.3397003,0.294437856 C19.5327531,0.099683758 19.7839861,-0.00861132394 20.071949,0.000536217045 C20.34522,0.00850343016 20.6035052,0.130667365 20.7859797,0.336044414 C22.8578439,2.67929032 23.999999,5.69827392 23.999999,8.83676573 C24.0011744,11.8557493 22.9336545,14.7879788 20.9948997,17.0946346 Z" id="Fill-1"></path>
                 </g>
               </svg>
             </span>
@@ -90,33 +103,34 @@
         <div v-if="this.text" class="video-description">
           <bds-typo class="typo" tag="p" variant="fs-16" bold="regular" margin="false">{{ this.text }}</bds-typo>
         </div>
+      </div>
     </div>
     <div class="form" v-else>
-        <form novalidate v-on:submit.prevent>
-          <bds-button-icon
-            class="btn saveIco closeIco"
-            icon="close"
-            variant="ghost"
-            size="short"
-            v-on:click="cancel()"
-          ></bds-button-icon>
-          <bds-button-icon
-            class="btn saveIco"
-            icon="check"
-            variant="primary"
-            size="short"
-            :disabled="errors.any()"
-            v-on:click="videoSave()"
-          ></bds-button-icon>
-          <div class="form-group">
-            <input type="text" name="video" class="form-control" v-model="videoUri" :placeholder="videoUriMsg" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
-            <span v-if="errors.has('video')" class="help input-error">{{ errors.first('video') }}</span>
-            <input type="text" name="text" class="form-control text" v-model="text" placeholder="Text"/>
-          </div>
-          <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-media-link-metadata" @click="editMetadata(fullDocument)">
-            {{ metadataButtonText }}
-          </button>
-        </form>
+      <form novalidate v-on:submit.prevent>
+        <bds-button-icon
+          class="btn saveIco closeIco"
+          icon="close"
+          variant="ghost"
+          size="short"
+          v-on:click="cancel()"
+        ></bds-button-icon>
+        <bds-button-icon
+          class="btn saveIco"
+          icon="check"
+          variant="primary"
+          size="short"
+          :disabled="errors.any()"
+          v-on:click="videoSave()"
+        ></bds-button-icon>
+        <div class="form-group">
+          <input type="text" name="video" class="form-control" v-model="videoUri" :placeholder="videoUriMsg" :class="{'input-error': errors.has('video') }" v-validate="'required|url'"/>
+          <span v-if="errors.has('video')" class="help input-error">{{ errors.first('video') }}</span>
+          <input type="text" name="text" class="form-control text" v-model="text" placeholder="Text"/>
+        </div>
+        <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-media-link-metadata" @click="editMetadata(fullDocument)">
+          {{ metadataButtonText }}
+        </button>
+      </form>
     </div>
   </div>
 </template>
@@ -137,6 +151,10 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    simplified: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {
@@ -154,11 +172,16 @@ export default {
       videoPlayerWrapper: undefined,
       inactivityTimeout: undefined,
       animation: undefined,
-      text: undefined
+      text: undefined,
+      isLoading: undefined
     }
   },
   mounted: function() {
-    this.initVideo()
+    if (!this.simplified) {
+      this.initVideo()
+    } else {
+      this.initSimplifiedVideo()
+    }
     document.addEventListener('fullscreenchange', this.fullScreenChange)
     document.addEventListener('webkitfullscreenchange', this.fullScreenChange)
     document.addEventListener('mozfullscreenchange', this.fullScreenChange)
@@ -199,6 +222,7 @@ export default {
       this.animation = undefined
     },
     initVideo: async function() {
+      this.isLoading = true
       this.videoUri = isAuthenticatedMediaLink(this.document)
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
@@ -240,6 +264,25 @@ export default {
       this.video.addEventListener('seeked', this.readyToPlay)
       this.video.addEventListener('canplay', this.readyToPlay)
       this.video.addEventListener('ended', this.resetPlay)
+
+      this.video.src = this.videoUri
+
+      this.video.load()
+    },
+    initSimplifiedVideo: async function() {
+      this.loading = true
+
+      this.videoUri = isAuthenticatedMediaLink(this.document)
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
+
+      if (!this.video) {
+        this.video = this.$el.querySelector('#simplifiedVideo')
+      }
+
+      this.video.addEventListener('seeked', this.readyToPlay)
+      this.video.addEventListener('canplay', this.readyToPlay)
+      this.video.addEventListener('loadedmetadata', this.videoLoaded)
 
       this.video.src = this.videoUri
 
@@ -290,6 +333,10 @@ export default {
     },
     readyToPlay: function(event) {
       if (event.type === 'seeked' || event.type === 'canplay') {
+        this.loading = false
+        if (this.simplified && this.video) {
+          return
+        }
         this.animation.classList.add('hide')
       } else {
         this.animation.classList.remove('hide')
@@ -397,6 +444,24 @@ export default {
 <style lang="scss">
 @import '../../styles/variables.scss';
 @import '../../styles/loading.scss';
+
+#simplifiedVideo {
+  background-color: $color-surface-1;
+  object-fit: fill;
+  border-radius: 0 !important;
+}
+
+.video-preview-container {
+  background-color: $color-surface-1;
+  width: 56px;
+  height: 56px;
+  align-items: center;
+}
+
+.preview-loading {
+  padding-left: 20px;
+  padding-top: 20px;
+}
 
 #blipVideo {
   max-height: 300px;

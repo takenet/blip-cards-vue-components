@@ -103,6 +103,7 @@
         </button>
         <button class="button" @click="sendCollection">ENVIAR Coleção</button>
         <button class="button" @click="sendImage">ENVIAR Imagem</button>
+        <button class="button" @click="sendSticker">ENVIAR Sticker</button>
         <button class="button" @click="sendAudio">ENVIAR Audio</button>
         <button class="button" @click="sendVideo">ENVIAR Video</button>
         <button class="button" @click="sendWebLink">ENVIAR WebLink</button>
@@ -165,6 +166,36 @@
         </button>
         <button class="button" @click="sendReplyMessageInReplyToReplyButtonWithoutHeader">
           ENVIAR Reply Message de Reply Buttton sem header
+        </button>
+        <button class="button" @click="sendReactionToText">
+          ENVIAR Reaction de texto
+        </button>
+        <button class="button" @click="sendReactionToAudio">
+          ENVIAR Reaction de áudio
+        </button>
+        <button class="button" @click="sendReactionToVideo">
+          ENVIAR Reaction de vídeo
+        </button>
+        <button class="button" @click="sendReactionToImage">
+          ENVIAR Reaction de imagem
+        </button>
+        <button class="button" @click="sendReactionToSticker">
+          ENVIAR Reaction de sticker
+        </button>
+        <button class="button" @click="sendReactionToFile">
+          ENVIAR Reaction de arquivo
+        </button>
+        <button class="button" @click="sendReactionToLocation">
+          ENVIAR Reaction de location
+        </button>
+        <button class="button" @click="sendReactionToWebLink">
+          ENVIAR Reaction de web link
+        </button>
+        <button class="button" @click="sendReactionRemoved">
+          ENVIAR remover reação
+        </button>
+        <button class="button" @click="sendReactionToUnsuportedContent">
+          ENVIAR reação conteúdo não suportado
         </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
@@ -456,6 +487,19 @@ export default {
           uri:
             'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
           size: '1'
+        }
+      })
+      this.send()
+    },
+    sendSticker: function () {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@messenger.gw.msging.net',
+        type: 'application/vnd.lime.media-link+json',
+        content: {
+          type: 'sticker/webp',
+          uri:
+            'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
         }
       })
       this.send()
@@ -932,7 +976,7 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'video/mp4',
-              uri: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'
+              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
             }
           },
           inReplyTo: {
@@ -1259,7 +1303,227 @@ export default {
       })
       this.send()
     },
-    onUnsupportedType: function (document) { },
+    sendReactionToText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          emoji: {
+            values: [128077]
+          },
+          inReactionTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'text/plain',
+            value: 'teste',
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionRemoved: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'text/plain',
+            value: 'teste',
+            direction: 'sent'
+          },
+          emoji: undefined
+        }
+      })
+      this.send()
+    },
+    sendReactionToAudio: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'audio/mp3',
+              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToVideo: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'video/mp4',
+              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToImage: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
+              title: 'texto de exemplo'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToSticker: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'sticker/webp',
+              uri:
+                'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToUnsuportedContent: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        direction: 'sent',
+        content: {
+          inReactionTo: {
+            type: 'application/x+json',
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToFile: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              uri:
+                'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+              title: 'pdf_open_parameters.pdf',
+              type: 'application/pdf',
+              size: '5540'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToLocation: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.location+json',
+            value: {
+              latitude: -19.918899,
+              longitude: -43.959275,
+              altitude: 853,
+              text: 'Takes place'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToWebLink: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.web-link+json',
+            value: {
+              uri: 'http://limeprotocol.org/content-types.html#web-link',
+              target: 'self',
+              text: 'Segue documentação do web-link'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    onUnsupportedType: function (document) {},
     toogleBlipGroupCard: function () {
       this.showBlipGroupCard = !this.showBlipGroupCard
     }

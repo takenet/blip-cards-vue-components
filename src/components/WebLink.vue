@@ -1,42 +1,50 @@
 <template>
-  <div v-if="!isEditing" class="blip-container web-link" :class="isFailedMessage(status, position)">
+  <div v-if="!isEditing" class="web-link" :class="isFailedMessage(status, position) + ' ' + getBlipContainer">
     <div
-      :class="'bubble ' + position + (this.title == null && this.text == null ? ' text-link': '' )"
+      :class="simplified ? '' : 'bubble ' + position + (this.title == null && this.text == null ? ' text-link': '' )"
     >
-      <bds-button-icon v-if="deletable && !isEditing"
+      <div v-if="simplified">
+        <bds-grid align-items="center" gap="1">
+          <bds-icon class="typo" size="small" name="link" theme="outline"></bds-icon>
+          <bds-typo class="typo web-link-reacted-text" tag="span">{{ sanitize(this.document.uri) }}</bds-typo>
+        </bds-grid>
+      </div>
+      <div v-if="!simplified">
+        <bds-button-icon v-if="deletable && !isEditing"
           class="editIco trashIco icon-button-margin"
           icon="trash"
           variant="delete"
           size="short"
           v-on:click="trash(document)"
         ></bds-button-icon>
-        <bds-button-icon v-if="editable"
-          class="editIco icon-button-margin"
-          icon="edit"
-          variant="primary"
-          size="short"
-          v-on:click="toggleEdit"
-        ></bds-button-icon>
-      <span
-        v-if="this.previewTitle || this.previewText"
-        class="link web-link-wrapper"
-        @click="(editable ? null : handleWeblink())"
-      >
-        <div
-          v-if="this.previewImage"
-          class="preview"
-          :style="'background-image: url(&quot;' + this.previewImage + '&quot;)'"
-        ></div>
-        <div class="link-description-wrapper text-left">
-          <span class="text big-text" :title="previewTitle" v-text="this.previewTitle"></span>
-          <div class="text-wrapper">
-            <span class="text light-text" :title="previewText" v-text="this.previewText"></span>
+          <bds-button-icon v-if="editable"
+            class="editIco icon-button-margin"
+            icon="edit"
+            variant="primary"
+            size="short"
+            v-on:click="toggleEdit"
+          ></bds-button-icon>
+        <span
+          v-if="this.previewTitle || this.previewText"
+          class="link web-link-wrapper"
+          @click="(editable ? null : handleWeblink())"
+        >
+          <div
+            v-if="this.previewImage"
+            class="preview"
+            :style="'background-image: url(&quot;' + this.previewImage + '&quot;)'"
+          ></div>
+          <div class="link-description-wrapper text-left">
+            <span class="text big-text" :title="previewTitle" v-text="this.previewTitle"></span>
+            <div class="text-wrapper">
+              <span class="text light-text" :title="previewText" v-text="this.previewText"></span>
+            </div>
+            <div class="space-between-text"></div>
+            <span class="text small-text" :title="uri" v-text="uri"></span>
           </div>
-          <div class="space-between-text"></div>
-          <span class="text small-text" :title="uri" v-text="uri"></span>
-        </div>
-      </span>
-      <span v-else v-html="sanitize(this.textLink)"></span>
+        </span>
+        <span v-else v-html="sanitize(this.textLink)"></span>
+      </div>
     </div>
     <div class="flex" :class="'notification ' + position" v-if="date">
       <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
@@ -151,6 +159,10 @@ export default {
     descriptionMsg: {
       type: String,
       default: 'Description'
+    },
+    simplified: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {
@@ -178,6 +190,13 @@ export default {
       return this.document.previewUri
         ? this.document.previewUri
         : this.imgPreview
+    },
+    getBlipContainer: function() {
+      if (this.simplified) {
+        return ''
+      }
+
+      return 'blip-container'
     }
   },
   methods: {
@@ -352,5 +371,15 @@ export default {
     margin-top: -8px;
     padding: 0 10px 0 0;
   }
+}
+
+.web-link-reacted-text {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  margin: 0;
+  text-align: left;
+  -webkit-line-clamp: 1;
 }
 </style>
