@@ -1,11 +1,11 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import NewApp from './NewApp'
+import VueRouter from 'vue-router'
 import App from './App'
+import NewApp from './NewApp'
 import blipCards from './index'
 import { applyPolyfills, defineCustomElements } from 'blip-ds/loader'
-import VueRouter from 'vue-router'
 
 blipCards.install(Vue)
 
