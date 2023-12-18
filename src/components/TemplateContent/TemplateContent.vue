@@ -25,7 +25,14 @@
           </bds-grid>
         </bds-grid>
       </div>
-      <bds-grid flex-wrap="wrap" direction="row" align-items="center" justify-content="space-between" class="quick-reply-buttons" v-if="hasQuickReplyInComponentButtons()">
+      <bds-grid
+        flex-wrap="wrap"
+        direction="row"
+        align-items="center"
+        justify-content="space-between"
+        class="quick-reply-buttons"
+        v-if="hasQuickReplyInComponentButtons()"
+      >
         <div v-for="(button, index) in componentButtons" v-bind:key="index">
           <span :class="buttonClass">{{ button.text }}</span>
         </div>
