@@ -6,7 +6,7 @@
     justify-content="center"
     gap="half"
     padding="y-2"
-    @click="() => goToWebsite(button.url)"
+    @click="() => goToWebsite(button)"
   >
     <bds-icon v-if="position === 'right'" size="small" name="external-file" theme="outline" color="white" />
     <bds-icon v-else size="small" name="external-file" theme="outline" />
@@ -31,7 +31,14 @@ export default {
     }
   },
   methods: {
-    goToWebsite(link) {
+    goToWebsite(button) {
+      const parameter = button.parameter
+      let link = button.url
+
+      if (parameter) {
+        link = link.replace(`{{1}}`, parameter)
+      }
+
       window.open(link, '_blank')
     }
   }

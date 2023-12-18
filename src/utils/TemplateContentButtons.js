@@ -13,4 +13,19 @@ export const parseComponentButtons = (document) => {
   return components
     .filter(({ type }) => type === COMPONENT_BUTTONS_TYPE)
     .flatMap(component => component[BUTTONS_PROPERTY])
+    .map((button, index) => ({
+      ...button,
+      parameter: getButtonParametersByIndex(document, '' + index)
+    }))
+}
+
+export const getButtonParametersByIndex = (document, index) => {
+  const { template: { components = [] } = {} } = document || {}
+
+  const parameters = components
+    .filter(component => component.index === index)
+    .flatMap(({ parameters }) => parameters)
+    .map(parameters => parameters.text)
+
+  return parameters.length === 1 ? parameters[0] : ''
 }
