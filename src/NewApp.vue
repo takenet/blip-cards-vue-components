@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       parameters: {
-        position: 'right',
+        position: 'left',
         isSample: true,
         date: '08:32 PM',
         photo: false,

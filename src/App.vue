@@ -1467,7 +1467,7 @@ export default {
         content: 'Seja bem-vindo ao nosso serviço! Como podemos te ajudar?'
       }),
       width: 700,
-      position: 'right',
+      position: 'left',
       isSample: 'true',
       date: '08:32 PM',
       photo: false,
