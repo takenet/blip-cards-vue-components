@@ -1,23 +1,57 @@
 <template>
   <div>
-    <div v-if="previewDocument.content != null && previewDocument.content.length > 0" :class="`blip-container calls-card ${isFailedMessage(status, position)} ${document.photo ? 'with-photo' : ''}`.trim()">
+    <div
+      v-if="
+        previewDocument.content != null && previewDocument.content.length > 0
+      "
+      :class="
+        `blip-container calls-card ${isFailedMessage(status, position)} ${
+          document.photo ? 'with-photo' : ''
+        }`.trim()
+      "
+    >
       <div :class="`bubble ${position}`">
         <div class="content">
           <div class="content__details">
             <div :class="`content__details__icon ${document.status}`">
-              <bds-icon :name="iconName" color="var(--color-content-default, #454545)" />
+              <bds-icon
+                :name="iconName"
+                color="var(--color-content-default, #454545)"
+              />
             </div>
             <div class="content__details__text">
               <div class="content__details__text__container">
-                <bds-typo class="typo title" variant="fs-16" bold="bold" :margin="false">{{ titleText }}</bds-typo>
-                <bds-typo v-if="this.document.identification" class="typo" variant="fs-12" bold="regular" :margin="false">{{ identificationText }}</bds-typo>
+                <bds-typo
+                  class="typo title"
+                  variant="fs-16"
+                  bold="bold"
+                  :margin="false"
+                  >{{ titleText }}</bds-typo
+                >
+                <bds-typo
+                  v-if="this.document.identification"
+                  class="typo"
+                  variant="fs-12"
+                  bold="regular"
+                  :margin="false"
+                  >{{ identificationText }}</bds-typo
+                >
               </div>
               <div class="content__details__text__status">
-                <bds-typo class="typo" variant="fs-14" bold="semi-bold" :margin="false">{{ statusText }}</bds-typo>
+                <bds-typo
+                  class="typo"
+                  variant="fs-14"
+                  bold="semi-bold"
+                  :margin="false"
+                  >{{ statusText }}</bds-typo
+                >
               </div>
             </div>
           </div>
-          <div v-if="document.status === 'success'" :class="`content__record ${document.type}`">
+          <div
+            v-if="document.status === 'success'"
+            :class="`content__record ${document.type}`"
+          >
             <blip-video
               v-if="document.type === 'video'"
               video-uri-msg="videoUriMsg"
@@ -33,6 +67,7 @@
               :deletable="deletable"
               :on-cancel="onCancel"
               :editing="editing"
+              :on-video-validate-uri="onMediaValidateUri"
               :async-fetch-media="asyncFetchMedia"
             />
             <blip-audio
@@ -49,7 +84,7 @@
               :deletable="deletable"
               :on-cancel="onCancel"
               :editing="editing"
-              :on-audio-validate-uri="onAudioValidateUri"
+              :on-audio-validate-uri="onMediaValidateUri"
               :async-fetch-media="asyncFetchMedia"
             />
           </div>
@@ -58,10 +93,21 @@
       <div
         v-if="document.photo"
         :class="'blip-card-photo ' + position"
-        :style="{ bottom: '25px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + document.photo + '&quot;)' }">
-      </div>
-      <blip-card-date :status="status" :position="position" :date="date" :failed-to-send-msg="failedToSendMsg" />
-    </div>    
+        :style="{
+          bottom: '25px',
+          right: '0%',
+          width: '25px',
+          height: '25px',
+          'background-image': 'url(&quot;' + document.photo + '&quot;)'
+        }"
+      ></div>
+      <blip-card-date
+        :status="status"
+        :position="position"
+        :date="date"
+        :failed-to-send-msg="failedToSendMsg"
+      />
+    </div>
   </div>
 </template>
 
@@ -123,12 +169,15 @@ export default {
       type: String,
       default: 'Falha ao enviar a mensagem.'
     },
+    onMediaValidateUri: {
+      type: Function
+    },
     asyncFetchMedia: {
       type: Function
     }
   },
   computed: {
-    previewDocument: function () {
+    previewDocument: function() {
       const sanitizedDocument = this.sanitize(this.document)
 
       return {
@@ -140,16 +189,26 @@ export default {
         content: linkify(sanitizedDocument, this.disableLink)
       }
     },
-    iconName: function () {
-      return this.document.type === 'video' ? 'video' : 'voip'
+    iconName: function() {
+      const icons = {
+        video: 'video',
+        voice: 'voip'
+      }
+
+      return icons[this.document.type]
     },
-    titleText: function () {
-      return this.sanitize(this.document.type === 'video' ? this.videoCallMsg : this.voiceCallMsg)
+    titleText: function() {
+      const msgs = {
+        video: this.videoCallMsg,
+        voice: this.voiceCallMsg
+      }
+
+      return this.sanitize(msgs[this.document.type])
     },
-    identificationText: function () {
+    identificationText: function() {
       return this.sanitize(this.document.identification)
     },
-    statusText: function () {
+    statusText: function() {
       const statusMessage = {
         success: this.successStatusMsg,
         failed: this.failedStatusMsg,
@@ -160,52 +219,20 @@ export default {
       return this.sanitize(statusMessage[this.document.status])
     }
   },
-  data: function () {
+  data: function() {
     return {
-      text: undefined,
-      showContent: undefined,
       isFailedMessage
-    }
-  },
-  methods: {
-    init: function () {
-      this.text = this.document
-      this.showContent = false
-    },
-    saveText: function ($event) {
-      if (this.errors.any() || ($event && $event.shiftKey)) {
-        return
-      }
-
-      if ($event) {
-        $event.stopPropagation()
-        $event.preventDefault()
-        $event.returnValue = false
-      }
-
-      this.showContent = false
-      this.save(this.text)
-    },
-    sanitizeText: function (text) {
-      return this.sanitize(text)
-    },
-    async onAudioValidateUri(uri) {
-      return uri
-    },
-    emitUpdate() {
-      this.$emit('updated')
     }
   }
 }
 </script>
 
-
 <style lang="scss">
 @import '../styles/variables.scss';
 
 $space-0: var(--space-0, 0);
-$space-05: var(--space-05, .25rem);
-$space-1: var(--space-1, .5rem);
+$space-05: var(--space-05, 0.25rem);
+$space-1: var(--space-1, 0.5rem);
 $space-2: var(--space-2, 1rem);
 $space-4: var(--space-4, 2rem);
 
@@ -275,10 +302,10 @@ $space-4: var(--space-4, 2rem);
           align-items: center;
           padding: $space-1;
           border-radius: $space-1;
-          background-color: var(--color-error, #F99F9F);
+          background-color: var(--color-error, #f99f9f);
 
           &.success {
-            background-color: var(--color-success, #84EBBC);
+            background-color: var(--color-success, #84ebbc);
           }
         }
 
@@ -335,7 +362,7 @@ $space-4: var(--space-4, 2rem);
           }
         }
 
-        >div {
+        > div {
           display: flex;
           align-self: stretch;
 

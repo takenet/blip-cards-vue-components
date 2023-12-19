@@ -14,9 +14,12 @@
       :cancel-status-msg="cancelStatusMsg"
       :not-answered-status-msg="notAnsweredStatusMsg"
       :failed-to-send-msg="failedToSendMsg"
+      :on-media-validate-uri="onMediaValidateUri"
       :async-fetch-media="asyncFetchMedia"
     />
-    <p class="subtitle fancy"><span>{{ formattedMessage }}</span></p>
+    <p class="subtitle fancy">
+      <span>{{ formattedMessage }}</span>
+    </p>
   </div>
 </template>
 
@@ -75,13 +78,21 @@ export default {
       type: String,
       default: 'Não atendida'
     },
+    onMediaValidateUri: {
+      type: Function
+    },
     asyncFetchMedia: {
       type: Function
     }
   },
   computed: {
     formattedMessage() {
-      return (this.document.status === 'started' ? this.startCallMsg : this.endCallMsg).replace(/\{callType\}/g, this.callTypeText).replace(/\{callTime\}/g, this.callTimeText)
+      return (this.document.status === 'started'
+        ? this.startCallMsg
+        : this.endCallMsg
+      )
+        .replace(/\{callType\}/g, this.callTypeText)
+        .replace(/\{callTime\}/g, this.callTimeText)
     },
     callTypeText() {
       return this.document.type === 'video' ? this.videoMsg : this.audioMsg
@@ -92,7 +103,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="scss" scoped>
 @import '../styles/variables.scss';

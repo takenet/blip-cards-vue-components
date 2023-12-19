@@ -348,6 +348,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :on-media-validate-uri="onAudioValidateUri"
+          :async-fetch-media="asyncFetchMedia"
         />
 
         <template-content
