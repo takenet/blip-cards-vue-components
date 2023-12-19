@@ -37,7 +37,6 @@ export class MetadataService {
   }
 
   async parseMetadata(content) {
-    console.log('content', content)
     const metadata = JSON.parse(content)
 
     const title = this.decodeHtml(metadata.title)

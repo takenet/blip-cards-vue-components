@@ -1,7 +1,9 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import App from './App'
+import NewApp from './NewApp'
 import blipCards from './index'
 import { applyPolyfills, defineCustomElements } from 'blip-ds/loader'
 
@@ -14,11 +16,26 @@ Vue.config.ignoredElements = [/bds-\w*/]
 applyPolyfills().then(() => {
   defineCustomElements(window)
 })
-Vue.component('App', App)
+
+Vue.use(VueRouter)
+
+const routes = [
+  { path: '/', component: App },
+  { path: '/new', component: NewApp }
+]
+
+const router = new VueRouter({
+  mode: 'history',
+  routes
+})
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  template: '<App/>',
-  components: { App }
+  router,
+  template: '<router-view/>',
+  components: {
+    App,
+    NewApp
+  }
 })

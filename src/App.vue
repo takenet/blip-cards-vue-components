@@ -114,7 +114,7 @@
         <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
         <button class="button" @click="sendTicket">ENVIAR Ticket</button>
         <button class="button" @click="sendRaw">
-          ENVIAR Unsuportend Content
+          ENVIAR Unsupported Content
         </button>
         <button class="button" @click="sendSurveyContent">ENVIAR Survey</button>
         <button class="button" @click="toogleBlipGroupCard">
@@ -264,6 +264,7 @@
 
 <script>
 export default {
+  name: 'App',
   computed: {
     docs: function () {
       return this.documents.map((x) => {

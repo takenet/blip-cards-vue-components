@@ -16,7 +16,6 @@ import WebLink from './components/WebLink'
 import Location from './components/Location'
 import RequestLocation from './components/RequestLocation'
 import LimeInput from './components/LimeInput'
-import TemplateContent from './components/TemplateContent'
 import UnsuportedContent from './components/UnsuportedContent'
 import ChatState from './components/ChatState'
 import Redirect from './components/Redirect'
@@ -62,6 +61,11 @@ import vChatScroll from './directives/vChatScroll'
 // Mixins
 import Sanitize from './mixins/sanitizeHtml'
 
+// TemplateContent components
+import TemplateContent from './components/TemplateContent/TemplateContent'
+import WebsiteButton from './components/TemplateContent/Buttons/WebsiteButton'
+import PhoneNumberButton from './components/TemplateContent/Buttons/PhoneNumberButton'
+
 function install(Vue) {
   let components = []
 
@@ -81,7 +85,6 @@ function install(Vue) {
   components.push(Vue.component(Location.name, Location))
   components.push(Vue.component(RequestLocation.name, RequestLocation))
   components.push(Vue.component(LimeInput.name, LimeInput))
-  components.push(Vue.component(TemplateContent.name, TemplateContent))
   components.push(Vue.component(UnsuportedContent.name, UnsuportedContent))
   components.push(Vue.component(ChatState.name, ChatState))
   components.push(Vue.component(Survey.name, Survey))
@@ -109,6 +112,11 @@ function install(Vue) {
   components.push(Vue.component(InReactionToBase.name, InReactionToBase))
   components.push(Vue.component(InReactionToText.name, InReactionToText))
   components.push(Vue.component(InReactionToMediaLink.name, InReactionToMediaLink))
+
+  // TemplateContent components
+  components.push(Vue.component(TemplateContent.name, TemplateContent))
+  components.push(Vue.component(WebsiteButton.name, WebsiteButton))
+  components.push(Vue.component(PhoneNumberButton.name, PhoneNumberButton))
 
   Vue.component(Editable.name, Editable)
 
