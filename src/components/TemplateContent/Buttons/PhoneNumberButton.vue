@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     goToPhone(phoneNumber) {
-      window.open(`tel:${phoneNumber}`, '_blank')
+      window.open(`tel:${phoneNumber}`)
     }
   }
 }
