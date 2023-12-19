@@ -129,7 +129,6 @@ export default {
   },
   computed: {
     previewDocument: function () {
-      console.log('document: ', this.document)
       const sanitizedDocument = this.sanitize(this.document)
 
       return {
@@ -191,8 +190,6 @@ export default {
       return this.sanitize(text)
     },
     async onAudioValidateUri(uri) {
-      console.log(uri)
-
       return uri
     },
     emitUpdate() {
