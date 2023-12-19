@@ -315,8 +315,9 @@
         <ticket
           v-else-if="document.type === 'application/vnd.iris.ticket+json'"
           class="blip-card"
-          :start-call-msg="translations.userWaitingAttendance"
-          :end-call-msg="translations.closedByAttendant"
+          :waiting-msg="translations.userWaitingAttendance"
+          :closed-attendant-msg="translations.closedByAttendant"
+          :closed-client-msg="translations.closedByClient"
           :status="status"
           :position="position"
           :document="editableDocument.content"
