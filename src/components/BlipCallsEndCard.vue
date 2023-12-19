@@ -223,6 +223,11 @@ export default {
     return {
       isFailedMessage
     }
+  },
+  methods: {
+    emitUpdate() {
+      this.$emit('updated')
+    }
   }
 }
 </script>
