@@ -26,16 +26,16 @@
                   variant="fs-16"
                   bold="bold"
                   :margin="false"
-                  >{{ titleText }}</bds-typo
-                >
+                  >{{ titleText }}
+                </bds-typo>
                 <bds-typo
                   v-if="this.document.identification"
                   class="typo"
                   variant="fs-12"
                   bold="regular"
                   :margin="false"
-                  >{{ identificationText }}</bds-typo
-                >
+                  >{{ identificationText }}
+                </bds-typo>
               </div>
               <div class="content__details__text__status">
                 <bds-typo
@@ -43,8 +43,8 @@
                   variant="fs-14"
                   bold="semi-bold"
                   :margin="false"
-                  >{{ statusText }}</bds-typo
-                >
+                  >{{ statusText }}
+                </bds-typo>
               </div>
             </div>
           </div>
