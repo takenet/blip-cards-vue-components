@@ -155,6 +155,9 @@ export default {
     simplified: {
       type: Boolean,
       default: false
+    },
+    onVideoValidateUri: {
+      type: Function
     }
   },
   data: function() {
@@ -176,12 +179,12 @@ export default {
       isLoading: undefined
     }
   },
-  mounted: function() {
-    if (!this.simplified) {
-      this.initVideo()
-    } else {
-      this.initSimplifiedVideo()
-    }
+  mounted: async function() {
+    this.videoUri = isAuthenticatedMediaLink(this.document)
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
+
+    this._initVideo()
     document.addEventListener('fullscreenchange', this.fullScreenChange)
     document.addEventListener('webkitfullscreenchange', this.fullScreenChange)
     document.addEventListener('mozfullscreenchange', this.fullScreenChange)
@@ -221,11 +224,8 @@ export default {
       this.inactivityTimeout = undefined
       this.animation = undefined
     },
-    initVideo: async function() {
+    initVideo: async function(uri) {
       this.isLoading = true
-      this.videoUri = isAuthenticatedMediaLink(this.document)
-        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
-        : this.document.uri
 
       if (!this.video) {
         this.video = this.$el.querySelector('#blipVideo')
@@ -265,16 +265,12 @@ export default {
       this.video.addEventListener('canplay', this.readyToPlay)
       this.video.addEventListener('ended', this.resetPlay)
 
-      this.video.src = this.videoUri
+      this.video.src = uri
 
       this.video.load()
     },
-    initSimplifiedVideo: async function() {
+    initSimplifiedVideo: async function(uri) {
       this.loading = true
-
-      this.videoUri = isAuthenticatedMediaLink(this.document)
-        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
-        : this.document.uri
 
       if (!this.video) {
         this.video = this.$el.querySelector('#simplifiedVideo')
@@ -284,7 +280,7 @@ export default {
       this.video.addEventListener('canplay', this.readyToPlay)
       this.video.addEventListener('loadedmetadata', this.videoLoaded)
 
-      this.video.src = this.videoUri
+      this.video.src = uri
 
       this.video.load()
     },
@@ -315,10 +311,18 @@ export default {
         })
       })
     },
-    togglePlay: function() {
+    togglePlay: async function() {
       if (this.isPlaying) {
         this.video.pause()
       } else {
+        if (this.onVideoValidateUri) {
+          const refreshedAudioUri = await this.onVideoValidateUri(this.videoUri)
+          if (refreshedAudioUri !== this.videoUri) {
+            this.videoUri = refreshedAudioUri
+            this._initVideo()
+          }
+        }
+
         this.video.play()
       }
 
@@ -435,6 +439,13 @@ export default {
         ':' +
         (timeSec < 10 ? '0' + timeSec : timeSec)
       )
+    },
+    _initVideo: function() {
+      if (!this.simplified) {
+        this.initVideo(this.videoUri)
+      } else {
+        this.initSimplifiedVideo(this.videoUri)
+      }
     }
   }
 }
@@ -475,6 +486,10 @@ export default {
       padding: $bubble-padding;
     }
   }
+}
+
+.media-link.video,
+.calls-card {
   .left, .middle {
     .slider {
       background-color: $color-surface-3;

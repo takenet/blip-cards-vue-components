@@ -323,7 +323,10 @@ export default {
       padding: $bubble-padding;
     }
   }
+}
 
+.media-link.audio,
+.calls-card {
   .left,
   .middle {
     .slider {

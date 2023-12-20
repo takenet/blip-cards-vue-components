@@ -330,6 +330,35 @@
           :on-cancel="cancel"
         />
 
+        <blip-calls
+          v-else-if="document.type === 'application/vnd.iris.calls.media+json'"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :start-call-msg="translations.startCallMsg"
+          :end-call-msg="translations.endCallMsg"
+          :video-msg="translations.videoMsg"
+          :audio-msg="translations.audioMsg"
+          :video-call-msg="translations.videoCallMsg"
+          :voice-call-msg="translations.voiceCallMsg"
+          :success-status-msg="translations.successStatusMsg"
+          :failed-status-msg="translations.failedStatusMsg"
+          :cancel-status-msg="ctranslations.cancelStatusMsg"
+          :not-answered-status-msg="translations.notAnsweredStatusMsg"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :on-media-validate-uri="onAudioValidateUri"
+          :async-fetch-media="asyncFetchMedia"
+        />
+
         <template-content
           v-else-if="document.content.type === 'template-content'"
           class="blip-card"
