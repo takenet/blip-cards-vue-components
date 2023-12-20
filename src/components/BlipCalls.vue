@@ -68,7 +68,7 @@ export default {
     },
     failedStatusMsg: {
       type: String,
-      default: 'Não atendida'
+      default: 'Falha'
     },
     cancelStatusMsg: {
       type: String,

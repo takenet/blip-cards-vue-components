@@ -137,10 +137,6 @@ export default {
       type: Boolean,
       default: false
     },
-    showMoreMsg: {
-      type: String,
-      default: 'Ver mais'
-    },
     videoCallMsg: {
       type: String,
       default: 'Chamada de vídeo'
