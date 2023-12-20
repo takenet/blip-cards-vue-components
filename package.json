@@ -97,6 +97,7 @@
     "url-loader": "^0.5.8",
     "vue": "^2.5.2",
     "vue-loader": "^13.3.0",
+    "vue-router": "3.0.1",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.10.0",
@@ -120,7 +121,7 @@
     }
   },
   "dependencies": {
-    "blip-ds": "^1.271.0",
+    "blip-ds": "1.271.0",
     "lodash": "^4.17.4",
     "sanitize-html": "^1.20.0",
     "vee-validate": "^2.0.0-rc.21",

@@ -376,7 +376,9 @@
           :on-deleted="deleteCard"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+          :disable-link="disableLink"
+        />
 
         <unsuported-content
           v-else-if="document.content.type === 'template'"
