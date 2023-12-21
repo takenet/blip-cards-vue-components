@@ -71,6 +71,7 @@
         :deletable="deletable"
         :on-cancel="onCancel"
         :editing="editing"
+        :on-video-validate-uri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"/>
 
       <blip-file

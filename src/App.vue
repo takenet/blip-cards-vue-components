@@ -14,7 +14,8 @@
         <br />
         <input type="checkbox" :value="false" v-model="readonly" /> Readonly
         <br />
-       <label style="font-size:smaller;color:#cbb"> Readonly property does not apply to all components. Please, checkout the README.md file for more information!</label>
+        <label style="font-size:smaller;color:#cbb"> Readonly property does not apply to all components. Please, checkout
+          the README.md file for more information!</label>
       </div>
 
       <div>
@@ -64,14 +65,14 @@
             name="status"
             v-model="msgStatus"
             value="received"
-          />
+            />
           Received <br />
           <input
             type="radio"
             name="status"
             v-model="msgStatus"
             value="consumed"
-          />
+            />
           Consumed <br />
           <input
             type="radio"
@@ -113,6 +114,10 @@
         </button>
         <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
         <button class="button" @click="sendTicket">ENVIAR Ticket</button>
+        <button class="button" @click="sendCallsVoiceStart">ENVIAR Inicio de chamada de áudio</button>
+        <button class="button" @click="sendCallsVoiceEnd">ENVIAR Fim de chamada áudio</button>
+        <button class="button" @click="sendCallsVideoStart">ENVIAR Inicio de chamada de vídeo</button>
+        <button class="button" @click="sendCallsVideoEnd">ENVIAR Fim de chamada vídeo</button>
         <button class="button" @click="sendRaw">
           ENVIAR Unsupported Content
         </button>
@@ -281,7 +286,7 @@ export default {
     }, 500)
   },
   methods: {
-    onScroll: function (e) {},
+    onScroll: function (e) { },
     send: function () {
       const doc = JSON.parse(this.json)
       this.documents.push({
@@ -300,7 +305,7 @@ export default {
       })
       this.send()
     },
-    sendTextEmail: function() {
+    sendTextEmail: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -620,6 +625,73 @@ export default {
       })
       this.send()
     },
+    sendCallsVoiceStart() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.iris.calls.media+json',
+        content: {
+          type: 'voice',
+          status: 'started'
+        }
+      })
+      this.send()
+    },
+    sendCallsVoiceEnd() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.iris.calls.media+json',
+        content: {
+          type: 'voice',
+          status: 'success',
+          identification: '+55 84 966956332',
+          media: {
+            type: 'application/vnd.lime.media-link+json',
+            content: {
+              type: 'audio/mp3',
+              uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3',
+              size: '1'
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendCallsVideoStart() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.iris.calls.media+json',
+        content: {
+          type: 'video',
+          status: 'started'
+        }
+      })
+      this.send()
+    },
+    sendCallsVideoEnd() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.iris.calls.media+json',
+        content: {
+          type: 'video',
+          status: 'success',
+          identification: '#1234513',
+          media: {
+            type: 'application/vnd.lime.media-link+json',
+            content: {
+              type: 'video/mp4',
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+              size: '1'
+            }
+          }
+        }
+      })
+      this.send()
+    },
     sendRaw: function () {
       this.json = JSON.stringify({
         id: '1',
@@ -631,7 +703,7 @@ export default {
       })
       this.send()
     },
-    sendSurveyContent: function() {
+    sendSurveyContent: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
@@ -645,7 +717,7 @@ export default {
       })
       this.send()
     },
-    sendContact: function() {
+    sendContact: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@wa.gw.msging.net',
@@ -665,7 +737,7 @@ export default {
       })
       this.send()
     },
-    sendMenuList: function() {
+    sendMenuList: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@wa.gw.msging.net',
@@ -716,7 +788,7 @@ export default {
       })
       this.send()
     },
-    sendMenuListMultiSection: function() {
+    sendMenuListMultiSection: function () {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@wa.gw.msging.net',
@@ -795,7 +867,7 @@ export default {
       })
       this.send()
     },
-    sendReplyButton: function() {
+    sendReplyButton: function () {
       this.json = JSON.stringify({
         id: '16b0d902-7487-4c5c-b49c-8103558621e7',
         direction: 'sent',
@@ -849,7 +921,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessage: function() {
+    sendReplyMessage: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -869,7 +941,7 @@ export default {
       })
       this.send()
     },
-    sendReplyTextMessageWithDocument: function() {
+    sendReplyTextMessageWithDocument: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -894,7 +966,7 @@ export default {
       })
       this.send()
     },
-    sendReplyTextMessageWithVideo: function() {
+    sendReplyTextMessageWithVideo: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -917,7 +989,7 @@ export default {
       })
       this.send()
     },
-    sendReplyTextMessageWithAudio: function() {
+    sendReplyTextMessageWithAudio: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -940,7 +1012,7 @@ export default {
       })
       this.send()
     },
-    sendReplyTextMessageWithImage: function() {
+    sendReplyTextMessageWithImage: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -963,7 +1035,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToMenu: function() {
+    sendReplyMessageInReplyToMenu: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -996,7 +1068,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToMenuList: function() {
+    sendReplyMessageInReplyToMenuList: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1047,7 +1119,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToMenuListMultiSection: function() {
+    sendReplyMessageInReplyToMenuListMultiSection: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1106,7 +1178,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToReplyButton: function() {
+    sendReplyMessageInReplyToReplyButton: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1159,7 +1231,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToReplyButtonWithoutHeader: function() {
+    sendReplyMessageInReplyToReplyButtonWithoutHeader: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1208,7 +1280,7 @@ export default {
       })
       this.send()
     },
-    sendThreadSummary: function() {
+    sendThreadSummary: function () {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1473,9 +1545,9 @@ export default {
       photo: false,
       group: false,
       msgStatus: 'accepted',
-      selected: function (d) {},
-      save: function (d) {},
-      deleted: function (d) {},
+      selected: function (d) { },
+      save: function (d) { },
+      deleted: function (d) { },
       showBlipGroupCard: true,
       disableLink: false,
       editable: true,
