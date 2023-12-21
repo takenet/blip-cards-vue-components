@@ -2,25 +2,16 @@
   <div class="blip-container">
     <bds-grid direction="column" :align-items="position === 'right' ? 'flex-end' : 'flex-start'">
       <div :class="bubbleClass">
-        <bds-grid direction="column" padding="x-2">
-          <bds-grid direction="row" justify-content="flex-start" padding="y-1" gap="1">
+        <bds-grid direction="column" padding="y-1" gap="2">
+          <bds-grid direction="row" justify-content="flex-start" padding="x-2" >
             <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane" />
             <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
             <bds-typo :class="'typo ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
           </bds-grid>
-          <div
-            :class="'bubble ' + position">
-            <!-- <img v-if="componentImage.type === 'image'" :src="componentImage.uri" /> -->
-            <blip-image 
-              v-if="componentImage.type === 'image'"
-              :document="componentImage"
-              :deletable="false"
-              :editing="false"
-              :editable="true"
-              :simplified="false"
-              />
-          </div>
-          <bds-grid direction="column" justify-content="flex-start" padding="y-1">
+
+          <media-content :document="document"/>
+
+          <bds-grid direction="column" justify-content="flex-start" padding="x-2">
             <bds-typo class="span" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
               <a :href="link" target="_blank">{{ link }}</a>
             </bds-typo>
@@ -66,11 +57,10 @@
 </template>
 
 <script>
-import BlipImage from '../MediaLink/Image'
 import base from '@/mixins/baseComponent.js'
 import { formatText } from '@/utils/FormatTextUtils'
 import { linkify } from '@/utils/misc'
-import { BUTTON_TYPE, parseComponentButtons, parseComponentImage } from '@/utils/TemplateContent'
+import { BUTTON_TYPE, parseComponentButtons } from '@/utils/TemplateContent'
 
 export default {
   name: 'template-content',
@@ -105,16 +95,11 @@ export default {
   },
   data: function () {
     return {
-      componentButtons: [],
-      componentImage: {}
+      componentButtons: []
     }
-  },
-  components: {
-    BlipImage
   },
   created() {
     this.componentButtons = parseComponentButtons(this.document)
-    this.componentImage = parseComponentImage(this.document)
   },
   computed: {
     showTemplateContentTitle() {

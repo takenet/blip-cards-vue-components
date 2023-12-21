@@ -2,7 +2,6 @@ const COMPONENT_BUTTONS_TYPE = 'BUTTONS'
 const BUTTONS_PROPERTY = 'buttons'
 const PARAMETERS_PROPERTY = 'parameters'
 const HEADER_TYPE = 'header'
-const IMAGE_TYPE = 'image'
 
 export const BUTTON_TYPE = {
   PHONE_NUMBER: 'PHONE_NUMBER',
@@ -10,25 +9,44 @@ export const BUTTON_TYPE = {
   URL: 'URL'
 }
 
-export const MEDIA_TYPE = {
-  IMAGE: 'image'
+const MEDIA_TYPE = {
+  IMAGE: 'image',
+  VIDEO: 'video',
+  DOCUMENT: 'file',
+  AUDIO: 'audio'
 }
 
-export const parseComponentImage = (document) => {
+const parseMediaComponent = (document, MEDIA_TYPE) => {
   const { template: { components = [] } = {} } = document || {}
 
-  const image = components
+  const elements = components
     .filter(({ type }) => type === HEADER_TYPE)
     .flatMap(component => component[PARAMETERS_PROPERTY])
-    .filter(({ type }) => type === IMAGE_TYPE)
-    .flatMap(parameter => parameter[MEDIA_TYPE.IMAGE])
-    .map((image) => ({
-      uri: image.link,
+    .filter(({ type }) => type === MEDIA_TYPE)
+    .flatMap(parameter => parameter[MEDIA_TYPE])
+    .map((element) => ({
+      uri: element.link,
       authorizationRealm: 'blip',
-      type: 'image'
+      type: MEDIA_TYPE
     }))
 
-  return image[0]
+  return elements[0]
+}
+
+export const parseComponentImage = (documento) => {
+  return parseMediaComponent(documento, MEDIA_TYPE.IMAGE)
+}
+
+export const parseComponentVideo = (documento) => {
+  return parseMediaComponent(documento, MEDIA_TYPE.VIDEO)
+}
+
+export const parseComponentDocument = (documento) => {
+  return parseMediaComponent(documento, MEDIA_TYPE.DOCUMENT)
+}
+
+export const parseComponentAudio = (documento) => {
+  return parseMediaComponent(documento, MEDIA_TYPE.AUDIO)
 }
 
 export const parseComponentButtons = (document) => {
