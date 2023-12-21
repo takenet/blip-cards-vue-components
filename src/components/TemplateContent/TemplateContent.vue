@@ -8,6 +8,18 @@
             <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
             <bds-typo :class="'typo ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
           </bds-grid>
+          <div
+            :class="'bubble ' + position">
+            <!-- <img v-if="componentImage.type === 'image'" :src="componentImage.uri" /> -->
+            <blip-image 
+              v-if="componentImage.type === 'image'"
+              :document="componentImage"
+              :deletable="false"
+              :editing="false"
+              :editable="true"
+              :simplified="false"
+              />
+          </div>
           <bds-grid direction="column" justify-content="flex-start" padding="y-1">
             <bds-typo class="span" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
               <a :href="link" target="_blank">{{ link }}</a>
@@ -54,10 +66,11 @@
 </template>
 
 <script>
+import BlipImage from '../MediaLink/Image'
 import base from '@/mixins/baseComponent.js'
 import { formatText } from '@/utils/FormatTextUtils'
 import { linkify } from '@/utils/misc'
-import { BUTTON_TYPE, parseComponentButtons } from '@/utils/TemplateContentButtons'
+import { BUTTON_TYPE, parseComponentButtons, parseComponentImage } from '@/utils/TemplateContent'
 
 export default {
   name: 'template-content',
@@ -92,12 +105,16 @@ export default {
   },
   data: function () {
     return {
-      componentButtons: []
+      componentButtons: [],
+      componentImage: {}
     }
+  },
+  components: {
+    BlipImage
   },
   created() {
     this.componentButtons = parseComponentButtons(this.document)
-    console.log(this.componentButtons)
+    this.componentImage = parseComponentImage(this.document)
   },
   computed: {
     showTemplateContentTitle() {
