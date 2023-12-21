@@ -97,7 +97,6 @@ export default {
   },
   created() {
     this.componentButtons = parseComponentButtons(this.document)
-    console.log(this.componentButtons)
   },
   computed: {
     showTemplateContentTitle() {
