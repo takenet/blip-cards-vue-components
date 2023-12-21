@@ -342,7 +342,7 @@
           :voice-call-msg="translations.voiceCallMsg"
           :success-status-msg="translations.successStatusMsg"
           :failed-status-msg="translations.failedStatusMsg"
-          :cancel-status-msg="ctranslations.cancelStatusMsg"
+          :cancel-status-msg="translations.cancelStatusMsg"
           :not-answered-status-msg="translations.notAnsweredStatusMsg"
           :status="status"
           :position="position"
