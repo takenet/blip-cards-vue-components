@@ -2,7 +2,7 @@
   <div class="blip-container">
     <bds-grid direction="column" :align-items="position === 'right' ? 'flex-end' : 'flex-start'">
       <div :class="bubbleClass">
-        <bds-grid direction="column" padding="y-1" gap="2">
+        <bds-grid direction="column" padding="y-1" gap="2" class="wrap">
           <bds-grid direction="row" justify-content="flex-start" padding="x-2" >
             <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane" />
             <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
@@ -200,6 +200,10 @@ $template-width: 368px;
 
   &.template-width {
     width: $template-width;
+  }
+
+  > .wrap {
+    overflow-wrap: anywhere;
   }
 }
 

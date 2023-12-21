@@ -1192,7 +1192,7 @@ export const commandExamples = [
           components: [
             {
               type: 'BODY',
-              text: 'Olá Usuário!\n\nCompre castanha de caju direto da fábrica!\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\n\n_Esta podendo falar?_\n\nhttps://url-link.com/p/ifCeg3.mp4'
+              text: 'Olá Usuário!\n\nCompre castanha de caju direto da fábrica!\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\n\n_Esta podendo falar?_\n\nhttps://url-link.com/p/ifCeg3/p/ifCeg3/p/ifCeg3/p/ifCeg3/p/ifCeg3/p/ifCeg3/p/ifCeg3/p/ifCeg3/p/ifCeg3/p/ifCeg3.mp4'
             }
           ]
         }
