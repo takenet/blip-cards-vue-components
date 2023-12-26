@@ -52,8 +52,8 @@
           :deletable="deletable"
           :on-cancel="onCancel"
           :editing="editing"
-          :async-fetch-media="asyncFetchMedia"/>--->
-      </div>
+          :async-fetch-media="asyncFetchMedia"/>
+      </div>--->
     </div>
   </div>
 </template>
