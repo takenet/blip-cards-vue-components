@@ -357,6 +357,7 @@
           :on-cancel="cancel"
           :on-media-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
+          :on-async-fetch-session="onAsyncFetchSession"
         />
 
         <template-content
@@ -621,6 +622,9 @@ export default {
       type: Function
     },
     asyncFetchMedia: {
+      type: Function
+    },
+    onAsyncFetchSession: {
       type: Function
     }
   },

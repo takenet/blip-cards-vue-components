@@ -16,6 +16,7 @@
       :failed-to-send-msg="failedToSendMsg"
       :on-media-validate-uri="onMediaValidateUri"
       :async-fetch-media="asyncFetchMedia"
+      :on-async-fetch-session="onAsyncFetchSession"
     />
     <p class="subtitle fancy">
       <span>{{ formattedMessage }}</span>
@@ -82,6 +83,9 @@ export default {
       type: Function
     },
     asyncFetchMedia: {
+      type: Function
+    },
+    onAsyncFetchSession: {
       type: Function
     }
   },

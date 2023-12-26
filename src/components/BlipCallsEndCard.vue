@@ -45,6 +45,13 @@
                   :margin="false"
                   >{{ statusText }}
                 </bds-typo>
+                <bds-icon
+                  v-if="document.status === 'success' && !hasMediaUri && !refreshingMediaUrl"
+                  name="refresh"
+                  size="x-small"
+                  color="var(--fixed-color-bright, var(--color-bright, #FFF))"
+                  v-on:click="updateMediaUrl"
+                />
               </div>
             </div>
           </div>
@@ -72,6 +79,7 @@
             />
             <blip-audio
               v-else
+              :key="mediaComponentKey"
               file-url-msg="fileUrlMsg"
               :document="document.media.content"
               :full-document="fullDocument.media"
@@ -170,7 +178,21 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    onAsyncFetchSession: {
+      type: Function
     }
+  },
+  data() {
+    return {
+      mediaComponentKey: 0,
+      refreshingMediaUrl: false,
+      hasMediaUri: false,
+      isFailedMessage
+    }
+  },
+  mounted() {
+    this.updateMediaUrl()
   },
   computed: {
     previewDocument: function() {
@@ -215,12 +237,29 @@ export default {
       return this.sanitize(statusMessage[this.document.status])
     }
   },
-  data: function() {
-    return {
-      isFailedMessage
-    }
-  },
   methods: {
+    async updateMediaUrl() {
+      try {
+        if (this.onAsyncFetchSession) {
+          this.refreshingMediaUrl = true
+
+          const session = await this.onAsyncFetchSession(
+            this.document.sessionId
+          )
+
+          if (session && session.recordedFileUrl) {
+            this.document.media.content.uri = session.recordedFileUrl
+            this.hasMediaUri = true
+            this.forceRerender()
+          }
+        }
+      } finally {
+        this.refreshingMediaUrl = false
+      }
+    },
+    forceRerender() {
+      this.mediaComponentKey += 1
+    },
     emitUpdate() {
       this.$emit('updated')
     }
@@ -328,6 +367,15 @@ $space-4: var(--space-4, 2rem);
             bds-typo.title {
               flex: 1;
             }
+          }
+
+          &__status {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            align-self: stretch;
+            gap: $space-1;
           }
         }
       }
