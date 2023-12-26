@@ -76,6 +76,7 @@ export default {
       type: String,
       default: ''
     },
+    aspectRatioMsg: String,
     supportedFormatsMsg: String,
     fileUrlMsg: String,
     imageUriMsg: String,

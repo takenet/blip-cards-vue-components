@@ -10,7 +10,6 @@
           </bds-grid>
 
           <media-content class="blip-card"
-            @updated="updatedPhotoMargin"
             :failed-to-send-msg="translations.failedToSend"
             :aspect-ratio-msg="translations.aspectRatio"
             :supported-formats-msg="translations.supportedFormats"
@@ -32,31 +31,6 @@
             :on-cancel="cancel"
             :on-audio-validate-uri="onAudioValidateUri"
             :async-fetch-media="asyncFetchMedia"/>
-          <media-link
-            class="blip-card"
-            @updated="updatedPhotoMargin"
-            :failed-to-send-msg="translations.failedToSend"
-            :aspect-ratio-msg="translations.aspectRatio"
-            :supported-formats-msg="translations.supportedFormats"
-            :file-url-msg="translations.fileUrl"
-            :title-msg="translations.title"
-            :image-uri-msg="translations.imageUri"
-            :text-msg="translations.text"
-            :video-uri-msg="translations.videoUri"
-            :status="status"
-            :position="position"
-            :document="mediaComponent"
-            :full-document="mediaComponent"
-            :date="date"
-            :on-media-selected="onMediaSelected"
-            :editable="editable"
-            :on-metadata-edit="isMetadataReady"
-            :deletable="deletable"
-            :editing="editing"
-            :on-cancel="cancel"
-            :on-audio-validate-uri="onAudioValidateUri"
-            :async-fetch-media="asyncFetchMedia"
-          />
 
           <bds-grid direction="column" justify-content="flex-start" padding="x-2">
             <bds-typo :class="'typo ' + position" variant="fs-16" bold="regular" type="span" v-if="hasTemplateContentBody" v-html="showTemplateContentBody()" />
@@ -145,6 +119,9 @@ export default {
     disableLink: {
       type: Boolean,
       default: false
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data: function () {
