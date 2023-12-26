@@ -9,12 +9,56 @@
             <bds-typo :class="'typo ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
           </bds-grid>
 
-          <media-content :document="document"/>
+          <media-content class="blip-card"
+            @updated="updatedPhotoMargin"
+            :failed-to-send-msg="translations.failedToSend"
+            :aspect-ratio-msg="translations.aspectRatio"
+            :supported-formats-msg="translations.supportedFormats"
+            :file-url-msg="translations.fileUrl"
+            :title-msg="translations.title"
+            :image-uri-msg="translations.imageUri"
+            :text-msg="translations.text"
+            :video-uri-msg="translations.videoUri"
+            :status="status"
+            :position="position"
+            :document="document"
+            :full-document="document"
+            :date="date"
+            :on-media-selected="onMediaSelected"
+            :editable="editable"
+            :on-metadata-edit="isMetadataReady"
+            :deletable="deletable"
+            :editing="editing"
+            :on-cancel="cancel"
+            :on-audio-validate-uri="onAudioValidateUri"
+            :async-fetch-media="asyncFetchMedia"/>
+          <media-link
+            class="blip-card"
+            @updated="updatedPhotoMargin"
+            :failed-to-send-msg="translations.failedToSend"
+            :aspect-ratio-msg="translations.aspectRatio"
+            :supported-formats-msg="translations.supportedFormats"
+            :file-url-msg="translations.fileUrl"
+            :title-msg="translations.title"
+            :image-uri-msg="translations.imageUri"
+            :text-msg="translations.text"
+            :video-uri-msg="translations.videoUri"
+            :status="status"
+            :position="position"
+            :document="mediaComponent"
+            :full-document="mediaComponent"
+            :date="date"
+            :on-media-selected="onMediaSelected"
+            :editable="editable"
+            :on-metadata-edit="isMetadataReady"
+            :deletable="deletable"
+            :editing="editing"
+            :on-cancel="cancel"
+            :on-audio-validate-uri="onAudioValidateUri"
+            :async-fetch-media="asyncFetchMedia"
+          />
 
           <bds-grid direction="column" justify-content="flex-start" padding="x-2">
-            <bds-typo class="span" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
-              <a :href="link" target="_blank">{{ link }}</a>
-            </bds-typo>
             <bds-typo :class="'typo ' + position" variant="fs-16" bold="regular" type="span" v-if="hasTemplateContentBody" v-html="showTemplateContentBody()" />
           </bds-grid>
           <bds-grid
@@ -60,7 +104,7 @@
 import base from '@/mixins/baseComponent.js'
 import { formatText } from '@/utils/FormatTextUtils'
 import { linkify } from '@/utils/misc'
-import { BUTTON_TYPE, parseComponentButtons } from '@/utils/TemplateContent'
+import { BUTTON_TYPE, parseComponentButtons, parseComponentImage, parseComponentAudio, parseComponentDocument, parseComponentVideo } from '@/utils/TemplateContent'
 
 export default {
   name: 'template-content',
@@ -68,6 +112,10 @@ export default {
     base
   ],
   props: {
+    translations: {
+      type: Object,
+      default: () => ({})
+    },
     document: {},
     status: {
       type: String,
@@ -85,6 +133,12 @@ export default {
       type: String,
       default: 'Falha ao enviar a mensagem'
     },
+    onMediaSelected: {
+      type: Function
+    },
+    onAudioValidateUri: {
+      type: Function
+    },
     onFailedClickIcon: {
       type: Function
     },
@@ -95,11 +149,28 @@ export default {
   },
   data: function () {
     return {
-      componentButtons: []
+      componentButtons: [],
+      mediaComponent: {},
+      componentImage: {},
+      componentVideo: {},
+      componentDocument: {},
+      componentAudio: {}
     }
   },
   created() {
     this.componentButtons = parseComponentButtons(this.document)
+
+    this.componentImage = parseComponentImage(this.document)
+    this.componentAudio = parseComponentAudio(this.document)
+    this.componentDocument = parseComponentDocument(this.document)
+    this.componentVideo = parseComponentVideo(this.document)
+    console.log('componentImage', this.componentImage)
+    console.log('componentAudio', this.componentAudio)
+    console.log('componentDocument', this.componentDocument)
+    console.log('componentVideo', this.componentVideo)
+
+    this.mediaComponent = this.componentImage || this.componentAudio || this.componentDocument || this.componentVideo
+    console.log('this.mediaComponent', this.mediaComponent)
   },
   computed: {
     showTemplateContentTitle() {
@@ -121,6 +192,9 @@ export default {
     }
   },
   methods: {
+    emitUpdate () {
+      this.$emit('updated')
+    },
     showTemplateContentBody() {
       let componentTemplateBody = this.document.templateContent.components
         .filter(m => m.type === 'BODY')

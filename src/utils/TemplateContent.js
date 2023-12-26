@@ -1,3 +1,5 @@
+import mime from 'mime-types'
+
 const COMPONENT_BUTTONS_TYPE = 'BUTTONS'
 const BUTTONS_PROPERTY = 'buttons'
 const PARAMETERS_PROPERTY = 'parameters'
@@ -18,35 +20,47 @@ const MEDIA_TYPE = {
 
 const parseMediaComponent = (document, MEDIA_TYPE) => {
   const { template: { components = [] } = {} } = document || {}
-
   const elements = components
     .filter(({ type }) => type === HEADER_TYPE)
     .flatMap(component => component[PARAMETERS_PROPERTY])
-    .filter(({ type }) => type === MEDIA_TYPE)
-    .flatMap(parameter => parameter[MEDIA_TYPE])
+    .filter(({ type }) => type.indexOf(MEDIA_TYPE) !== -1)
+    .flatMap(parameter => parameter)
     .map((element) => ({
-      uri: element.link,
+      ...element,
+      uri: element[MEDIA_TYPE].link,
       authorizationRealm: 'blip',
-      type: MEDIA_TYPE
+      type: element.type || MEDIA_TYPE
     }))
 
   return elements[0]
 }
 
-export const parseComponentImage = (documento) => {
-  return parseMediaComponent(documento, MEDIA_TYPE.IMAGE)
+export const parseComponentImage = (document) => {
+  return parseMediaComponent(document, MEDIA_TYPE.IMAGE)
 }
 
-export const parseComponentVideo = (documento) => {
-  return parseMediaComponent(documento, MEDIA_TYPE.VIDEO)
+export const parseComponentVideo = (document) => {
+  return parseMediaComponent(document, MEDIA_TYPE.VIDEO)
 }
 
-export const parseComponentDocument = (documento) => {
-  return parseMediaComponent(documento, MEDIA_TYPE.DOCUMENT)
+export const parseComponentDocument = (document) => {
+  const { template: { components = [] } = {} } = document || {}
+
+  const elements = components
+    .filter(({ type }) => type === HEADER_TYPE)
+    .flatMap(component => component[PARAMETERS_PROPERTY])
+    .filter(({ type }) => mime.extension(type))
+  console.log('elements[0]', elements[0])
+  return elements[0]
+    ? {
+      ...elements[0],
+      uri: elements[0].file.link
+    }
+    : undefined
 }
 
-export const parseComponentAudio = (documento) => {
-  return parseMediaComponent(documento, MEDIA_TYPE.AUDIO)
+export const parseComponentAudio = (document) => {
+  return parseMediaComponent(document, MEDIA_TYPE.AUDIO)
 }
 
 export const parseComponentButtons = (document) => {

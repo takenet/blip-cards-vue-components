@@ -191,6 +191,10 @@ export default {
     simplified: {
       type: Boolean,
       default: false
+    },
+    useBorderRadius: {
+      type: Boolean,
+      default: true
     }
   },
   data: function() {
@@ -247,8 +251,11 @@ export default {
 
       this.$validator.validateAll().then((result) => {
         if (!result) return
-        this.styleObject['border-radius'] =
-          this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'
+        if (this.useBorderRadius) {
+          this.styleObject['border-radius'] = this.title || this.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px'
+        }
 
         this.save({
           ...this.document,
@@ -271,8 +278,9 @@ export default {
       var img = new Image()
       img.onload = () => {
         this.styleObject = {
-          'border-radius':
-            this.document.title || this.document.text
+          'border-radius': !this.useBorderRadius
+            ? ''
+            : this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
           'background-image': `url("${url}")`
@@ -285,8 +293,9 @@ export default {
       }
       img.onerror = () => {
         this.styleObject = {
-          'border-radius':
-            this.document.title || this.document.text
+          'border-radius': !this.useBorderRadius
+            ? ''
+            : this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
           'background-image': `url("${

@@ -1488,6 +1488,140 @@ export const commandExamples = [
     }
   },
   {
+    buttonLabel: 'Template Message - video e botão editável',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  video: {
+                    link: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+                  },
+                  type: 'video/mp4',
+                  uri:
+                    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+                  size: '1'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - audio e botão editável',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  audio: {
+                    link: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4'
+                  },
+                  type: 'audio/mp4',
+                  size: '1'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
     buttonLabel: 'Template Message - documento e botão editável',
     command: {
       id: '1',
@@ -1506,9 +1640,11 @@ export const commandExamples = [
               parameters: [
                 {
                   file: {
-                    link: 'https://www.africau.edu/images/default/sample.pdf'
+                    link: 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf'
                   },
-                  type: 'file'
+                  title: 'pdf_open_parameters.pdf',
+                  type: 'application/pdf',
+                  size: '5540'
                 }
               ],
               type: 'header'
