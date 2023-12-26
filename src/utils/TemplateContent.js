@@ -50,7 +50,6 @@ export const parseComponentDocument = (document) => {
     .filter(({ type }) => type === HEADER_TYPE)
     .flatMap(component => component[PARAMETERS_PROPERTY])
     .filter(({ type }) => mime.extension(type))
-  console.log('elements[0]', elements[0])
   return elements[0]
     ? {
       ...elements[0],

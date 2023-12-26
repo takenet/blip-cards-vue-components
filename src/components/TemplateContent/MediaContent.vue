@@ -1,5 +1,5 @@
 <template>
-  <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)"
+  <div :class="'blip-container media-link ' + mediaComponent.type.split('/')[0] + isFailedMessage(status, position)"
     id="blip-container">
     <div id='media-content'>
       <blip-image
@@ -16,6 +16,7 @@
         :useBorderRadius="false"/>
 
       <blip-audio
+        :class="'padding-control'"
         :file-url-msg="fileUrlMsg"
         :document="componentAudio"
         :full-document="fullDocument"
@@ -25,7 +26,7 @@
         :on-audio-validate-uri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"/>
 
-      <!-- <blip-video
+      <blip-video
         :video-uri-msg="videoUriMsg"
         :document="componentVideo"
         :full-document="fullDocument"
@@ -36,7 +37,7 @@
         :on-video-validate-uri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"/>
 
-      <div class="bubble">
+      <!-- <div class="bubble">
         <blip-file
           :title-msg="titleMsg"
           :document="componentDocument"
@@ -92,6 +93,11 @@ export default {
       type: Function
     }
   },
+  computed: {
+    mediaComponent() {
+      return this.componentImage || this.componentAudio || this.componentDocument || this.componentVideo
+    }
+  },
   data: function() {
     return {
       isFailedMessage,
@@ -111,6 +117,7 @@ export default {
     this.componentVideo = parseComponentVideo(this.document)
     console.log('this.documen', this.document)
     console.log('componentDocument', this.componentDocument)
+    console.log('componentAudio', this.componentAudio)
   },
   components: {
     BlipImage,
@@ -132,4 +139,48 @@ export default {
 //     margin-left: 0px;
 //   }
 // }
+
+.padding-control {
+ padding: $bubble-padding !important;
+}
+
+.left,
+  .middle {
+    .slider {
+      background-color: $color-surface-3;
+    }
+    .progress .pin {
+      background-color: $color-content-default;
+    }
+    .audio-player-button {
+      fill: $color-content-default;
+    }
+    .blip-change-playback-rate {
+      border-color: $color-content-ghost;
+      color: $color-content-default;
+    }
+    .video-player-time {
+      color: $color-content-default;
+    }
+  }
+  .right {
+    .slider {
+      background-color: $color-content-ghost;
+    }
+    .progress .pin {
+      background-color: $color-surface-1;
+    }
+    .audio-player-button {
+      fill: $color-surface-1;
+    }
+
+    .video-player-time {
+      color: $color-surface-1;
+    }
+
+    .blip-change-playback-rate {
+      border-color: $color-content-ghost;
+      color: $color-surface-1;
+    }
+  }
 </style>
