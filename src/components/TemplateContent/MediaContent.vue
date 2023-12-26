@@ -15,7 +15,7 @@
         v-if="componentImage !== undefined"
         :useBorderRadius="false"/>
 
-      <blip-audio
+      <!-- <blip-audio
         :file-url-msg="fileUrlMsg"
         :document="componentAudio"
         :full-document="fullDocument"
@@ -25,7 +25,7 @@
         :on-audio-validate-uri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"/>
 
-      <!-- <blip-video
+      <blip-video
         :video-uri-msg="videoUriMsg"
         :document="componentVideo"
         :full-document="fullDocument"
@@ -75,6 +75,7 @@ export default {
       type: String,
       default: ''
     },
+    aspectRatioMsg: String,
     supportedFormatsMsg: String,
     fileUrlMsg: String,
     imageUriMsg: String,
