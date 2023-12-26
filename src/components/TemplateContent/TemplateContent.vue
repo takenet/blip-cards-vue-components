@@ -78,7 +78,7 @@
 import base from '@/mixins/baseComponent.js'
 import { formatText } from '@/utils/FormatTextUtils'
 import { linkify } from '@/utils/misc'
-import { BUTTON_TYPE, parseComponentButtons, parseComponentImage, parseComponentAudio, parseComponentDocument, parseComponentVideo } from '@/utils/TemplateContent'
+import { BUTTON_TYPE, parseComponentButtons } from '@/utils/TemplateContent'
 
 export default {
   name: 'template-content',
@@ -126,28 +126,11 @@ export default {
   },
   data: function () {
     return {
-      componentButtons: [],
-      mediaComponent: {},
-      componentImage: {},
-      componentVideo: {},
-      componentDocument: {},
-      componentAudio: {}
+      componentButtons: []
     }
   },
   created() {
     this.componentButtons = parseComponentButtons(this.document)
-
-    this.componentImage = parseComponentImage(this.document)
-    this.componentAudio = parseComponentAudio(this.document)
-    this.componentDocument = parseComponentDocument(this.document)
-    this.componentVideo = parseComponentVideo(this.document)
-    console.log('componentImage', this.componentImage)
-    console.log('componentAudio', this.componentAudio)
-    console.log('componentDocument', this.componentDocument)
-    console.log('componentVideo', this.componentVideo)
-
-    this.mediaComponent = this.componentImage || this.componentAudio || this.componentDocument || this.componentVideo
-    console.log('this.mediaComponent', this.mediaComponent)
   },
   computed: {
     showTemplateContentTitle() {
