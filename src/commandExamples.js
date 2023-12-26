@@ -215,8 +215,8 @@ export const commandExamples = [
       to: '128271320123982@messenger.gw.msging.net',
       type: 'application/vnd.lime.media-link+json',
       content: {
-        type: 'audio/mp3',
-        uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3',
+        type: 'audio/mp4',
+        uri: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4',
         size: '1'
       }
     }
@@ -635,8 +635,8 @@ export const commandExamples = [
         replied: {
           type: 'application/vnd.lime.media-link+json',
           value: {
-            type: 'audio/mp3',
-            uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3'
+            type: 'audio/mp4',
+            uri: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4'
           }
         },
         inReplyTo: {
@@ -946,8 +946,8 @@ export const commandExamples = [
         inReactionTo: {
           type: 'application/vnd.lime.media-link+json',
           value: {
-            type: 'audio/mp3',
-            uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+            type: 'audio/mp4',
+            uri: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4'
           },
           direction: 'sent'
         },
@@ -1505,9 +1505,6 @@ export const commandExamples = [
             {
               parameters: [
                 {
-                  video: {
-                    link: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-                  },
                   type: 'video/mp4',
                   uri:
                     'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
