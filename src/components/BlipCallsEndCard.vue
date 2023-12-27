@@ -46,7 +46,7 @@
                   >{{ statusText }}
                 </bds-typo>
                 <bds-icon
-                  v-if="document.status === 'success' && !hasMediaUri && !refreshingMediaUrl"
+                  v-if="isSuccess && !hasMediaUri && !refreshingMediaUrl"
                   name="refresh"
                   size="x-small"
                   color="var(--fixed-color-bright, var(--color-bright, #FFF))"
@@ -56,7 +56,7 @@
             </div>
           </div>
           <div
-            v-if="document.status === 'success'"
+            v-if="isSuccess"
             :class="`content__record ${document.type}`"
           >
             <blip-video
@@ -235,12 +235,15 @@ export default {
       }
 
       return this.sanitize(statusMessage[this.document.status])
+    },
+    isSuccess: function() {
+      return this.document.status === 'success'
     }
   },
   methods: {
     async updateMediaUrl() {
       try {
-        if (this.onAsyncFetchSession) {
+        if (this.isSuccess && this.onAsyncFetchSession) {
           this.refreshingMediaUrl = true
 
           const session = await this.onAsyncFetchSession(
