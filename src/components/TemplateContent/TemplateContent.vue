@@ -139,12 +139,12 @@ export default {
 
     this.componentImage = parseComponentImage(this.document)
     this.componentAudio = parseComponentAudio(this.document)
-    this.componentDocument = parseComponentDocument(this.document)
     this.componentVideo = parseComponentVideo(this.document)
+    this.componentDocument = parseComponentDocument(this.document)
     console.log('componentImage', this.componentImage)
     console.log('componentAudio', this.componentAudio)
-    console.log('componentDocument', this.componentDocument)
     console.log('componentVideo', this.componentVideo)
+    console.log('componentDocument', this.componentDocument)
 
     this.mediaComponent = this.componentImage || this.componentAudio || this.componentDocument || this.componentVideo
     console.log('this.mediaComponent', this.mediaComponent)
@@ -205,6 +205,8 @@ export default {
 
       const attachments = this.document.template.components
         .filter((m) => (m.type === 'header'))
+
+      console.log('attachments', attachments)
 
       if (attachments) {
         const links = []

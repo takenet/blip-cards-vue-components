@@ -27,6 +27,7 @@
         :async-fetch-media="asyncFetchMedia"/>
 
       <blip-video
+        :class="'padding-control'"
         :video-uri-msg="videoUriMsg"
         :document="componentVideo"
         :full-document="fullDocument"
@@ -114,11 +115,8 @@ export default {
   created() {
     this.componentImage = parseComponentImage(this.document)
     this.componentAudio = parseComponentAudio(this.document)
-    this.componentDocument = parseComponentDocument(this.document)
     this.componentVideo = parseComponentVideo(this.document)
-    console.log('this.documen', this.document)
-    console.log('componentDocument', this.componentDocument)
-    console.log('componentAudio', this.componentAudio)
+    this.componentDocument = parseComponentDocument(this.document)
   },
   components: {
     BlipImage,
@@ -160,6 +158,9 @@ export default {
       border-color: $color-content-ghost;
       color: $color-content-default;
     }
+    .video-player-button {
+      fill: $color-content-default;
+    }
     .video-player-time {
       color: $color-content-default;
     }
@@ -174,11 +175,12 @@ export default {
     .audio-player-button {
       fill: $color-surface-1;
     }
-
+    .video-player-button {
+      fill: $color-surface-1;
+    }
     .video-player-time {
       color: $color-surface-1;
     }
-
     .blip-change-playback-rate {
       border-color: $color-content-ghost;
       color: $color-surface-1;

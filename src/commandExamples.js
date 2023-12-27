@@ -1505,9 +1505,10 @@ export const commandExamples = [
             {
               parameters: [
                 {
+                  video: {
+                    link: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+                  },
                   type: 'video/mp4',
-                  uri:
-                    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
                   size: '1'
                 }
               ],
