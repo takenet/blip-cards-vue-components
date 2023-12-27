@@ -13,22 +13,13 @@
             :failed-to-send-msg="translations.failedToSend"
             :aspect-ratio-msg="translations.aspectRatio"
             :supported-formats-msg="translations.supportedFormats"
-            :file-url-msg="translations.fileUrl"
             :title-msg="translations.title"
-            :image-uri-msg="translations.imageUri"
             :text-msg="translations.text"
-            :video-uri-msg="translations.videoUri"
             :status="status"
             :position="position"
             :document="document"
-            :full-document="document"
             :date="date"
-            :on-media-selected="onMediaSelected"
-            :editable="editable"
             :on-metadata-edit="isMetadataReady"
-            :deletable="deletable"
-            :editing="editing"
-            :on-cancel="cancel"
             :on-audio-validate-uri="onAudioValidateUri"
             :async-fetch-media="asyncFetchMedia"/>
 
@@ -139,9 +130,6 @@ export default {
     hasTemplateContentBody() {
       return this.document.templateContent && this.document.templateContent.components
     },
-    hasTemplateContentHeader() {
-      return this.document.template && this.document.template.components
-    },
     bubbleClass() {
       const cssClass = ['bubble', this.position, 'template-width']
 
@@ -152,9 +140,6 @@ export default {
     }
   },
   methods: {
-    emitUpdate () {
-      this.$emit('updated')
-    },
     showTemplateContentBody() {
       let componentTemplateBody = this.document.templateContent.components
         .filter(m => m.type === 'BODY')
@@ -180,29 +165,6 @@ export default {
       componentTemplateBody = linkify(componentTemplateBody, this.disableLink)
 
       return componentTemplateBody
-    },
-    showTemplateContentLinks() {
-      if (!this.hasTemplateContentHeader || !this.hasTemplateContentBody) {
-        return
-      }
-
-      const attachments = this.document.template.components
-        .filter((m) => (m.type === 'header'))
-
-      console.log('attachments', attachments)
-
-      if (attachments) {
-        const links = []
-        attachments.forEach(item => {
-          item.parameters.forEach(parameter => {
-            const { type } = parameter
-            if (['image', 'video', 'audio'].includes(type)) {
-              links.push(parameter[type].link)
-            }
-          })
-        })
-        return links
-      }
     },
     isWebsiteButton(button) {
       return button.type === BUTTON_TYPE.URL

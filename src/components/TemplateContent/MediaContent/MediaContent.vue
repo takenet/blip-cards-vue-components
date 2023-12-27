@@ -54,16 +54,10 @@ export default {
     },
     aspectRatioMsg: String,
     supportedFormatsMsg: String,
-    fileUrlMsg: String,
-    imageUriMsg: String,
-    videoUriMsg: String,
     titleMsg: String,
     textMsg: String,
     document: {},
     onAudioValidateUri: {
-      type: Function
-    },
-    onMediaSelected: {
       type: Function
     },
     asyncFetchMedia: {
