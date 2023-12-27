@@ -67,7 +67,7 @@ import Sanitize from './mixins/sanitizeHtml'
 import TemplateContent from './components/TemplateContent/TemplateContent'
 import WebsiteButton from './components/TemplateContent/Buttons/WebsiteButton'
 import PhoneNumberButton from './components/TemplateContent/Buttons/PhoneNumberButton'
-import MediaContent from './components/TemplateContent/MediaContent'
+import MediaContent from './components/TemplateContent/MediaContent/MediaContent'
 
 function install(Vue) {
   let components = []

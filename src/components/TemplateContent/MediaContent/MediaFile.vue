@@ -1,6 +1,6 @@
 <template>
   <div :class="`file-container ${position}`" v-if="componentDocument !== undefined">
-    <div  class="file-wrapper" @click="handleFileLink()">
+    <div class="file-wrapper">
       <div class="file-icon-wrapper">
         <img v-if="isLoading" :src="loadingGif" alt />
         <img v-else class="file-icon" :src="mimeType | fileIconFilter"/>
@@ -18,9 +18,8 @@
 
 <script>
 
-import { default as base } from '../../mixins/baseComponent.js'
+import { default as base } from '../../../mixins/baseComponent.js'
 import mime from 'mime-types'
-import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 
 export default {
   name: 'media-file',
@@ -41,30 +40,12 @@ export default {
     return {
       isLoading: false
     }
-  },
-  methods: {
-    handleFileLink: async function () {
-      const uri = await this.getFileUri()
-
-      this.isLoading = true
-      await this.openFileInNewTab(uri)
-      this.isLoading = false
-    },
-    openFileInNewTab: function(uri) {
-      window.open(uri, '_blank', 'noopener')
-      this.asyncFetchMedia && URL.revokeObjectURL(uri)
-    },
-    getFileUri: async function () {
-      return isAuthenticatedMediaLink(this.componentDocument)
-        ? tryCreateLocalMediaUri(this.componentDocument, this.asyncFetchMedia)
-        : this.componentDocument.uri
-    }
   }
 }
 </script>
 
 <style lang="scss">
-@import '../../styles/variables.scss';
+@import '../../../styles/variables.scss';
 
 
 .file-container {

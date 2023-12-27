@@ -15,17 +15,6 @@
         v-if="componentImage !== undefined"
         :useBorderRadius="false"/>
 
-      <blip-audio
-        :class="'padding-control'"
-        :file-url-msg="fileUrlMsg"
-        :document="componentAudio"
-        :full-document="fullDocument"
-        :position="position"
-        :date="date"
-        v-else-if="componentAudio !== undefined"
-        :on-audio-validate-uri="onAudioValidateUri"
-        :async-fetch-media="asyncFetchMedia"/>
-
       <blip-video
         :video-uri-msg="videoUriMsg"
         :document="componentVideo"
@@ -37,6 +26,11 @@
         :on-video-validate-uri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"/>
 
+      <media-audio
+        :componentAudio="componentAudio"
+        :onAudioValidateUri="onAudioValidateUri"
+        :async-fetch-media="asyncFetchMedia"></media-audio>
+
       <media-file
         :componentDocument="componentDocument"
         :position="position"></media-file>
@@ -46,15 +40,14 @@
   
 <script>
 
-import BlipImage from '../MediaLink/Image'
-import BlipAudio from '../MediaLink/Audio'
-import BlipVideo from '../MediaLink/Video'
+import BlipImage from '../../MediaLink/Image'
+import BlipVideo from '../../MediaLink/Video'
 import MediaFile from './MediaFile'
-import { default as base } from '../../mixins/baseComponent.js'
+import MediaAudio from './MediaAudio'
+import { default as base } from '../../../mixins/baseComponent.js'
 import { parseComponentImage, parseComponentAudio, parseComponentVideo, parseComponentDocument } from '@/utils/TemplateContent'
-import { isFailedMessage } from '../../utils/misc'
+import { isFailedMessage } from '../../../utils/misc'
 import mime from 'mime-types'
-import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 
 export default {
   name: 'media-content',
@@ -83,7 +76,13 @@ export default {
   },
   computed: {
     mediaComponent() {
-      return this.componentImage || this.componentAudio || this.componentDocument || this.componentVideo
+      return this.componentImage ||
+        this.componentAudio ||
+        this.componentDocument ||
+        this.componentVideo ||
+        {
+          type: ''
+        }
     },
     mimeType: function() {
       let extension = mime.extension(this.componentDocument.type)
@@ -114,74 +113,9 @@ export default {
   },
   components: {
     BlipImage,
-    BlipAudio,
     BlipVideo,
-    MediaFile
-  },
-  methods: {
-    handleFileLink: async function () {
-      const uri = await this.getFileUri()
-
-      this.isLoading = true
-      await this.openFileInNewTab(uri)
-      this.isLoading = false
-    },
-    openFileInNewTab: function(uri) {
-      window.open(uri, '_blank', 'noopener')
-      this.asyncFetchMedia && URL.revokeObjectURL(uri)
-    },
-    getFileUri: async function () {
-      return isAuthenticatedMediaLink(this.componentDocument)
-        ? tryCreateLocalMediaUri(this.componentDocument, this.asyncFetchMedia)
-        : this.componentDocument.uri
-    }
+    MediaFile,
+    MediaAudio
   }
 }
 </script>
-<style lang="scss">
-@import '../../styles/variables.scss';
-
-.padding-control {
- padding: $bubble-padding !important;
-}
-
-.left,
-.middle {
-  .slider {
-    background-color: $color-surface-3;
-  }
-  .progress .pin {
-    background-color: $color-content-default;
-  }
-  .audio-player-button {
-    fill: $color-content-default;
-  }
-  .blip-change-playback-rate {
-    border-color: $color-content-ghost;
-    color: $color-content-default;
-  }
-  .video-player-time {
-    color: $color-content-default;
-  }
-}
-.right {
-  .slider {
-    background-color: $color-content-ghost;
-  }
-  .progress .pin {
-    background-color: $color-surface-1;
-  }
-  .audio-player-button {
-    fill: $color-surface-1;
-  }
-
-  .video-player-time {
-    color: $color-surface-1;
-  }
-
-  .blip-change-playback-rate {
-    border-color: $color-content-ghost;
-    color: $color-surface-1;
-  }
-}
-</style>
