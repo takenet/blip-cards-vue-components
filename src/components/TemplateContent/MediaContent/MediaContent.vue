@@ -15,18 +15,14 @@
         v-if="componentImage !== undefined"
         :useBorderRadius="false"/>
 
-      <blip-video
-        :video-uri-msg="videoUriMsg"
-        :document="componentVideo"
-        :full-document="fullDocument"
-        :position="position"
-        :date="date"
-        v-else-if="componentVideo !== undefined"
-        :on-metadata-edit="isMetadataReady"
-        :on-video-validate-uri="onAudioValidateUri"
-        :async-fetch-media="asyncFetchMedia"/>
+      <media-video
+        :class="'padding-control'"
+        :componentVideo="componentVideo"
+        :onVideoValidateUri="onAudioValidateUri"
+        :async-fetch-media="asyncFetchMedia"></media-video>
 
       <media-audio
+        :class="'padding-control'"
         :componentAudio="componentAudio"
         :onAudioValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-audio>
@@ -41,9 +37,9 @@
 <script>
 
 import BlipImage from '../../MediaLink/Image'
-import BlipVideo from '../../MediaLink/Video'
 import MediaFile from './MediaFile'
 import MediaAudio from './MediaAudio'
+import MediaVideo from './MediaVideo'
 import { default as base } from '../../../mixins/baseComponent.js'
 import { parseComponentImage, parseComponentAudio, parseComponentVideo, parseComponentDocument } from '@/utils/TemplateContent'
 import { isFailedMessage } from '../../../utils/misc'
@@ -113,9 +109,17 @@ export default {
   },
   components: {
     BlipImage,
-    BlipVideo,
     MediaFile,
-    MediaAudio
+    MediaAudio,
+    MediaVideo
   }
 }
 </script>
+
+<style lang="scss">
+@import '../../../styles/variables.scss';
+
+.padding-control {
+  padding: $bubble-padding;
+}
+</style>

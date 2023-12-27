@@ -1,23 +1,23 @@
 <template>
-  <blip-audio
-    :document="componentAudio"
-    :full-document="fullDocument"
+  <blip-video
+    :document="componentVideo"
     :position="position"
     :date="date"
-    v-if="componentAudio !== undefined"
-    :on-audio-validate-uri="onAudioValidateUri"
+    v-if="componentVideo !== undefined"
+    :on-video-validate-uri="onVideoValidateUri"
     :async-fetch-media="asyncFetchMedia"/>
 </template>
 
 <script>
-import BlipAudio from '../../MediaLink/Audio'
+
+import BlipVideo from '../../MediaLink/Video'
 import { default as base } from '../../../mixins/baseComponent.js'
 
 export default {
   name: 'media-content',
   props: {
-    componentAudio: {},
-    onAudioValidateUri: {
+    componentVideo: {},
+    onVideoValidateUri: {
       type: Function
     },
     asyncFetchMedia: {
@@ -28,7 +28,7 @@ export default {
     base
   ],
   components: {
-    BlipAudio
+    BlipVideo
   }
 }
 </script>
@@ -47,13 +47,13 @@ export default {
     background-color: $color-content-default;
   }
 
-  .audio-player-button {
-    fill: $color-content-default;
-  }
-
   .blip-change-playback-rate {
     border-color: $color-content-ghost;
     color: $color-content-default;
+  }
+
+  .video-player-button {
+    fill: $color-content-default;
   }
 
   .video-player-time {
@@ -71,7 +71,7 @@ export default {
     background-color: $color-surface-1;
   }
 
-  .audio-player-button {
+  .video-player-button {
     fill: $color-surface-1;
   }
 
