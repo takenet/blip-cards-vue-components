@@ -189,6 +189,8 @@ export default {
       const attachments = this.document.template.components
         .filter((m) => (m.type === 'header'))
 
+      console.log('attachments', attachments)
+
       if (attachments) {
         const links = []
         attachments.forEach(item => {
