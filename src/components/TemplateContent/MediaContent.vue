@@ -38,24 +38,9 @@
         :on-video-validate-uri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"/>
 
-      <!-- <div class="bubble">
-        <blip-file
-          :title-msg="titleMsg"
-          :document="componentDocument"
-          :full-document="fullDocument"
-          :position="position"
-          :date="date"
-          v-if="componentDocument !== undefined"
-          :editable="editable"
-          :on-media-selected="onMediaSelected"
-          :on-save="save"
-          :on-deleted="onDeleted"
-          :on-metadata-edit="isMetadataReady"
-          :deletable="deletable"
-          :on-cancel="onCancel"
-          :editing="editing"
-          :async-fetch-media="asyncFetchMedia"/>
-      </div>--->
+      <media-file
+        :componentDocument="componentDocument"
+        :position="position"></media-file>
     </div>
   </div>
 </template>
@@ -65,10 +50,12 @@
 import BlipImage from '../MediaLink/Image'
 import BlipAudio from '../MediaLink/Audio'
 import BlipVideo from '../MediaLink/Video'
-import BlipFile from '../MediaLink/BlipFile'
+import MediaFile from './MediaFile'
 import { default as base } from '../../mixins/baseComponent.js'
 import { parseComponentImage, parseComponentAudio, parseComponentVideo, parseComponentDocument } from '@/utils/TemplateContent'
 import { isFailedMessage } from '../../utils/misc'
+import mime from 'mime-types'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 
 export default {
   name: 'media-content',
@@ -98,6 +85,13 @@ export default {
   computed: {
     mediaComponent() {
       return this.componentImage || this.componentAudio || this.componentDocument || this.componentVideo
+    },
+    mimeType: function() {
+      let extension = mime.extension(this.componentDocument.type)
+      if (extension) {
+        return this.componentDocument.type
+      }
+      return mime.lookup(this.componentDocument.uri)
     }
   },
   data: function() {
@@ -106,7 +100,8 @@ export default {
       componentImage: {},
       componentVideo: {},
       componentDocument: {},
-      componentAudio: {}
+      componentAudio: {},
+      isLoading: false
     }
   },
   mixins: [
@@ -122,22 +117,30 @@ export default {
     BlipImage,
     BlipAudio,
     BlipVideo,
-    BlipFile
+    MediaFile
+  },
+  methods: {
+    handleFileLink: async function () {
+      const uri = await this.getFileUri()
+
+      this.isLoading = true
+      await this.openFileInNewTab(uri)
+      this.isLoading = false
+    },
+    openFileInNewTab: function(uri) {
+      window.open(uri, '_blank', 'noopener')
+      this.asyncFetchMedia && URL.revokeObjectURL(uri)
+    },
+    getFileUri: async function () {
+      return isAuthenticatedMediaLink(this.componentDocument)
+        ? tryCreateLocalMediaUri(this.componentDocument, this.asyncFetchMedia)
+        : this.componentDocument.uri
+    }
   }
 }
 </script>
 <style lang="scss">
 @import '../../styles/variables.scss';
-
-// .bubble {
-//   &.right {
-//     margin-right: 0px;
-//   }
-
-//   &.left {
-//     margin-left: 0px;
-//   }
-// }
 
 .padding-control {
  padding: $bubble-padding !important;
