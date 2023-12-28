@@ -1620,7 +1620,7 @@ export const commandExamples = [
     }
   },
   {
-    buttonLabel: 'Template Message - documento e botão editável',
+    buttonLabel: 'Template Message - documento e botão editável - nome grande',
     command: {
       id: '1',
       direction: 'sent',
@@ -1640,7 +1640,141 @@ export const commandExamples = [
                   file: {
                     link: 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf'
                   },
-                  title: 'pdf_open_parameters.pdf',
+                  title: 'pdf_open_parameters_long_name_document_need_include_spread_on limited_second_line.pdf',
+                  type: 'application/pdf',
+                  size: '5540'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - documento e botão editável - nome completo',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  file: {
+                    link: 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf'
+                  },
+                  title: 'pdf_open_parameters_complete_name.pdf',
+                  type: 'application/pdf',
+                  size: '5540'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - documento e botão editável - nome pequeno',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  file: {
+                    link: 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf'
+                  },
+                  title: 'pdf_open_param.pdf',
                   type: 'application/pdf',
                   size: '5540'
                 }

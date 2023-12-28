@@ -100,17 +100,22 @@ export default {
       padding-left: 10px;
       display: flex;
       flex-direction: column;
+      justify-content: center;
 
       .link-description {
         display: flex;
         align-items: flex-start;
         flex-direction: column;
         flex-grow: 1;
+        height: 2.5rem;
 
         .text {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+        position: relative;
+        text-align: left;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
         }
       }
 
