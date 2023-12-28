@@ -3,7 +3,7 @@
     <bds-grid direction="column" :align-items="position === 'right' ? 'flex-end' : 'flex-start'">
       <div :class="bubbleClass">
         <bds-grid direction="column" padding="y-1" gap="2" class="wrap">
-          <bds-grid direction="row" justify-content="flex-start" padding="x-2" >
+          <bds-grid margin="t-1" direction="row" justify-content="flex-start" padding="x-2">
             <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane" />
             <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
             <bds-typo :class="'typo ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
@@ -203,10 +203,6 @@ $template-width: 368px;
   > .wrap {
     overflow-wrap: anywhere;
   }
-}
-
-.template-content-blocks {
-  padding: 10px 20px;
 }
 
 .quick-reply-buttons {
