@@ -2,11 +2,11 @@
   <div class="blip-container">
     <bds-grid direction="column" :align-items="position === 'right' ? 'flex-end' : 'flex-start'">
       <div :class="bubbleClass">
-        <bds-grid direction="column" padding="y-1" gap="2" class="wrap">
-          <bds-grid margin="t-1" direction="row" justify-content="flex-start" padding="x-2">
+        <bds-grid direction="column" padding="y-1" gap="1" class="wrap">
+          <bds-grid margin="y-1" direction="row" justify-content="flex-start" padding="x-2">
             <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane" />
             <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
-            <bds-typo :class="'typo ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
+            <bds-typo :class="'typo ' + position + ' title-template'" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
           </bds-grid>
 
           <media-content class="blip-card"
@@ -191,6 +191,10 @@ $template-width: 368px;
   margin-top: -5px;
   color: $color-extended-red;
   cursor: pointer;
+}
+
+.title-template {
+  margin-left: 8px;
 }
 
 .bubble {
