@@ -1637,12 +1637,11 @@ export const commandExamples = [
             {
               parameters: [
                 {
-                  file: {
+                  document: {
+                    filename: 'pdf_open_parameters_long_name_document_need_include_spread_on limited_second_line.pdf',
                     link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
                   },
-                  title: 'pdf_open_parameters_long_name_document_need_include_spread_on limited_second_line.pdf',
-                  type: 'application/pdf',
-                  size: '5540'
+                  type: 'document'
                 }
               ],
               type: 'header'
@@ -1704,12 +1703,11 @@ export const commandExamples = [
             {
               parameters: [
                 {
-                  file: {
+                  document: {
+                    filename: 'pdf_open_parameters_complete_name.pdf',
                     link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
                   },
-                  title: 'pdf_open_parameters_complete_name.pdf',
-                  type: 'application/pdf',
-                  size: '5540'
+                  type: 'document'
                 }
               ],
               type: 'header'
@@ -1771,12 +1769,11 @@ export const commandExamples = [
             {
               parameters: [
                 {
-                  file: {
+                  document: {
+                    filename: 'pdf_open_param.pdf',
                     link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
                   },
-                  title: 'pdf_open_param.pdf',
-                  type: 'application/pdf',
-                  size: '5540'
+                  type: 'document'
                 }
               ],
               type: 'header'
@@ -1876,70 +1873,6 @@ export const commandExamples = [
                   example: [
                     'desk'
                   ]
-                }
-              ]
-            }
-          ]
-        }
-      }
-    }
-  },
-  {
-    buttonLabel: 'Template Message - documento e botão link - new 2',
-    command: {
-      id: '1',
-      direction: 'sent',
-      type: 'application/json',
-      content: {
-        type: 'template-content',
-        template: {
-          language: {
-            policy: 'deterministic',
-            code: 'pt_BR'
-          },
-          name: 'automation_test_document_quick_answers',
-          components: [
-            {
-              type: 'header',
-              parameters: [
-                {
-                  document: {
-                    filename: 'dummy',
-                    link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
-                  },
-                  type: 'document'
-                }
-              ]
-            }
-          ]
-        },
-        templateContent: {
-          name: 'automation_test_document_quick_answers',
-          language: 'pt_BR',
-          components: [
-            {
-              type: 'HEADER',
-              format: 'DOCUMENT',
-              example: {
-                headerHandle: [
-                  'https://scontent.whatsapp.net/v/t61.29466-34/323856102_1904690989867182_4055631374923478479_n.pdf?ccb=1-7&_nc_sid=8b1bef&_nc_ohc=rG4OYiH3XMwAX9wxLyd&_nc_ht=scontent.whatsapp.net&edm=AH51TzQEAAAA&oh=01_AdTrO5r_-WQeHq8urMwF0ofKowEMvwOj8MZ8Ri6m6JkylA&oe=65B6362E'
-                ]
-              }
-            },
-            {
-              type: 'BODY',
-              text: 'Esta mensagem foi gerada por um teste de automação.\\n\\nTake Blip'
-            },
-            {
-              type: 'BUTTONS',
-              buttons: [
-                {
-                  type: 'QUICK_REPLY',
-                  text: 'Continuar'
-                },
-                {
-                  type: 'QUICK_REPLY',
-                  text: 'Cancelar'
                 }
               ]
             }

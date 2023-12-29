@@ -12,7 +12,7 @@ export const BUTTON_TYPE = {
 const MEDIA_TYPE = {
   IMAGE: 'image',
   VIDEO: 'video',
-  DOCUMENT: 'file',
+  DOCUMENT: 'document',
   AUDIO: 'audio'
 }
 
@@ -54,7 +54,8 @@ export const parseComponentDocument = (document) => {
   return elements[0]
     ? {
       ...elements[0],
-      uri: elements[0].document.link
+      uri: elements[0].document.link,
+      title: elements[0].document.filename
     }
     : undefined
 }
