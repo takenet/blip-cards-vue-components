@@ -1,5 +1,3 @@
-import mime from 'mime-types'
-
 const COMPONENT_BUTTONS_TYPE = 'BUTTONS'
 const BUTTONS_PROPERTY = 'buttons'
 const PARAMETERS_PROPERTY = 'parameters'
@@ -45,19 +43,18 @@ export const parseComponentVideo = (document) => {
 
 export const parseComponentDocument = (document) => {
   const { template: { components = [] } = {} } = document || {}
-
   const elements = components
     .filter(({ type }) => type === HEADER_TYPE)
     .flatMap(component => component[PARAMETERS_PROPERTY])
     .filter(({ type }) => {
-      return mime.extension(type) &&
-        type.indexOf(MEDIA_TYPE.AUDIO) === -1 &&
+      return type.indexOf(MEDIA_TYPE.AUDIO) === -1 &&
         type.indexOf(MEDIA_TYPE.VIDEO) === -1
     })
+
   return elements[0]
     ? {
       ...elements[0],
-      uri: elements[0].file.link
+      uri: elements[0].document.link
     }
     : undefined
 }
