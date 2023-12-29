@@ -59,6 +59,10 @@ export default {
   .video-player-time {
     color: $color-content-default;
   }
+
+  .video-player-controls {
+  padding: $bubble-padding !important;
+  }
 }
 
 .right {
@@ -77,6 +81,10 @@ export default {
 
   .video-player-time {
     color: $color-surface-1;
+  }
+  
+  .video-player-controls {
+  padding: $bubble-padding !important;
   }
 
   .blip-change-playback-rate {

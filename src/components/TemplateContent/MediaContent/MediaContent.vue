@@ -1,5 +1,5 @@
 <template>
-  <div :class="'blip-container media-link ' + mediaComponent.type.split('/')[0] + isFailedMessage(status, position)"
+  <div :class="'blip-container media-link ' + getMediaType + isFailedMessage(status, position)"
     id="blip-container">
     <div id='media-content'>
       <blip-image
@@ -16,7 +16,6 @@
         :useBorderRadius="false"/>
 
       <media-video
-        :class="'padding-control'"
         :componentVideo="componentVideo"
         :onVideoValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-video>
@@ -73,6 +72,10 @@ export default {
         {
           type: ''
         }
+    },
+    getMediaType() {
+      const media = this.mediaComponent.type.split('/')[0]
+      return media === 'video' ? 'media-video' : media
     },
     mimeType: function() {
       let extension = mime.extension(this.componentDocument.type)

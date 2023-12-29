@@ -256,7 +256,7 @@ export const commandExamples = [
       type: 'application/vnd.lime.media-link+json',
       content: {
         uri:
-          'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+          'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
         title: 'pdf_open_parameters.pdf',
         type: 'application/pdf',
         size: '5540'
@@ -1038,7 +1038,7 @@ export const commandExamples = [
           type: 'application/vnd.lime.media-link+json',
           value: {
             uri:
-              'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+              'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
             title: 'pdf_open_parameters.pdf',
             type: 'application/pdf',
             size: '5540'
@@ -1638,7 +1638,7 @@ export const commandExamples = [
               parameters: [
                 {
                   file: {
-                    link: 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf'
+                    link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
                   },
                   title: 'pdf_open_parameters_long_name_document_need_include_spread_on limited_second_line.pdf',
                   type: 'application/pdf',
@@ -1673,8 +1673,8 @@ export const commandExamples = [
               buttons: [
                 {
                   type: 'URL',
-                  text: 'Ir para o site',
-                  url: 'https://blip.ai/{{1}}',
+                  text: 'Clique para visualizar o documento',
+                  url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
                   example: [
                     'desk'
                   ]
@@ -1705,7 +1705,7 @@ export const commandExamples = [
               parameters: [
                 {
                   file: {
-                    link: 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf'
+                    link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
                   },
                   title: 'pdf_open_parameters_complete_name.pdf',
                   type: 'application/pdf',
@@ -1740,8 +1740,8 @@ export const commandExamples = [
               buttons: [
                 {
                   type: 'URL',
-                  text: 'Ir para o site',
-                  url: 'https://blip.ai/{{1}}',
+                  text: 'Clique para visualizar o documento',
+                  url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
                   example: [
                     'desk'
                   ]
@@ -1772,7 +1772,7 @@ export const commandExamples = [
               parameters: [
                 {
                   file: {
-                    link: 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf'
+                    link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
                   },
                   title: 'pdf_open_param.pdf',
                   type: 'application/pdf',
@@ -1807,8 +1807,8 @@ export const commandExamples = [
               buttons: [
                 {
                   type: 'URL',
-                  text: 'Ir para o site',
-                  url: 'https://blip.ai/{{1}}',
+                  text: 'Clique para visualizar o documento',
+                  url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
                   example: [
                     'desk'
                   ]
