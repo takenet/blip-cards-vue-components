@@ -168,9 +168,4 @@ export default {
 
 <style lang="scss">
 @import '../styles/variables.scss';
-
-.media-link {
-    white-space: normal !important;
-}
-
 </style>
