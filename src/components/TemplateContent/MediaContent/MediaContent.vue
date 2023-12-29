@@ -1,5 +1,5 @@
 <template>
-  <div :class="'blip-container media-link ' + getMediaType + isFailedMessage(status, position)"
+  <div :class="'blip-container media-link ' + mediaType + isFailedMessage(status, position)"
     id="blip-container">
     <div id='media-content'>
       <blip-image
@@ -73,7 +73,7 @@ export default {
           type: ''
         }
     },
-    getMediaType() {
+    mediaType() {
       const media = this.mediaComponent.type.split('/')[0]
       return media === 'video' ? 'media-video' : media
     },
