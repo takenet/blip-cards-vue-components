@@ -69,9 +69,7 @@ export default {
         this.componentAudio ||
         this.componentDocument ||
         this.componentVideo ||
-        {
-          type: ''
-        }
+        { type: '' }
     },
     mediaType() {
       const media = this.mediaComponent.type.split('/')[0]
