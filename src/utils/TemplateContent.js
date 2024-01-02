@@ -46,10 +46,7 @@ export const parseComponentDocument = (document) => {
   const elements = components
     .filter(({ type }) => type === HEADER_TYPE)
     .flatMap(component => component[PARAMETERS_PROPERTY])
-    .filter(({ type }) => {
-      return type.indexOf(MEDIA_TYPE.AUDIO) === -1 &&
-        type.indexOf(MEDIA_TYPE.VIDEO) === -1
-    })
+    .filter(({ type }) => type.indexOf(MEDIA_TYPE.DOCUMENT) !== -1)
 
   return elements[0]
     ? {

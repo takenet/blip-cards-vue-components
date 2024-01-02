@@ -255,6 +255,8 @@ export default {
           this.styleObject['border-radius'] = this.title || this.text
             ? '13px 13px 0px 0px'
             : '13px 13px 13px 0px'
+        } else {
+          this.styleObject['background-size'] = 'contain'
         }
 
         this.save({
@@ -283,7 +285,10 @@ export default {
             : this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
-          'background-image': `url("${url}")`
+          'background-image': `url("${url}")`,
+          'background-size': !this.useBorderRadius
+            ? 'contain'
+            : ''
         }
 
         this.simplifiedStyleObject = {
@@ -301,8 +306,10 @@ export default {
           'background-image': `url("${
             this.position === 'right' ? BrokenWhite : Broken
           }")`,
-          'background-size': '125px',
-          opacity: '0.6'
+          opacity: '0.6',
+          'background-size': !this.useBorderRadius
+            ? 'contain'
+            : '125px'
         }
 
         this.simplifiedStyleObject = this.styleObject

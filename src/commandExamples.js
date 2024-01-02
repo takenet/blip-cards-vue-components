@@ -1508,8 +1508,7 @@ export const commandExamples = [
                   video: {
                     link: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
                   },
-                  type: 'video/mp4',
-                  size: '1'
+                  type: 'video/mp4'
                 }
               ],
               type: 'header'
