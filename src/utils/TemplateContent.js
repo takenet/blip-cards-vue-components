@@ -18,7 +18,7 @@ const MEDIA_TYPE = {
 
 const parseMediaComponent = (document, MEDIA_TYPE) => {
   const { template: { components = [] } = {} } = document || {}
-  const elements = components
+  const elementList = components
     .filter(({ type }) => type === HEADER_TYPE)
     .flatMap(component => component[PARAMETERS_PROPERTY])
     .filter(({ type }) => type.indexOf(MEDIA_TYPE) !== -1)
@@ -30,7 +30,7 @@ const parseMediaComponent = (document, MEDIA_TYPE) => {
       type: element.type || MEDIA_TYPE
     }))
 
-  return elements[0]
+  return elementList[0]
 }
 
 export const parseComponentImage = (document) => {
@@ -43,16 +43,16 @@ export const parseComponentVideo = (document) => {
 
 export const parseComponentDocument = (document) => {
   const { template: { components = [] } = {} } = document || {}
-  const elements = components
+  const elementList = components
     .filter(({ type }) => type === HEADER_TYPE)
     .flatMap(component => component[PARAMETERS_PROPERTY])
     .filter(({ type }) => type.indexOf(MEDIA_TYPE.DOCUMENT) !== -1)
 
-  return elements[0]
+  return elementList[0]
     ? {
-      ...elements[0],
-      uri: elements[0].document.link,
-      title: elements[0].document.filename
+      ...elementList[0],
+      uri: elementList[0].document.link,
+      title: elementList[0].document.filename
     }
     : undefined
 }
