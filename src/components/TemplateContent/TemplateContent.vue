@@ -2,16 +2,28 @@
   <div class="blip-container">
     <bds-grid direction="column" :align-items="position === 'right' ? 'flex-end' : 'flex-start'">
       <div :class="bubbleClass">
-        <bds-grid direction="column" padding="x-2" class="wrap">
-          <bds-grid direction="row" justify-content="flex-start" padding="y-1" gap="1">
+        <bds-grid direction="column" padding="y-1" gap="1" class="wrap">
+          <bds-grid margin="y-1" direction="row" justify-content="flex-start" padding="x-2">
             <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane" />
             <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
-            <bds-typo :class="'typo ' + position" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
+            <bds-typo :class="'typo ' + position + ' title-template'" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
           </bds-grid>
-          <bds-grid direction="column" justify-content="flex-start" padding="y-1">
-            <bds-typo class="span" variant="fs-16" bold="semi-bold" v-for="(link, index) in showTemplateContentLinks()" :key="index">
-              <a :href="link" target="_blank">{{ link }}</a>
-            </bds-typo>
+
+          <media-content class="blip-card"
+            :failed-to-send-msg="translations.failedToSend"
+            :aspect-ratio-msg="translations.aspectRatio"
+            :supported-formats-msg="translations.supportedFormats"
+            :title-msg="translations.title"
+            :text-msg="translations.text"
+            :status="status"
+            :position="position"
+            :document="document"
+            :date="date"
+            :on-metadata-edit="isMetadataReady"
+            :on-audio-validate-uri="onAudioValidateUri"
+            :async-fetch-media="asyncFetchMedia"/>
+
+          <bds-grid direction="column" justify-content="flex-start" padding="x-2">
             <bds-typo :class="'typo ' + position" variant="fs-16" bold="regular" type="span" v-if="hasTemplateContentBody" v-html="showTemplateContentBody()" />
           </bds-grid>
           <bds-grid
@@ -57,7 +69,7 @@
 import base from '@/mixins/baseComponent.js'
 import { formatText } from '@/utils/FormatTextUtils'
 import { linkify } from '@/utils/misc'
-import { BUTTON_TYPE, parseComponentButtons } from '@/utils/TemplateContentButtons'
+import { BUTTON_TYPE, parseComponentButtons } from '@/utils/TemplateContent'
 
 export default {
   name: 'template-content',
@@ -65,6 +77,10 @@ export default {
     base
   ],
   props: {
+    translations: {
+      type: Object,
+      default: () => ({})
+    },
     document: {},
     status: {
       type: String,
@@ -82,12 +98,21 @@ export default {
       type: String,
       default: 'Falha ao enviar a mensagem'
     },
+    onMediaSelected: {
+      type: Function
+    },
+    onAudioValidateUri: {
+      type: Function
+    },
     onFailedClickIcon: {
       type: Function
     },
     disableLink: {
       type: Boolean,
       default: false
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data: function () {
@@ -104,9 +129,6 @@ export default {
     },
     hasTemplateContentBody() {
       return this.document.templateContent && this.document.templateContent.components
-    },
-    hasTemplateContentHeader() {
-      return this.document.template && this.document.template.components
     },
     bubbleClass() {
       const cssClass = ['bubble', this.position, 'template-width']
@@ -144,27 +166,6 @@ export default {
 
       return componentTemplateBody
     },
-    showTemplateContentLinks() {
-      if (!this.hasTemplateContentHeader || !this.hasTemplateContentBody) {
-        return
-      }
-
-      const attachments = this.document.template.components
-        .filter((m) => (m.type === 'header'))
-
-      if (attachments) {
-        const links = []
-        attachments.forEach(item => {
-          item.parameters.forEach(parameter => {
-            const { type } = parameter
-            if (['image', 'video', 'audio'].includes(type)) {
-              links.push(parameter[type].link)
-            }
-          })
-        })
-        return links
-      }
-    },
     isWebsiteButton(button) {
       return button.type === BUTTON_TYPE.URL
     },
@@ -192,6 +193,10 @@ $template-width: 368px;
   cursor: pointer;
 }
 
+.title-template {
+  margin-left: 8px;
+}
+
 .bubble {
   text-align: left;
 
@@ -202,10 +207,6 @@ $template-width: 368px;
   > .wrap {
     overflow-wrap: anywhere;
   }
-}
-
-.template-content-blocks {
-  padding: 10px 20px;
 }
 
 .quick-reply-buttons {

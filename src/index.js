@@ -67,6 +67,7 @@ import Sanitize from './mixins/sanitizeHtml'
 import TemplateContent from './components/TemplateContent/TemplateContent'
 import WebsiteButton from './components/TemplateContent/Buttons/WebsiteButton'
 import PhoneNumberButton from './components/TemplateContent/Buttons/PhoneNumberButton'
+import MediaContent from './components/TemplateContent/MediaContent/MediaContent'
 
 function install(Vue) {
   let components = []
@@ -121,6 +122,7 @@ function install(Vue) {
   components.push(Vue.component(TemplateContent.name, TemplateContent))
   components.push(Vue.component(WebsiteButton.name, WebsiteButton))
   components.push(Vue.component(PhoneNumberButton.name, PhoneNumberButton))
+  components.push(Vue.component(MediaContent.name, MediaContent))
 
   Vue.component(Editable.name, Editable)
 

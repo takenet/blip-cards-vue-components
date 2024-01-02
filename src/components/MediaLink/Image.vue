@@ -191,6 +191,10 @@ export default {
     simplified: {
       type: Boolean,
       default: false
+    },
+    useBorderRadius: {
+      type: Boolean,
+      default: true
     }
   },
   data: function() {
@@ -247,8 +251,13 @@ export default {
 
       this.$validator.validateAll().then((result) => {
         if (!result) return
-        this.styleObject['border-radius'] =
-          this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'
+        if (this.useBorderRadius) {
+          this.styleObject['border-radius'] = this.title || this.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px'
+        } else {
+          this.styleObject['background-size'] = 'contain'
+        }
 
         this.save({
           ...this.document,
@@ -271,11 +280,15 @@ export default {
       var img = new Image()
       img.onload = () => {
         this.styleObject = {
-          'border-radius':
-            this.document.title || this.document.text
+          'border-radius': !this.useBorderRadius
+            ? ''
+            : this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
-          'background-image': `url("${url}")`
+          'background-image': `url("${url}")`,
+          'background-size': !this.useBorderRadius
+            ? 'contain'
+            : ''
         }
 
         this.simplifiedStyleObject = {
@@ -285,15 +298,18 @@ export default {
       }
       img.onerror = () => {
         this.styleObject = {
-          'border-radius':
-            this.document.title || this.document.text
+          'border-radius': !this.useBorderRadius
+            ? ''
+            : this.document.title || this.document.text
               ? '13px 13px 0px 0px'
               : '13px 13px 13px 0px',
           'background-image': `url("${
             this.position === 'right' ? BrokenWhite : Broken
           }")`,
-          'background-size': '125px',
-          opacity: '0.6'
+          opacity: '0.6',
+          'background-size': !this.useBorderRadius
+            ? 'contain'
+            : '125px'
         }
 
         this.simplifiedStyleObject = this.styleObject

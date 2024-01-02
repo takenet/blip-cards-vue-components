@@ -488,7 +488,12 @@ export default {
   }
 }
 
+.media-video video {
+  border-radius: 0px !important;
+}
+
 .media-link.video,
+.media-link.media-video,
 .calls-card {
   .left, .middle {
     .slider {

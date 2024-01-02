@@ -215,8 +215,8 @@ export const commandExamples = [
       to: '128271320123982@messenger.gw.msging.net',
       type: 'application/vnd.lime.media-link+json',
       content: {
-        type: 'audio/mp3',
-        uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3',
+        type: 'audio/mp4',
+        uri: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4',
         size: '1'
       }
     }
@@ -256,7 +256,7 @@ export const commandExamples = [
       type: 'application/vnd.lime.media-link+json',
       content: {
         uri:
-          'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+          'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
         title: 'pdf_open_parameters.pdf',
         type: 'application/pdf',
         size: '5540'
@@ -635,8 +635,8 @@ export const commandExamples = [
         replied: {
           type: 'application/vnd.lime.media-link+json',
           value: {
-            type: 'audio/mp3',
-            uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3'
+            type: 'audio/mp4',
+            uri: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4'
           }
         },
         inReplyTo: {
@@ -946,8 +946,8 @@ export const commandExamples = [
         inReactionTo: {
           type: 'application/vnd.lime.media-link+json',
           value: {
-            type: 'audio/mp3',
-            uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+            type: 'audio/mp4',
+            uri: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4'
           },
           direction: 'sent'
         },
@@ -1038,7 +1038,7 @@ export const commandExamples = [
           type: 'application/vnd.lime.media-link+json',
           value: {
             uri:
-              'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+              'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
             title: 'pdf_open_parameters.pdf',
             type: 'application/pdf',
             size: '5540'
@@ -1174,7 +1174,17 @@ export const commandExamples = [
             code: 'pt_BR'
           },
           name: 'test_button_web_site',
-          components: []
+          components: [
+            {
+              parameters: [
+                {
+                  image: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Example_image.png',
+                  type: 'image'
+                }
+              ],
+              type: 'header'
+            }
+          ]
         },
         templateContent: {
           name: 'test_button_web_site',
@@ -1401,6 +1411,464 @@ export const commandExamples = [
                   type: 'URL',
                   text: 'Ir para o site',
                   url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - imagem e botão editável',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  image: {
+                    link: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Example_image.png'
+                  },
+                  type: 'image'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - video e botão editável',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  video: {
+                    link: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+                  },
+                  type: 'video/mp4'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - audio e botão editável',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  audio: {
+                    link: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4'
+                  },
+                  type: 'audio/mp4',
+                  size: '1'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - documento e botão editável - nome grande',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  document: {
+                    filename: 'pdf_open_parameters_long_name_document_need_include_spread_on limited_second_line.pdf',
+                    link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+                  },
+                  type: 'document'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Clique para visualizar o documento',
+                  url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - documento e botão editável - nome completo',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  document: {
+                    filename: 'pdf_open_parameters_complete_name.pdf',
+                    link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+                  },
+                  type: 'document'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Clique para visualizar o documento',
+                  url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - documento e botão editável - nome pequeno',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  document: {
+                    filename: 'pdf_open_param.pdf',
+                    link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+                  },
+                  type: 'document'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Clique para visualizar o documento',
+                  url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - documento e botão link - new',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'automation_test_document_quick_answers',
+          components: [
+            {
+              type: 'header',
+              parameters: [
+                {
+                  document: {
+                    filename: 'dummy',
+                    link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+                  },
+                  type: 'document'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'automation_test_document_quick_answers',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'HEADER',
+              format: 'DOCUMENT',
+              example: {
+                headerHandle: [
+                  'https://scontent.whatsapp.net/v/t61.29466-34/323856102_1904690989867182_4055631374923478479_n.pdf?ccb=1-7&_nc_sid=8b1bef&_nc_ohc=rG4OYiH3XMwAX9wxLyd&_nc_ht=scontent.whatsapp.net&edm=AH51TzQEAAAA&oh=01_AdTrO5r_-WQeHq8urMwF0ofKowEMvwOj8MZ8Ri6m6JkylA&oe=65B6362E'
+                ]
+              }
+            },
+            {
+              type: 'BODY',
+              text: 'Esta mensagem foi gerada por um teste de automação.\\n\\nTake Blip'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Clique para visualizar o documento',
+                  url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
                   example: [
                     'desk'
                   ]
