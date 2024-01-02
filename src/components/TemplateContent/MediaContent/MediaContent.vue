@@ -1,7 +1,7 @@
 <template>
   <div :class="'blip-container media-link ' + mediaType + isFailedMessage(status, position)"
     id="blip-container">
-    <div id='media-content'>
+    <div id='media-content' class="media-content">
       <blip-image
         :image-uri-msg="titleMsg"
         :title-msg="titleMsg"
@@ -115,6 +115,10 @@ export default {
 
 <style lang="scss">
 @import '../../../styles/variables.scss';
+
+.media-content {
+  white-space: normal;
+}
 
 .padding-control {
   padding: $bubble-padding;
