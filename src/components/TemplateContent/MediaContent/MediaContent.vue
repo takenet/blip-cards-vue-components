@@ -64,15 +64,14 @@ export default {
     }
   },
   computed: {
-    mediaComponent() {
-      return this.componentImage ||
+    mediaType() {
+      const mediaComponent = this.componentImage ||
         this.componentAudio ||
         this.componentDocument ||
         this.componentVideo ||
         { type: '' }
-    },
-    mediaType() {
-      const media = this.mediaComponent.type.split('/')[0]
+
+      const media = mediaComponent.type.split('/')[0]
       return media === 'video' ? 'media-video' : media
     },
     mimeType: function() {
