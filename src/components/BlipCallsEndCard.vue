@@ -231,12 +231,27 @@ export default {
       }
     },
     iconName: function() {
+      const failedVideoIconName = 'video-ended'
+      const failedVoiceIconName = 'voip-ended'
+
       const icons = {
-        video: 'video',
-        voice: 'voip'
+        video: {
+          success: 'video-calling',
+          failed: failedVideoIconName,
+          canceled: failedVideoIconName,
+          notAnswered: failedVideoIconName,
+          none: failedVideoIconName
+        },
+        voice: {
+          success: 'voip-calling',
+          failed: failedVoiceIconName,
+          canceled: failedVoiceIconName,
+          notAnswered: failedVoiceIconName,
+          none: failedVoiceIconName
+        }
       }
 
-      return icons[this.document.type]
+      return icons[this.document.type][this.document.status]
     },
     titleText: function() {
       const msgs = {
