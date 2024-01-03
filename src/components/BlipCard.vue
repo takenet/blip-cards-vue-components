@@ -333,7 +333,6 @@
         <blip-calls
           v-else-if="document.type === 'application/vnd.iris.calls.media+json'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
           :start-call-msg="translations.startCallMsg"
           :end-call-msg="translations.endCallMsg"
           :video-msg="translations.videoMsg"
@@ -344,6 +343,8 @@
           :failed-status-msg="translations.failedStatusMsg"
           :cancel-status-msg="translations.cancelStatusMsg"
           :not-answered-status-msg="translations.notAnsweredStatusMsg"
+          :preparing-recording-msg="translations.preparingRecordingMsg"
+          :failed-to-send-msg="translations.failedToSend"
           :status="status"
           :position="position"
           :document="editableDocument.content"

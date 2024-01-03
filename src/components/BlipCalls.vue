@@ -13,6 +13,7 @@
       :failed-status-msg="failedStatusMsg"
       :cancel-status-msg="cancelStatusMsg"
       :not-answered-status-msg="notAnsweredStatusMsg"
+      :preparing-recording-msg="preparingRecordingMsg"
       :failed-to-send-msg="failedToSendMsg"
       :on-media-validate-uri="onMediaValidateUri"
       :async-fetch-media="asyncFetchMedia"
@@ -67,10 +68,6 @@ export default {
       type: String,
       default: 'Finalizada'
     },
-    failedStatusMsg: {
-      type: String,
-      default: 'Falha'
-    },
     cancelStatusMsg: {
       type: String,
       default: 'Cancelada'
@@ -78,6 +75,14 @@ export default {
     notAnsweredStatusMsg: {
       type: String,
       default: 'Não atendida'
+    },
+    preparingRecordingMsg: {
+      type: String,
+      default: 'Preparando Gravação'
+    },
+    failedStatusMsg: {
+      type: String,
+      default: 'Falha'
     },
     onMediaValidateUri: {
       type: Function

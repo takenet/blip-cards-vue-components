@@ -45,56 +45,76 @@
                   :margin="false"
                   >{{ statusText }}
                 </bds-typo>
-                <bds-icon
-                  v-if="isSuccess && !hasMediaUri && !refreshingMediaUrl"
-                  name="refresh"
-                  size="x-small"
-                  color="var(--fixed-color-bright, var(--color-bright, #FFF))"
-                  v-on:click="updateMediaUrl"
-                />
               </div>
             </div>
           </div>
           <div
             v-if="isSuccess"
-            :class="`content__record ${document.type}`"
+            :class="
+              `content__record ${document.type} ${
+                hasMediaUri ? 'has-media' : ''
+              }`
+            "
           >
-            <blip-video
-              v-if="document.type === 'video'"
-              video-uri-msg="videoUriMsg"
-              :document="document.media.content"
-              :full-document="fullDocument.media"
-              :position="position"
-              :date="date"
-              @updated="emitUpdate"
-              :editable="editable"
-              :on-save="save"
-              :on-deleted="onDeleted"
-              :on-metadata-edit="isMetadataReady"
-              :deletable="deletable"
-              :on-cancel="onCancel"
-              :editing="editing"
-              :on-video-validate-uri="onMediaValidateUri"
-              :async-fetch-media="asyncFetchMedia"
-            />
-            <blip-audio
-              v-else
-              :key="mediaComponentKey"
-              file-url-msg="fileUrlMsg"
-              :document="document.media.content"
-              :full-document="fullDocument.media"
-              :position="position"
-              :date="date"
-              :editable="editable"
-              :on-save="save"
-              :on-deleted="onDeleted"
-              :on-metadata-edit="isMetadataReady"
-              :deletable="deletable"
-              :on-cancel="onCancel"
-              :editing="editing"
-              :on-audio-validate-uri="onMediaValidateUri"
-              :async-fetch-media="asyncFetchMedia"
-            />
+            <template v-if="hasMediaUri && document.type === 'video'">
+              <blip-video
+                video-uri-msg="videoUriMsg"
+                :document="document.media.content"
+                :full-document="fullDocument.media"
+                :position="position"
+                :date="date"
+                @updated="emitUpdate"
+                :editable="editable"
+                :on-save="save"
+                :on-deleted="onDeleted"
+                :on-metadata-edit="isMetadataReady"
+                :deletable="deletable"
+                :on-cancel="onCancel"
+                :editing="editing"
+                :on-video-validate-uri="onMediaValidateUri"
+                :async-fetch-media="asyncFetchMedia"
+              />
+            </template>
+            <template v-else-if="document.type === 'voice' && hasMediaUri">
+              <blip-audio
+                file-url-msg="fileUrlMsg"
+                :document="document.media.content"
+                :full-document="fullDocument.media"
+                :position="position"
+                :date="date"
+                :editable="editable"
+                :on-save="save"
+                :on-deleted="onDeleted"
+                :on-metadata-edit="isMetadataReady"
+                :deletable="deletable"
+                :on-cancel="onCancel"
+                :editing="editing"
+                :on-audio-validate-uri="onMediaValidateUri"
+                :async-fetch-media="asyncFetchMedia"
+              />
+            </template>
+            <div v-else-if="!hasMediaUri" class="loading-media-content">
+              <bds-typo variant="fs-14" bold="semi-bold" line-height="plus"
+                >{{ preparingRecordingMsg }}
+              </bds-typo>
+              <button
+                class="btn-refresh"
+                :disabled="refreshingMediaUri"
+                @click="refreshMediaUrl"
+              >
+                <bds-loading-spinner
+                  v-if="refreshingMediaUri"
+                  color="light"
+                  size="small"
+                />
+                <bds-icon
+                  v-else
+                  name="refresh"
+                  size="x-large"
+                  color="var(--color-surface-1, #F6F6F6)"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -169,6 +189,10 @@ export default {
       type: String,
       default: 'Não atendida'
     },
+    preparingRecordingMsg: {
+      type: String,
+      default: 'Preparando Graveção'
+    },
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem.'
@@ -185,14 +209,13 @@ export default {
   },
   data() {
     return {
-      mediaComponentKey: 0,
-      refreshingMediaUrl: false,
+      refreshingMediaUri: false,
       hasMediaUri: false,
       isFailedMessage
     }
   },
   mounted() {
-    this.updateMediaUrl()
+    this.refreshMediaUrl()
   },
   computed: {
     previewDocument: function() {
@@ -231,7 +254,8 @@ export default {
         success: this.successStatusMsg,
         failed: this.failedStatusMsg,
         canceled: this.cancelStatusMsg,
-        notAnswered: this.notAnsweredStatusMsg
+        notAnswered: this.notAnsweredStatusMsg,
+        none: this.notAnsweredStatusMsg
       }
 
       return this.sanitize(statusMessage[this.document.status])
@@ -241,10 +265,10 @@ export default {
     }
   },
   methods: {
-    async updateMediaUrl() {
+    async refreshMediaUrl() {
       try {
         if (this.isSuccess && this.onAsyncFetchSession) {
-          this.refreshingMediaUrl = true
+          this.refreshingMediaUri = true
 
           const session = await this.onAsyncFetchSession(
             this.document.sessionId
@@ -253,15 +277,11 @@ export default {
           if (session && session.recordedFileUrl) {
             this.document.media.content.uri = session.recordedFileUrl
             this.hasMediaUri = true
-            this.forceRerender()
           }
         }
       } finally {
-        this.refreshingMediaUrl = false
+        this.refreshingMediaUri = false
       }
-    },
-    forceRerender() {
-      this.mediaComponentKey += 1
     },
     emitUpdate() {
       this.$emit('updated')
@@ -397,32 +417,114 @@ $space-4: var(--space-4, 2rem);
         min-height: 60px;
 
         &.video {
-          padding: 0;
-          background-color: transparent;
+          &.has-media {
+            padding: 0;
+            background-color: transparent;
+          }
 
-          .video-player-wrapper {
+          > div {
+            display: flex;
             flex: 1;
+            align-self: stretch;
 
-            #blipVideo {
-              border-radius: $space-1 !important;
-            }
+            > div {
+              display: flex;
+              flex: 1;
+              align-self: stretch;
 
-            .video-player-controls {
-              margin-top: $space-2;
-              padding: $space-05 $space-2;
+              div.video-player-wrapper {
+                flex: 1;
+
+                #blipVideo {
+                  border-radius: $space-1 !important;
+                }
+
+                .video-player-controls {
+                  margin-top: $space-2;
+                  padding: $space-05 $space-2;
+                }
+              }
             }
           }
         }
 
-        > div {
+        &.voice {
+          > div {
+            display: flex;
+            align-self: stretch;
+
+            div.audio-player-wrapper {
+              flex: 1;
+
+              .audio-play-pause {
+                margin-top: 3px;
+              }
+            }
+          }
+        }
+
+        .loading-media-content {
           display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
           align-self: stretch;
+          gap: $space-1;
 
-          div.audio-player-wrapper {
+          bds-loading-spinner {
+            display: flex;
+          }
+
+          bds-typo {
             flex: 1;
+            color: $color-surface-1;
+          }
 
-            .audio-play-pause {
-              margin-top: 3px;
+          button {
+            &.btn-refresh {
+              position: relative;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin: 0;
+              padding: $space-05 $space-1;
+              background-color: transparent;
+              border-radius: $space-1;
+              border: 1px solid $color-border-1;
+              cursor: pointer;
+
+              &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: transparent;
+                z-index: 0;
+                border-radius: $space-1;
+              }
+
+              &:hover {
+                &::before {
+                  background-color: $color-hover;
+                }
+              }
+
+              &:active {
+                &::before {
+                  background-color: $color-pressed;
+                }
+              }
+
+              &:disabled {
+                cursor: default;
+                border: 1px solid $color-content-ghost;
+
+                &::before {
+                  background-color: transparent;
+                }
+              }
             }
           }
         }
