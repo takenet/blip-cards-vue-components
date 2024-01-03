@@ -239,9 +239,7 @@ export default {
       if (this.document.type === 'voice') {
         return 'voice/mp3'
       }
-      return mime.lookup(this.audioUri)
-        ? mime.lookup(this.audioUri)
-        : 'audio/mp3'
+      return mime.lookup(this.audioUri) ? mime.lookup(this.audioUri) : 'audio/mp3'
     },
     togglePlay: async function() {
       if (this.isPlaying) {
