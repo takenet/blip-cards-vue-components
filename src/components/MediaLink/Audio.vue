@@ -231,11 +231,17 @@ export default {
         this.save({
           ...this.document,
           uri: this.audioUri,
-          type: mime.lookup(this.audioUri)
-            ? mime.lookup(this.audioUri)
-            : 'audio/mp3'
+          type: this.getAudioType()
         })
       })
+    },
+    getAudioType: function() {
+      if (this.document.type === 'voice') {
+        return 'voice/mp3'
+      }
+      return mime.lookup(this.audioUri)
+        ? mime.lookup(this.audioUri)
+        : 'audio/mp3'
     },
     togglePlay: async function() {
       if (this.isPlaying) {
@@ -315,7 +321,8 @@ export default {
 <style lang="scss">
 @import '../../styles/variables.scss';
 
-.media-link.audio {
+.media-link.audio,
+.media-link.voice {
   .bubble {
     padding: 0;
     width: $bubble-width;
@@ -326,6 +333,7 @@ export default {
 }
 
 .media-link.audio,
+.media-link.voice,
 .calls-card {
   .left,
   .middle {
