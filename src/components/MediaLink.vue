@@ -55,6 +55,23 @@
         :editing="editing"
         :on-audio-validate-uri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"/>
+        
+      <blip-voice
+        :file-url-msg="fileUrlMsg"
+        :document="document"
+        :full-document="fullDocument"
+        :position="position"
+        :date="date"
+        v-else-if="document.type.indexOf('voice') != -1"
+        :editable="editable"
+        :on-save="save"
+        :on-deleted="onDeleted"
+        :on-metadata-edit="isMetadataReady"
+        :deletable="deletable"
+        :on-cancel="onCancel"
+        :editing="editing"
+        :on-voice-validate-uri="onAudioValidateUri"
+        :async-fetch-media="asyncFetchMedia"/>
 
       <blip-video
         :video-uri-msg="videoUriMsg"
@@ -109,6 +126,7 @@
 
 import BlipImage from './MediaLink/Image'
 import BlipAudio from './MediaLink/Audio'
+import BlipVoice from './MediaLink/Voice'
 import BlipVideo from './MediaLink/Video'
 import BlipFile from './MediaLink/BlipFile'
 import BlipSticker from './MediaLink/Sticker'
@@ -154,6 +172,7 @@ export default {
   components: {
     BlipImage,
     BlipAudio,
+    BlipVoice,
     BlipVideo,
     BlipFile,
     BlipSticker

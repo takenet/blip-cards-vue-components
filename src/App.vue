@@ -105,6 +105,7 @@
         <button class="button" @click="sendImage">ENVIAR Imagem</button>
         <button class="button" @click="sendSticker">ENVIAR Sticker</button>
         <button class="button" @click="sendAudio">ENVIAR Audio</button>
+        <button class="button" @click="sendVoice">ENVIAR Voice</button>
         <button class="button" @click="sendVideo">ENVIAR Video</button>
         <button class="button" @click="sendWebLink">ENVIAR WebLink</button>
         <button class="button" @click="sendFile">ENVIAR Documento</button>
@@ -172,6 +173,9 @@
         </button>
         <button class="button" @click="sendReactionToAudio">
           ENVIAR Reaction de áudio
+        </button>
+        <button class="button" @click="sendReactionToVoice">
+          ENVIAR Reaction de voice
         </button>
         <button class="button" @click="sendReactionToVideo">
           ENVIAR Reaction de vídeo
@@ -513,6 +517,19 @@ export default {
         content: {
           type: 'audio/mp3',
           uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3',
+          size: '1'
+        }
+      })
+      this.send()
+    },
+    sendVoice: function () {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@messenger.gw.msging.net',
+        type: 'application/vnd.lime.media-link+json',
+        content: {
+          type: 'voice/mp3',
+          uri: 'https://samples-files.com/samples/Audio/mp3/sample-file-1.mp3',
           size: '1'
         }
       })
@@ -1353,6 +1370,28 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'audio/mp3',
+              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+            },
+            direction: 'sent'
+          },
+          emoji: {
+            values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendReactionToVoice: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reaction+json',
+        content: {
+          inReactionTo: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'voice/mp3',
               uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
             },
             direction: 'sent'
