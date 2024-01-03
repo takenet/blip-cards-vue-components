@@ -45,7 +45,7 @@
         :full-document="fullDocument"
         :position="position"
         :date="date"
-        v-else-if="document.type.indexOf('audio') != -1"
+        v-else-if="document.type.indexOf('audio') != -1 || document.type.indexOf('voice') != -1"
         :editable="editable"
         :on-save="save"
         :on-deleted="onDeleted"
