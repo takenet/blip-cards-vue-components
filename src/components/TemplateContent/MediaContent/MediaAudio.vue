@@ -14,7 +14,7 @@ import BlipAudio from '../../MediaLink/Audio'
 import { default as base } from '../../../mixins/baseComponent.js'
 
 export default {
-  name: 'media-content',
+  name: 'media-audio',
   props: {
     componentAudio: {},
     onAudioValidateUri: {

@@ -2,18 +2,7 @@
   <div :class="'blip-container media-link ' + mediaType + isFailedMessage(status, position)"
     id="blip-container">
     <div id='media-content' class="media-content">
-      <blip-image
-        :image-uri-msg="titleMsg"
-        :title-msg="titleMsg"
-        :text-msg="textMsg"
-        :aspect-ratio-msg="aspectRatioMsg"
-        :supported-formats-msg="supportedFormatsMsg"
-        :document="componentImage"
-        :full-document="fullDocument"
-        :position="position"
-        :date="date"
-        v-if="componentImage !== undefined"
-        :useBorderRadius="false"/>
+      <media-image :componentImage="componentImage" />
 
       <media-video
         :componentVideo="componentVideo"
@@ -35,7 +24,7 @@
   
 <script>
 
-import BlipImage from '../../MediaLink/Image'
+import MediaImage from './MediaImage'
 import MediaFile from './MediaFile'
 import MediaAudio from './MediaAudio'
 import MediaVideo from './MediaVideo'
@@ -102,7 +91,7 @@ export default {
     this.componentVideo = parseComponentVideo(this.document)
   },
   components: {
-    BlipImage,
+    MediaImage,
     MediaFile,
     MediaAudio,
     MediaVideo
