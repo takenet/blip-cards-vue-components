@@ -32,6 +32,7 @@
           :on-audio-validate-uri="onAudioValidateUri"
           :readonly="readonly"
           :async-fetch-media="asyncFetchMedia"
+          :on-async-fetch-session="onAsyncFetchSession"
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
@@ -125,6 +126,9 @@ export default {
       type: Function
     },
     asyncFetchMedia: {
+      type: Function
+    },
+    onAsyncFetchSession: {
       type: Function
     }
   },

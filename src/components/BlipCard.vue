@@ -333,7 +333,6 @@
         <blip-calls
           v-else-if="document.type === 'application/vnd.iris.calls.media+json'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
           :start-call-msg="translations.startCallMsg"
           :end-call-msg="translations.endCallMsg"
           :video-msg="translations.videoMsg"
@@ -344,6 +343,9 @@
           :failed-status-msg="translations.failedStatusMsg"
           :cancel-status-msg="translations.cancelStatusMsg"
           :not-answered-status-msg="translations.notAnsweredStatusMsg"
+          :preparing-recording-msg="translations.preparingRecordingMsg"
+          :load-recording-msg="translations.loadRecordingMsg"
+          :failed-to-send-msg="translations.failedToSend"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -357,6 +359,7 @@
           :on-cancel="cancel"
           :on-media-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
+          :on-async-fetch-session="onAsyncFetchSession"
         />
 
         <template-content
@@ -621,6 +624,9 @@ export default {
       type: Function
     },
     asyncFetchMedia: {
+      type: Function
+    },
+    onAsyncFetchSession: {
       type: Function
     }
   },

@@ -49,44 +49,73 @@
             </div>
           </div>
           <div
-            v-if="document.status === 'success'"
-            :class="`content__record ${document.type}`"
+            v-if="isSuccess"
+            :class="
+              `content__record ${document.type} ${
+                hasMediaUri ? 'has-media' : ''
+              }`
+            "
           >
-            <blip-video
-              v-if="document.type === 'video'"
-              video-uri-msg="videoUriMsg"
-              :document="document.media.content"
-              :full-document="fullDocument.media"
-              :position="position"
-              :date="date"
-              @updated="emitUpdate"
-              :editable="editable"
-              :on-save="save"
-              :on-deleted="onDeleted"
-              :on-metadata-edit="isMetadataReady"
-              :deletable="deletable"
-              :on-cancel="onCancel"
-              :editing="editing"
-              :on-video-validate-uri="onMediaValidateUri"
-              :async-fetch-media="asyncFetchMedia"
-            />
-            <blip-audio
-              v-else
-              file-url-msg="fileUrlMsg"
-              :document="document.media.content"
-              :full-document="fullDocument.media"
-              :position="position"
-              :date="date"
-              :editable="editable"
-              :on-save="save"
-              :on-deleted="onDeleted"
-              :on-metadata-edit="isMetadataReady"
-              :deletable="deletable"
-              :on-cancel="onCancel"
-              :editing="editing"
-              :on-audio-validate-uri="onMediaValidateUri"
-              :async-fetch-media="asyncFetchMedia"
-            />
+            <template v-if="hasMediaUri && document.type === 'video'">
+              <blip-video
+                video-uri-msg="videoUriMsg"
+                :document="document.media.content"
+                :full-document="fullDocument.media"
+                :position="position"
+                :date="date"
+                @updated="emitUpdate"
+                :editable="editable"
+                :on-save="save"
+                :on-deleted="onDeleted"
+                :on-metadata-edit="isMetadataReady"
+                :deletable="deletable"
+                :on-cancel="onCancel"
+                :editing="editing"
+                :on-video-validate-uri="onMediaValidateUri"
+                :async-fetch-media="asyncFetchMedia"
+              />
+            </template>
+            <template v-else-if="document.type === 'voice' && hasMediaUri">
+              <blip-audio
+                file-url-msg="fileUrlMsg"
+                :document="document.media.content"
+                :full-document="fullDocument.media"
+                :position="position"
+                :date="date"
+                :editable="editable"
+                :on-save="save"
+                :on-deleted="onDeleted"
+                :on-metadata-edit="isMetadataReady"
+                :deletable="deletable"
+                :on-cancel="onCancel"
+                :editing="editing"
+                :on-audio-validate-uri="onMediaValidateUri"
+                :async-fetch-media="asyncFetchMedia"
+              />
+            </template>
+            <div
+              v-else-if="!hasMediaUri"
+              class="loading-media-content"
+              :class="refreshingMediaUri ? 'refreshing-media' : ''"
+            >
+              <bds-loading-spinner color="light" size="small" />
+              <bds-typo variant="fs-14" bold="semi-bold" line-height="plus"
+                >{{
+                  refreshingMediaUri ? preparingRecordingMsg : loadRecordingMsg
+                }}
+              </bds-typo>
+              <button
+                class="btn-refresh"
+                :disabled="refreshingMediaUri"
+                @click="refreshMediaUrl"
+              >
+                <bds-icon
+                  name="refresh"
+                  size="x-large"
+                  color="var(--color-surface-1, #F6F6F6)"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -161,6 +190,14 @@ export default {
       type: String,
       default: 'Não atendida'
     },
+    preparingRecordingMsg: {
+      type: String,
+      default: 'Preparando Gravação'
+    },
+    loadRecordingMsg: {
+      type: String,
+      default: 'Carregar Gravação'
+    },
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem.'
@@ -170,7 +207,20 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    onAsyncFetchSession: {
+      type: Function
     }
+  },
+  data() {
+    return {
+      refreshingMediaUri: false,
+      hasMediaUri: false,
+      isFailedMessage
+    }
+  },
+  mounted() {
+    this.refreshMediaUrl()
   },
   computed: {
     previewDocument: function() {
@@ -186,12 +236,27 @@ export default {
       }
     },
     iconName: function() {
+      const failedVideoIconName = 'video-ended'
+      const failedVoiceIconName = 'voip-ended'
+
       const icons = {
-        video: 'video',
-        voice: 'voip'
+        video: {
+          success: 'video-calling',
+          failed: failedVideoIconName,
+          canceled: failedVideoIconName,
+          notAnswered: failedVideoIconName,
+          none: failedVideoIconName
+        },
+        voice: {
+          success: 'voip-calling',
+          failed: failedVoiceIconName,
+          canceled: failedVoiceIconName,
+          notAnswered: failedVoiceIconName,
+          none: failedVoiceIconName
+        }
       }
 
-      return icons[this.document.type]
+      return icons[this.document.type][this.document.status]
     },
     titleText: function() {
       const msgs = {
@@ -209,18 +274,41 @@ export default {
         success: this.successStatusMsg,
         failed: this.failedStatusMsg,
         canceled: this.cancelStatusMsg,
-        notAnswered: this.notAnsweredStatusMsg
+        notAnswered: this.notAnsweredStatusMsg,
+        none: this.notAnsweredStatusMsg
       }
 
       return this.sanitize(statusMessage[this.document.status])
-    }
-  },
-  data: function() {
-    return {
-      isFailedMessage
+    },
+    isSuccess: function() {
+      return this.document.status === 'success'
     }
   },
   methods: {
+    async refreshMediaUrl() {
+      try {
+        if (this.isSuccess && this.onAsyncFetchSession) {
+          this.refreshingMediaUri = true
+
+          const session = await this.onAsyncFetchSession(
+            this.document.sessionId
+          )
+
+          if (session && session.recordedFileUrl) {
+            this.document.media.content.uri = session.recordedFileUrl
+            this.hasMediaUri = true
+          } else {
+            await new Promise(resolve => {
+              setTimeout(async () => {
+                resolve()
+              }, 5000)
+            })
+          }
+        }
+      } finally {
+        this.refreshingMediaUri = false
+      }
+    },
     emitUpdate() {
       this.$emit('updated')
     }
@@ -236,6 +324,7 @@ $space-05: var(--space-05, 0.25rem);
 $space-1: var(--space-1, 0.5rem);
 $space-2: var(--space-2, 1rem);
 $space-4: var(--space-4, 2rem);
+$default-transition: var(--default-transition, all 0.25s ease-in);
 
 .blip-message-group {
   .blip-card-group {
@@ -329,6 +418,15 @@ $space-4: var(--space-4, 2rem);
               flex: 1;
             }
           }
+
+          &__status {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            align-self: stretch;
+            gap: $space-1;
+          }
         }
       }
 
@@ -342,36 +440,146 @@ $space-4: var(--space-4, 2rem);
         padding: $space-05 12px;
         background-color: var(--color-content-disabled, #636363);
         border-radius: 6px 6px $space-0 6px;
+        overflow: hidden;
 
         min-height: 60px;
 
         &.video {
-          padding: 0;
-          background-color: transparent;
+          &.has-media {
+            padding: 0;
+            background-color: transparent;
+          }
 
-          .video-player-wrapper {
+          > div {
+            display: flex;
             flex: 1;
+            align-self: stretch;
 
-            #blipVideo {
-              border-radius: $space-1 !important;
-            }
+            > div {
+              display: flex;
+              flex: 1;
+              align-self: stretch;
 
-            .video-player-controls {
-              margin-top: $space-2;
-              padding: $space-05 $space-2;
+              div.video-player-wrapper {
+                flex: 1;
+
+                #blipVideo {
+                  border-radius: $space-1 !important;
+                }
+
+                .video-player-controls {
+                  margin-top: $space-2;
+                  padding: $space-05 $space-2;
+                }
+              }
             }
           }
         }
 
-        > div {
+        &.voice {
+          > div {
+            display: flex;
+            align-self: stretch;
+
+            div.audio-player-wrapper {
+              flex: 1;
+
+              .audio-play-pause {
+                margin-top: 3px;
+              }
+            }
+          }
+        }
+
+        .loading-media-content {
           display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
           align-self: stretch;
+          gap: $space-1;
 
-          div.audio-player-wrapper {
+          bds-loading-spinner {
+            display: flex;
+            transition: $default-transition;
+            overflow: hidden;
+
+            opacity: 0;
+            transform: translateX(-200%);
+          }
+
+          bds-typo {
             flex: 1;
+            color: $color-surface-1;
+            transition: $default-transition;
+            transform: translateX(-40px);
+          }
 
-            .audio-play-pause {
-              margin-top: 3px;
+          button {
+            &.btn-refresh {
+              position: relative;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin: 0;
+              padding: $space-05 $space-1;
+              background-color: transparent;
+              border-radius: $space-1;
+              border: 1px solid $color-border-1;
+              cursor: pointer;
+              transition: $default-transition;
+              opacity: 1;
+
+              &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: transparent;
+                z-index: 0;
+                border-radius: $space-1;
+              }
+
+              &:hover {
+                &::before {
+                  background-color: $color-hover;
+                }
+              }
+
+              &:active {
+                &::before {
+                  background-color: $color-pressed;
+                }
+              }
+
+              &:disabled {
+                cursor: default;
+                border: 1px solid $color-content-ghost;
+
+                &::before {
+                  background-color: transparent;
+                }
+              }
+            }
+          }
+
+          &.refreshing-media {
+            bds-loading-spinner {
+              opacity: 1;
+              transform: translateX(0);
+            }
+
+            bds-typo {
+              transform: translateX(0);
+            }
+
+            button {
+              &.btn-refresh {
+                transform: translateX(200%);
+                opacity: 0;
+              }
             }
           }
         }
