@@ -344,6 +344,7 @@
           :cancel-status-msg="translations.cancelStatusMsg"
           :not-answered-status-msg="translations.notAnsweredStatusMsg"
           :preparing-recording-msg="translations.preparingRecordingMsg"
+          :load-recording-msg="translations.loadRecordingMsg"
           :failed-to-send-msg="translations.failedToSend"
           :status="status"
           :position="position"

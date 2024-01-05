@@ -93,22 +93,23 @@
                 :async-fetch-media="asyncFetchMedia"
               />
             </template>
-            <div v-else-if="!hasMediaUri" class="loading-media-content">
+            <div
+              v-else-if="!hasMediaUri"
+              class="loading-media-content"
+              :class="refreshingMediaUri ? 'refreshing-media' : ''"
+            >
+              <bds-loading-spinner color="light" size="small" />
               <bds-typo variant="fs-14" bold="semi-bold" line-height="plus"
-                >{{ preparingRecordingMsg }}
+                >{{
+                  refreshingMediaUri ? preparingRecordingMsg : loadRecordingMsg
+                }}
               </bds-typo>
               <button
                 class="btn-refresh"
                 :disabled="refreshingMediaUri"
                 @click="refreshMediaUrl"
               >
-                <bds-loading-spinner
-                  v-if="refreshingMediaUri"
-                  color="light"
-                  size="small"
-                />
                 <bds-icon
-                  v-else
                   name="refresh"
                   size="x-large"
                   color="var(--color-surface-1, #F6F6F6)"
@@ -191,7 +192,11 @@ export default {
     },
     preparingRecordingMsg: {
       type: String,
-      default: 'Preparando Graveção'
+      default: 'Preparando Gravação'
+    },
+    loadRecordingMsg: {
+      type: String,
+      default: 'Carregar Gravação'
     },
     failedToSendMsg: {
       type: String,
@@ -292,6 +297,12 @@ export default {
           if (session && session.recordedFileUrl) {
             this.document.media.content.uri = session.recordedFileUrl
             this.hasMediaUri = true
+          } else {
+            await new Promise(resolve => {
+              setTimeout(async () => {
+                resolve()
+              }, 5000)
+            })
           }
         }
       } finally {
@@ -313,6 +324,7 @@ $space-05: var(--space-05, 0.25rem);
 $space-1: var(--space-1, 0.5rem);
 $space-2: var(--space-2, 1rem);
 $space-4: var(--space-4, 2rem);
+$default-transition: var(--default-transition, all 0.25s ease-in);
 
 .blip-message-group {
   .blip-card-group {
@@ -428,6 +440,7 @@ $space-4: var(--space-4, 2rem);
         padding: $space-05 12px;
         background-color: var(--color-content-disabled, #636363);
         border-radius: 6px 6px $space-0 6px;
+        overflow: hidden;
 
         min-height: 60px;
 
@@ -488,11 +501,18 @@ $space-4: var(--space-4, 2rem);
 
           bds-loading-spinner {
             display: flex;
+            transition: $default-transition;
+            overflow: hidden;
+
+            opacity: 0;
+            transform: translateX(-200%);
           }
 
           bds-typo {
             flex: 1;
             color: $color-surface-1;
+            transition: $default-transition;
+            transform: translateX(-40px);
           }
 
           button {
@@ -507,6 +527,8 @@ $space-4: var(--space-4, 2rem);
               border-radius: $space-1;
               border: 1px solid $color-border-1;
               cursor: pointer;
+              transition: $default-transition;
+              opacity: 1;
 
               &::before {
                 content: '';
@@ -539,6 +561,24 @@ $space-4: var(--space-4, 2rem);
                 &::before {
                   background-color: transparent;
                 }
+              }
+            }
+          }
+
+          &.refreshing-media {
+            bds-loading-spinner {
+              opacity: 1;
+              transform: translateX(0);
+            }
+
+            bds-typo {
+              transform: translateX(0);
+            }
+
+            button {
+              &.btn-refresh {
+                transform: translateX(200%);
+                opacity: 0;
               }
             }
           }

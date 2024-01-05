@@ -14,6 +14,7 @@
       :cancel-status-msg="cancelStatusMsg"
       :not-answered-status-msg="notAnsweredStatusMsg"
       :preparing-recording-msg="preparingRecordingMsg"
+      :load-recording-msg="loadRecordingMsg"
       :failed-to-send-msg="failedToSendMsg"
       :on-media-validate-uri="onMediaValidateUri"
       :async-fetch-media="asyncFetchMedia"
@@ -79,6 +80,10 @@ export default {
     preparingRecordingMsg: {
       type: String,
       default: 'Preparando Gravação'
+    },
+    loadRecordingMsg: {
+      type: String,
+      default: 'Carregar Gravação'
     },
     failedStatusMsg: {
       type: String,
