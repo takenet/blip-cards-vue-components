@@ -122,7 +122,7 @@ export default {
       this.type = this.document.type
         ? this.document.type
         : mime.lookup(this.uri)
-      this.size = this.document.siz
+      this.size = this.document.size
     },
     fileSave: async function() {
       let result = await this.$validator.validateAll()
