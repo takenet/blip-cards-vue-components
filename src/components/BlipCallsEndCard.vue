@@ -141,8 +141,8 @@
 </template>
 
 <script>
-import { linkify, isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
+import { linkify, isFailedMessage } from '../utils/misc'
 import BlipAudio from './MediaLink/Audio'
 import BlipVideo from './MediaLink/Video'
 
