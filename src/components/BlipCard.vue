@@ -511,6 +511,26 @@
           :removed-reaction-text="translations.removedReactionText"
         />
 
+        <copy-and-paste-card
+          v-else-if="document.type === 'application/vnd.lime.copy-and-paste+json'"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-media-selected="onMediaSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :translations="translations"
+        />
+
         <thread-summary
           v-else-if="
             document.type === MessageTypesConstants.THREAD_SUMMARY

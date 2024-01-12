@@ -201,6 +201,9 @@
         <button class="button" @click="sendReactionToUnsuportedContent">
           ENVIAR reação conteúdo não suportado
         </button>
+        <button class="button" @click="sendCopyAndPaste">
+          ENVIAR copia e cola
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -1481,8 +1484,10 @@ export default {
         direction: 'sent',
         content: {
           inReactionTo: {
-            type: 'application/x+json',
-            direction: 'sent'
+            type: 'application/vnd.lime.chatstater+json',
+            value: {
+              state: 'composing'
+            }
           },
           emoji: {
             values: [55357, 56397, 55356, 57341]
@@ -1558,6 +1563,26 @@ export default {
           },
           emoji: {
             values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendCopyAndPaste: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.copy-and-paste+json',
+        content: {
+          header: 'Segue o código',
+          body: 'Clique no botão abaixo para copiar o código Pix.',
+          footer: 'O código expira em 10 minutos.',
+          action: {
+            button: {
+              text: 'Copiar código Pix',
+              value: 'Value'
+            }
           }
         }
       })
