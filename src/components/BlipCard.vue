@@ -529,6 +529,15 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :translations="translations"
+          :requiredFieldText="translations.requiredFieldText"
+          :copyContentText="translations.copyContentText"
+          :cancelText="translations.cancel"
+          :saveText="translations.save"
+          :headerMessage="translations.headerMessage"
+          :bodyMessage="translations.bodyMessage"
+          :footerMessage="translations.footerMessage"
+          :copyButtonMessage="translations.copyButtonMessage"
+          :copyContentMessage="translations.copyContentMessage"
         />
 
         <thread-summary

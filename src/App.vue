@@ -1578,11 +1578,9 @@ export default {
           header: 'Segue o código',
           body: 'Clique no botão abaixo para copiar o código Pix.',
           footer: 'O código expira em 10 minutos.',
-          action: {
-            button: {
-              text: 'Copiar código Pix',
-              value: 'Value'
-            }
+          button: {
+            text: 'Copiar código Pix',
+            value: 'Value'
           }
         }
       })
