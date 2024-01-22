@@ -26,8 +26,8 @@
           </bds-grid>
           <hr class="copy-and-paste-horizontal-divider">
           <bds-grid direction="row" align-items="center" justify-content="center" class="button-container" padding="y-1" margin="x-2" gap="1" @click="writeToClipboard">
-            <bds-icon name="copy" class="button-container-text"></bds-icon>
-            <bds-typo class="button-container-text">{{ this.document.button.text }}</bds-typo>
+            <bds-icon name="copy" :class="'button-container-text-' + (position == 'right' ? 'white' : 'primary')"></bds-icon>
+            <bds-typo :class="'button-container-text-' + (position == 'right' ? 'white' : 'primary')">{{ this.document.button.text }}</bds-typo>
           </bds-grid>
         </bds-grid>
       </div>
@@ -39,7 +39,7 @@
               icon="close"
               variant="ghost"
               size="short"
-              v-on:click="cancel()"
+              v-on:click="backToOriginalDocumentAndCancel()"
             ></bds-button-icon>
             <bds-button-icon
               class="btn saveIco"
@@ -201,7 +201,8 @@
         footer: undefined,
         text: undefined,
         value: undefined,
-        isEditingButton: false
+        isEditingButton: false,
+        originalDocument: undefined
       }
     },
     watch: {
@@ -219,6 +220,7 @@
         this.text = this.document.button.text
         this.value = this.document.button.value
         this.isEditingButton = false
+        this.originalDocument = { ...this.document }
       },
       writeToClipboard() {
         navigator.clipboard.writeText(this.document.button.value)
@@ -229,14 +231,8 @@
       cancelEditButton() {
         this.toggleEditButton()
 
-        this.document = {
-          ...this.document,
-          header: this.header,
-          body: this.body,
-          footer: this.footer,
-          button: {
-            ...this.document.button
-          }
+        this.document.button = {
+          ...this.document.button
         }
       },
       saveButton: function($event) {
@@ -244,19 +240,23 @@
           return
         }
 
-        this.document = {
-          ...this.document,
-          header: this.header,
-          body: this.body,
-          footer: this.footer,
-          button: {
-            ...this.document.button,
-            text: this.text,
-            value: this.value
-          }
+        this.document.button = {
+          ...this.document.button,
+          text: this.text,
+          value: this.value
         }
 
         this.toggleEditButton()
+      },
+      backToOriginalDocumentAndCancel: function() {
+        this.document = {
+          ...this.originalDocument,
+          button: {
+            ...this.originalDocument.button
+          }
+        }
+
+        this.cancel()
       },
       copyAndPasteSave: function($event) {
         if (this.errors.any() || ($event && $event.shiftKey)) {
@@ -305,8 +305,12 @@
   cursor: pointer;
 }
 
-.button-container-text {
+.button-container-text-primary {
   color: $color-primary;
+}
+
+.button-container-text-white {
+  color: $color-surface-1;
 }
 
 .in-edit-button {
