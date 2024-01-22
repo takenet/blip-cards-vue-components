@@ -20,9 +20,9 @@
       <div v-if="!isEditing">
         <bds-grid direction="column" align-items="flex-start">
           <bds-grid direction="column" align-items="flex-start" padding="y-1" margin="x-2" gap="1">
-            <bds-typo class="typo" v-show="this.document.header" bold="bold">{{ this.document.header }}</bds-typo>
-            <bds-typo class="typo">{{ this.document.body }}</bds-typo>
-            <bds-typo class="typo" v-show="this.document.footer" italic="true" variant="fs-10">{{ this.document.footer }}</bds-typo>
+            <bds-typo class="typo copy-and-paste-text" v-show="this.document.header" bold="bold">{{ this.document.header }}</bds-typo>
+            <bds-typo class="typo copy-and-paste-text">{{ this.document.body }}</bds-typo>
+            <bds-typo class="typo copy-and-paste-text" v-show="this.document.footer" italic="true" variant="fs-10">{{ this.document.footer }}</bds-typo>
           </bds-grid>
           <hr class="copy-and-paste-horizontal-divider">
           <bds-grid direction="row" align-items="center" justify-content="center" class="button-container" padding="y-1" margin="x-2" gap="1" @click="writeToClipboard">
@@ -82,7 +82,11 @@
                   :placeholder="footerMessage"
                 />
                 <div class="button-container">
-                  <bds-button variant="ghost" icon="copy" class="in-edit-button" v-on:click="toggleEditButton">{{ this.document.button.text }}</bds-button>
+                  <bds-button variant="ghost" icon="copy" class="in-edit-button" v-on:click="toggleEditButton">
+                    <div class="edit-copy-and-paste-button">
+                      <bds-typo bold="bold" class="typo">{{ this.document.button.text }}</bds-typo>
+                    </div>
+                  </bds-button>
                 </div>
               </bds-grid>
             </div>
@@ -315,5 +319,21 @@
 
 .in-edit-button {
   display: grid;
+}
+
+.copy-and-paste-text {
+  word-wrap: break-word;
+  min-width: auto !important;
+  text-align: left;
+  word-break: break-word;
+}
+
+.edit-copy-and-paste-button {
+  width: 200px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: ltr;
 }
 </style>
