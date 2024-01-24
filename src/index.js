@@ -31,6 +31,7 @@ import ApplicationJSon from './components/ApplicationJSon'
 import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
 import MenuList from './components/ApplicationJSon/MenuList'
 import ThreadSummary from './components/ThreadSummary.vue'
+import CopyAndPaste from './components/CopyAndPaste.vue'
 
 // Reply components
 import ReplyCard from './components/ReplyCard/ReplyCard'
@@ -100,6 +101,7 @@ function install(Vue) {
   components.push(Vue.component(MenuListPrompt.name, MenuListPrompt))
   components.push(Vue.component(MenuList.name, MenuList))
   components.push(Vue.component(ThreadSummary.name, ThreadSummary))
+  components.push(Vue.component(CopyAndPaste.name, CopyAndPaste))
 
   // Reply components
   components.push(Vue.component(ReplyCard.name, ReplyCard))
