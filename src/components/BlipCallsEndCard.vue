@@ -5,15 +5,13 @@
         previewDocument.content != null && previewDocument.content.length > 0
       "
       :class="
-        `blip-container calls-card ${isFailedMessage(status, position)} ${
-          document.photo ? 'with-photo' : ''
-        }`.trim()
+        `blip-container calls-card ${isFailedMessage(status, position)}`.trim()
       "
     >
       <div :class="`bubble ${position}`">
         <div class="content">
           <div class="content__details">
-            <div :class="`content__details__icon ${document.status}`">
+            <div :class="`content__details__icon ${documentStatusClass}`">
               <bds-icon
                 :name="iconName"
                 color="var(--color-content-default, #454545)"
@@ -51,12 +49,12 @@
           <div
             v-if="isSuccess"
             :class="
-              `content__record ${document.type} ${
+              `content__record ${documentTypeClass} ${
                 hasMediaUri ? 'has-media' : ''
               }`
             "
           >
-            <template v-if="hasMediaUri && document.type === 'video'">
+            <template v-if="hasMediaUri && isVideoType">
               <blip-video
                 video-uri-msg="videoUriMsg"
                 :document="document.media.content"
@@ -75,7 +73,7 @@
                 :async-fetch-media="asyncFetchMedia"
               />
             </template>
-            <template v-else-if="document.type === 'voice' && hasMediaUri">
+            <template v-else-if="hasMediaUri && isVoiceType">
               <blip-audio
                 file-url-msg="fileUrlMsg"
                 :document="document.media.content"
@@ -119,23 +117,6 @@
           </div>
         </div>
       </div>
-      <div
-        v-if="document.photo"
-        :class="'blip-card-photo ' + position"
-        :style="{
-          bottom: '25px',
-          right: '0%',
-          width: '25px',
-          height: '25px',
-          'background-image': 'url(&quot;' + document.photo + '&quot;)'
-        }"
-      ></div>
-      <blip-card-date
-        :status="status"
-        :position="position"
-        :date="date"
-        :failed-to-send-msg="failedToSendMsg"
-      />
     </div>
   </div>
 </template>
@@ -145,6 +126,8 @@ import { default as base } from '../mixins/baseComponent.js'
 import { linkify, isFailedMessage } from '../utils/misc'
 import BlipAudio from './MediaLink/Audio'
 import BlipVideo from './MediaLink/Video'
+import blipCallsStatus from '../enums/blipCallsStatus.enum'
+import blipCallsType from '../enums/blipCallsType.enum'
 
 export default {
   name: 'blip-calls-end-card',
@@ -240,19 +223,21 @@ export default {
       const failedVoiceIconName = 'voip-ended'
 
       const icons = {
-        video: {
-          success: 'video-calling',
-          failed: failedVideoIconName,
-          canceled: failedVideoIconName,
-          notAnswered: failedVideoIconName,
-          none: failedVideoIconName
+        [blipCallsType.video]: {
+          [blipCallsStatus.answer]: 'video-calling',
+          [blipCallsStatus.busy]: failedVideoIconName,
+          [blipCallsStatus.cancel]: failedVideoIconName,
+          [blipCallsStatus.noAnswer]: failedVideoIconName,
+          [blipCallsStatus.progress]: failedVideoIconName,
+          [blipCallsStatus.unknown]: failedVideoIconName
         },
-        voice: {
-          success: 'voip-calling',
-          failed: failedVoiceIconName,
-          canceled: failedVoiceIconName,
-          notAnswered: failedVoiceIconName,
-          none: failedVoiceIconName
+        [blipCallsType.voice]: {
+          [blipCallsStatus.answer]: 'voip-calling',
+          [blipCallsStatus.busy]: failedVoiceIconName,
+          [blipCallsStatus.cancel]: failedVoiceIconName,
+          [blipCallsStatus.noAnswer]: failedVoiceIconName,
+          [blipCallsStatus.progress]: failedVoiceIconName,
+          [blipCallsStatus.unknown]: failedVoiceIconName
         }
       }
 
@@ -260,33 +245,53 @@ export default {
     },
     titleText: function() {
       const msgs = {
-        video: this.videoCallMsg,
-        voice: this.voiceCallMsg
+        [blipCallsType.video]: this.videoCallMsg,
+        [blipCallsType.voice]: this.voiceCallMsg
       }
 
       return this.sanitize(msgs[this.document.type])
     },
     identificationText: function() {
-      return this.sanitize(this.document.identification)
+      return this.sanitize(
+        `${this.isVideoType ? '#' : ''}${this.document.identification}`
+      )
     },
     statusText: function() {
       const statusMessage = {
-        success: this.successStatusMsg,
-        failed: this.failedStatusMsg,
-        canceled: this.cancelStatusMsg,
-        notAnswered: this.notAnsweredStatusMsg,
-        none: this.notAnsweredStatusMsg
+        [blipCallsStatus.answer]: this.successStatusMsg,
+        [blipCallsStatus.busy]: this.notAnsweredStatusMsg,
+        [blipCallsStatus.cancel]: this.cancelStatusMsg,
+        [blipCallsStatus.noAnswer]: this.notAnsweredStatusMsg,
+        [blipCallsStatus.progress]: this.failedStatusMsg,
+        [blipCallsStatus.unknown]: this.notAnsweredStatusMsg
       }
 
       return this.sanitize(statusMessage[this.document.status])
     },
     isSuccess: function() {
-      return this.document.status === 'success'
+      return this.document.status === blipCallsStatus.answer
+    },
+    isVideoType: function() {
+      return this.document.type === blipCallsType.video
+    },
+    isVoiceType: function() {
+      return this.document.type === blipCallsType.voice
+    },
+    documentTypeClass: function() {
+      return this.document.type.toLowerCase()
+    },
+    documentStatusClass: function() {
+      return this.document.status.toLowerCase()
     }
   },
   methods: {
     async refreshMediaUrl() {
       try {
+        if (this.document.media.content.uri) {
+          this.hasMediaUri = true
+          return
+        }
+
         if (this.isSuccess && this.onAsyncFetchSession) {
           this.refreshingMediaUri = true
 
@@ -298,7 +303,7 @@ export default {
             this.document.media.content.uri = session.recordedFileUrl
             this.hasMediaUri = true
           } else {
-            await new Promise(resolve => {
+            await new Promise((resolve) => {
               setTimeout(async () => {
                 resolve()
               }, 5000)
@@ -329,28 +334,6 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
 .blip-message-group {
   .blip-card-group {
     .calls-card {
-      &.with-photo {
-        .bubble {
-          &.right {
-            margin-right: 32px;
-          }
-
-          &.left {
-            margin-left: 32px;
-          }
-        }
-
-        div.notification {
-          &.right {
-            margin-right: 32px;
-          }
-
-          &.left {
-            margin-left: 32px;
-          }
-        }
-      }
-
       div.notification {
         display: flex !important;
       }
@@ -359,8 +342,6 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
 }
 
 .calls-card {
-  margin-bottom: $space-4 !important;
-
   .bubble {
     padding: 12px;
     word-wrap: break-word;
@@ -394,7 +375,7 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
           border-radius: $space-1;
           background-color: var(--color-error, #f99f9f);
 
-          &.success {
+          &.answer {
             background-color: var(--color-success, #84ebbc);
           }
         }

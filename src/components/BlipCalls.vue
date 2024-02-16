@@ -20,9 +20,6 @@
       :async-fetch-media="asyncFetchMedia"
       :on-async-fetch-session="onAsyncFetchSession"
     />
-    <p class="subtitle fancy">
-      <span>{{ formattedMessage }}</span>
-    </p>
   </div>
 </template>
 
@@ -127,41 +124,5 @@ export default {
   overflow: hidden;
   padding-top: 5px;
   width: auto;
-
-  .subtitle {
-    margin: 0;
-    margin: 16px 32px;
-    overflow: hidden;
-
-    &.fancy {
-      line-height: 1;
-      text-align: center;
-
-      span {
-        display: inline-block;
-        position: relative;
-
-        &:before,
-        &:after {
-          content: '';
-          position: absolute;
-          height: 5px;
-          border-bottom: 1px solid $color-surface-3;
-          top: 2px;
-          width: 100%;
-        }
-
-        &:before {
-          right: 100%;
-          margin-right: 15px;
-        }
-
-        &:after {
-          left: 100%;
-          margin-left: 15px;
-        }
-      }
-    }
-  }
 }
 </style>
