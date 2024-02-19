@@ -1,12 +1,8 @@
 <template>
   <div>
     <div
-      v-if="
-        previewDocument.content != null && previewDocument.content.length > 0
-      "
-      :class="
-        `blip-container calls-card ${isFailedMessage(status, position)}`.trim()
-      "
+      v-if="previewDocument.content != null && previewDocument.content.length > 0"
+      :class="`blip-container calls-card ${isFailedMessage(status, position)}`.trim()"
     >
       <div :class="`bubble ${position}`">
         <div class="content">
