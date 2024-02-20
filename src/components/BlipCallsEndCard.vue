@@ -1,8 +1,12 @@
 <template>
   <div>
     <div
-      v-if="previewDocument.content != null && previewDocument.content.length > 0"
-      :class="`blip-container calls-card ${isFailedMessage(status, position)}`.trim()"
+      v-if="
+        previewDocument.content != null && previewDocument.content.length > 0
+      "
+      :class="
+        `blip-container calls-card ${isFailedMessage(status, position)}`.trim()
+      "
     >
       <div :class="`bubble ${position}`">
         <div class="content">
@@ -283,7 +287,11 @@ export default {
   methods: {
     async refreshMediaUrl() {
       try {
-        if (this.document.media.content.uri) {
+        if (
+          this.document.media &&
+          this.document.media.content &&
+          this.document.media.content.uri
+        ) {
           this.hasMediaUri = true
           return
         }
