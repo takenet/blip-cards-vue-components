@@ -5,7 +5,7 @@
         previewDocument.content != null && previewDocument.content.length > 0
       "
       :class="
-        `blip-container calls-card ${isFailedMessage(status, position)}`.trim()
+        `calls-card ${isFailedMessage(status, position)}`.trim()
       "
     >
       <div :class="`bubble ${position}`">
@@ -118,6 +118,12 @@
         </div>
       </div>
     </div>
+    <blip-card-date
+      :status="status"
+      :position="position"
+      :date="date"
+      :failed-to-send-msg="failedToSendMsg"
+    />
   </div>
 </template>
 
