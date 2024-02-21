@@ -339,6 +339,7 @@ $space-05: var(--space-05, 0.25rem);
 $space-1: var(--space-1, 0.5rem);
 $space-2: var(--space-2, 1rem);
 $space-4: var(--space-4, 2rem);
+$space-5: var(--space-5, 2.5rem);
 $default-transition: var(--default-transition, all 0.25s ease-in);
 
 .blip-message-group {
@@ -355,9 +356,7 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
   .bubble {
     padding: 12px;
     word-wrap: break-word;
-    min-width: auto !important;
     text-align: left;
-    min-width: 340px !important;
 
     .content {
       display: flex;
@@ -365,6 +364,7 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
       justify-content: center;
       align-items: flex-center;
       gap: $space-1;
+      width: auto;
 
       &__details {
         display: flex;
@@ -402,7 +402,7 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            gap: $space-1;
+            gap: $space-5;
             align-self: stretch;
 
             bds-typo.title {
