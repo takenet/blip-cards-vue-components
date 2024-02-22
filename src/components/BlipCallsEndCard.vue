@@ -330,21 +330,49 @@ export default {
 
         return `#${sequentialId}`
       } else {
+        const mask = this.getPhoneMask(identification)
+
         const digits = identification.replace(/\D/g, '')
-
-        const mask =
-          digits.length <= 10
-            ? '(##) ####-####'
-            : digits.length <= 11
-            ? '(##) #####-####'
-            : digits.length <= 12
-            ? '+## (##) ####-####'
-            : '+## (##) #####-####'
-
         let i = 0
 
-        return mask.replace(/#/g, (_) => (digits[i] ? digits[i++] : ''))
+        return mask
+          ? mask.replace(/#/g, (_) => (digits[i] ? digits[i++] : ''))
+          : identification
       }
+    },
+    getPhoneMask(phone, countryCode = 55) {
+      if (!phone) return ''
+
+      const digits = phone.replace(/\D/g, '')
+      let mask
+
+      switch (countryCode) {
+        case 55:
+          switch (digits.length) {
+            case 10:
+              mask = '(##) ####-####'
+              break
+            case 11:
+              mask = '(##) #####-####'
+              break
+            case 12:
+              mask = '+## (##) ####-####'
+              break
+            case 13:
+              mask = '+## (##) #####-####'
+              break
+            default:
+              mask = undefined
+              break
+          }
+          break
+
+        default:
+          mask = undefined
+          break
+      }
+
+      return mask
     },
     emitUpdate() {
       this.$emit('updated')
@@ -362,7 +390,7 @@ $space-1: var(--space-1, 0.5rem);
 $space-2: var(--space-2, 1rem);
 $space-4: var(--space-4, 2rem);
 $space-5: var(--space-5, 2.5rem);
-$space-6: var(--space-6, 3.0rem);
+$space-6: var(--space-6, 3rem);
 $default-transition: var(--default-transition, all 0.25s ease-in);
 
 .blip-message-group {
