@@ -4,9 +4,7 @@
       v-if="
         previewDocument.content != null && previewDocument.content.length > 0
       "
-      :class="
-        `calls-card ${isFailedMessage(status, position)}`.trim()
-      "
+      :class="`calls-card ${isFailedMessage(status, position)}`.trim()"
     >
       <div :class="`bubble ${position}`">
         <div class="content">
@@ -259,7 +257,7 @@ export default {
     },
     identificationText: function() {
       return this.sanitize(
-        `${this.isVideoType ? '#' : ''}${this.document.identification}`
+        this.maskIdentification(this.document.identification)
       )
     },
     statusText: function() {
@@ -324,6 +322,30 @@ export default {
         this.refreshingMediaUri = false
       }
     },
+    maskIdentification(identification) {
+      if (!identification) return ''
+
+      if (this.isVideoType) {
+        const sequentialId = identification.replace(/\D/g, '')
+
+        return `#${sequentialId}`
+      } else {
+        const digits = identification.replace(/\D/g, '')
+
+        const mask =
+          digits.length <= 10
+            ? '(##) ####-####'
+            : digits.length <= 11
+            ? '(##) #####-####'
+            : digits.length <= 12
+            ? '+## (##) ####-####'
+            : '+## (##) #####-####'
+
+        let i = 0
+
+        return mask.replace(/#/g, (_) => (digits[i] ? digits[i++] : ''))
+      }
+    },
     emitUpdate() {
       this.$emit('updated')
     }
@@ -340,6 +362,7 @@ $space-1: var(--space-1, 0.5rem);
 $space-2: var(--space-2, 1rem);
 $space-4: var(--space-4, 2rem);
 $space-5: var(--space-5, 2.5rem);
+$space-6: var(--space-6, 3.0rem);
 $default-transition: var(--default-transition, all 0.25s ease-in);
 
 .blip-message-group {
@@ -402,7 +425,7 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            gap: $space-5;
+            gap: $space-6;
             align-self: stretch;
 
             bds-typo.title {
