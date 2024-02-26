@@ -55,7 +55,7 @@
             <template v-if="hasMediaUri && isVideoType">
               <blip-video
                 video-uri-msg="videoUriMsg"
-                :document="document.media.content"
+                :document="document.media"
                 :full-document="fullDocument.media"
                 :position="position"
                 :date="date"
@@ -74,7 +74,7 @@
             <template v-else-if="hasMediaUri && isVoiceType">
               <blip-audio
                 file-url-msg="fileUrlMsg"
-                :document="document.media.content"
+                :document="document.media"
                 :full-document="fullDocument.media"
                 :position="position"
                 :date="date"
@@ -293,8 +293,7 @@ export default {
       try {
         if (
           this.document.media &&
-          this.document.media.content &&
-          this.document.media.content.uri
+          this.document.media.uri
         ) {
           this.hasMediaUri = true
           return
@@ -308,7 +307,7 @@ export default {
           )
 
           if (session && session.recordedFileUrl) {
-            this.document.media.content.uri = session.recordedFileUrl
+            this.document.media.uri = session.recordedFileUrl
             this.hasMediaUri = true
           } else {
             await new Promise((resolve) => {
