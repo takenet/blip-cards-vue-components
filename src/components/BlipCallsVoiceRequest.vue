@@ -32,10 +32,10 @@ export default {
       default: 'right'
     },
     bodyText: {
-      type: String,
+      type: String
     },
     actionText: {
-      type: String,
+      type: String
     }
   }
 }
