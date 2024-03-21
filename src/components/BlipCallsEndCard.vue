@@ -45,7 +45,7 @@
             </div>
           </div>
           <div
-            v-if="isSuccess"
+            v-if="isSuccess && isMobcall"
             :class="
               `content__record ${documentTypeClass} ${
                 hasMediaUri ? 'has-media' : ''
@@ -236,7 +236,7 @@ export default {
           [blipCallsStatus.unknown]: failedVideoIconName
         },
         [blipCallsType.voice]: {
-          [blipCallsStatus.answer]: 'voip-calling',
+          [blipCallsStatus.answer]: this.isMobcall ? 'voip-calling' : 'voip-receiving',
           [blipCallsStatus.busy]: failedVoiceIconName,
           [blipCallsStatus.cancel]: failedVoiceIconName,
           [blipCallsStatus.noAnswer]: failedVoiceIconName,
@@ -286,6 +286,9 @@ export default {
     },
     documentStatusClass: function() {
       return this.document.status.toLowerCase()
+    },
+    isMobcall: function() {
+      return this.document.provider.toLowerCase() === 'mobcall'
     }
   },
   methods: {
