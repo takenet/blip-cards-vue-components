@@ -4,7 +4,9 @@ const blipCallsStatus = {
   cancel: 'CANCEL',
   noAnswer: 'NOANSWER',
   progress: 'PROGRESS',
-  unknown: 'UNKNOWN'
+  unknown: 'UNKNOWN',
+  completed: 'COMPLETED',
+  failed: 'FAILED'
 }
 
 export default blipCallsStatus

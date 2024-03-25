@@ -9,8 +9,8 @@
       </bds-typo>
     <div class="action">
       <bds-grid margin="y-1" direction="row" justify-content="center" padding="x-2">
-        <bds-icon v-if="position === 'right'" color="white" name="voip"/>
-        <bds-icon v-else name="voip"/>
+        <bds-icon v-if="position === 'right'" color="white" name="voip-call"/>
+        <bds-icon v-else name="voip-call"/>
         <bds-typo 
           class="typo title-action"
           variant="fs-16" 
