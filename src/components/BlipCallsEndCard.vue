@@ -235,7 +235,7 @@ export default {
           [blipCallsStatus.noAnswer]: failedVideoIconName,
           [blipCallsStatus.progress]: failedVideoIconName,
           [blipCallsStatus.unknown]: failedVideoIconName,
-          [blipCallsStatus.failed]: failedVoiceIconName
+          [blipCallsStatus.failed]: failedVideoIconName
         },
         [blipCallsType.voice]: {
           [blipCallsStatus.answer]: this.isOutboundCall ? 'voip-calling' : 'voip-receiving',
