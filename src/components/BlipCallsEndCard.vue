@@ -234,18 +234,22 @@ export default {
           [blipCallsStatus.cancel]: failedVideoIconName,
           [blipCallsStatus.noAnswer]: failedVideoIconName,
           [blipCallsStatus.progress]: failedVideoIconName,
-          [blipCallsStatus.unknown]: failedVideoIconName,
-          [blipCallsStatus.failed]: failedVideoIconName
+          [blipCallsStatus.failed]: failedVideoIconName,
+          [blipCallsStatus.unknown]: failedVideoIconName
         },
         [blipCallsType.voice]: {
-          [blipCallsStatus.answer]: this.isOutboundCall ? 'voip-calling' : 'voip-receiving',
-          [blipCallsStatus.completed]: this.isOutboundCall ? 'voip-calling' : 'voip-receiving',
+          [blipCallsStatus.answer]: this.isOutboundCall
+            ? 'voip-calling'
+            : 'voip-receiving',
+          [blipCallsStatus.completed]: this.isOutboundCall
+            ? 'voip-calling'
+            : 'voip-receiving',
           [blipCallsStatus.busy]: failedVoiceIconName,
           [blipCallsStatus.cancel]: failedVoiceIconName,
           [blipCallsStatus.noAnswer]: failedVoiceIconName,
           [blipCallsStatus.progress]: failedVoiceIconName,
-          [blipCallsStatus.unknown]: failedVoiceIconName,
-          [blipCallsStatus.failed]: failedVoiceIconName
+          [blipCallsStatus.failed]: failedVoiceIconName,
+          [blipCallsStatus.unknown]: failedVoiceIconName
         }
       }
 
@@ -279,7 +283,9 @@ export default {
       return this.sanitize(statusMessage[this.document.status])
     },
     isSuccess: function() {
-      return this.document.status === blipCallsStatus.answer
+      return [blipCallsStatus.answer, blipCallsStatus.completed].some(
+        (status) => status === this.document.status
+      )
     },
     isVideoType: function() {
       return this.document.type === blipCallsType.video
@@ -294,10 +300,14 @@ export default {
       return this.document.status.toLowerCase()
     },
     isMobcall: function() {
-      return this.document.provider ? this.document.provider.toLowerCase() === 'mobcall' : true
+      return this.document.provider
+        ? this.document.provider.toLowerCase() === 'mobcall'
+        : true
     },
     isOutboundCall: function() {
-      return this.document.direction ? this.document.direction.toLowerCase() === 'outbound' : true
+      return this.document.direction
+        ? this.document.direction.toLowerCase() === 'outbound'
+        : true
     }
   },
   methods: {
@@ -305,10 +315,7 @@ export default {
       try {
         if (!this.isMobcall) return
 
-        if (
-          this.document.media &&
-          this.document.media.uri
-        ) {
+        if (this.document.media && this.document.media.uri) {
           this.hasMediaUri = true
           return
         }
@@ -449,7 +456,8 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
           border-radius: $space-1;
           background-color: var(--color-error, #f99f9f);
 
-          &.answer {
+          &.answer,
+          &.completed {
             background-color: var(--color-success, #84ebbc);
           }
         }
