@@ -229,19 +229,23 @@ export default {
       const icons = {
         [blipCallsType.video]: {
           [blipCallsStatus.answer]: 'video-calling',
+          [blipCallsStatus.completed]: 'video-calling',
           [blipCallsStatus.busy]: failedVideoIconName,
           [blipCallsStatus.cancel]: failedVideoIconName,
           [blipCallsStatus.noAnswer]: failedVideoIconName,
           [blipCallsStatus.progress]: failedVideoIconName,
-          [blipCallsStatus.unknown]: failedVideoIconName
+          [blipCallsStatus.unknown]: failedVideoIconName,
+          [blipCallsStatus.failed]: failedVoiceIconName
         },
         [blipCallsType.voice]: {
-          [blipCallsStatus.answer]: this.isMobcall ? 'voip-calling' : 'voip-receiving',
+          [blipCallsStatus.answer]: this.isOutboundCall ? 'voip-calling' : 'voip-receiving',
+          [blipCallsStatus.completed]: this.isOutboundCall ? 'voip-calling' : 'voip-receiving',
           [blipCallsStatus.busy]: failedVoiceIconName,
           [blipCallsStatus.cancel]: failedVoiceIconName,
           [blipCallsStatus.noAnswer]: failedVoiceIconName,
           [blipCallsStatus.progress]: failedVoiceIconName,
-          [blipCallsStatus.unknown]: failedVoiceIconName
+          [blipCallsStatus.unknown]: failedVoiceIconName,
+          [blipCallsStatus.failed]: failedVoiceIconName
         }
       }
 
@@ -289,6 +293,9 @@ export default {
     },
     isMobcall: function() {
       return this.document.provider.toLowerCase() === 'mobcall'
+    },
+    isOutboundCall: function() {
+      return this.document.direction.toLowerCase() === 'outbound'
     }
   },
   methods: {
