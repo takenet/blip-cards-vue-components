@@ -271,7 +271,9 @@ export default {
         [blipCallsStatus.cancel]: this.cancelStatusMsg,
         [blipCallsStatus.noAnswer]: this.notAnsweredStatusMsg,
         [blipCallsStatus.progress]: this.failedStatusMsg,
-        [blipCallsStatus.unknown]: this.notAnsweredStatusMsg
+        [blipCallsStatus.unknown]: this.notAnsweredStatusMsg,
+        [blipCallsStatus.failed]: this.cancelStatusMsg,
+        [blipCallsStatus.completed]: this.successStatusMsg
       }
 
       return this.sanitize(statusMessage[this.document.status])
@@ -292,15 +294,17 @@ export default {
       return this.document.status.toLowerCase()
     },
     isMobcall: function() {
-      return this.document.provider.toLowerCase() === 'mobcall'
+      return this.document.provider ? this.document.provider.toLowerCase() === 'mobcall' : true
     },
     isOutboundCall: function() {
-      return this.document.direction.toLowerCase() === 'outbound'
+      return this.document.direction ? this.document.direction.toLowerCase() === 'outbound' : true
     }
   },
   methods: {
     async refreshMediaUrl() {
       try {
+        if (!this.isMobcall) return
+
         if (
           this.document.media &&
           this.document.media.uri
