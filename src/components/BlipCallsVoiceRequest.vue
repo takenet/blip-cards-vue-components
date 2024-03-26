@@ -11,9 +11,9 @@
         <bds-grid margin="y-1" direction="row" justify-content="center" padding="x-2">
           <bds-icon v-if="position === 'right'" color="white" name="voip-call"/>
           <bds-icon v-else name="voip-call"/>
-          <bds-typo 
+          <bds-typo
             class="typo title-action"
-            variant="fs-16" 
+            variant="fs-16"
             bold="regular">{{ actionText }}
           </bds-typo>
         </bds-grid>
@@ -23,7 +23,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'blip-calls-voice-request',
   props: {
@@ -44,26 +43,23 @@ export default {
 <style lang="scss">
 @import '../styles/variables.scss';
 
-.title-action {
-  margin-left: 8px;
-}
-
-.bubble {
-  max-width: 368px !important;
-}
-
-.action {
-  text-align: center;
-  border-top: 1px solid $color-content-ghost;
-  margin-top: 10px;
-  padding-top: 12px;
-}
-
 .blip-container.calls-voice-request {
   .bubble {
     text-align: left;
     overflow: hidden;
     padding: 10px 20px;
+    max-width: 368px !important;
+  }
+
+  .action {
+    text-align: center;
+    border-top: 1px solid $color-content-ghost;
+    margin-top: 10px;
+    padding-top: 12px;
+
+    .title-action {
+      margin-left: 8px;
+    }
   }
 }
 </style>
