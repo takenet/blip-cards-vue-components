@@ -131,6 +131,9 @@
         <button class="button" @click="sendNoAnswerCallsVideoEnd">
           ENVIAR Fim de chamada vídeo não respondida
         </button>
+        <button class="button" @click="sendCallsVoiceRequest">
+          ENVIAR Solicitação de chamada
+        </button>
         <button class="button" @click="sendRaw">
           ENVIAR Unsupported Content
         </button>
@@ -729,6 +732,31 @@ export default {
           type: blipCallsType.video,
           status: blipCallsStatus.noAnswer,
           identification: '1234513'
+        }
+      })
+      this.send()
+    },
+    sendCallsVoiceRequest() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'voice_call',
+            body: {
+              text:
+                'Olá! Para um atendimento mais rápido, você pode entrar em contato através de uma chamada WhatsApp.'
+            },
+            action: {
+              name: 'voice_call',
+              parameters: {
+                display_text: 'Ligar agora'
+              }
+            }
+          }
         }
       })
       this.send()
