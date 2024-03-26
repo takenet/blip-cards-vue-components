@@ -1,22 +1,23 @@
 <template>
-  <div :class="'blip-container ' + position">
-    <div :class="'bubble body ' + position">
+  <div :class="'blip-container calls-voice-request ' + position">
+    <div :class="'bubble ' + position">
       <bds-typo
         class="typo"
         variant="fs-16"
         bold="regular"
         >{{ bodyText }}
       </bds-typo>
-    <div class="action">
-      <bds-grid margin="y-1" direction="row" justify-content="center" padding="x-2">
-        <bds-icon v-if="position === 'right'" color="white" name="voip-call"/>
-        <bds-icon v-else name="voip-call"/>
-        <bds-typo 
-          class="typo title-action"
-          variant="fs-16" 
-          bold="regular">{{ actionText }}
-        </bds-typo>
-      </bds-grid>
+      <div class="action">
+        <bds-grid margin="y-1" direction="row" justify-content="center" padding="x-2">
+          <bds-icon v-if="position === 'right'" color="white" name="voip-call"/>
+          <bds-icon v-else name="voip-call"/>
+          <bds-typo 
+            class="typo title-action"
+            variant="fs-16" 
+            bold="regular">{{ actionText }}
+          </bds-typo>
+        </bds-grid>
+      </div>
     </div>
   </div>
 </template>
@@ -58,9 +59,11 @@ export default {
   padding-top: 12px;
 }
 
-.body {
-  text-align: left;
-  overflow: hidden;
-  padding: 10px 20px;
+.blip-container.calls-voice-request {
+  .bubble {
+    text-align: left;
+    overflow: hidden;
+    padding: 10px 20px;
+  }
 }
 </style>
