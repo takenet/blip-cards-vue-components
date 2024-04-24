@@ -17,21 +17,42 @@
       v-on:click="toggleEdit"
     ></bds-button-icon>
     <div class="header" :id="id" v-if="!isEditing">
-      <div
-        :class="
-          'background ratio ratio' +
-            documentAspect +
-            (editable ? '' : ' pointer')
-        "
-        :style="styleObject"
-        @click="editable ? null : handleImageLink()"
-      ></div>
-      <div class="title" v-if="document.title || document.text">
-        <strong
-          v-if="document.title"
-          v-html="sanitize(document.title)"
-        ></strong>
-        <span v-if="document.text" v-html="sanitize(document.text)"></span>
+      <div v-if="simplified">
+        <bds-grid gap="4" align-items="center" justify-content="space-between">
+          <bds-grid margin="r-1" align-items="center" gap="1">
+            <bds-icon class="typo" size="small" name="file-image" theme="outline"></bds-icon>
+            <bds-typo
+              v-if="document.title"
+              tag="span"
+              margin="false"
+              class="image-simplified-text typo"
+              v-html="sanitize(document.title)">
+            </bds-typo>
+          </bds-grid>
+          <bds-grid>
+            <div class="image-preview-container">
+              <div class="background ratio ratio1-1" :style="simplifiedStyleObject" id="simplifiedImage"></div>
+            </div>
+          </bds-grid>
+        </bds-grid>
+      </div>
+      <div v-if="!simplified">
+        <div
+          :class="
+            'background ratio ratio' +
+              documentAspect +
+              (editable ? '' : ' pointer')
+          "
+          :style="styleObject"
+          @click="editable ? null : handleImageLink()"
+        ></div>
+        <div class="title" v-if="document.title || document.text">
+          <strong
+            v-if="document.title"
+            v-html="sanitize(document.title)"
+          ></strong>
+          <span v-if="document.text" v-html="sanitize(document.text)"></span>
+        </div>
       </div>
     </div>
     <div class="form" v-else>
@@ -136,7 +157,7 @@ import { default as base } from '../../mixins/baseComponent.js'
 import mime from 'mime-types'
 import BrokenWhite from '../../assets/img/BrokenWhite.svg'
 import Broken from '../../assets/img/Broken.svg'
-import { tryCreateLocalMediaUri } from '../../utils/media.js'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 
 export default {
   mixins: [base],
@@ -166,11 +187,16 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    simplified: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {
     return {
       styleObject: undefined,
+      simplifiedStyleObject: undefined,
       id: undefined,
       title: undefined,
       text: undefined,
@@ -196,7 +222,7 @@ export default {
   },
   methods: {
     init: async function() {
-      this.imageUri = this.asyncFetchMedia
+      this.imageUri = isAuthenticatedMediaLink(this.document)
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
       this.checkImage(this.imageUri)
@@ -221,8 +247,10 @@ export default {
 
       this.$validator.validateAll().then((result) => {
         if (!result) return
-        this.styleObject['border-radius'] =
-          this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'
+
+        this.styleObject['border-radius'] = this.title || this.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px'
 
         this.save({
           ...this.document,
@@ -245,25 +273,30 @@ export default {
       var img = new Image()
       img.onload = () => {
         this.styleObject = {
-          'border-radius':
-            this.document.title || this.document.text
-              ? '13px 13px 0px 0px'
-              : '13px 13px 13px 0px',
+          'border-radius': this.document.title || this.document.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px',
           'background-image': `url("${url}")`
+        }
+
+        this.simplifiedStyleObject = {
+          'background-image': `url("${url}")`,
+          'border-radius': '0px !important'
         }
       }
       img.onerror = () => {
         this.styleObject = {
-          'border-radius':
-            this.document.title || this.document.text
-              ? '13px 13px 0px 0px'
-              : '13px 13px 13px 0px',
+          'border-radius': this.document.title || this.document.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px',
           'background-image': `url("${
             this.position === 'right' ? BrokenWhite : Broken
           }")`,
-          'background-size': '125px',
-          opacity: '0.6'
+          opacity: '0.6',
+          'background-size': '125px'
         }
+
+        this.simplifiedStyleObject = this.styleObject
       }
       img.src = url
     },
@@ -286,6 +319,34 @@ export default {
 
 <style lang="scss">
 @import '../../styles/variables.scss';
+
+#simplifiedImage {
+  object-fit: fill;
+  border-radius: 0 !important;
+}
+
+.image-preview-container {
+  background-color: $color-surface-1;
+  width: 56px;
+  height: 56px;
+  align-items: center;
+}
+
+.preview-loading {
+  padding-left: 20px;
+  padding-top: 20px;
+}
+
+.image-simplified-text {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  margin: 0;
+  text-align: left;
+  -webkit-line-clamp: 1;
+  max-width: 150px;
+}
 
 .media-link {
   .bubble {

@@ -17,7 +17,14 @@
       v-on:click="toggleEdit"
     ></bds-button-icon>
     <div class="audio-player-wrapper" v-if="!isEditing">
-      <div class="audio-player-controls">
+      <div v-if="simplified">
+        <bds-grid align-items="center" gap="1">
+          <bds-icon class="typo" size="small" name="audio" theme="solid"></bds-icon>
+          <bds-typo class="typo" v-if="!isLoading" tag="span">{{ getTimeFromSeconds(this.totalTime) }}</bds-typo>
+          <bds-loading-spinner v-if="isLoading" size="extra-small" color="light"></bds-loading-spinner>
+        </bds-grid>
+      </div>
+      <div v-if="!simplified" class="audio-player-controls">
         <div v-if="!isLoading" class="audio-play-pause">
           <span v-if="isPlaying" @click="togglePlay">
             <svg
@@ -134,7 +141,7 @@
 
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
-import { tryCreateLocalMediaUri } from '../../utils/media.js'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 import mime from 'mime-types'
 
 export default {
@@ -149,6 +156,10 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    simplified: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {
@@ -166,7 +177,9 @@ export default {
     }
   },
   mounted: async function() {
-    await this.init()
+    this.audioUri = isAuthenticatedMediaLink(this.document)
+        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
+        : this.document.uri
     this.initAudio(this.audioUri)
     this.progress = this.$el.querySelector('.progress')
   },
@@ -179,9 +192,6 @@ export default {
   },
   methods: {
     init: async function() {
-      this.audioUri = this.asyncFetchMedia
-        ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
-        : this.document.uri
       this.isPlaying = false
       this.audio = Audio
       this.currentTime = 0
@@ -192,7 +202,7 @@ export default {
       this.playbackRate = 1
     },
     initAudio: function(uri) {
-      this.audio = new Audio(uri)
+      this.audio = new Audio()
       this.isLoading = true
       this.audio.addEventListener(
         'canplaythrough',
@@ -202,6 +212,8 @@ export default {
       this.audio.addEventListener('timeupdate', this.audioTimeUpdated)
       this.audio.addEventListener('loadedmetadata', this.audioLoaded)
       this.audio.addEventListener('ended', this.resetPlay)
+      this.audio.src = uri
+      this.audio.load()
     },
     toggleEdit: function() {
       this.isEditing = !this.isEditing
@@ -219,11 +231,15 @@ export default {
         this.save({
           ...this.document,
           uri: this.audioUri,
-          type: mime.lookup(this.audioUri)
-            ? mime.lookup(this.audioUri)
-            : 'audio/mp3'
+          type: this.getAudioType()
         })
       })
+    },
+    getAudioType: function() {
+      if (this.document.type === 'voice') {
+        return 'voice/mp3'
+      }
+      return mime.lookup(this.audioUri) ? mime.lookup(this.audioUri) : 'audio/mp3'
     },
     togglePlay: async function() {
       if (this.isPlaying) {
@@ -303,7 +319,8 @@ export default {
 <style lang="scss">
 @import '../../styles/variables.scss';
 
-.media-link.audio {
+.media-link.audio,
+.media-link.voice {
   .bubble {
     padding: 0;
     width: $bubble-width;
@@ -311,7 +328,11 @@ export default {
       padding: $bubble-padding;
     }
   }
+}
 
+.media-link.audio,
+.media-link.voice,
+.calls-card {
   .left,
   .middle {
     .slider {

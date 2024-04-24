@@ -1,50 +1,62 @@
 import VeeValidate, { Validator } from 'vee-validate'
-import VeeValidateMessagesBR from 'vee-validate/dist/locale/pt_BR'
 import VeeValidateMessagesEN from 'vee-validate/dist/locale/en'
+import VeeValidateMessagesBR from 'vee-validate/dist/locale/pt_BR'
 import Vue2TouchEvents from 'vue2-touch-events'
 
 // Components
+import ApplicationJSon from './components/ApplicationJSon'
+import MenuList from './components/ApplicationJSon/MenuList'
+import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
+import BlipCalls from './components/BlipCalls'
+import BlipCallsEndCard from './components/BlipCallsEndCard'
+import BlipCallsVoiceRequest from './components/BlipCallsVoiceRequest'
 import BlipCard from './components/BlipCard'
+import BlipCardDate from './components/BlipCardDate'
 import BlipGroupCard from './components/BlipGroupCard'
 import BlipListCard from './components/BlipListCard'
-import PlainText from './components/PlainText'
 import BlipSelect from './components/BlipSelect'
-import DocumentSelect from './components/DocumentSelect'
-import MediaLink from './components/MediaLink'
-import Collection from './components/Collection'
-import WebLink from './components/WebLink'
-import Location from './components/Location'
-import RequestLocation from './components/RequestLocation'
-import LimeInput from './components/LimeInput'
-import UnsuportedContent from './components/UnsuportedContent'
 import ChatState from './components/ChatState'
-import Redirect from './components/Redirect'
-import Ticket from './components/Ticket'
-import Editable from './components/Editable'
-import Survey from './components/Survey'
+import Collection from './components/Collection'
 import Contact from './components/Contact'
+import CopyAndPaste from './components/CopyAndPaste.vue'
+import DocumentSelect from './components/DocumentSelect'
+import Editable from './components/Editable'
 import InteractiveButton from './components/InteractiveButton'
-import BlipCardDate from './components/BlipCardDate'
-import ApplicationJSon from './components/ApplicationJSon'
-import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
-import MenuList from './components/ApplicationJSon/MenuList'
+import LimeInput from './components/LimeInput'
+import Location from './components/Location'
+import MediaLink from './components/MediaLink'
+import PlainText from './components/PlainText'
+import Redirect from './components/Redirect'
+import RequestLocation from './components/RequestLocation'
+import Survey from './components/Survey'
+import ThreadSummary from './components/ThreadSummary.vue'
+import Ticket from './components/Ticket'
+import UnsuportedContent from './components/UnsuportedContent'
+import WebLink from './components/WebLink'
 
 // Reply components
-import ReplyCard from './components/ReplyCard/ReplyCard'
-import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
-import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
-import RepliedWithMediaLink from './components/ReplyCard/Replied/RepliedWithMediaLink'
 import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
 import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
+import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
+import RepliedWithMediaLink from './components/ReplyCard/Replied/RepliedWithMediaLink'
+import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
+import ReplyCard from './components/ReplyCard/ReplyCard'
+
+// Reaction components
+import InReactionToBase from './components/ReactionCard/InReactionTo/InReactionToBase'
+import InReactionToMediaLink from './components/ReactionCard/InReactionTo/InReactionToMediaLink'
+import InReactionToText from './components/ReactionCard/InReactionTo/InReactionToText'
+import ReactionBase from './components/ReactionCard/Reaction/ReactionBase'
+import ReactionCard from './components/ReactionCard/ReactionCard'
 
 // Validators
 import JsonValidator from './validators/jsonValidator'
 import MimeValidator from './validators/mimeValidator'
 
 // Filters
-import SizeInBytesFilter from './filters/SizeInBytesFilter'
-import LimitContentFilter from './filters/LimitContentFilter'
 import FileIconFilter from './filters/FileIconFilter'
+import LimitContentFilter from './filters/LimitContentFilter'
+import SizeInBytesFilter from './filters/SizeInBytesFilter'
 
 // Directives
 import AutoExpandDirective from './directives/AutoExpandDirective'
@@ -52,6 +64,12 @@ import vChatScroll from './directives/vChatScroll'
 
 // Mixins
 import Sanitize from './mixins/sanitizeHtml'
+
+// TemplateContent components
+import PhoneNumberButton from './components/TemplateContent/Buttons/PhoneNumberButton'
+import WebsiteButton from './components/TemplateContent/Buttons/WebsiteButton'
+import MediaContent from './components/TemplateContent/MediaContent/MediaContent'
+import TemplateContent from './components/TemplateContent/TemplateContent'
 
 function install(Vue) {
   let components = []
@@ -62,6 +80,9 @@ function install(Vue) {
   components.push(Vue.component(BlipGroupCard.name, BlipGroupCard))
   components.push(Vue.component(BlipListCard.name, BlipListCard))
   components.push(Vue.component(Ticket.name, Ticket))
+  components.push(Vue.component(BlipCalls.name, BlipCalls))
+  components.push(Vue.component(BlipCallsEndCard.name, BlipCallsEndCard))
+  components.push(Vue.component(BlipCallsVoiceRequest.name, BlipCallsVoiceRequest))
   components.push(Vue.component(Redirect.name, Redirect))
   components.push(Vue.component(PlainText.name, PlainText))
   components.push(Vue.component(MediaLink.name, MediaLink))
@@ -81,6 +102,8 @@ function install(Vue) {
   components.push(Vue.component(ApplicationJSon.name, ApplicationJSon))
   components.push(Vue.component(MenuListPrompt.name, MenuListPrompt))
   components.push(Vue.component(MenuList.name, MenuList))
+  components.push(Vue.component(ThreadSummary.name, ThreadSummary))
+  components.push(Vue.component(CopyAndPaste.name, CopyAndPaste))
 
   // Reply components
   components.push(Vue.component(ReplyCard.name, ReplyCard))
@@ -91,6 +114,19 @@ function install(Vue) {
   // In Reply To
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))
+
+  // Reaction components
+  components.push(Vue.component(ReactionCard.name, ReactionCard))
+  components.push(Vue.component(ReactionBase.name, ReactionBase))
+  components.push(Vue.component(InReactionToBase.name, InReactionToBase))
+  components.push(Vue.component(InReactionToText.name, InReactionToText))
+  components.push(Vue.component(InReactionToMediaLink.name, InReactionToMediaLink))
+
+  // TemplateContent components
+  components.push(Vue.component(TemplateContent.name, TemplateContent))
+  components.push(Vue.component(WebsiteButton.name, WebsiteButton))
+  components.push(Vue.component(PhoneNumberButton.name, PhoneNumberButton))
+  components.push(Vue.component(MediaContent.name, MediaContent))
 
   Vue.component(Editable.name, Editable)
 
@@ -134,6 +170,7 @@ export default {
   WebLink,
   Location,
   RequestLocation,
+  TemplateContent,
   UnsuportedContent,
   install
 }

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <bds-typo class="typo" tag="span" variant="fs-16" margin="false">{{ repliedText }}</bds-typo>
+    <bds-typo class="typo" tag="span" variant="fs-16" margin="false" v-html="sanitize(repliedText)"></bds-typo>
   </div>
 </template>
-  
+
 <script>
   export default {
     name: 'replied-with-text',
@@ -21,4 +21,3 @@
     }
   }
 </script>
-  

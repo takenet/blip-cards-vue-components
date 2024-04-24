@@ -48,6 +48,15 @@
       :deletable="deletable"
       :editing="editing"
     />
+
+    <blip-calls-voice-request
+      v-if="document.type === 'interactive' && document.interactive.type === 'voice_call'"
+      class="blip-card"
+      :position="position"
+      :body-text="document.interactive.body.text"
+      :action-text="document.interactive.action.parameters.display_text"
+    />
+
     <unsuported-content
       v-else
       class="blip-card"

@@ -6,6 +6,7 @@
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
         <blip-card
           v-for="message in group.msgs"
+          :id="message.id"
           :key="message.id"
           :document="message.document || message"
           :position="message.position"
@@ -26,11 +27,12 @@
           :on-unsupported-type="onUnsupportedType"
           :on-location-error="onLocationError"
           :translations="translations"
-          :class="messageClass(message) + (message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : '')"
+          :class="messageClass(message) + isFailedMessageGroup(message,group)"
           :disable-link="disableLink"
           :on-audio-validate-uri="onAudioValidateUri"
           :readonly="readonly"
           :async-fetch-media="asyncFetchMedia"
+          :on-async-fetch-session="onAsyncFetchSession"
         />
 
         <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
@@ -41,7 +43,7 @@
           <span v-else-if="group.status === 'failed' && group.position === 'right'" class='failure'>
             <img v-if="onFailedClickIcon" :src="alertSvg" draggable="false"/>
             <span v-else>
-              {{ failedToSendMsg }}
+               {{ failedMessageNotification(group.msgs[0].type) }}
             </span>
           </span>
           <span>{{ group.date }}</span>
@@ -69,6 +71,7 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
+import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 
 export default {
   name: 'blip-group-card',
@@ -138,6 +141,9 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    onAsyncFetchSession: {
+      type: Function
     }
   },
   data() {
@@ -181,6 +187,20 @@ export default {
       }
       groups.push(group)
       return groups
+    }
+  },
+  methods: {
+    isFailedMessageGroup(message, group) {
+      if (message.type === MessageTypesConstants.THREAD_SUMMARY) {
+        return ''
+      }
+      return message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : ''
+    },
+    failedMessageNotification(type) {
+      if (type === MessageTypesConstants.THREAD_SUMMARY) {
+        return this.translations.failedToLoadThreadSummary
+      }
+      return this.failedToSendMsg
     }
   }
 }

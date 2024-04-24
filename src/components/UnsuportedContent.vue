@@ -82,7 +82,7 @@ export default {
   margin-left: 5px;
   margin-right: -1px;
   margin-top: -5px;
-  color: $color-delete;
+  color: $color-extended-red;
   cursor: pointer;  
 }
 
