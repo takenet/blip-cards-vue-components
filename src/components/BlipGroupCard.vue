@@ -38,17 +38,31 @@
           <img v-else-if="group.status === 'accepted' && group.position === 'right'" class='accepted' :src="checkSentSvg" draggable="false"/>
           <img v-else-if="group.status === 'received' && group.position === 'right'" class='received' :src="doubleCheckReceivedSvg" draggable="false"/>
           <img v-else-if="group.status === 'consumed' && group.position === 'right'" class='consumed' :src="doubleCheckReadSvg" draggable="false"/>
-          <div v-else-if="group.status === 'failed' && group.position === 'right'" class="failure">
-            {{ failedToSendMsg }}
-          </div>
+          <span v-else-if="group.status === 'failed' && group.position === 'right'" class='failure'>
+            <img v-if="onFailedClickIcon" :src="alertSvg" draggable="false"/>
+            <span v-else>
+              {{ failedToSendMsg }}
+            </span>
+          </span>
           <span>{{ group.date }}</span>
         </div>
         <div class="flex" :class="'group-notification ' + group.position" v-else>
           <img v-if="group.status === 'dispatched' && group.position === 'right'" :src="clockSvg" draggable="false">
         </div>
       </div>
-      <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '10px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
-      </div>
+      <span v-if="onFailedClickIcon && group.status === 'failed'">
+        <bds-icon v-if="group.position === 'right'"
+          name="info" 
+          theme="solid" 
+          aria-label="Active message failed reason" 
+          @click="onFailedClickIcon(group)"
+          class="icon-message-failed">
+        </bds-icon>
+      </span>
+      <span v-else>
+        <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '10px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
+        </div>
+      </span>
     </div>
   </div>
 </template>
@@ -160,7 +174,8 @@ export default {
             photo: message.photo,
             date: message.date,
             hasNotification: this.showNotification(message),
-            status: message.status
+            status: message.status,
+            reason: message.reason
           }
         }
       }
@@ -182,6 +197,19 @@ export default {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+  }
+
+  .icon-message-failed {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: $color-delete;
+    cursor: pointer;  
+    position: absolute;
+    bottom: 10px;
+    right: 0%;
+    width: 25px;
+    height: 25px;
   }
 
   .blip-card-group {
