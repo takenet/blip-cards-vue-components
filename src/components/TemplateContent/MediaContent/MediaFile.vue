@@ -6,7 +6,7 @@
         <img v-else class="file-icon" :src="mimeType | fileIconFilter"/>
       </div>
       <div class="description-wrapper">
-        <div class="link-description">
+        <div class="link-description" @click="(editable || isLoading ? null : handleFileLink())">
           <span v-if="componentDocument.title" :title="componentDocument.title" class="text">{{ componentDocument.title }}</span>
           <span v-else :title="componentDocument.uri" class="text">{{ componentDocument.uri }}</span>
         </div>
@@ -20,11 +20,15 @@
 
 import { default as base } from '../../../mixins/baseComponent.js'
 import mime from 'mime-types'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
 
 export default {
   name: 'media-file',
   props: {
-    componentDocument: {}
+    componentDocument: {},
+    asyncFetchMedia: {
+      type: Function
+    }
   },
   mixins: [base],
   computed: {
@@ -40,6 +44,24 @@ export default {
     return {
       isLoading: false
     }
+  },
+  methods: {
+    getFileUri: async function () {
+      return isAuthenticatedMediaLink(this.componentDocument)
+        ? tryCreateLocalMediaUri(this.componentDocument, this.asyncFetchMedia)
+        : this.componentDocument.uri
+    },
+    handleFileLink: async function () {
+      const uri = await this.getFileUri()
+
+      if (this.onMediaSelected) {
+        this.onMediaSelected(uri)
+      } else {
+        this.isLoading = true
+        await this.openFileInNewTab(uri)
+        this.isLoading = false
+      }
+    },
   }
 }
 </script>

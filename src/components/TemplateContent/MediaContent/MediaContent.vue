@@ -28,7 +28,8 @@
 
       <media-file
         :componentDocument="componentDocument"
-        :position="position"></media-file>
+        :position="position"
+        :async-fetch-media="asyncFetchMedia"></media-file>
     </div>
   </div>
 </template>
