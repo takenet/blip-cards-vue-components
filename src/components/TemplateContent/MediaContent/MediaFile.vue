@@ -1,6 +1,16 @@
 <template>
-  <div :class="`file-container ${position}`" v-if="componentDocument !== undefined">
-    <div class="file-wrapper">
+  <div :class="`file-container ${position}`">
+    <div v-if="!componentDocument || !componentDocument.url || componentDocument === ''"
+      class="default-document-div">
+      <div class="default-document">
+        <bds-icon name="file-name-doc" color="var(--$color-content-ghost, #8C8C8C)" />
+      </div>
+      <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">
+        {{ defaultDocumentMessage }}
+      </bds-typo>
+    </div>
+    <div v-else-if="componentDocument !== undefined"
+      class="file-wrapper">
       <div class="file-icon-wrapper">
         <img v-if="isLoading" :src="loadingGif" alt />
         <img v-else class="file-icon" :src="mimeType | fileIconFilter"/>
@@ -20,7 +30,7 @@
 
 import { default as base } from '../../../mixins/baseComponent.js'
 import mime from 'mime-types'
-import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../utils/media.js'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../../utils/media.js'
 
 export default {
   name: 'media-file',
@@ -28,6 +38,10 @@ export default {
     componentDocument: {},
     asyncFetchMedia: {
       type: Function
+    },
+    defaultDocumentMessage: {
+      type: String,
+      default: 'Insira um documento em “Mídia“'
     }
   },
   mixins: [base],
@@ -61,7 +75,7 @@ export default {
         await this.openFileInNewTab(uri)
         this.isLoading = false
       }
-    },
+    }
   }
 }
 </script>
@@ -151,5 +165,16 @@ export default {
   }
 }
 
+.default-document-div {
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-surface-2;
+  flex-direction: column;
+}
 
+.default-document {
+  margin-bottom: 8px;
+}
 </style>
