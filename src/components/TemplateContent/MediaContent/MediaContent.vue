@@ -2,7 +2,8 @@
   <div :class="'blip-container media-link ' + mediaType + isFailedMessage(status, position)"
     id="blip-container">
     <div id='media-content' class="media-content">
-      <blip-image
+      <media-image
+        v-if="docType === 'image'"
         :image-uri-msg="titleMsg"
         :title-msg="titleMsg"
         :text-msg="textMsg"
@@ -12,21 +13,23 @@
         :full-document="fullDocument"
         :position="position"
         :date="date"
-        v-if="componentImage !== undefined"
         :useBorderRadius="false"/>
 
       <media-video
+        v-else-if="docType === 'video'"
         :componentVideo="componentVideo"
         :onVideoValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-video>
 
       <media-audio
+        v-else-if="docType === 'audio'"
         :class="'padding-control'"
         :componentAudio="componentAudio"
         :onAudioValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-audio>
 
       <media-file
+        v-else-if="docType === 'document'"
         :componentDocument="componentDocument"
         :position="position"
         :async-fetch-media="asyncFetchMedia"></media-file>
@@ -36,7 +39,7 @@
   
 <script>
 
-import BlipImage from '../../MediaLink/Image'
+import MediaImage from './MediaImage'
 import MediaFile from './MediaFile'
 import MediaAudio from './MediaAudio'
 import MediaVideo from './MediaVideo'
@@ -90,20 +93,29 @@ export default {
       componentVideo: {},
       componentDocument: {},
       componentAudio: {},
-      isLoading: false
+      docType: ''
     }
   },
   mixins: [
     base
   ],
   created() {
+    this.docType = (this.document &&
+      this.document.template &&
+      this.document.template.components &&
+      this.document.template.components[0] &&
+      this.document.template.components[0].parameters &&
+      this.document.template.components[0].parameters[0])
+      ? this.document.template.components[0].parameters[0].type
+      : ''
+
     this.componentImage = parseComponentImage(this.document)
     this.componentAudio = parseComponentAudio(this.document)
     this.componentDocument = parseComponentDocument(this.document)
     this.componentVideo = parseComponentVideo(this.document)
   },
   components: {
-    BlipImage,
+    MediaImage,
     MediaFile,
     MediaAudio,
     MediaVideo
