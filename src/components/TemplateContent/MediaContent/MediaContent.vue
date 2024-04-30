@@ -16,7 +16,7 @@
         :useBorderRadius="false"/>
 
       <media-video
-        v-else-if="docType === 'video'"
+        v-else-if="docType.indexOf('video') !== -1"
         :componentVideo="componentVideo"
         :onVideoValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-video>

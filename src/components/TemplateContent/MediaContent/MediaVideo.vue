@@ -1,7 +1,7 @@
 <template>
   <div v-if="!componentVideo || !componentVideo.uri || componentVideo.uri === ''"
-    class="default-image-div">
-    <div class="default-image">
+    class="default-video-div">
+    <div class="default-video">
       <bds-icon name="video" color="var(--$color-content-ghost, #8C8C8C)" />
     </div>
     <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">
@@ -103,5 +103,18 @@ export default {
     border-color: $color-content-ghost;
     color: $color-surface-1;
   }
+}
+
+.default-video-div {
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-surface-2;
+  flex-direction: column;
+}
+
+.default-video {
+  margin-bottom: 8px;
 }
 </style>
