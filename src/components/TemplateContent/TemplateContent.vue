@@ -210,9 +210,11 @@ $template-width: 368px;
 }
 
 .quick-reply-buttons {
+  width: $template-width;
+  max-width: 90%;
+  min-width: 160px;
   margin-top: 3px;
   margin-bottom: 5px;
-  width: 90%;
   
   > div {
     flex: 1 0 calc(50%);
