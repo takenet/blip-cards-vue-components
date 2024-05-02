@@ -30,7 +30,22 @@ const parseMediaComponent = (document, MEDIA_TYPE) => {
       type: element.type || MEDIA_TYPE
     }))
 
-  return elementList[0]
+  let element = elementList[0]
+  if (element && !element.url) {
+    const header = components.filter(({ type }) => type === HEADER_TYPE)
+
+    if (header &&
+      header[0] &&
+      header[0].example &&
+      header[0].example.header_handle) {
+      element = {
+        ...element,
+        uri: header[0].example.header_handle[0]
+      }
+    }
+  }
+
+  return element
 }
 
 export const parseComponentImage = (document) => {

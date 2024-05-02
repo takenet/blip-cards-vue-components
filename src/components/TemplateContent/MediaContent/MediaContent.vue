@@ -3,7 +3,7 @@
     id="blip-container">
     <div id='media-content' class="media-content">
       <media-image
-        v-if="docType === 'image'"
+        v-if="docType.toLowerCase().includes('image')"
         :image-uri-msg="titleMsg"
         :title-msg="titleMsg"
         :text-msg="textMsg"
@@ -16,20 +16,20 @@
         :useBorderRadius="false"/>
 
       <media-video
-        v-else-if="docType.indexOf('video') !== -1"
+        v-else-if="docType.toLowerCase().includes('video')"
         :componentVideo="componentVideo"
         :onVideoValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-video>
 
       <media-audio
-        v-else-if="docType === 'audio'"
+        v-else-if="docType.toLowerCase().includes('audio')"
         :class="'padding-control'"
         :componentAudio="componentAudio"
         :onAudioValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-audio>
 
       <media-file
-        v-else-if="docType === 'document'"
+        v-else-if="docType.toLowerCase().includes('document')"
         :componentDocument="componentDocument"
         :position="position"
         :async-fetch-media="asyncFetchMedia"></media-file>
@@ -101,6 +101,12 @@ export default {
   ],
   created() {
     this.docType = (this.document &&
+      this.document.template &&
+      this.document.template.components &&
+      this.document.template.components[0] &&
+      this.document.template.components[0].format)
+      ? this.document.template.components[0].format
+      : (this.document &&
       this.document.template &&
       this.document.template.components &&
       this.document.template.components[0] &&

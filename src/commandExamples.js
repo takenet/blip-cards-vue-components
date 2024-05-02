@@ -1487,6 +1487,75 @@ export const commandExamples = [
     }
   },
   {
+    buttonLabel: 'Template Message - imagem vazio / com examplo e botão editável',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              example: {
+                header_handle: [
+                  'https://upload.wikimedia.org/wikipedia/commons/c/ce/Example_image.png'
+                ]
+              },
+              parameters: [
+                {
+                  image: {
+                  },
+                  type: 'image'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
     buttonLabel: 'Template Message - imagem e botão editável',
     command: {
       id: '1',
