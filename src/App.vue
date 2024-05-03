@@ -14,8 +14,10 @@
         <br />
         <input type="checkbox" :value="false" v-model="readonly" /> Readonly
         <br />
-        <label style="font-size:smaller;color:#cbb"> Readonly property does not apply to all components. Please, checkout
-          the README.md file for more information!</label>
+        <label style="font-size:smaller;color:#cbb">
+          Readonly property does not apply to all components. Please, checkout
+          the README.md file for more information!</label
+        >
       </div>
 
       <div>
@@ -65,14 +67,14 @@
             name="status"
             v-model="msgStatus"
             value="received"
-            />
+          />
           Received <br />
           <input
             type="radio"
             name="status"
             v-model="msgStatus"
             value="consumed"
-            />
+          />
           Consumed <br />
           <input
             type="radio"
@@ -93,7 +95,9 @@
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
         <button class="button" @click="sendText">ENVIAR Texto</button>
-        <button class="button" @click="sendTextEmail">ENVIAR Texto contendo email</button>
+        <button class="button" @click="sendTextEmail">
+          ENVIAR Texto contendo email
+        </button>
         <button class="button" @click="sendMenu">ENVIAR Menu</button>
         <button class="button" @click="sendQuickReply">
           ENVIAR QuickReply
@@ -115,10 +119,21 @@
         </button>
         <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
         <button class="button" @click="sendTicket">ENVIAR Ticket</button>
-        <button class="button" @click="sendCallsVoiceStart">ENVIAR Inicio de chamada de áudio</button>
-        <button class="button" @click="sendCallsVoiceEnd">ENVIAR Fim de chamada áudio</button>
-        <button class="button" @click="sendCallsVideoStart">ENVIAR Inicio de chamada de vídeo</button>
-        <button class="button" @click="sendCallsVideoEnd">ENVIAR Fim de chamada vídeo</button>
+        <button class="button" @click="sendCallsVoiceEnd">
+          ENVIAR Fim de chamada áudio
+        </button>
+        <button class="button" @click="sendCallsVideoEnd">
+          ENVIAR Fim de chamada vídeo
+        </button>
+        <button class="button" @click="sendNoAnswerCallsVoiceEnd">
+          ENVIAR Fim de chamada áudio não respondida
+        </button>
+        <button class="button" @click="sendNoAnswerCallsVideoEnd">
+          ENVIAR Fim de chamada vídeo não respondida
+        </button>
+        <button class="button" @click="sendCallsVoiceRequest">
+          ENVIAR Solicitação de chamada
+        </button>
         <button class="button" @click="sendRaw">
           ENVIAR Unsupported Content
         </button>
@@ -159,13 +174,19 @@
         <button class="button" @click="sendReplyMessageInReplyToMenuList">
           ENVIAR Reply Message de Menu List
         </button>
-        <button class="button" @click="sendReplyMessageInReplyToMenuListMultiSection">
+        <button
+          class="button"
+          @click="sendReplyMessageInReplyToMenuListMultiSection"
+        >
           ENVIAR Reply Message de Menu List Multi Section
         </button>
         <button class="button" @click="sendReplyMessageInReplyToReplyButton">
           ENVIAR Reply Message de Reply Buttton
         </button>
-        <button class="button" @click="sendReplyMessageInReplyToReplyButtonWithoutHeader">
+        <button
+          class="button"
+          @click="sendReplyMessageInReplyToReplyButtonWithoutHeader"
+        >
           ENVIAR Reply Message de Reply Buttton sem header
         </button>
         <button class="button" @click="sendReactionToText">
@@ -201,6 +222,9 @@
         <button class="button" @click="sendReactionToUnsuportedContent">
           ENVIAR reação conteúdo não suportado
         </button>
+        <button class="button" @click="sendCopyAndPaste">
+          ENVIAR copia e cola
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -221,9 +245,7 @@
       class="ss-container light-theme"
       v-if="showBlipGroupCard"
       :style="
-        'float: left; width:' +
-        width +
-        'px; margin: 50px 100px; height: 800px;'
+        'float: left; width:' + width + 'px; margin: 50px 100px; height: 800px;'
       "
       v-chat-scroll="{ scrollToTop: false, onScroll }"
     >
@@ -272,10 +294,13 @@
 </template>
 
 <script>
+import blipCallsStatus from './enums/blipCallsStatus.enum'
+import blipCallsType from './enums/blipCallsType.enum'
+
 export default {
   name: 'App',
   computed: {
-    docs: function () {
+    docs: function() {
       return this.documents.map((x) => {
         return { ...x, photo: this.photo ? this.photoUri : '' }
       })
@@ -290,8 +315,8 @@ export default {
     }, 500)
   },
   methods: {
-    onScroll: function (e) { },
-    send: function () {
+    onScroll: function(e) {},
+    send: function() {
       const doc = JSON.parse(this.json)
       this.documents.push({
         document: doc,
@@ -300,7 +325,7 @@ export default {
         status: this.msgStatus
       })
     },
-    sendText: function () {
+    sendText: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -309,7 +334,7 @@ export default {
       })
       this.send()
     },
-    sendTextEmail: function () {
+    sendTextEmail: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -318,7 +343,7 @@ export default {
       })
       this.send()
     },
-    sendQuickReply: function () {
+    sendQuickReply: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -340,7 +365,7 @@ export default {
       })
       this.send()
     },
-    sendMenu: function () {
+    sendMenu: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -361,7 +386,7 @@ export default {
       })
       this.send()
     },
-    sendMultimediaMenu: function () {
+    sendMultimediaMenu: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '1042221589186385@messenger.gw.msging.net',
@@ -401,7 +426,7 @@ export default {
       })
       this.send()
     },
-    sendCollection: function () {
+    sendCollection: function() {
       this.json = JSON.stringify({
         id: '5',
         to: '1042221589186385@messenger.gw.msging.net',
@@ -482,7 +507,7 @@ export default {
       })
       this.send()
     },
-    sendImage: function () {
+    sendImage: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -496,7 +521,7 @@ export default {
       })
       this.send()
     },
-    sendSticker: function () {
+    sendSticker: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -509,7 +534,7 @@ export default {
       })
       this.send()
     },
-    sendAudio: function () {
+    sendAudio: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -522,7 +547,7 @@ export default {
       })
       this.send()
     },
-    sendVoice: function () {
+    sendVoice: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -535,7 +560,7 @@ export default {
       })
       this.send()
     },
-    sendVideo: function () {
+    sendVideo: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -549,7 +574,7 @@ export default {
       })
       this.send()
     },
-    sendWebLink: function () {
+    sendWebLink: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '553199991111@0mn.io',
@@ -562,7 +587,7 @@ export default {
       })
       this.send()
     },
-    sendFile: function () {
+    sendFile: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@messenger.gw.msging.net',
@@ -577,7 +602,7 @@ export default {
       })
       this.send()
     },
-    sendLocation: function () {
+    sendLocation: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '1042221589186385@messenger.gw.msging.net',
@@ -591,7 +616,7 @@ export default {
       })
       this.send()
     },
-    sendRequestLocation: function () {
+    sendRequestLocation: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '1042221589186385@messenger.gw.msging.net',
@@ -606,7 +631,7 @@ export default {
       })
       this.send()
     },
-    sendChatState: function () {
+    sendChatState: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
@@ -642,47 +667,23 @@ export default {
       })
       this.send()
     },
-    sendCallsVoiceStart() {
-      this.json = JSON.stringify({
-        id: '1',
-        to: '104222@telegram.gw.msging.net',
-        type: 'application/vnd.iris.calls.media+json',
-        content: {
-          type: 'voice',
-          status: 'started'
-        }
-      })
-      this.send()
-    },
     sendCallsVoiceEnd() {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
         type: 'application/vnd.iris.calls.media+json',
         content: {
-          type: 'voice',
-          status: 'success',
+          type: blipCallsType.voice,
+          status: blipCallsStatus.answer,
           identification: '+55 84 966956332',
           media: {
             type: 'application/vnd.lime.media-link+json',
             content: {
-              type: 'audio/mp3',
+              type: 'audio/mp4',
               uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3',
               size: '1'
             }
           }
-        }
-      })
-      this.send()
-    },
-    sendCallsVideoStart() {
-      this.json = JSON.stringify({
-        id: '1',
-        to: '104222@telegram.gw.msging.net',
-        type: 'application/vnd.iris.calls.media+json',
-        content: {
-          type: 'video',
-          status: 'started'
         }
       })
       this.send()
@@ -693,9 +694,9 @@ export default {
         to: '104222@telegram.gw.msging.net',
         type: 'application/vnd.iris.calls.media+json',
         content: {
-          type: 'video',
-          status: 'success',
-          identification: '#1234513',
+          type: blipCallsType.video,
+          status: blipCallsStatus.answer,
+          identification: '1234513',
           media: {
             type: 'application/vnd.lime.media-link+json',
             content: {
@@ -709,7 +710,58 @@ export default {
       })
       this.send()
     },
-    sendRaw: function () {
+    sendNoAnswerCallsVoiceEnd() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.iris.calls.media+json',
+        content: {
+          type: blipCallsType.voice,
+          status: blipCallsStatus.noAnswer,
+          identification: '+55 84 966956332'
+        }
+      })
+      this.send()
+    },
+    sendNoAnswerCallsVideoEnd() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/vnd.iris.calls.media+json',
+        content: {
+          type: blipCallsType.video,
+          status: blipCallsStatus.noAnswer,
+          identification: '1234513'
+        }
+      })
+      this.send()
+    },
+    sendCallsVoiceRequest() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '104222@telegram.gw.msging.net',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'voice_call',
+            body: {
+              text:
+                'Olá! Para um atendimento mais rápido, você pode entrar em contato através de uma chamada WhatsApp.'
+            },
+            action: {
+              name: 'voice_call',
+              parameters: {
+                display_text: 'Ligar agora'
+              }
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendRaw: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
@@ -720,7 +772,7 @@ export default {
       })
       this.send()
     },
-    sendSurveyContent: function () {
+    sendSurveyContent: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '104222@telegram.gw.msging.net',
@@ -734,7 +786,7 @@ export default {
       })
       this.send()
     },
-    sendContact: function () {
+    sendContact: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@wa.gw.msging.net',
@@ -754,7 +806,7 @@ export default {
       })
       this.send()
     },
-    sendMenuList: function () {
+    sendMenuList: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@wa.gw.msging.net',
@@ -779,17 +831,20 @@ export default {
                     {
                       id: 'id:1.0',
                       title: '🤖 Como funciona?',
-                      description: 'Entender como o Blip funciona, seus benefícios, preços e mais'
+                      description:
+                        'Entender como o Blip funciona, seus benefícios, preços e mais'
                     },
                     {
                       id: 'id:1.1',
                       title: '🤝 Contratar Take Blip',
-                      description: 'Quero conversar com o time de vendas para tirar dúvidas e contratar'
+                      description:
+                        'Quero conversar com o time de vendas para tirar dúvidas e contratar'
                     },
                     {
                       id: 'id:1.2',
                       title: '💬 Já uso o Blip',
-                      description: 'Se você é cliente Take Blip e precisa de ajuda ou suporte, clique aqui'
+                      description:
+                        'Se você é cliente Take Blip e precisa de ajuda ou suporte, clique aqui'
                     },
                     {
                       id: 'id:1.3',
@@ -805,7 +860,7 @@ export default {
       })
       this.send()
     },
-    sendMenuListMultiSection: function () {
+    sendMenuListMultiSection: function() {
       this.json = JSON.stringify({
         id: '1',
         to: '128271320123982@wa.gw.msging.net',
@@ -884,7 +939,7 @@ export default {
       })
       this.send()
     },
-    sendReplyButton: function () {
+    sendReplyButton: function() {
       this.json = JSON.stringify({
         id: '16b0d902-7487-4c5c-b49c-8103558621e7',
         direction: 'sent',
@@ -938,7 +993,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessage: function () {
+    sendReplyMessage: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -958,7 +1013,7 @@ export default {
       })
       this.send()
     },
-    sendReplyTextMessageWithDocument: function () {
+    sendReplyTextMessageWithDocument: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -969,7 +1024,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'application/pdf',
-              uri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
+              uri:
+                'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
               title: 'my_pdf.pdf',
               size: '5540'
             }
@@ -983,7 +1039,7 @@ export default {
       })
       this.send()
     },
-    sendReplyTextMessageWithVideo: function () {
+    sendReplyTextMessageWithVideo: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -994,7 +1050,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'video/mp4',
-              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
             }
           },
           inReplyTo: {
@@ -1006,7 +1063,7 @@ export default {
       })
       this.send()
     },
-    sendReplyTextMessageWithAudio: function () {
+    sendReplyTextMessageWithAudio: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1029,7 +1086,7 @@ export default {
       })
       this.send()
     },
-    sendReplyTextMessageWithImage: function () {
+    sendReplyTextMessageWithImage: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1040,7 +1097,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'image/jpeg',
-              uri: 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
             }
           },
           inReplyTo: {
@@ -1052,7 +1110,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToMenu: function () {
+    sendReplyMessageInReplyToMenu: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1085,7 +1143,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToMenuList: function () {
+    sendReplyMessageInReplyToMenuList: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1118,12 +1176,14 @@ export default {
                         {
                           id: 'id:1.0',
                           title: '🤖 Como funciona?',
-                          description: 'Entender como o Blip funciona, seus benefícios, preços e mais'
+                          description:
+                            'Entender como o Blip funciona, seus benefícios, preços e mais'
                         },
                         {
                           id: 'id:1.1',
                           title: '🤝 Contratar Take Blip',
-                          description: 'Quero conversar com o time de vendas para tirar dúvidas e contratar'
+                          description:
+                            'Quero conversar com o time de vendas para tirar dúvidas e contratar'
                         }
                       ]
                     }
@@ -1136,7 +1196,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToMenuListMultiSection: function () {
+    sendReplyMessageInReplyToMenuListMultiSection: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1195,7 +1255,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToReplyButton: function () {
+    sendReplyMessageInReplyToReplyButton: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1248,7 +1308,7 @@ export default {
       })
       this.send()
     },
-    sendReplyMessageInReplyToReplyButtonWithoutHeader: function () {
+    sendReplyMessageInReplyToReplyButtonWithoutHeader: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1297,7 +1357,7 @@ export default {
       })
       this.send()
     },
-    sendThreadSummary: function () {
+    sendThreadSummary: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -1370,7 +1430,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'audio/mp3',
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+              uri:
+                'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
             },
             direction: 'sent'
           },
@@ -1392,7 +1453,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'voice/mp3',
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+              uri:
+                'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
             },
             direction: 'sent'
           },
@@ -1414,7 +1476,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'video/mp4',
-              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
             },
             direction: 'sent'
           },
@@ -1481,8 +1544,10 @@ export default {
         direction: 'sent',
         content: {
           inReactionTo: {
-            type: 'application/x+json',
-            direction: 'sent'
+            type: 'application/vnd.lime.chatstater+json',
+            value: {
+              state: 'composing'
+            }
           },
           emoji: {
             values: [55357, 56397, 55356, 57341]
@@ -1563,12 +1628,30 @@ export default {
       })
       this.send()
     },
-    onUnsupportedType: function (document) {},
-    toogleBlipGroupCard: function () {
+    sendCopyAndPaste: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.copy-and-paste+json',
+        content: {
+          header: 'Segue o código',
+          body: 'Clique no botão abaixo para copiar o código Pix.',
+          footer: 'O código expira em 10 minutos.',
+          button: {
+            text: 'Copiar código Pix',
+            value: 'Value'
+          }
+        }
+      })
+      this.send()
+    },
+    onUnsupportedType: function(document) {},
+    toogleBlipGroupCard: function() {
       this.showBlipGroupCard = !this.showBlipGroupCard
     }
   },
-  data: function () {
+  data: function() {
     return {
       documents: [],
       json: JSON.stringify({
@@ -1584,9 +1667,9 @@ export default {
       photo: false,
       group: false,
       msgStatus: 'accepted',
-      selected: function (d) { },
-      save: function (d) { },
-      deleted: function (d) { },
+      selected: function(d) {},
+      save: function(d) {},
+      deleted: function(d) {},
       showBlipGroupCard: true,
       disableLink: false,
       editable: true,
@@ -1600,7 +1683,6 @@ export default {
   components: {}
 }
 </script>
-
 
 <style lang="scss">
 @import 'styles/variables.scss';

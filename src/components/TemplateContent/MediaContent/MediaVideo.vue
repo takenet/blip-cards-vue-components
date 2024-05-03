@@ -22,7 +22,7 @@ import BlipVideo from '../../MediaLink/Video'
 import { default as base } from '../../../mixins/baseComponent.js'
 
 export default {
-  name: 'media-content',
+  name: 'media-video',
   props: {
     componentVideo: {},
     onVideoValidateUri: {

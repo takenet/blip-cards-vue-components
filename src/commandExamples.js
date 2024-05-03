@@ -1423,6 +1423,136 @@ export const commandExamples = [
     }
   },
   {
+    buttonLabel: 'Template Message - imagem longa',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  image: {
+                    link: 'https://storage.googleapis.com/support-forums-api/attachment/thread-222038152-7286047119988742904.JPG'
+                  },
+                  type: 'image'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Template Message - imagem GIGANTE',
+    command: {
+      id: '1',
+      direction: 'sent',
+      type: 'application/json',
+      content: {
+        type: 'template-content',
+        template: {
+          language: {
+            policy: 'deterministic',
+            code: 'pt_BR'
+          },
+          name: 'test_button_website_with_variable',
+          components: [
+            {
+              parameters: [
+                {
+                  image: {
+                    link: 'https://www.onvit.com.br/contents/items/1025_1665688522.jpg?v=1666026064'
+                  },
+                  type: 'image'
+                }
+              ],
+              type: 'header'
+            },
+            {
+              sub_type: 'url',
+              index: '0',
+              type: 'button',
+              parameters: [
+                {
+                  text: 'teste',
+                  type: 'text'
+                }
+              ]
+            }
+          ]
+        },
+        templateContent: {
+          name: 'test_button_website_with_variable',
+          language: 'pt_BR',
+          components: [
+            {
+              type: 'BODY',
+              text: 'Olá! Cosme\\n\\nCompre castanha de caju direto da fábrica!\\nSomos o parceiro que faltava no fornecimento de castanha de caju orgânica de qualidade para o seu negócio.\\n\\nEsta podendo falar?\\n\\nhttps://url-link.com/p/ifCeg3.mp4'
+            },
+            {
+              type: 'BUTTONS',
+              buttons: [
+                {
+                  type: 'URL',
+                  text: 'Ir para o site',
+                  url: 'https://blip.ai/{{1}}',
+                  example: [
+                    'desk'
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
     buttonLabel: 'Template Message - imagem vazio e botão editável',
     command: {
       id: '1',

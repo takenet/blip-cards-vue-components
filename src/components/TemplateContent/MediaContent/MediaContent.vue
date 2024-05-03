@@ -2,18 +2,7 @@
   <div :class="'blip-container media-link ' + mediaType + isFailedMessage(status, position)"
     id="blip-container">
     <div id='media-content' class="media-content">
-      <media-image
-        v-if="docType.toLowerCase().includes('image')"
-        :image-uri-msg="titleMsg"
-        :title-msg="titleMsg"
-        :text-msg="textMsg"
-        :aspect-ratio-msg="aspectRatioMsg"
-        :supported-formats-msg="supportedFormatsMsg"
-        :document="componentImage"
-        :full-document="fullDocument"
-        :position="position"
-        :date="date"
-        :useBorderRadius="false"/>
+      <media-image :componentImage="componentImage" />
 
       <media-video
         v-else-if="docType.toLowerCase().includes('video')"

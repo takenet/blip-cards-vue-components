@@ -333,7 +333,6 @@
         <blip-calls
           v-else-if="document.type === 'application/vnd.iris.calls.media+json'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
           :start-call-msg="translations.startCallMsg"
           :end-call-msg="translations.endCallMsg"
           :video-msg="translations.videoMsg"
@@ -344,6 +343,9 @@
           :failed-status-msg="translations.failedStatusMsg"
           :cancel-status-msg="translations.cancelStatusMsg"
           :not-answered-status-msg="translations.notAnsweredStatusMsg"
+          :preparing-recording-msg="translations.preparingRecordingMsg"
+          :load-recording-msg="translations.loadRecordingMsg"
+          :failed-to-send-msg="translations.failedToSend"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -357,6 +359,7 @@
           :on-cancel="cancel"
           :on-media-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
+          :on-async-fetch-session="onAsyncFetchSession"
         />
 
         <template-content
@@ -508,6 +511,35 @@
           :removed-reaction-text="translations.removedReactionText"
         />
 
+        <copy-and-paste-card
+          v-else-if="document.type === 'application/vnd.lime.copy-and-paste+json'"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-media-selected="onMediaSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :translations="translations"
+          :requiredFieldText="translations.requiredFieldText"
+          :copyContentText="translations.copyContentText"
+          :cancelText="translations.cancel"
+          :saveText="translations.save"
+          :headerMessage="translations.headerMessage"
+          :bodyMessage="translations.bodyMessage"
+          :footerMessage="translations.footerMessage"
+          :copyButtonMessage="translations.copyButtonMessage"
+          :copyContentMessage="translations.copyContentMessage"
+        />
+
         <thread-summary
           v-else-if="
             document.type === MessageTypesConstants.THREAD_SUMMARY
@@ -621,6 +653,9 @@ export default {
       type: Function
     },
     asyncFetchMedia: {
+      type: Function
+    },
+    onAsyncFetchSession: {
       type: Function
     }
   },
