@@ -19,7 +19,7 @@ const MEDIA_TYPE = {
 const parseMediaComponent = (document, MEDIA_TYPE) => {
   const { template: { components = [] } = {} } = document || {}
   const elementList = components
-    .filter(({ type }) => type === HEADER_TYPE)
+    .filter(({ type }) => type.toLowerCase().includes(HEADER_TYPE))
     .flatMap(component => component[PARAMETERS_PROPERTY])
     .filter(({ type }) => type.indexOf(MEDIA_TYPE) !== -1)
     .flatMap(parameter => parameter)
@@ -30,9 +30,9 @@ const parseMediaComponent = (document, MEDIA_TYPE) => {
       type: element.type || MEDIA_TYPE
     }))
 
-  let element = elementList[0]
-  if (element && !element.url) {
-    const header = components.filter(({ type }) => type === HEADER_TYPE)
+  let element = elementList && elementList[0]
+  if (element && !element.uri) {
+    const header = components.filter(({ type }) => type.toLowerCase().includes(HEADER_TYPE))
 
     if (header &&
       header[0] &&

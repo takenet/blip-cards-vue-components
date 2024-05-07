@@ -1,6 +1,6 @@
 <template>
   <div :class="`file-container ${position}`">
-    <div v-if="!componentDocument || !componentDocument.url || componentDocument === ''"
+    <div v-if="!componentDocument || !componentDocument.uri || componentDocument.uri === ''"
       class="default-document-div">
       <div class="default-document">
         <bds-icon name="file-name-doc" color="var(--$color-content-ghost, #8C8C8C)" />

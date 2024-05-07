@@ -24,7 +24,10 @@
             :async-fetch-media="asyncFetchMedia"/>
 
           <bds-grid direction="column" justify-content="flex-start" padding="x-2">
-            <bds-typo :class="'typo ' + position" variant="fs-16" bold="regular" type="span" v-if="hasTemplateContentBody" v-html="showTemplateContentBody()" />
+            <bds-typo v-if="hasTemplateContentBody"
+              v-html="showTemplateContentBody()"
+              :class="'typo ' + position" variant="fs-16"
+              type="span" />
           </bds-grid>
           <bds-grid
             direction="column"
@@ -160,8 +163,8 @@ export default {
         }
       }
 
-      componentTemplateBody = formatText(componentTemplateBody, '')
       componentTemplateBody = this.sanitize(componentTemplateBody)
+      componentTemplateBody = formatText(componentTemplateBody, '')
       componentTemplateBody = linkify(componentTemplateBody, this.disableLink)
 
       return componentTemplateBody

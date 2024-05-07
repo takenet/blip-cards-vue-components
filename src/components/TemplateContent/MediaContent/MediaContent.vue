@@ -2,23 +2,21 @@
   <div :class="'blip-container media-link ' + mediaType + isFailedMessage(status, position)"
     id="blip-container">
     <div id='media-content' class="media-content">
-      <media-image :componentImage="componentImage" />
+      <media-image v-if="docType.toLowerCase().includes('image')"
+        :componentImage="componentImage" />
 
-      <media-video
-        v-else-if="docType.toLowerCase().includes('video')"
+      <media-video v-else-if="docType.toLowerCase().includes('video')"
         :componentVideo="componentVideo"
         :onVideoValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-video>
 
-      <media-audio
-        v-else-if="docType.toLowerCase().includes('audio')"
+      <media-audio v-else-if="docType.toLowerCase().includes('audio')"
         :class="'padding-control'"
         :componentAudio="componentAudio"
         :onAudioValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-audio>
 
-      <media-file
-        v-else-if="docType.toLowerCase().includes('document')"
+      <media-file v-else-if="docType.toLowerCase().includes('document')"
         :componentDocument="componentDocument"
         :position="position"
         :async-fetch-media="asyncFetchMedia"></media-file>
@@ -93,6 +91,7 @@ export default {
       this.document.template &&
       this.document.template.components &&
       this.document.template.components[0] &&
+      this.document.template.components[0].type === 'HEADER' &&
       this.document.template.components[0].format)
       ? this.document.template.components[0].format
       : (this.document &&
