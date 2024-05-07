@@ -31,7 +31,7 @@ import MediaFile from './MediaFile'
 import MediaAudio from './MediaAudio'
 import MediaVideo from './MediaVideo'
 import { default as base } from '../../../mixins/baseComponent.js'
-import { parseComponentImage, parseComponentAudio, parseComponentVideo, parseComponentDocument } from '@/utils/TemplateContent'
+import { validateTextHasValue, parseComponentImage, parseComponentAudio, parseComponentVideo, parseComponentDocument } from '@/utils/TemplateContent'
 import { isFailedMessage } from '../../../utils/misc'
 import mime from 'mime-types'
 
@@ -76,10 +76,10 @@ export default {
   data: function() {
     return {
       isFailedMessage,
-      componentImage: {},
-      componentVideo: {},
-      componentDocument: {},
-      componentAudio: {},
+      componentImage: undefined,
+      componentVideo: undefined,
+      componentDocument: undefined,
+      componentAudio: undefined,
       docType: ''
     }
   },
@@ -91,7 +91,7 @@ export default {
       this.document.template &&
       this.document.template.components &&
       this.document.template.components[0] &&
-      this.document.template.components[0].type === 'HEADER' &&
+      validateTextHasValue(this.document.template.components[0].type, 'header') &&
       this.document.template.components[0].format)
       ? this.document.template.components[0].format
       : (this.document &&

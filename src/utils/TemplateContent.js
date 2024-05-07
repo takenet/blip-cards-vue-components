@@ -18,10 +18,13 @@ const MEDIA_TYPE = {
 
 const parseMediaComponent = (document, MEDIA_TYPE) => {
   const { template: { components = [] } = {} } = document || {}
+
+  if (!components) return undefined
+
   const elementList = components
-    .filter(({ type }) => type.toLowerCase().includes(HEADER_TYPE))
+    .filter(({ type }) => validateTextHasValue(type, HEADER_TYPE))
     .flatMap(component => component[PARAMETERS_PROPERTY])
-    .filter(({ type }) => type.indexOf(MEDIA_TYPE) !== -1)
+    .filter(({ type }) => validateTextHasValue(type, MEDIA_TYPE))
     .flatMap(parameter => parameter)
     .map((element) => ({
       ...element,
@@ -30,9 +33,13 @@ const parseMediaComponent = (document, MEDIA_TYPE) => {
       type: element.type || MEDIA_TYPE
     }))
 
-  let element = elementList && elementList[0]
-  if (element && !element.uri) {
-    const header = components.filter(({ type }) => type.toLowerCase().includes(HEADER_TYPE))
+  let element
+  if (elementList && elementList[0]) {
+    element = elementList[0]
+  }
+
+  if (element && (!element.uri || element.uri === '')) {
+    const header = components.filter(({ type }) => validateTextHasValue(type, HEADER_TYPE))
 
     if (header &&
       header[0] &&
@@ -59,9 +66,9 @@ export const parseComponentVideo = (document) => {
 export const parseComponentDocument = (document) => {
   const { template: { components = [] } = {} } = document || {}
   const elementList = components
-    .filter(({ type }) => type === HEADER_TYPE)
+    .filter(({ type }) => validateTextHasValue(type, HEADER_TYPE))
     .flatMap(component => component[PARAMETERS_PROPERTY])
-    .filter(({ type }) => type.indexOf(MEDIA_TYPE.DOCUMENT) !== -1)
+    .filter(({ type }) => validateTextHasValue(type, MEDIA_TYPE.DOCUMENT))
 
   return elementList[0]
     ? {
@@ -80,7 +87,7 @@ export const parseComponentButtons = (document) => {
   const { templateContent: { components = [] } = {} } = document || {}
 
   return components
-    .filter(({ type }) => type === COMPONENT_BUTTONS_TYPE)
+    .filter(({ type }) => validateTextHasValue(type, COMPONENT_BUTTONS_TYPE))
     .flatMap(component => component[BUTTONS_PROPERTY])
     .map((button, index) => ({
       ...button,
@@ -97,4 +104,8 @@ export const getButtonParametersByIndex = (document, index) => {
     .map(parameters => parameters.text)
 
   return parameters.length === 1 ? parameters[0] : ''
+}
+
+export const validateTextHasValue = (text, value) => {
+  return (text || '').toLowerCase().includes(value)
 }
