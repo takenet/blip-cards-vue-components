@@ -42,5 +42,5 @@ const formatLineBreak = (text) => {
 
 const formatVariable = (text) => {
   return text.replace(regexConsttants.REGEX_FIND_TEXT_VARIABLE,
-    '<bds-typo variant="fs-16" tag="span" italic style="color: #1e6bf1">$&</bds-typo>')
+    '<bds-typo variant="fs-16" tag="span" style="color: #1e6bf1">$&</bds-typo>')
 }

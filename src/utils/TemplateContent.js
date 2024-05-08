@@ -73,7 +73,7 @@ export const parseComponentVideo = (document) => {
 export const parseComponentDocument = (document) => {
   const { template: { components = [] } = {} } = document || {}
   const parameters = components
-    .filter(({ typeA }) => validateTextHasValue(typeA, HEADER_TYPE))
+    .filter((component) => component && validateTextHasValue(component.type, HEADER_TYPE))
     .flatMap(component => component[PARAMETERS_PROPERTY])
 
   const elementList = parameters && parameters.length > 0
@@ -120,5 +120,5 @@ export const getButtonParametersByIndex = (document, index) => {
 }
 
 export const validateTextHasValue = (text, value) => {
-  return (text || '').toLowerCase().includes(value)
+  return (text || '').toLowerCase().includes(value.toLowerCase())
 }

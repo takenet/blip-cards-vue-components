@@ -66,15 +66,16 @@ export default {
         : this.componentDocument.uri
     },
     handleFileLink: async function () {
-      const uri = await this.getFileUri()
+      this.isLoading = true
 
-      if (this.onMediaSelected) {
-        this.onMediaSelected(uri)
-      } else {
-        this.isLoading = true
-        await this.openFileInNewTab(uri)
-        this.isLoading = false
-      }
+      const uri = await this.getFileUri()
+      await this.openFileInNewTab(uri)
+
+      this.isLoading = false
+    },
+    openFileInNewTab: function(uri) {
+      window.open(uri, '_blank', 'noopener')
+      this.asyncFetchMedia && URL.revokeObjectURL(uri)
     }
   }
 }
@@ -113,6 +114,7 @@ export default {
     flex-direction: row;
     align-content: center;
     justify-content: flex-start;
+    cursor: pointer;
 
     .file-icon-wrapper {
       display: flex;
