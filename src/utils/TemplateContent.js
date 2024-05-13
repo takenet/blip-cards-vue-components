@@ -18,19 +18,48 @@ const MEDIA_TYPE = {
 
 const parseMediaComponent = (document, MEDIA_TYPE) => {
   const { template: { components = [] } = {} } = document || {}
-  const elementList = components
-    .filter(({ type }) => type === HEADER_TYPE)
-    .flatMap(component => component[PARAMETERS_PROPERTY])
-    .filter(({ type }) => type.indexOf(MEDIA_TYPE) !== -1)
-    .flatMap(parameter => parameter)
-    .map((element) => ({
-      ...element,
-      uri: element[MEDIA_TYPE].link,
-      authorizationRealm: 'blip',
-      type: element.type || MEDIA_TYPE
-    }))
 
-  return elementList[0]
+  if (!components) return undefined
+
+  const parameters = components
+    .filter((component) => component && validateTextHasValue(component.type, HEADER_TYPE))
+    .flatMap(component => component[PARAMETERS_PROPERTY])
+
+  const elementList = parameters && parameters.length > 0
+    ? parameters.filter((parameter) => parameter && validateTextHasValue(parameter.type, MEDIA_TYPE))
+      .flatMap(parameter => parameter)
+      .map((element) => ({
+        ...element,
+        uri: element[MEDIA_TYPE].link,
+        authorizationRealm: 'blip',
+        type: element.type || MEDIA_TYPE
+      }))
+    : []
+
+  let element
+  if (elementList && elementList[0]) {
+    element = elementList[0]
+  }
+
+  return getElementWithExampleUri(element, components)
+}
+
+const getElementWithExampleUri = (element, components) => {
+  if (element && (!element.uri || element.uri === '')) {
+    const header = components.filter((component) => component && validateTextHasValue(component.type, HEADER_TYPE))
+
+    if (header &&
+      header[0] &&
+      header[0].example &&
+      header[0].example.header_handle) {
+      element = {
+        ...element,
+        uri: header[0].example.header_handle[0]
+      }
+    }
+  }
+
+  return element
 }
 
 export const parseComponentImage = (document) => {
@@ -43,18 +72,24 @@ export const parseComponentVideo = (document) => {
 
 export const parseComponentDocument = (document) => {
   const { template: { components = [] } = {} } = document || {}
-  const elementList = components
-    .filter(({ type }) => type === HEADER_TYPE)
+  const parameters = components
+    .filter((component) => component && validateTextHasValue(component.type, HEADER_TYPE))
     .flatMap(component => component[PARAMETERS_PROPERTY])
-    .filter(({ type }) => type.indexOf(MEDIA_TYPE.DOCUMENT) !== -1)
 
-  return elementList[0]
-    ? {
-      ...elementList[0],
-      uri: elementList[0].document.link,
-      title: elementList[0].document.filename
-    }
-    : undefined
+  const elementList = parameters && parameters.length > 0
+    ? parameters.filter((parameter) => parameter && validateTextHasValue(parameter.type, MEDIA_TYPE.DOCUMENT))
+    : []
+
+  if (elementList.length === 0) return undefined
+
+  let element
+  element = {
+    ...elementList[0],
+    uri: elementList[0].document.link,
+    title: elementList[0].document.filename
+  }
+
+  return getElementWithExampleUri(element, components)
 }
 
 export const parseComponentAudio = (document) => {
@@ -65,7 +100,7 @@ export const parseComponentButtons = (document) => {
   const { templateContent: { components = [] } = {} } = document || {}
 
   return components
-    .filter(({ type }) => type === COMPONENT_BUTTONS_TYPE)
+    .filter((component) => component && validateTextHasValue(component.type, COMPONENT_BUTTONS_TYPE))
     .flatMap(component => component[BUTTONS_PROPERTY])
     .map((button, index) => ({
       ...button,
@@ -82,4 +117,8 @@ export const getButtonParametersByIndex = (document, index) => {
     .map(parameters => parameters.text)
 
   return parameters.length === 1 ? parameters[0] : ''
+}
+
+export const validateTextHasValue = (text, value) => {
+  return (text || '').toLowerCase().includes(value.toLowerCase())
 }

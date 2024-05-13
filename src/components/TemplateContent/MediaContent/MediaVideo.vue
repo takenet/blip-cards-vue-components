@@ -1,9 +1,17 @@
 <template>
-  <blip-video
+  <div v-if="!componentVideo || !componentVideo.uri || componentVideo.uri === ''"
+    class="default-video-div">
+    <div class="default-video">
+      <bds-icon name="video" color="var(--$color-content-ghost, #8C8C8C)" />
+    </div>
+    <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">
+      {{ defaultVideoMessage }}
+    </bds-typo>
+  </div>
+  <blip-video v-else
     :document="componentVideo"
     :position="position"
     :date="date"
-    v-if="componentVideo !== undefined"
     :on-video-validate-uri="onVideoValidateUri"
     :async-fetch-media="asyncFetchMedia"/>
 </template>
@@ -22,6 +30,10 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    defaultVideoMessage: {
+      type: String,
+      default: 'Insira um vídeo em “Mídia“'
     }
   },
   mixins: [
@@ -91,5 +103,18 @@ export default {
     border-color: $color-content-ghost;
     color: $color-surface-1;
   }
+}
+
+.default-video-div {
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-surface-2;
+  flex-direction: column;
+}
+
+.default-video {
+  margin-bottom: 8px;
 }
 </style>

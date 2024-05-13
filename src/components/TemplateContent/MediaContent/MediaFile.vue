@@ -1,12 +1,22 @@
 <template>
-  <div :class="`file-container ${position}`" v-if="componentDocument !== undefined">
-    <div class="file-wrapper">
+  <div :class="`file-container ${position}`">
+    <div v-if="!componentDocument || !componentDocument.uri || componentDocument.uri === ''"
+      class="default-document-div">
+      <div class="default-document">
+        <bds-icon name="file-name-doc" color="var(--$color-content-ghost, #8C8C8C)" />
+      </div>
+      <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">
+        {{ defaultDocumentMessage }}
+      </bds-typo>
+    </div>
+    <div v-else-if="componentDocument !== undefined"
+      class="file-wrapper">
       <div class="file-icon-wrapper">
         <img v-if="isLoading" :src="loadingGif" alt />
         <img v-else class="file-icon" :src="mimeType | fileIconFilter"/>
       </div>
       <div class="description-wrapper">
-        <div class="link-description">
+        <div class="link-description" @click="(editable || isLoading ? null : handleFileLink())">
           <span v-if="componentDocument.title" :title="componentDocument.title" class="text">{{ componentDocument.title }}</span>
           <span v-else :title="componentDocument.uri" class="text">{{ componentDocument.uri }}</span>
         </div>
@@ -20,11 +30,19 @@
 
 import { default as base } from '../../../mixins/baseComponent.js'
 import mime from 'mime-types'
+import { isAuthenticatedMediaLink, tryCreateLocalMediaUri } from '../../../utils/media.js'
 
 export default {
   name: 'media-file',
   props: {
-    componentDocument: {}
+    componentDocument: {},
+    asyncFetchMedia: {
+      type: Function
+    },
+    defaultDocumentMessage: {
+      type: String,
+      default: 'Insira um documento em “Mídia“'
+    }
   },
   mixins: [base],
   computed: {
@@ -39,6 +57,25 @@ export default {
   data: function() {
     return {
       isLoading: false
+    }
+  },
+  methods: {
+    getFileUri: async function () {
+      return isAuthenticatedMediaLink(this.componentDocument)
+        ? tryCreateLocalMediaUri(this.componentDocument, this.asyncFetchMedia)
+        : this.componentDocument.uri
+    },
+    handleFileLink: async function () {
+      this.isLoading = true
+
+      const uri = await this.getFileUri()
+      await this.openFileInNewTab(uri)
+
+      this.isLoading = false
+    },
+    openFileInNewTab: function(uri) {
+      window.open(uri, '_blank', 'noopener')
+      this.asyncFetchMedia && URL.revokeObjectURL(uri)
     }
   }
 }
@@ -77,6 +114,7 @@ export default {
     flex-direction: row;
     align-content: center;
     justify-content: flex-start;
+    cursor: pointer;
 
     .file-icon-wrapper {
       display: flex;
@@ -129,5 +167,16 @@ export default {
   }
 }
 
+.default-document-div {
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-surface-2;
+  flex-direction: column;
+}
 
+.default-document {
+  margin-bottom: 8px;
+}
 </style>

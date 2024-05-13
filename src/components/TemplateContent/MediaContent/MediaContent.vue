@@ -2,22 +2,24 @@
   <div :class="'blip-container media-link ' + mediaType + isFailedMessage(status, position)"
     id="blip-container">
     <div id='media-content' class="media-content">
-      <media-image :componentImage="componentImage" />
+      <media-image v-if="docType.includes('image')"
+        :componentImage="componentImage" />
 
-      <media-video
+      <media-video v-else-if="docType.includes('video')"
         :componentVideo="componentVideo"
         :onVideoValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-video>
 
-      <media-audio
+      <media-audio v-else-if="docType.includes('audio')"
         :class="'padding-control'"
         :componentAudio="componentAudio"
         :onAudioValidateUri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"></media-audio>
 
-      <media-file
+      <media-file v-else-if="docType.includes('document')"
         :componentDocument="componentDocument"
-        :position="position"></media-file>
+        :position="position"
+        :async-fetch-media="asyncFetchMedia"></media-file>
     </div>
   </div>
 </template>
@@ -29,9 +31,8 @@ import MediaFile from './MediaFile'
 import MediaAudio from './MediaAudio'
 import MediaVideo from './MediaVideo'
 import { default as base } from '../../../mixins/baseComponent.js'
-import { parseComponentImage, parseComponentAudio, parseComponentVideo, parseComponentDocument } from '@/utils/TemplateContent'
+import { validateTextHasValue, parseComponentImage, parseComponentAudio, parseComponentVideo, parseComponentDocument } from '@/utils/TemplateContent'
 import { isFailedMessage } from '../../../utils/misc'
-import mime from 'mime-types'
 
 export default {
   name: 'media-content',
@@ -60,31 +61,41 @@ export default {
         this.componentVideo ||
         { type: '' }
 
-      const media = mediaComponent.type.split('/')[0]
+      const media = this.getMediaTypeFromText(mediaComponent.type)
       return media === 'video' ? 'media-video' : media
-    },
-    mimeType: function() {
-      let extension = mime.extension(this.componentDocument.type)
-      if (extension) {
-        return this.componentDocument.type
-      }
-      return mime.lookup(this.componentDocument.uri)
     }
   },
   data: function() {
     return {
       isFailedMessage,
-      componentImage: {},
-      componentVideo: {},
-      componentDocument: {},
-      componentAudio: {},
-      isLoading: false
+      componentImage: undefined,
+      componentVideo: undefined,
+      componentDocument: undefined,
+      componentAudio: undefined,
+      docType: ''
     }
   },
   mixins: [
     base
   ],
   created() {
+    this.docType = (this.document &&
+      this.document.template &&
+      this.document.template.components &&
+      this.document.template.components[0] &&
+      validateTextHasValue(this.document.template.components[0].type, 'header') &&
+      this.document.template.components[0].format)
+      ? this.document.template.components[0].format
+      : (this.document &&
+      this.document.template &&
+      this.document.template.components &&
+      this.document.template.components[0] &&
+      this.document.template.components[0].parameters &&
+      this.document.template.components[0].parameters[0])
+      ? this.document.template.components[0].parameters[0].type
+      : ''
+
+    this.docType = this.docType.toLowerCase()
     this.componentImage = parseComponentImage(this.document)
     this.componentAudio = parseComponentAudio(this.document)
     this.componentDocument = parseComponentDocument(this.document)
@@ -95,6 +106,11 @@ export default {
     MediaFile,
     MediaAudio,
     MediaVideo
+  },
+  methods: {
+    getMediaTypeFromText(text) {
+      return (text || '').split('/')[0]
+    }
   }
 }
 </script>
