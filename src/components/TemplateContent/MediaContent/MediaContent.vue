@@ -97,16 +97,13 @@ export default {
 
     this.docType = this.docType.toLowerCase()
 
-    if(docType.includes('image')) {
+    if (this.docType.includes('image')) {
       this.componentImage = parseComponentImage(this.document)
-    }
-    else if(docType.includes('audio')) {
+    } else if (this.docType.includes('audio')) {
       this.componentAudio = parseComponentAudio(this.document)
-    }
-    else if(docType.includes('document')) {
+    } else if (this.docType.includes('document')) {
       this.componentDocument = parseComponentDocument(this.document)
-    }
-    else if(docType.includes('video')) {
+    } else if (this.docType.includes('video')) {
       this.componentVideo = parseComponentVideo(this.document)
     }
   },
