@@ -56,7 +56,7 @@
         <bds-icon v-if="group.position === 'right'"
           name="info" 
           theme="solid" 
-          aria-label="Active message failed reason" 
+          :aria-label="translations.failedToSend" 
           @click="onFailedClickIcon(group)"
           class="icon-message-failed">
         </bds-icon>
@@ -223,7 +223,7 @@ export default {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    color: $color-delete;
+    color: $color-extended-red;
     cursor: pointer;  
     position: absolute;
     bottom: 10px;
