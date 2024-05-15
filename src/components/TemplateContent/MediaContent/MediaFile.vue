@@ -6,7 +6,7 @@
         <bds-icon name="file-name-doc" color="var(--$color-content-ghost, #8C8C8C)" />
       </div>
       <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">
-        {{ defaultDocumentMessage }}
+        {{ emptyMediaMessage }}
       </bds-typo>
     </div>
     <div v-else-if="componentDocument !== undefined"
@@ -39,7 +39,7 @@ export default {
     asyncFetchMedia: {
       type: Function
     },
-    defaultDocumentMessage: {
+    emptyMediaMessage: {
       type: String,
       default: 'Insira um documento em “Mídia“'
     }

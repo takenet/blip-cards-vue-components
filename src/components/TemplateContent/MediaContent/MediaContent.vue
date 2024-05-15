@@ -3,12 +3,14 @@
     id="blip-container">
     <div id='media-content' class="media-content">
       <media-image v-if="docType.includes('image')"
-        :componentImage="componentImage" />
+        :componentImage="componentImage"
+        :emptyMediaMessage="defaultMediaMessage" />
 
       <media-video v-else-if="docType.includes('video')"
         :componentVideo="componentVideo"
         :onVideoValidateUri="onAudioValidateUri"
-        :async-fetch-media="asyncFetchMedia"></media-video>
+        :async-fetch-media="asyncFetchMedia"
+        :emptyMediaMessage="defaultMediaMessage"></media-video>
 
       <media-audio v-else-if="docType.includes('audio')"
         :class="'padding-control'"
@@ -19,11 +21,12 @@
       <media-file v-else-if="docType.includes('document')"
         :componentDocument="componentDocument"
         :position="position"
-        :async-fetch-media="asyncFetchMedia"></media-file>
+        :async-fetch-media="asyncFetchMedia"
+        :emptyMediaMessage="defaultMediaMessage"></media-file>
     </div>
   </div>
 </template>
-  
+
 <script>
 
 import MediaImage from './MediaImage'
@@ -72,7 +75,8 @@ export default {
       componentVideo: undefined,
       componentDocument: undefined,
       componentAudio: undefined,
-      docType: ''
+      docType: '',
+      defaultMediaMessage: ''
     }
   },
   mixins: [
@@ -95,6 +99,7 @@ export default {
       ? this.document.template.components[0].parameters[0].type
       : ''
 
+    this.defaultMediaMessage = this.document.emptyMediaMessage
     this.docType = this.docType.toLowerCase()
 
     if (this.docType.includes('image')) {

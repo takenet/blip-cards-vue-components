@@ -9,7 +9,7 @@
       <bds-icon name="file-image" color="var(--$color-content-ghost, #8C8C8C)" />
     </div>
     <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">
-      {{ defaultImageMessage }}
+      {{ emptyMediaMessage }}
     </bds-typo>
   </div>
 </template>
@@ -23,9 +23,9 @@ export default {
     asyncFetchMedia: {
       type: Function
     },
-    defaultImageMessage: {
+    emptyMediaMessage: {
       type: String,
-      default: 'Insira uma imagem em “Mídia“'
+      default: 'Insira um imagem em “Mídia“'
     }
   },
   methods: {
