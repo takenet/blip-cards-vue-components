@@ -157,8 +157,8 @@ export default {
           bodyFilledVariables = bodyFilledVariables[0].parameters
           const regexFindVariablesInText = /\{\{(\d+)\}\}/g
           componentTemplateBody = componentTemplateBody.replace(regexFindVariablesInText, (match, index) => {
-            const value = bodyFilledVariables[index - 1].text
-            return value !== undefined ? value : match
+            const variable = bodyFilledVariables[index - 1]
+            return variable ? variable.text : match
           })
         }
       }

@@ -84,19 +84,19 @@ export default {
   ],
   created() {
     this.docType = (this.document &&
-      this.document.template &&
-      this.document.template.components &&
-      this.document.template.components[0] &&
-      validateTextHasValue(this.document.template.components[0].type, 'header') &&
-      this.document.template.components[0].format)
-      ? this.document.template.components[0].format
+      this.document.templateContent &&
+      this.document.templateContent.components &&
+      this.document.templateContent.components[0] &&
+      validateTextHasValue(this.document.templateContent.components[0].type, 'header') &&
+      this.document.templateContent.components[0].format)
+      ? this.document.templateContent.components[0].format
       : (this.document &&
-      this.document.template &&
-      this.document.template.components &&
-      this.document.template.components[0] &&
-      this.document.template.components[0].parameters &&
-      this.document.template.components[0].parameters[0])
-      ? this.document.template.components[0].parameters[0].type
+      this.document.templateContent &&
+      this.document.templateContent.components &&
+      this.document.templateContent.components[0] &&
+      this.document.templateContent.components[0].parameters &&
+      this.document.templateContent.components[0].parameters[0])
+      ? this.document.templateContent.components[0].parameters[0].type
       : ''
 
     this.defaultMediaMessage = this.document.emptyMediaMessage

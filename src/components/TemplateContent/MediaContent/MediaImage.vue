@@ -25,7 +25,7 @@ export default {
     },
     emptyMediaMessage: {
       type: String,
-      default: 'Insira um imagem em “Mídia“'
+      default: 'Insira um imagem em "Mídia"'
     }
   },
   methods: {
