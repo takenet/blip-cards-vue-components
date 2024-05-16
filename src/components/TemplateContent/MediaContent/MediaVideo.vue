@@ -5,7 +5,7 @@
       <bds-icon name="video" color="var(--$color-content-ghost, #8C8C8C)" />
     </div>
     <bds-typo class="typo" tag="p" variant="fs-12" bold="regular">
-      {{ defaultVideoMessage }}
+      {{ emptyMediaMessage }}
     </bds-typo>
   </div>
   <blip-video v-else
@@ -31,7 +31,7 @@ export default {
     asyncFetchMedia: {
       type: Function
     },
-    defaultVideoMessage: {
+    emptyMediaMessage: {
       type: String,
       default: 'Insira um vídeo em “Mídia“'
     }
