@@ -30,7 +30,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :is-external-message="checkIsExternalMessage"
+          :is-external-message="checkIsExternalMessage(document)"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -53,7 +53,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :disable-link="disableLink"
-          :is-external-message="checkIsExternalMessage"
+          :is-external-message="checkIsExternalMessage(document)"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -601,6 +601,7 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
+import { checkIsExternalMessage } from '../utils/externalMessages.js'
 
 const supportedRepliedTypes = [
   MessageTypesConstants.TEXT_MESSAGE,
@@ -667,7 +668,8 @@ export default {
     return {
       editableDocument: this.document,
       isCardEditing: this.editing,
-      photoMargin: 0
+      photoMargin: 0,
+      checkIsExternalMessage
     }
   },
   watch: {
@@ -757,9 +759,6 @@ export default {
   computed: {
     MessageTypesConstants() {
       return MessageTypesConstants
-    },
-    checkIsExternalMessage() {
-      return this.document && this.document.metadata && this.document.metadata['#messageEmitter'] === 'externalMessages'
     }
   }
 }
