@@ -3,7 +3,7 @@
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
       <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
-      <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
+      <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo || onFailedClickIcon, [group.position]: true}">
         <blip-card
           v-for="message in group.msgs"
           :id="message.id"
@@ -14,7 +14,6 @@
           :editing="editing"
           :hide-options="hideOptions || message.hideOptions"
           :on-save="onSave"
-          :on-failed-click-icon="onFailedClickIcon"
           :status="message.status"
           :on-deleted="onDeleted"
           :on-cancel="onCancel"
@@ -171,6 +170,7 @@ export default {
           group.msgs.push(message)
           group.date = message.date
           group.status = message.status
+          group.reason = message.reason
         } else {
           groups.push(group)
 
