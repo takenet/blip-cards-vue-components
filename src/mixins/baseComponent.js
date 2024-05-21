@@ -50,6 +50,13 @@ var baseComponent = {
     },
     editing: {
       type: Boolean
+    },
+    isExternalMessage: {
+      type: Boolean,
+      default: false
+    },
+    externalMessageText: {
+      type: String
     }
   },
   watch: {
