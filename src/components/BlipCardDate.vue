@@ -10,7 +10,7 @@
     >
       {{ failedToSendMsg }}
     </div>
-    {{ date }}
+    {{ isExternalMessage ? externalMessageText + ' | ' + date : date }}
   </div>
 </template>
 
@@ -37,6 +37,14 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem.'
+    },
+    isExternalMessage: {
+      type: Boolean,
+      default: false
+    },
+    externalMessageText: {
+      type: String,
+      default: 'Enviada pelo aplicativo'
     }
   },
   computed: {
