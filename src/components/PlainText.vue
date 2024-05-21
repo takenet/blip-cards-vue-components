@@ -29,27 +29,14 @@
           <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
         </div>
       </div>
-
-      <div class="flex" :class="'notification ' + position" v-if="date">
-        <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
-        <img
-          v-else-if="this.status === 'accepted' && this.position === 'right'"
-          :src="checkSentSvg"
-        >
-        <img
-          v-else-if="this.status === 'received' && this.position === 'right'"
-          :src="doubleCheckReceivedSvg"
-        >
-        <img
-          v-else-if="this.status === 'consumed' && this.position === 'right'"
-          :src="doubleCheckReadSvg"
-        >
-        <div
-          v-else-if="this.status === 'failed' && this.position === 'right'"
-          class="failure"
-        >{{ failedToSendMsg }}</div>
-        <div>{{ date }}</div>
-      </div>
+      <blip-card-date
+        :status="status"
+        :position="position"
+        :date="date"
+        :failed-to-send-msg="failedToSendMsg"
+        :is-external-message="isExternalMessage"
+        :external-message-text="externalMessageText"
+      />
     </div>
   </div>
 

@@ -30,6 +30,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="checkIsExternalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <plain-text
@@ -51,6 +53,8 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :disable-link="disableLink"
+          :is-external-message="checkIsExternalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <media-link
@@ -753,6 +757,9 @@ export default {
   computed: {
     MessageTypesConstants() {
       return MessageTypesConstants
+    },
+    checkIsExternalMessage() {
+      return this.document && this.document.metadata && this.document.metadata['#messageEmitter'] === 'externalMessages'
     }
   }
 }
