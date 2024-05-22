@@ -220,16 +220,16 @@ export default {
   }
 
   .icon-message-failed {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: $color-extended-red;
-    cursor: pointer;  
-    position: absolute;
     bottom: 10px;
     right: 0%;
     width: 25px;
     height: 25px;
+    color: $color-extended-red;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;  
+    position: absolute;
   }
 
   .blip-card-group {
