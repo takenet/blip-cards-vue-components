@@ -84,6 +84,8 @@
           :on-cancel="cancel"
           :on-audio-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
+          :is-external-message="checkIsExternalMessage(document)"
+          :external-message-text="translations.externalMessageText"
         />
 
         <document-select
