@@ -1,5 +1,5 @@
 <template>
-  <div class="flex" :class="'notification ' + position" v-if="date">
+  <div class="flex" :class="`${isGroup ? 'group-' : ''}notification ` + position" v-if="date">
     <img
       v-if="this.status !== 'failed' && this.position === 'right'"
       :src="this.getImage"
@@ -45,6 +45,10 @@ export default {
     externalMessageText: {
       type: String,
       default: 'Enviada pelo aplicativo'
+    },
+    isGroup: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
