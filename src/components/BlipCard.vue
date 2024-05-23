@@ -525,6 +525,8 @@
           :on-audio-validate-uri="onAudioValidateUri"
           :reaction-text="translations.reactionText"
           :removed-reaction-text="translations.removedReactionText"
+          :is-external-message="checkIsExternalMessage(document)"
+          :external-message-text="translations.externalMessageText"
         />
 
         <copy-and-paste-card
