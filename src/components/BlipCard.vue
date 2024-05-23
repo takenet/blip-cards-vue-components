@@ -440,6 +440,8 @@
           :phone-label="translations.phoneLabel"
           :mail-label="translations.mailLabel"
           :address-label="translations.addressLabel"
+          :is-external-message="checkIsExternalMessage(document)"
+          :external-message-text="translations.externalMessageText"
         />
 
         <application-json
