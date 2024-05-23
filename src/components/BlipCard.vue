@@ -30,7 +30,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :is-external-message="checkIsExternalMessage(document)"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -53,7 +53,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :disable-link="disableLink"
-          :is-external-message="checkIsExternalMessage(document)"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -84,7 +84,7 @@
           :on-cancel="cancel"
           :on-audio-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
-          :is-external-message="checkIsExternalMessage(document)"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -197,7 +197,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :is-external-message="checkIsExternalMessage(document)"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -237,7 +237,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :is-external-message="checkIsExternalMessage(document)"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -415,7 +415,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :is-external-message="checkIsExternalMessage(document)"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -438,7 +438,7 @@
           :phone-label="translations.phoneLabel"
           :mail-label="translations.mailLabel"
           :address-label="translations.addressLabel"
-          :is-external-message="checkIsExternalMessage(document)"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -491,7 +491,7 @@
           :video-uri-msg="translations.videoUri"
           :on-audio-validate-uri="onAudioValidateUri"
           :reply-text="translations.replyText"
-          :is-external-message="checkIsExternalMessage(document)"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -525,7 +525,7 @@
           :on-audio-validate-uri="onAudioValidateUri"
           :reaction-text="translations.reactionText"
           :removed-reaction-text="translations.removedReactionText"
-          :is-external-message="checkIsExternalMessage(document)"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
         />
 
@@ -682,8 +682,7 @@ export default {
     return {
       editableDocument: this.document,
       isCardEditing: this.editing,
-      photoMargin: 0,
-      checkIsExternalMessage
+      photoMargin: 0
     }
   },
   watch: {
@@ -773,6 +772,9 @@ export default {
   computed: {
     MessageTypesConstants() {
       return MessageTypesConstants
+    },
+    externalMessage() {
+      return checkIsExternalMessage(this.document)
     }
   }
 }
