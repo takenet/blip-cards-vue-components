@@ -124,6 +124,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="checkIsExternalMessage(document)"
+          :external-message-text="translations.externalMessageText"
         />
 
         <collection
