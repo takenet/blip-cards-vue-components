@@ -491,6 +491,8 @@
           :video-uri-msg="translations.videoUri"
           :on-audio-validate-uri="onAudioValidateUri"
           :reply-text="translations.replyText"
+          :is-external-message="checkIsExternalMessage(document)"
+          :external-message-text="translations.externalMessageText"
         />
 
         <reaction-card
