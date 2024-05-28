@@ -3,7 +3,7 @@
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
       <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
-      <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
+      <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo || onFailedClickIcon, [group.position]: true}">
         <blip-card
           v-for="message in group.msgs"
           :id="message.id"
@@ -14,7 +14,6 @@
           :editing="editing"
           :hide-options="hideOptions || message.hideOptions"
           :on-save="onSave"
-          :on-failed-click-icon="onFailedClickIcon"
           :status="message.status"
           :on-deleted="onDeleted"
           :on-cancel="onCancel"
@@ -168,6 +167,7 @@ export default {
           group.msgs.push(message2)
           group.date = message2.date
           group.status = message2.status
+          group.reason = message2.reason
         } else {
           groups.push(group)
 
@@ -217,16 +217,16 @@ export default {
   }
 
   .icon-message-failed {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: $color-extended-red;
-    cursor: pointer;  
-    position: absolute;
     bottom: 10px;
     right: 0%;
     width: 25px;
     height: 25px;
+    color: $color-extended-red;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;  
+    position: absolute;
   }
 
   .blip-card-group {
