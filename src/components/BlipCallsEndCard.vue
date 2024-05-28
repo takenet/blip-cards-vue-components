@@ -45,7 +45,7 @@
             </div>
           </div>
           <div
-            v-if="isSuccess && isMobcall"
+            v-if="isSuccess"
             :class="
               `content__record ${documentTypeClass} ${
                 hasMediaUri ? 'has-media' : ''
@@ -299,11 +299,6 @@ export default {
     documentStatusClass: function() {
       return this.document.status.toLowerCase()
     },
-    isMobcall: function() {
-      return this.document.provider
-        ? this.document.provider.toLowerCase() === 'mobcall'
-        : true
-    },
     isOutboundCall: function() {
       return this.document.direction
         ? this.document.direction.toLowerCase() === 'outbound'
@@ -313,8 +308,6 @@ export default {
   methods: {
     async refreshMediaUrl() {
       try {
-        if (!this.isMobcall) return
-
         if (this.document.media && this.document.media.uri) {
           this.hasMediaUri = true
           return
