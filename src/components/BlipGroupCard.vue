@@ -159,26 +159,26 @@ export default {
         status: this.documents[0].status
       }
       for (let i = 1; i < this.documents.length; i++) {
-        const message1 = group.msgs[group.msgs.length - 1]
-        const message2 = this.documents[i]
-        const isMessage1External = checkIsExternalMessage(message1.document)
-        const isMessage2External = checkIsExternalMessage(message2.document)
-        if (this.compareMessages(message1, message2) && (isMessage1External === isMessage2External)) {
-          group.msgs.push(message2)
-          group.date = message2.date
-          group.status = message2.status
-          group.reason = message2.reason
+        const lastMessage = group.msgs[group.msgs.length - 1]
+        const currentMessage = this.documents[i]
+        const isLastMessageExternal = checkIsExternalMessage(lastMessage.document)
+        const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
+        if (this.compareMessages(lastMessage, currentMessage) && (isLastMessageExternal === isCurrentMessageExternal)) {
+          group.msgs.push(currentMessage)
+          group.date = currentMessage.date
+          group.status = currentMessage.status
+          group.reason = currentMessage.reason
         } else {
           groups.push(group)
 
           group = {
-            msgs: [message2],
-            position: message2.position,
-            photo: message2.photo,
-            date: message2.date,
-            hasNotification: this.showNotification(message2),
-            status: message2.status,
-            reason: message2.reason
+            msgs: [currentMessage],
+            position: currentMessage.position,
+            photo: currentMessage.photo,
+            date: currentMessage.date,
+            hasNotification: this.showNotification(currentMessage),
+            status: currentMessage.status,
+            reason: currentMessage.reason
           }
         }
       }
