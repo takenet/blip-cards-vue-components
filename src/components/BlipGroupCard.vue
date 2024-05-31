@@ -41,6 +41,7 @@
           :is-external-message="checkIsExternalMessage(group.msgs[0].document)"
           :external-message-text="externalMessageText"
           :is-group="true"
+          :show-alert-icon="Boolean(onFailedClickIcon)"
         />
       </div>
       <span v-if="onFailedClickIcon && group.status === 'failed'">

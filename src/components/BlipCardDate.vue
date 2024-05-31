@@ -8,6 +8,7 @@
       v-else-if="this.status === 'failed' && this.position === 'right'"
       class="failure"
     >
+      <img v-if="this.showAlertIcon" :src="alertSvg" draggable="false"/>
       {{ failedToSendMsg }}
     </div>
     {{ isExternalMessage ? externalMessageText + ' | ' + date : date }}
@@ -19,6 +20,7 @@ import checkSentSvg from '../assets/img/CheckSent.svg'
 import clockSvg from '../assets/img/clock.svg'
 import doubleCheckReceivedSvg from '../assets/img/DoubleCheckReceived.svg'
 import doubleCheckReadSvg from '../assets/img/DoubleCheckRead.svg'
+import alertSvg from '../assets/img/alert.svg'
 
 export default {
   name: 'blip-card-date',
@@ -49,6 +51,15 @@ export default {
     isGroup: {
       type: Boolean,
       default: false
+    },
+    showAlertIcon: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: function() {
+    return {
+      alertSvg
     }
   },
   computed: {
