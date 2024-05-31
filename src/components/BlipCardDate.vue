@@ -13,6 +13,9 @@
     </div>
     {{ isExternalMessage ? externalMessageText + ' | ' + date : date }}
   </div>
+  <div class="flex" :class="`${isGroup ? 'group-' : ''}notification ` + position" v-else>
+    <img v-if="this.status === 'dispatched' && this.position === 'right'" :src="clockSvg" draggable="false">
+  </div>
 </template>
 
 <script>
@@ -59,7 +62,8 @@ export default {
   },
   data: function() {
     return {
-      alertSvg
+      alertSvg,
+      clockSvg
     }
   },
   computed: {
