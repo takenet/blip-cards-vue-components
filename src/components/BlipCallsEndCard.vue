@@ -32,6 +32,22 @@
                   :margin="false"
                   >{{ identificationText }}
                 </bds-typo>
+                <div v-if="isSuccess && hasMediaUri">
+                  <bds-dropdown position="bottom-right">
+                    <div slot="dropdown-activator">
+                      <bds-icon class="btn-download" v-if="position === 'right'" color="white" name="arrow-down"/>
+                    </div>
+                    <div slot="dropdown-content">
+                      <bds-list type-list="default">
+                        <bds-list-item
+                          text="Baixar gravação"
+                          clickable
+                          @click="onDownload"
+                        ></bds-list-item>
+                      </bds-list>
+                    </div>
+                  </bds-dropdown>
+                </div>
               </div>
               <div class="content__details__text__status">
                 <bds-typo
@@ -43,23 +59,6 @@
                 </bds-typo>
               </div>
             </div>
-          </div>
-          <div v-if="isSuccess && hasMediaUri">
-            <bds-dropdown>
-              <div slot="dropdown-activator">
-                <bds-button-icon variant="primary" icon="arrow-down" size="short"></bds-button-icon>
-              </div>
-              <div slot="dropdown-content">
-                <bds-list type-list="default">
-                  <bds-list-item
-                    text="Download"
-                    icon="download"
-                    clickable
-                    @click="onDownload"
-                  ></bds-list-item>
-                </bds-list>
-              </div>
-            </bds-dropdown>
           </div>
           <div
             v-if="isSuccess"
@@ -407,7 +406,7 @@ export default {
     emitUpdate() {
       this.$emit('updated')
     },
-    async onDownload(option) {
+    async onDownload() {
       const a = document.createElement('a')
 
       const response = await fetch(this.document.media.uri)
@@ -459,6 +458,10 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
     word-wrap: break-word;
     text-align: left;
 
+    .btn-download {
+      cursor: pointer;
+    }
+
     .content {
       display: flex;
       flex-direction: column;
@@ -504,11 +507,11 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            gap: $space-6;
             align-self: stretch;
 
             bds-typo.title {
               flex: 1;
+              padding-right: $space-6;
             }
           }
 
