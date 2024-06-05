@@ -44,6 +44,23 @@
               </div>
             </div>
           </div>
+          <div v-if="isSuccess && hasMediaUri">
+            <bds-dropdown>
+              <div slot="dropdown-activator">
+                <bds-button-icon variant="primary" icon="arrow-down" size="short"></bds-button-icon>
+              </div>
+              <div slot="dropdown-content">
+                <bds-list type-list="default">
+                  <bds-list-item
+                    text="Download"
+                    icon="download"
+                    clickable
+                    @click="onDownload"
+                  ></bds-list-item>
+                </bds-list>
+              </div>
+            </bds-dropdown>
+          </div>
           <div
             v-if="isSuccess"
             :class="
@@ -389,6 +406,26 @@ export default {
     },
     emitUpdate() {
       this.$emit('updated')
+    },
+    async onDownload(option) {
+      const a = document.createElement('a')
+
+      const response = await fetch(this.document.media.uri)
+      const blob = await response.blob()
+
+      const url = window.URL.createObjectURL(blob)
+
+      a.style.diplay = 'none'
+      a.target = '_blank'
+      a.href = url
+      a.download = `${this.document.sessionId}.webm`
+
+      document.body.appendChild(a)
+
+      a.click()
+
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
     }
   }
 }
