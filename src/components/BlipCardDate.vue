@@ -9,7 +9,7 @@
       class="failure"
     >
       <img v-if="this.showAlertIcon" :src="alertSvg" draggable="false"/>
-      {{ failedToSendMsg }}
+      {{ showAlertIcon ? '' : failedToSendMsg }}
     </div>
     {{ isExternalMessage ? externalMessageText + ' | ' + date : date }}
   </div>
