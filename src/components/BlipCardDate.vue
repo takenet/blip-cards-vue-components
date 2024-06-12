@@ -1,5 +1,5 @@
 <template>
-  <div class="flex" :class="'notification ' + position" v-if="date">
+  <div class="flex" :class="`${isGroup ? 'group-' : ''}notification ` + position" v-if="date">
     <img
       v-if="this.status !== 'failed' && this.position === 'right'"
       :src="this.getImage"
@@ -8,9 +8,13 @@
       v-else-if="this.status === 'failed' && this.position === 'right'"
       class="failure"
     >
-      {{ failedToSendMsg }}
+      <img v-if="this.showAlertIcon" :src="alertSvg" draggable="false"/>
+      {{ showAlertIcon ? '' : failedToSendMsg }}
     </div>
-    {{ date }}
+    {{ isExternalMessage ? externalMessageText + ' | ' + date : date }}
+  </div>
+  <div class="flex" :class="`${isGroup ? 'group-' : ''}notification ` + position" v-else>
+    <img v-if="this.status === 'dispatched' && this.position === 'right'" :src="clockSvg" draggable="false">
   </div>
 </template>
 
@@ -19,6 +23,7 @@ import checkSentSvg from '../assets/img/CheckSent.svg'
 import clockSvg from '../assets/img/clock.svg'
 import doubleCheckReceivedSvg from '../assets/img/DoubleCheckReceived.svg'
 import doubleCheckReadSvg from '../assets/img/DoubleCheckRead.svg'
+import alertSvg from '../assets/img/alert.svg'
 
 export default {
   name: 'blip-card-date',
@@ -37,6 +42,28 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem.'
+    },
+    isExternalMessage: {
+      type: Boolean,
+      default: false
+    },
+    externalMessageText: {
+      type: String,
+      default: 'Enviada pelo aplicativo'
+    },
+    isGroup: {
+      type: Boolean,
+      default: false
+    },
+    showAlertIcon: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: function() {
+    return {
+      alertSvg,
+      clockSvg
     }
   },
   computed: {

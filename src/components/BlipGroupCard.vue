@@ -33,23 +33,16 @@
           :async-fetch-media="asyncFetchMedia"
           :on-async-fetch-session="onAsyncFetchSession"
         />
-
-        <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
-          <img v-if="group.status === 'dispatched' && group.position === 'right'" class='dispatched' :src="clockSvg" draggable="false"/>
-          <img v-else-if="group.status === 'accepted' && group.position === 'right'" class='accepted' :src="checkSentSvg" draggable="false"/>
-          <img v-else-if="group.status === 'received' && group.position === 'right'" class='received' :src="doubleCheckReceivedSvg" draggable="false"/>
-          <img v-else-if="group.status === 'consumed' && group.position === 'right'" class='consumed' :src="doubleCheckReadSvg" draggable="false"/>
-          <span v-else-if="group.status === 'failed' && group.position === 'right'" class='failure'>
-            <img v-if="onFailedClickIcon" :src="alertSvg" draggable="false"/>
-            <span v-else>
-               {{ failedMessageNotification(group.msgs[0].type) }}
-            </span>
-          </span>
-          <span>{{ group.date }}</span>
-        </div>
-        <div class="flex" :class="'group-notification ' + group.position" v-else>
-          <img v-if="group.status === 'dispatched' && group.position === 'right'" :src="clockSvg" draggable="false">
-        </div>
+        <blip-card-date
+          :status="group.status"
+          :position="group.position"
+          :date="group.date"
+          :failed-to-send-msg="failedMessageNotification(group.msgs[0].type)"
+          :is-external-message="checkIsExternalMessage(group.msgs[0].document)"
+          :external-message-text="externalMessageText"
+          :is-group="true"
+          :show-alert-icon="Boolean(onFailedClickIcon)"
+        />
       </div>
       <span v-if="onFailedClickIcon && group.status === 'failed'">
         <bds-icon v-if="group.position === 'right'"
@@ -71,6 +64,7 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
+import { checkIsExternalMessage } from '../utils/externalMessages.js'
 
 export default {
   name: 'blip-group-card',
@@ -147,7 +141,8 @@ export default {
   },
   data() {
     return {
-      photoMargin: 0
+      photoMargin: 0,
+      checkIsExternalMessage
     }
   },
   computed: {
@@ -165,23 +160,26 @@ export default {
         status: this.documents[0].status
       }
       for (let i = 1; i < this.documents.length; i++) {
-        const message = this.documents[i]
-        if (this.compareMessages(group.msgs[group.msgs.length - 1], message)) {
-          group.msgs.push(message)
-          group.date = message.date
-          group.status = message.status
-          group.reason = message.reason
+        const lastMessage = group.msgs[group.msgs.length - 1]
+        const currentMessage = this.documents[i]
+        const isLastMessageExternal = checkIsExternalMessage(lastMessage.document)
+        const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
+        if (this.compareMessages(lastMessage, currentMessage) && (isLastMessageExternal === isCurrentMessageExternal)) {
+          group.msgs.push(currentMessage)
+          group.date = currentMessage.date
+          group.status = currentMessage.status
+          group.reason = currentMessage.reason
         } else {
           groups.push(group)
 
           group = {
-            msgs: [message],
-            position: message.position,
-            photo: message.photo,
-            date: message.date,
-            hasNotification: this.showNotification(message),
-            status: message.status,
-            reason: message.reason
+            msgs: [currentMessage],
+            position: currentMessage.position,
+            photo: currentMessage.photo,
+            date: currentMessage.date,
+            hasNotification: this.showNotification(currentMessage),
+            status: currentMessage.status,
+            reason: currentMessage.reason
           }
         }
       }

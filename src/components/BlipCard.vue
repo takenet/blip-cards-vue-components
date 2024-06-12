@@ -30,6 +30,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <plain-text
@@ -51,6 +53,8 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :disable-link="disableLink"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <media-link
@@ -80,6 +84,8 @@
           :on-cancel="cancel"
           :on-audio-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <document-select
@@ -191,6 +197,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <survey
@@ -229,6 +237,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <request-location
@@ -405,6 +415,8 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <contact
@@ -426,6 +438,8 @@
           :phone-label="translations.phoneLabel"
           :mail-label="translations.mailLabel"
           :address-label="translations.addressLabel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <application-json
@@ -477,6 +491,8 @@
           :video-uri-msg="translations.videoUri"
           :on-audio-validate-uri="onAudioValidateUri"
           :reply-text="translations.replyText"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <reaction-card
@@ -509,6 +525,8 @@
           :on-audio-validate-uri="onAudioValidateUri"
           :reaction-text="translations.reactionText"
           :removed-reaction-text="translations.removedReactionText"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
         />
 
         <copy-and-paste-card
@@ -597,6 +615,7 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
+import { checkIsExternalMessage } from '../utils/externalMessages.js'
 
 const supportedRepliedTypes = [
   MessageTypesConstants.TEXT_MESSAGE,
@@ -753,6 +772,9 @@ export default {
   computed: {
     MessageTypesConstants() {
       return MessageTypesConstants
+    },
+    externalMessage() {
+      return checkIsExternalMessage(this.document)
     }
   }
 }
