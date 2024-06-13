@@ -42,6 +42,8 @@
       <input type="checkbox" value="false" v-model="photo" /> Show Photo
       <br />
       <input type="checkbox" value="false" v-model="group" /> Group Messages
+      <br />
+      <input type="checkbox" value="false" v-model="isExternalMessage" /> External Message
 
       <div>
         <h1>Status notification:</h1>
@@ -318,6 +320,12 @@ export default {
     onScroll: function(e) {},
     send: function() {
       const doc = JSON.parse(this.json)
+      if (this.isExternalMessage) {
+        doc.metadata = {
+          ...doc.metadata,
+          '#messageEmitter': 'externalMessages'
+        }
+      }
       this.documents.push({
         document: doc,
         date: this.date,
@@ -1677,7 +1685,8 @@ export default {
       readonly: false,
       translations: {
         failedToSend: 'Falha ao enviar a mensagem.'
-      }
+      },
+      isExternalMessage: false
     }
   },
   components: {}

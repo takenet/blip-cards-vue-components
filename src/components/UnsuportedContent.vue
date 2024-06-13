@@ -15,18 +15,14 @@
         aria-label="Active message failed reason" 
         class="icon-active-message-failed" 
         @click="onFailedClickIcon(fullDocument)"></bds-icon>
-    <div class="flex" :class="'notification ' + position" v-if="date">
-      <span v-if="this.position === 'right'">
-        <img v-if="this.status === 'waiting'" :src="clockSvg">
-        <img v-else-if="this.status === 'accepted'" :src="checkSentSvg">
-        <img v-else-if="this.status === 'received'" :src="doubleCheckReceivedSvg">
-        <img v-else-if="this.status === 'consumed'" :src="doubleCheckReadSvg">
-        <div v-else-if="this.status === 'failed'" class="failure">
-          {{ failedToSendMsg }}
-        </div>
-      </span>
-      <div>{{ date }}</div>
-    </div>
+    <blip-card-date
+      :status="status"
+      :position="position"
+      :date="date"
+      :failed-to-send-msg="failedToSendMsg"
+      :is-external-message="isExternalMessage"
+      :external-message-text="externalMessageText"
+    />
   </div>
 </template>
 

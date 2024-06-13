@@ -26,16 +26,12 @@
         <span class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</span>
       </div>
 
-      <div class="flex" :class="'notification ' + position" v-if="date">
-        <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
-        <img v-else-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
-        <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
-        <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
-        <div class="failure" v-else-if="this.status === 'failed' && this.position === 'right'">
-          {{ failedToSendMsg }}
-        </div>
-        {{ date }}
-      </div>
+      <blip-card-date
+        :status="status"
+        :position="position"
+        :date="date"
+        :failed-to-send-msg="failedToSendMsg"
+      />
     </div>
 
     <div v-else-if="document.itemType === 'application/vnd.lime.container+json'">
