@@ -211,12 +211,6 @@ export default {
 .blip-message-group {
   position: relative;
 
-  .blip-card-photo {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
   .icon-message-failed {
     bottom: 10px;
     right: 0%;
@@ -228,6 +222,12 @@ export default {
     background-size: cover;
     cursor: pointer;  
     position: absolute;
+  }
+
+  .blip-card-photo {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
   .blip-card-group {
