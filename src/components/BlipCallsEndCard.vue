@@ -464,6 +464,8 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
 
     .btn-download {
       cursor: pointer;
+      margin-left: 10px;
+      display: flex;
     }
 
     .content {
