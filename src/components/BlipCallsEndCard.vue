@@ -40,7 +40,7 @@
                     <div slot="dropdown-content">
                       <bds-list type-list="default">
                         <bds-list-item
-                          text="Baixar gravação"
+                          :text="downloadRecordingLabel"
                           clickable
                           @click="onDownload"
                         ></bds-list-item>
@@ -204,6 +204,10 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem.'
+    },
+    downloadRecordingLabel: {
+      type: String,
+      default: 'Baixar gravação'
     },
     onMediaValidateUri: {
       type: Function
