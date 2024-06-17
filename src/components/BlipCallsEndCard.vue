@@ -32,6 +32,22 @@
                   :margin="false"
                   >{{ identificationText }}
                 </bds-typo>
+                <div v-if="isSuccess && hasMediaUri && isVoiceType">
+                  <bds-dropdown position="bottom-right">
+                    <div slot="dropdown-activator">
+                      <bds-icon class="btn-download" v-if="position === 'right'" color="white" name="arrow-down"/>
+                    </div>
+                    <div slot="dropdown-content">
+                      <bds-list type-list="default">
+                        <bds-list-item
+                          :text="downloadRecordingLabel"
+                          clickable
+                          @click="onDownload"
+                        ></bds-list-item>
+                      </bds-list>
+                    </div>
+                  </bds-dropdown>
+                </div>
               </div>
               <div class="content__details__text__status">
                 <bds-typo
@@ -45,7 +61,7 @@
             </div>
           </div>
           <div
-            v-if="isSuccess && isMobcall"
+            v-if="isSuccess"
             :class="
               `content__record ${documentTypeClass} ${
                 hasMediaUri ? 'has-media' : ''
@@ -189,6 +205,10 @@ export default {
       type: String,
       default: 'Falha ao enviar a mensagem.'
     },
+    downloadRecordingLabel: {
+      type: String,
+      default: 'Baixar gravação'
+    },
     onMediaValidateUri: {
       type: Function
     },
@@ -299,11 +319,6 @@ export default {
     documentStatusClass: function() {
       return this.document.status.toLowerCase()
     },
-    isMobcall: function() {
-      return this.document.provider
-        ? this.document.provider.toLowerCase() === 'mobcall'
-        : true
-    },
     isOutboundCall: function() {
       return this.document.direction
         ? this.document.direction.toLowerCase() === 'outbound'
@@ -313,8 +328,6 @@ export default {
   methods: {
     async refreshMediaUrl() {
       try {
-        if (!this.isMobcall) return
-
         if (this.document.media && this.document.media.uri) {
           this.hasMediaUri = true
           return
@@ -396,6 +409,26 @@ export default {
     },
     emitUpdate() {
       this.$emit('updated')
+    },
+    async onDownload() {
+      const a = document.createElement('a')
+
+      const response = await fetch(this.document.media.uri)
+      const blob = await response.blob()
+
+      const url = window.URL.createObjectURL(blob)
+
+      a.style.diplay = 'none'
+      a.target = '_blank'
+      a.href = url
+      a.download = `${this.document.sessionId}.webm`
+
+      document.body.appendChild(a)
+
+      a.click()
+
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
     }
   }
 }
@@ -428,6 +461,12 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
     padding: 12px;
     word-wrap: break-word;
     text-align: left;
+
+    .btn-download {
+      cursor: pointer;
+      margin-left: 10px;
+      display: flex;
+    }
 
     .content {
       display: flex;
@@ -474,11 +513,11 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            gap: $space-6;
             align-self: stretch;
 
             bds-typo.title {
               flex: 1;
+              padding-right: $space-6;
             }
           }
 

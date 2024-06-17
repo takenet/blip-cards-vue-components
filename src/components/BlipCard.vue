@@ -356,6 +356,7 @@
           :preparing-recording-msg="translations.preparingRecordingMsg"
           :load-recording-msg="translations.loadRecordingMsg"
           :failed-to-send-msg="translations.failedToSend"
+          :download-recording-label="translations.downloadRecordingLabel"
           :status="status"
           :position="position"
           :document="editableDocument.content"

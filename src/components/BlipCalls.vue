@@ -16,6 +16,7 @@
       :preparing-recording-msg="preparingRecordingMsg"
       :load-recording-msg="loadRecordingMsg"
       :failed-to-send-msg="failedToSendMsg"
+      :download-recording-label="downloadRecordingLabel"
       :on-media-validate-uri="onMediaValidateUri"
       :async-fetch-media="asyncFetchMedia"
       :on-async-fetch-session="onAsyncFetchSession"
@@ -85,6 +86,10 @@ export default {
     failedStatusMsg: {
       type: String,
       default: 'Falha'
+    },
+    downloadRecordingLabel: {
+      type: String,
+      default: 'Baixar gravação'
     },
     onMediaValidateUri: {
       type: Function
