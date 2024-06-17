@@ -32,7 +32,7 @@
                   :margin="false"
                   >{{ identificationText }}
                 </bds-typo>
-                <div v-if="isSuccess && hasMediaUri">
+                <div v-if="isSuccess && hasMediaUri && isVoiceType">
                   <bds-dropdown position="bottom-right">
                     <div slot="dropdown-activator">
                       <bds-icon class="btn-download" v-if="position === 'right'" color="white" name="arrow-down"/>
