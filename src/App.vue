@@ -323,7 +323,7 @@ export default {
       if (this.isExternalMessage) {
         doc.metadata = {
           ...doc.metadata,
-          '#messageEmitter': 'externalMessages'
+          'messageEmitter': 'externalMessages'
         }
       }
       this.documents.push({
