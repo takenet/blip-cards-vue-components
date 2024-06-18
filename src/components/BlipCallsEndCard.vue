@@ -331,7 +331,7 @@ export default {
         class="typo"
         variant="fs-12"
         bold="regular"
-        margin="false">${ this.identificationText }</bds-typo>`
+        margin="false">${this.identificationText}</bds-typo>`
     }
   },
   methods: {
