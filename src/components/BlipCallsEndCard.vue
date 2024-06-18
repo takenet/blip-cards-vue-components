@@ -16,23 +16,15 @@
               />
             </div>
             <div class="content__details__text">
-              <div class="content__details__text__container">
+              <div class="content__details__text__title">
                 <bds-typo
                   class="typo title"
                   variant="fs-16"
                   bold="bold"
-                  :margin="false"
+                  margin="false"
                   >{{ titleText }}
                 </bds-typo>
-                <bds-typo
-                  v-if="this.document.identification"
-                  class="typo"
-                  variant="fs-12"
-                  bold="regular"
-                  :margin="false"
-                  >{{ identificationText }}
-                </bds-typo>
-                <div v-if="isSuccess && hasMediaUri && isVoiceType">
+                <div v-if="canDownloadRecording">
                   <bds-dropdown position="bottom-right">
                     <div slot="dropdown-activator">
                       <bds-icon 
@@ -52,15 +44,17 @@
                     </div>
                   </bds-dropdown>
                 </div>
+                <div v-else v-html="identificationTextComponent" />
               </div>
-              <div class="content__details__text__status">
+              <div class="content__details__text__subtitle">
                 <bds-typo
                   class="typo"
                   variant="fs-14"
                   bold="semi-bold"
-                  :margin="false"
+                  margin="false"
                   >{{ statusText }}
                 </bds-typo>
+                <div v-if="canDownloadRecording" v-html="identificationTextComponent" />
               </div>
             </div>
           </div>
@@ -327,6 +321,17 @@ export default {
       return this.document.direction
         ? this.document.direction.toLowerCase() === 'outbound'
         : true
+    },
+    canDownloadRecording: function() {
+      return this.isSuccess && this.hasMediaUri && this.isVoiceType
+    },
+    identificationTextComponent: function() {
+      return `<bds-typo
+        v-if="${this.document.identification}"
+        class="typo"
+        variant="fs-12"
+        bold="regular"
+        margin="false">${ this.identificationText }</bds-typo>`
     }
   },
   methods: {
@@ -471,7 +476,6 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
 
     .btn-download {
       cursor: pointer;
-      margin-left: 10px;
       display: flex;
     }
 
@@ -512,29 +516,25 @@ $default-transition: var(--default-transition, all 0.25s ease-in);
           display: flex;
           flex-direction: column;
           justify-content: center;
-          align-items: flex-start;
+          align-items: stretch;
           flex: 1;
-
-          &__container {
+          
+          &__title {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            align-self: stretch;
-
-            bds-typo.title {
-              flex: 1;
-              padding-right: $space-6;
-            }
+            gap: 32px;
+            flex: 1;
           }
 
-          &__status {
+          &__subtitle {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            align-self: stretch;
-            gap: $space-1;
+            gap: 16px;
+            flex: 1;
           }
         }
       }
