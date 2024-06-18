@@ -35,7 +35,11 @@
                 <div v-if="isSuccess && hasMediaUri && isVoiceType">
                   <bds-dropdown position="bottom-right">
                     <div slot="dropdown-activator">
-                      <bds-icon class="btn-download" v-if="position === 'right'" color="white" name="arrow-down"/>
+                      <bds-icon 
+                        class="btn-download"
+                        :color="position === 'right' ? 'var(--color-surface-0, #FFFFFF)' : 'var(--color-content-default, #454545)'"
+                        name="arrow-down"
+                      />
                     </div>
                     <div slot="dropdown-content">
                       <bds-list type-list="default">
@@ -416,12 +420,15 @@ export default {
       const response = await fetch(this.document.media.uri)
       const blob = await response.blob()
 
+      const extension = this.isVoiceType ? 'webm' : 'mp4'
+      const fileName = `${this.document.sessionId}.${extension}`
+
       const url = window.URL.createObjectURL(blob)
 
       a.style.diplay = 'none'
       a.target = '_blank'
       a.href = url
-      a.download = `${this.document.sessionId}.webm`
+      a.download = fileName
 
       document.body.appendChild(a)
 
