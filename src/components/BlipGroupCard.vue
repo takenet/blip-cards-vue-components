@@ -38,7 +38,7 @@
           :position="group.position"
           :date="group.date"
           :failed-to-send-msg="failedMessageNotification(group.msgs[0].type)"
-          :is-external-message="checkIsExternalMessage(group.msgs[0].document)"
+          :is-external-message="checkIsExternalMessage(group.msgs[0])"
           :external-message-text="externalMessageText"
           :is-group="true"
           :show-alert-icon="Boolean(onFailedClickIcon)"
