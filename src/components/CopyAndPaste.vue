@@ -25,7 +25,7 @@
             <bds-typo class="typo copy-and-paste-info-text" v-show="this.document.footer" italic="true" variant="fs-10">{{ this.document.footer }}</bds-typo>
           </bds-grid>
           <hr class="copy-and-paste-horizontal-divider">
-          <bds-grid direction="row" align-items="center" justify-content="center" class="button-container" padding="y-1" margin="x-2" gap="1" @click="writeToClipboard">
+          <bds-grid direction="row" align-items="center" justify-content="center" class="button-container" gap="1" @click="writeToClipboard">
             <bds-icon name="copy" :class="'button-container-text-' + (position == 'right' ? 'white' : 'primary')"></bds-icon>
             <bds-typo :class="'button-container-text-' + (position == 'right' ? 'white' : 'primary')">{{ this.document.button.text }}</bds-typo>
           </bds-grid>
@@ -266,13 +266,13 @@
         if (this.errors.any() || ($event && $event.shiftKey)) {
           return
         }
-  
+
         if ($event) {
           $event.stopPropagation()
           $event.preventDefault()
           $event.returnValue = false
         }
-  
+
         this.$validator.validateAll().then((result) => {
           if (!result) {
             return
@@ -305,7 +305,8 @@
 }
 
 .button-container {
-  width: -webkit-fill-available;
+  width: 100%;
+  padding: 8px 16px;
   cursor: pointer;
 }
 
