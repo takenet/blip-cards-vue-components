@@ -430,7 +430,7 @@ export default {
 
       const url = window.URL.createObjectURL(blob)
 
-      a.style.diplay = 'none'
+      a.style.display = 'none'
       a.target = '_blank'
       a.href = url
       a.download = fileName
