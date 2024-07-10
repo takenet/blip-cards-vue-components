@@ -163,7 +163,6 @@ export default {
       for (let i = 1; i < this.documents.length; i++) {
         const lastMessage = group.msgs[group.msgs.length - 1]
         const currentMessage = this.documents[i]
-        console.log('current ', currentMessage)
         const isLastMessageExternal = checkIsExternalMessage(lastMessage.document)
         const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
         if (this.compareMessages(lastMessage, currentMessage) && (isLastMessageExternal === isCurrentMessageExternal)) {
