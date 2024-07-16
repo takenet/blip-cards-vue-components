@@ -23,7 +23,7 @@ export const formatText = (text, style) => {
 
 const formatBold = (text, style) => {
   return text.replace(regexConsttants.REGEX_FIND_TEXT_BETWEEN_ASTERISKS,
-    '<bds-typo class="' + style + '" variant="fs-16" tag="span" bold="bold">$1</bds-typo>')
+    '<bds-typo class="bold-color ' + style + '" variant="fs-16" tag="span" bold="bold">$1</bds-typo>')
 }
 
 const formatItalic = (text, style) => {
