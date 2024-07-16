@@ -122,6 +122,7 @@
   },
   "dependencies": {
     "blip-ds": "^1.277.1",
+    "git-cz": "^4.9.0",
     "lodash": "^4.17.4",
     "sanitize-html": "^1.20.0",
     "vee-validate": "^2.0.0-rc.21",
