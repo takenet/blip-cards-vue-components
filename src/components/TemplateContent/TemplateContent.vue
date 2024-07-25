@@ -25,7 +25,7 @@
 
           <bds-grid direction="column" justify-content="flex-start" padding="x-2">
             <bds-typo v-if="hasTemplateContentBody"
-              v-html="showTemplateContentBody()"
+              v-html="showTemplateContentBody(position)"
               :class="'typo ' + position" variant="fs-16"
               type="span" />
           </bds-grid>
@@ -143,7 +143,7 @@ export default {
     }
   },
   methods: {
-    showTemplateContentBody() {
+    showTemplateContentBody(style) {
       let componentTemplateBody = this.document.templateContent.components
         .filter(m => m.type === 'BODY')
 
@@ -164,7 +164,7 @@ export default {
       }
 
       componentTemplateBody = this.sanitize(componentTemplateBody)
-      componentTemplateBody = formatText(componentTemplateBody, '')
+      componentTemplateBody = formatText(componentTemplateBody, style)
       componentTemplateBody = linkify(componentTemplateBody, this.disableLink)
 
       return componentTemplateBody
