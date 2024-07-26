@@ -1,7 +1,7 @@
 <template>
   <div :class="'blip-container calls-permission-request ' + position">
     <div :class="'bubble ' + position">
-      <bds-typo class="typo" variant="fs-16" bold="regular">{{ bodyTitle }}</bds-typo>
+      <bds-typo class="typo" variant="fs-16" bold="regular">{{ formattedBodyTitle }}</bds-typo>
       <bds-typo class="typo" variant="fs-16" bold="regular">{{ bodyText }}</bds-typo>
       <div class="divider" />
       <div class="action">
@@ -19,13 +19,12 @@
 </template>
 
 <script>
+import { default as base } from '../mixins/baseComponent.js'
+
 export default {
   name: 'blip-calls-permission-request',
+  mixins: [base],
   props: {
-    position: {
-      type: String,
-      default: 'right'
-    },
     bodyTitle: {
       type: String
     },
@@ -37,6 +36,18 @@ export default {
     },
     rightActionLabel: {
       type: String
+    }
+  },
+  computed: {
+    formattedBodyTitle() {
+      let placeholder = '{username}'
+      const username = this.document.username ? this.document.username : ''
+
+      if (!username) {
+        placeholder += ' '
+      }
+
+      return this.bodyTitle.replace(placeholder, username)
     }
   }
 }

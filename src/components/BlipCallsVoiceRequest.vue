@@ -22,13 +22,12 @@
 </template>
 
 <script>
+import { default as base } from '../mixins/baseComponent.js'
+
 export default {
   name: 'blip-calls-voice-request',
+  mixins: [base],
   props: {
-    position: {
-      type: String,
-      default: 'right'
-    },
     bodyText: {
       type: String
     },
