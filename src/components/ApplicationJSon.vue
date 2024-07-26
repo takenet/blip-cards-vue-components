@@ -15,7 +15,7 @@
     />
 
     <menu-list
-      v-if="document.type === 'interactive' && document.interactive.type === 'list'"
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'list'"
       class="blip-card"
       :add-button-msg="translations.addButton"
       :not-enough-options-msg="translations.notEnoughOptions"
@@ -34,7 +34,7 @@
     />
 
     <interactive-button
-      v-if="document.type === 'interactive' && document.interactive.type === 'button'"
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'button'"
       class="blip-card"
       :document="document"
       :full-document="fullDocument"
@@ -50,7 +50,7 @@
     />
 
     <blip-calls-voice-request
-      v-if="document.type === 'interactive' && document.interactive.type === 'voice_call'"
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'voice_call'"
       class="blip-card"
       :position="position"
       :body-text="document.interactive.body.text"
@@ -58,7 +58,7 @@
     />
 
     <blip-calls-permission-request
-      v-if="document.type === 'interactive' && document.interactive.type === 'call_permission_request'"
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'call_permission_request'"
       class="blip-card"
       :position="position"
       :body-title="translations.callsPermissionRequestBodyTitle"
