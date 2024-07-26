@@ -10,6 +10,7 @@ import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
 import BlipCalls from './components/BlipCalls'
 import BlipCallsEndCard from './components/BlipCallsEndCard'
 import BlipCallsVoiceRequest from './components/BlipCallsVoiceRequest'
+import BlipCallsPermissionRequest from './components/BlipCallsPermissionRequest'
 import BlipCard from './components/BlipCard'
 import BlipCardDate from './components/BlipCardDate'
 import BlipGroupCard from './components/BlipGroupCard'
@@ -83,6 +84,7 @@ function install(Vue) {
   components.push(Vue.component(BlipCalls.name, BlipCalls))
   components.push(Vue.component(BlipCallsEndCard.name, BlipCallsEndCard))
   components.push(Vue.component(BlipCallsVoiceRequest.name, BlipCallsVoiceRequest))
+  components.push(Vue.component(BlipCallsPermissionRequest.name, BlipCallsPermissionRequest))
   components.push(Vue.component(Redirect.name, Redirect))
   components.push(Vue.component(PlainText.name, PlainText))
   components.push(Vue.component(MediaLink.name, MediaLink))

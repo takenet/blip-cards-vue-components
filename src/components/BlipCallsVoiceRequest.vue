@@ -7,16 +7,15 @@
         bold="regular"
         >{{ bodyText }}
       </bds-typo>
+      <div class="divider" />
       <div class="action">
-        <bds-grid margin="y-1" direction="row" justify-content="center" padding="x-2">
-          <bds-icon v-if="position === 'right'" color="white" name="voip-call"/>
-          <bds-icon v-else name="voip-call"/>
-          <bds-typo
-            class="typo title-action"
-            variant="fs-16"
-            bold="regular">{{ actionText }}
-          </bds-typo>
-        </bds-grid>
+        <bds-icon v-if="position === 'right'" color="white" name="voip-call"/>
+        <bds-icon v-else name="voip-call"/>
+        <bds-typo
+          class="typo title-action"
+          variant="fs-16"
+          bold="regular">{{ actionText }}
+        </bds-typo>
       </div>
     </div>
   </div>
@@ -45,17 +44,23 @@ export default {
 
 .blip-container.calls-voice-request {
   .bubble {
-    text-align: left;
+    text-align: start;
     overflow: hidden;
-    padding: 10px 20px;
+    padding: 8px 16px;
     max-width: 368px !important;
   }
 
+  .divider {
+    border: 1px solid $color-content-ghost;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
   .action {
-    text-align: center;
-    border-top: 1px solid $color-content-ghost;
-    margin-top: 10px;
-    padding-top: 12px;
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+    margin-bottom: 8px;
 
     .title-action {
       margin-left: 8px;
