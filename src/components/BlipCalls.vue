@@ -17,9 +17,11 @@
       :load-recording-msg="loadRecordingMsg"
       :failed-to-send-msg="failedToSendMsg"
       :download-recording-label="downloadRecordingLabel"
+      :transcribe-recording-label="transcribeRecordingLabel"
       :on-media-validate-uri="onMediaValidateUri"
       :async-fetch-media="asyncFetchMedia"
       :on-async-fetch-session="onAsyncFetchSession"
+      :on-async-transcribe-media="onAsyncTranscribeMedia"
     />
   </div>
 </template>
@@ -91,6 +93,10 @@ export default {
       type: String,
       default: 'Baixar gravação'
     },
+    transcribeRecordingLabel: {
+      type: String,
+      default: 'Ver transcrição'
+    },
     onMediaValidateUri: {
       type: Function
     },
@@ -98,6 +104,9 @@ export default {
       type: Function
     },
     onAsyncFetchSession: {
+      type: Function
+    },
+    onAsyncTranscribeMedia: {
       type: Function
     }
   },

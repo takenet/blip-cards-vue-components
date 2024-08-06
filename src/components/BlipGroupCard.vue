@@ -32,6 +32,7 @@
           :readonly="readonly"
           :async-fetch-media="asyncFetchMedia"
           :on-async-fetch-session="onAsyncFetchSession"
+          :on-async-transcribe-media="onAsyncTranscribeMedia"
         />
         <blip-card-date
           v-if="group.date && group.hasNotification"
@@ -137,6 +138,9 @@ export default {
       type: Function
     },
     onAsyncFetchSession: {
+      type: Function
+    },
+    onAsyncTranscribeMedia: {
       type: Function
     }
   },
