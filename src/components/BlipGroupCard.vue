@@ -145,6 +145,7 @@ export default {
       default: () => ({
         audioEnabled: false,
         callRecordingEnabled: false,
+        limits: {},
         onAsyncTranscribe: (url) => {},
         onOpenMfeModal: (data) => {}
       })
