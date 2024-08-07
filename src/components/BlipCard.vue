@@ -372,6 +372,7 @@
           :on-media-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
           :on-async-fetch-session="onAsyncFetchSession"
+          :transcribe-enabled="transcribeEnabled"
           :on-async-transcribe-media="onAsyncTranscribeMedia"
         />
 
@@ -679,6 +680,9 @@ export default {
     },
     onAsyncFetchSession: {
       type: Function
+    },
+    transcribeEnabled: {
+      type: Boolean
     },
     onAsyncTranscribeMedia: {
       type: Function

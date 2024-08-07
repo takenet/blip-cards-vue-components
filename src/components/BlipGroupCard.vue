@@ -32,6 +32,7 @@
           :readonly="readonly"
           :async-fetch-media="asyncFetchMedia"
           :on-async-fetch-session="onAsyncFetchSession"
+          :transcribe-enabled="transcribeEnabled"
           :on-async-transcribe-media="onAsyncTranscribeMedia"
         />
         <blip-card-date
@@ -139,6 +140,9 @@ export default {
     },
     onAsyncFetchSession: {
       type: Function
+    },
+    transcribeEnabled: {
+      type: Boolean
     },
     onAsyncTranscribeMedia: {
       type: Function

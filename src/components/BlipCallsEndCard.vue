@@ -41,7 +41,7 @@
                           @click="onDownload"
                         ></bds-list-item>
                         <bds-list-item
-                          v-if="hasMediaUri"
+                          v-if="transcribeEnabled"
                           :text="transcribeRecordingLabel"
                           clickable
                           @click="onTranscribe"
@@ -225,6 +225,9 @@ export default {
     },
     onAsyncFetchSession: {
       type: Function
+    },
+    transcribeEnabled: {
+      type: Boolean
     },
     onAsyncTranscribeMedia: {
       type: Function
