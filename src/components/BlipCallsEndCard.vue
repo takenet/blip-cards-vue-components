@@ -41,7 +41,7 @@
                           @click="onDownload"
                         ></bds-list-item>
                         <bds-list-item
-                          v-if="transcribeEnabled"
+                          v-if="transcription && transcription.callRecordingEnabled"
                           :text="transcribeRecordingLabel"
                           clickable
                           @click="onTranscribe"
@@ -226,11 +226,8 @@ export default {
     onAsyncFetchSession: {
       type: Function
     },
-    transcribeEnabled: {
-      type: Boolean
-    },
-    onAsyncTranscribeMedia: {
-      type: Function
+    transcription: {
+      type: Object
     }
   },
   data() {
@@ -459,8 +456,8 @@ export default {
       window.URL.revokeObjectURL(url)
     },
     async onTranscribe() {
-      if (this.onAsyncTranscribeMedia) {
-        await this.onAsyncTranscribeMedia(this.document.media.uri)
+      if (this.transcription && this.transcription.onOpenMfeModal) {
+        await this.transcription.onOpenMfeModal({ url: this.document.media.uri })
       }
     }
   }
