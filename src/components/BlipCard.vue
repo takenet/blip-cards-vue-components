@@ -86,6 +86,7 @@
           :async-fetch-media="asyncFetchMedia"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :translations="translations"
         />
 
         <document-select
