@@ -83,6 +83,7 @@ export default {
           action: 'Transcrever áudio',
           loading: 'Preparando transcrição...',
           fullTranscription: 'Transcrição completa',
+          title: 'Transcrição de áudio',
           readMore: 'Ler mais',
           readLess: 'Ler menos'
         }
