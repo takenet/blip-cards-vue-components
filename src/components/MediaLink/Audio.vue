@@ -97,7 +97,7 @@
       </div>
       <div
         class="audio-player-transcription"
-        v-if="canTranscript"
+        v-if="canShowTranscript"
       >
         <div
           class="action"
@@ -116,7 +116,10 @@
           v-if="isTranscriptionVisible"
         >
           <bds-typo class="typo" bold="bold" variant="f-16">{{ translations.audioTranscription.title }}</bds-typo>
-          <bds-typo class="typo " variant="f-16">{{ transcriptionText }}</bds-typo>
+          <bds-typo class="typo " variant="f-16">
+            {{ transcriptionDisplayText }}<span v-if="showEllipsis">...</span>
+            <a v-if="showReadMoreOrLessButtonLink" @click="toggleTranscriptionTextSize">{{ readMoreOrLessDisplayText }}</a>
+          </bds-typo>
         </div>
       </div>
     </div>
@@ -194,14 +197,7 @@ export default {
       default: () => ({})
     },
     transcription: {
-      type: Object,
-      default: () => ({
-        enabled: true,
-        shortTextLength: 500,
-        longTextLength: 1000,
-        openModal: () => {},
-        transcript: () => new Promise((resolve) => setTimeout(() => resolve('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non tellus tellus. Vestibulum vel tortor nunc. Ut porttitor urna libero, dignissim sodales ante maximus quis. Proin convallis est quis lorem viverra cursus. In sed volutpat velit. Praesent eget posuere nisi. Mauris non mi leo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam accumsan.'), 1000))
-      })
+      type: Object
     }
   },
   data: function() {
@@ -217,12 +213,13 @@ export default {
       possiblePlaybackRates: undefined,
       playbackRate: undefined,
       transcriptionText: '',
+      transcriptionTextExpanded: false,
       loadingTranscription: false
     }
   },
   computed: {
-    canTranscript() {
-      return this.transcription.enabled
+    canShowTranscript() {
+      return this.transcription.audioEnabled
     },
     isTranscriptionActionVisible() {
       return this.transcriptionText.length === 0 && !this.loadingTranscription
@@ -232,6 +229,43 @@ export default {
     },
     isTranscriptionVisible() {
       return this.transcriptionText.length > 0 && !this.loadingTranscription
+    },
+    readMoreOrLessDisplayText() {
+      return this.transcriptionTextExpanded
+        ? this.translations.audioTranscription.readLess
+        : this.translations.audioTranscription.readMore
+    },
+    showReadMoreOrLessButtonLink() {
+      return this.transcriptionText.length > this.transcriptionTextLimits.shortTextLength
+    },
+    showReadLess() {
+      return this.transcriptionTextExpanded && this.transcriptionText.length > this.transcriptionTextLimits.shortTextLength
+    },
+    transcriptionDisplayText() {
+      return this.transcriptionTextExpanded
+        ? this.transcriptionText.substring(0, this.transcriptionTextLimits.longTextLength)
+        : this.transcriptionText.substring(0, this.transcriptionTextLimits.shortTextLength)
+    },
+    showEllipsis() {
+      return this.transcriptionTextExpanded
+        ? this.transcriptionText.length > this.transcriptionTextLimits.longTextLength
+        : this.transcriptionText.length > this.transcriptionTextLimits.shortTextLength
+    },
+    transcriptionTextLimits() {
+      const limits = {
+        shortTextLength: 500,
+        longTextLength: 1000
+      }
+
+      limits.shortTextLength = this.transcription.limits && this.transcription.limits.shortTextLength
+        ? this.transcription.limits.shortTextLength
+        : limits.shortTextLength
+
+      limits.longTextLength = this.transcription.limits && this.transcription.limits.longTextLength
+        ? this.transcription.limits.longTextLength
+        : limits.longTextLength
+
+      return limits
     }
   },
   mounted: async function() {
@@ -371,11 +405,17 @@ export default {
       this.audio.playbackRate = this.playbackRate
     },
     transcriptAudio: async function() {
-      if (this.transcription.transcript) {
+      if (this.transcription.onAsyncTranscribe) {
         this.loadingTranscription = true
-        this.transcriptionText = await this.transcription.transcript(this.audioUri)
+        const text = await this.transcription.onAsyncTranscribe(this.audioUri)
+        if (text) {
+          this.transcriptionText = text
+        }
         this.loadingTranscription = false
       }
+    },
+    toggleTranscriptionTextSize: function() {
+      this.transcriptionTextExpanded = !this.transcriptionTextExpanded
     }
   }
 }
@@ -564,6 +604,7 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 8px;
       }
 
       .transcription {
@@ -572,6 +613,7 @@ export default {
         align-items: flex-start;
         gap: 16px;
         text-align: left;
+        white-space: normal;
       }
     }
   }
