@@ -55,7 +55,8 @@
         :editing="editing"
         :on-audio-validate-uri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"
-        :translations="translations"/>
+        :translations="translations"
+        :transcription="transcription"/>
 
       <blip-video
         :video-uri-msg="videoUriMsg"
@@ -144,6 +145,9 @@ export default {
     translations: {
       type: Object,
       default: () => ({})
+    },
+    transcription: {
+      type: Object
     }
   },
   data: function() {

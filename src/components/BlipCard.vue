@@ -87,6 +87,7 @@
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :translations="translations"
+          :transcription="transcription"
         />
 
         <document-select
