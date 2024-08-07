@@ -95,6 +95,30 @@
           </button>
         </div>
       </div>
+      <div
+        class="audio-player-transcription"
+        v-if="canTranscript"
+      >
+        <div
+          class="action"
+          @click="transcriptAudio"
+          v-if="isTranscriptionActionVisible"
+        >{{ translations.audioTranscription.action }}</div>
+        <div
+          class="loading"
+          v-if="loadingTranscription"
+        >
+          <bds-loading-spinner size="small" :color="transcriptionSpinnerColor"></bds-loading-spinner>
+          <span>{{ translations.audioTranscription.loading }}</span>
+        </div>
+        <div
+          class="transcription"
+          v-if="isTranscriptionVisible"
+        >
+          <bds-typo class="typo" bold="bold" variant="f-16">{{ translations.audioTranscription.title }}</bds-typo>
+          <bds-typo class="typo " variant="f-16">{{ transcriptionText }}</bds-typo>
+        </div>
+      </div>
     </div>
     <div class="form" v-else>
       <form novalidate v-on:submit.prevent>
@@ -160,6 +184,24 @@ export default {
     simplified: {
       type: Boolean,
       default: false
+    },
+    position: {
+      type: String,
+      default: 'left'
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
+    },
+    transcription: {
+      type: Object,
+      default: () => ({
+        enabled: true,
+        shortTextLength: 500,
+        longTextLength: 1000,
+        openModal: () => {},
+        transcript: () => new Promise((resolve) => setTimeout(() => resolve('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas non tellus tellus. Vestibulum vel tortor nunc. Ut porttitor urna libero, dignissim sodales ante maximus quis. Proin convallis est quis lorem viverra cursus. In sed volutpat velit. Praesent eget posuere nisi. Mauris non mi leo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam accumsan.'), 1000))
+      })
     }
   },
   data: function() {
@@ -173,7 +215,23 @@ export default {
       progress: undefined,
       slider: undefined,
       possiblePlaybackRates: undefined,
-      playbackRate: undefined
+      playbackRate: undefined,
+      transcriptionText: '',
+      loadingTranscription: false
+    }
+  },
+  computed: {
+    canTranscript() {
+      return this.transcription.enabled
+    },
+    isTranscriptionActionVisible() {
+      return this.transcriptionText.length === 0 && !this.loadingTranscription
+    },
+    transcriptionSpinnerColor() {
+      return this.position === 'left' ? 'main' : 'light'
+    },
+    isTranscriptionVisible() {
+      return this.transcriptionText.length > 0 && !this.loadingTranscription
     }
   },
   mounted: async function() {
@@ -271,8 +329,8 @@ export default {
       }
 
       try {
-        var current = this.audio.currentTime
-        var percent = (current / this.totalTime) * 100
+        const current = this.audio.currentTime
+        const percent = (current / this.totalTime) * 100
         this.progress.style.width = percent + '%'
 
         this.currentTime = this.audio.currentTime
@@ -286,8 +344,8 @@ export default {
       this.audio.currentTime = (event.target || event.srcElement).value
     },
     getTimeFromSeconds: function(seconds) {
-      var timeMin = Math.floor(seconds / 60)
-      var timeSec = Math.floor(seconds % 60)
+      const timeMin = Math.floor(seconds / 60)
+      const timeSec = Math.floor(seconds % 60)
       return (
         (timeMin < 10 ? '0' + timeMin : timeMin) +
         ':' +
@@ -311,6 +369,13 @@ export default {
 
       this.playbackRate = this.possiblePlaybackRates[playbackRateIndex]
       this.audio.playbackRate = this.playbackRate
+    },
+    transcriptAudio: async function() {
+      if (this.transcription.transcript) {
+        this.loadingTranscription = true
+        this.transcriptionText = await this.transcription.transcript(this.audioUri)
+        this.loadingTranscription = false
+      }
     }
   }
 }
@@ -480,6 +545,33 @@ export default {
           pointer-events: all;
           box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);
         }
+      }
+    }
+
+    .audio-player-transcription {
+      padding: 16px 0;
+      width: 100%;
+      margin-top: 8px;
+      border-top: 1px solid $color-content-disable;
+
+      .action {
+        margin: 16px 0;
+        cursor: pointer;
+      }
+
+      .loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .transcription {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        text-align: left;
       }
     }
   }
