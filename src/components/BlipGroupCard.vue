@@ -32,6 +32,7 @@
           :readonly="readonly"
           :async-fetch-media="asyncFetchMedia"
           :on-async-fetch-session="onAsyncFetchSession"
+          :transcription="transcription"
         />
         <blip-card-date
           v-if="group.date && group.hasNotification"
@@ -138,6 +139,15 @@ export default {
     },
     onAsyncFetchSession: {
       type: Function
+    },
+    transcription: {
+      type: Object,
+      default: () => ({
+        audioEnabled: false,
+        callRecordingEnabled: false,
+        onAsyncTranscribe: (url) => {},
+        onOpenMfeModal: (data) => {}
+      })
     }
   },
   data() {
