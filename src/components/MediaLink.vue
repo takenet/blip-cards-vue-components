@@ -54,7 +54,8 @@
         :on-cancel="onCancel"
         :editing="editing"
         :on-audio-validate-uri="onAudioValidateUri"
-        :async-fetch-media="asyncFetchMedia"/>
+        :async-fetch-media="asyncFetchMedia"
+        :translations="translations"/>
 
       <blip-video
         :video-uri-msg="videoUriMsg"
@@ -139,6 +140,10 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: function() {
