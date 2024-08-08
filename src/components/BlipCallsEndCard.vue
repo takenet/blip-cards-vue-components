@@ -40,6 +40,12 @@
                           clickable
                           @click="onDownload"
                         ></bds-list-item>
+                        <bds-list-item
+                          v-if="transcription && transcription.callRecordingEnabled"
+                          :text="transcribeRecordingLabel"
+                          clickable
+                          @click="onTranscribe"
+                        ></bds-list-item>
                       </bds-list>
                     </div>
                   </bds-dropdown>
@@ -207,6 +213,10 @@ export default {
       type: String,
       default: 'Baixar gravação'
     },
+    transcribeRecordingLabel: {
+      type: String,
+      default: 'Ver transcrição'
+    },
     onMediaValidateUri: {
       type: Function
     },
@@ -215,6 +225,9 @@ export default {
     },
     onAsyncFetchSession: {
       type: Function
+    },
+    transcription: {
+      type: Object
     }
   },
   data() {
@@ -441,6 +454,11 @@ export default {
 
       document.body.removeChild(a)
       window.URL.revokeObjectURL(url)
+    },
+    async onTranscribe() {
+      if (this.transcription && this.transcription.onOpenMfeModal) {
+        await this.transcription.onOpenMfeModal({ url: this.document.media.uri })
+      }
     }
   }
 }

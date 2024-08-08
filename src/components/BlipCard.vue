@@ -86,6 +86,8 @@
           :async-fetch-media="asyncFetchMedia"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :translations="translations"
+          :transcription="transcription"
         />
 
         <document-select
@@ -357,6 +359,7 @@
           :load-recording-msg="translations.loadRecordingMsg"
           :failed-to-send-msg="translations.failedToSend"
           :download-recording-label="translations.downloadRecordingLabel"
+          :transcribe-recording-label="translations.transcribeRecordingLabel"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -371,6 +374,7 @@
           :on-media-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
           :on-async-fetch-session="onAsyncFetchSession"
+          :transcription="transcription"
         />
 
         <template-content
@@ -677,6 +681,9 @@ export default {
     },
     onAsyncFetchSession: {
       type: Function
+    },
+    transcription: {
+      type: Object
     }
   },
   data() {

@@ -95,6 +95,30 @@
           </button>
         </div>
       </div>
+      <div class="audio-player-transcription" v-if="canShowTranscript">
+        <div class="transcription" v-if="isTranscriptionVisible">
+          <bds-typo class="typo" bold="bold" variant="f-16">{{ translations.audioTranscription.title }}</bds-typo>
+          <bds-typo class="typo" variant="f-16">
+            {{ transcriptionDisplayText }}<span v-if="showEllipsis">...</span>
+            <a v-if="showReadMoreOrLessButtonLink" @click="toggleTranscriptionTextSize">{{ readMoreOrLessDisplayText }}</a>
+          </bds-typo>
+        </div>
+        <div class="action">
+          <div>
+            <span class="pointer" @click="transcribeAudio" v-if="isTranscriptionActionVisible">{{ translations.audioTranscription.action }}</span>
+          </div>
+          <div class="loading" v-if="loadingTranscription">
+            <bds-loading-spinner size="small" :color="transcriptionSpinnerColor"></bds-loading-spinner>
+            <bds-typo class="typo" variant="f-16">{{ translations.audioTranscription.loading }}</bds-typo>
+          </div>
+          <div v-if="transcriptionText.length > 0 && transcriptionText.length > transcriptionTextLimits.longTextLength">
+            <div class="pointer full-transcription" @click="openFullTranscription">
+              <bds-icon class="typo" name="external-file" theme="outline" type="icon" size="medium" />
+              <bds-typo class="typo" variant="f-16">{{ translations.audioTranscription.fullTranscription }}</bds-typo>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="form" v-else>
       <form novalidate v-on:submit.prevent>
@@ -160,6 +184,17 @@ export default {
     simplified: {
       type: Boolean,
       default: false
+    },
+    position: {
+      type: String,
+      default: 'left'
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
+    },
+    transcription: {
+      type: Object
     }
   },
   data: function() {
@@ -173,7 +208,63 @@ export default {
       progress: undefined,
       slider: undefined,
       possiblePlaybackRates: undefined,
-      playbackRate: undefined
+      playbackRate: undefined,
+      transcriptionText: '',
+      transcriptionTextExpanded: false,
+      loadingTranscription: false
+    }
+  },
+  computed: {
+    canShowTranscript() {
+      return this.transcription && this.transcription.audioEnabled
+        ? this.transcription.audioEnabled
+        : false
+    },
+    isTranscriptionActionVisible() {
+      return this.transcriptionText.length === 0 && !this.loadingTranscription
+    },
+    transcriptionSpinnerColor() {
+      return this.position === 'left' ? 'main' : 'light'
+    },
+    isTranscriptionVisible() {
+      return this.transcriptionText.length > 0 && !this.loadingTranscription
+    },
+    readMoreOrLessDisplayText() {
+      return this.transcriptionTextExpanded
+        ? this.translations.audioTranscription.readLess
+        : this.translations.audioTranscription.readMore
+    },
+    showReadMoreOrLessButtonLink() {
+      return this.transcriptionText.length > this.transcriptionTextLimits.shortTextLength
+    },
+    showReadLess() {
+      return this.transcriptionTextExpanded && this.transcriptionText.length > this.transcriptionTextLimits.shortTextLength
+    },
+    transcriptionDisplayText() {
+      return this.transcriptionTextExpanded
+        ? this.transcriptionText.substring(0, this.transcriptionTextLimits.longTextLength)
+        : this.transcriptionText.substring(0, this.transcriptionTextLimits.shortTextLength)
+    },
+    showEllipsis() {
+      return this.transcriptionTextExpanded
+        ? this.transcriptionText.length > this.transcriptionTextLimits.longTextLength
+        : this.transcriptionText.length > this.transcriptionTextLimits.shortTextLength
+    },
+    transcriptionTextLimits() {
+      const limits = {
+        shortTextLength: 500,
+        longTextLength: 1000
+      }
+
+      limits.shortTextLength = this.transcription.limits && this.transcription.limits.shortTextLength
+        ? this.transcription.limits.shortTextLength
+        : limits.shortTextLength
+
+      limits.longTextLength = this.transcription.limits && this.transcription.limits.longTextLength
+        ? this.transcription.limits.longTextLength
+        : limits.longTextLength
+
+      return limits
     }
   },
   mounted: async function() {
@@ -271,8 +362,8 @@ export default {
       }
 
       try {
-        var current = this.audio.currentTime
-        var percent = (current / this.totalTime) * 100
+        const current = this.audio.currentTime
+        const percent = (current / this.totalTime) * 100
         this.progress.style.width = percent + '%'
 
         this.currentTime = this.audio.currentTime
@@ -286,8 +377,8 @@ export default {
       this.audio.currentTime = (event.target || event.srcElement).value
     },
     getTimeFromSeconds: function(seconds) {
-      var timeMin = Math.floor(seconds / 60)
-      var timeSec = Math.floor(seconds % 60)
+      const timeMin = Math.floor(seconds / 60)
+      const timeSec = Math.floor(seconds % 60)
       return (
         (timeMin < 10 ? '0' + timeMin : timeMin) +
         ':' +
@@ -311,6 +402,24 @@ export default {
 
       this.playbackRate = this.possiblePlaybackRates[playbackRateIndex]
       this.audio.playbackRate = this.playbackRate
+    },
+    transcribeAudio: async function() {
+      if (this.transcription.onAsyncTranscribe) {
+        this.loadingTranscription = true
+        const text = await this.transcription.onAsyncTranscribe(this.audioUri)
+        if (text) {
+          this.transcriptionText = text
+        }
+        this.loadingTranscription = false
+      }
+    },
+    openFullTranscription: function() {
+      if (this.transcription.onOpenMfeModal) {
+        this.transcription.onOpenMfeModal()
+      }
+    },
+    toggleTranscriptionTextSize: function() {
+      this.transcriptionTextExpanded = !this.transcriptionTextExpanded
     }
   }
 }
@@ -479,6 +588,50 @@ export default {
           position: absolute;
           pointer-events: all;
           box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);
+        }
+      }
+    }
+
+    .audio-player-transcription {
+      width: 100%;
+      margin-top: 8px;
+
+      .pointer {
+        cursor: pointer;
+      }
+
+      .transcription {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        text-align: left;
+        white-space: normal;
+        margin: 16px 0;
+
+        a {
+          text-decoration: none;
+        }
+      }
+
+      .action {
+        border-top: 1px solid $color-content-disable;
+        padding: 16px 0;
+
+        .full-transcription {
+          display: inline-flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+
+        .loading {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
         }
       }
     }

@@ -21,6 +21,7 @@
           :on-location-error="selected"
           :disable-link="parameters.disableLink"
           :readonly="parameters.readonly"
+          :translations="translations"
         />
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
           <blip-card
@@ -40,6 +41,7 @@
             :on-location-error="selected"
             :disable-link="parameters.disableLink"
             :readonly="parameters.readonly"
+          :translations="translations"
           />
         </div>
       </div>
@@ -76,7 +78,15 @@ export default {
       },
       documents: [],
       translations: {
-        failedToSend: 'Falha ao enviar a mensagem.'
+        failedToSend: 'Falha ao enviar a mensagem.',
+        audioTranscription: {
+          action: 'Transcrever áudio',
+          loading: 'Preparando transcrição...',
+          fullTranscription: 'Transcrição completa',
+          title: 'Transcrição de áudio',
+          readMore: 'Ler mais',
+          readLess: 'Ler menos'
+        }
       },
       selected: () => {},
       save: () => {},
