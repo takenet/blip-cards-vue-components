@@ -2,12 +2,20 @@
   <div v-if="!isEditing" class="blip-container menu-list-prompt">
     <div :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
-        <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
-          <img :src="trashSvg" />
-        </div>
-        <div v-if="editable && !isEditing" class="editIco" @click="toggleEdit">
-          <img :src="editSvg" />
-        </div>
+        <bds-button-icon v-if="deletable && !isEditing"
+        class="editIco trashIco icon-margin"
+        icon="trash"
+        variant="delete"
+        size="short"
+        v-on:click="trash(document)"
+      ></bds-button-icon>
+      <bds-button-icon v-if="editable && !isEditing"
+        class="editIco icon-margin"
+        icon="edit"
+        variant="primary"
+        size="short"
+        v-on:click="toggleEdit"
+      ></bds-button-icon>         
         <div class="disable-selection">
           <div class="header-text">
             <bds-typo
@@ -30,6 +38,20 @@
             >
           </div>
 
+          <div class="fixed-options">
+            <ul>
+              <li
+                @click="(editable ? null :select(item))"
+                :class="editable ? '' : ' pointer'"
+              >
+                <div class="align-center">
+                  <bds-icon class="typo" name="link" size="medium"  ></bds-icon>
+                  <bds-typo variant="fs-16">{{headerText}}</bds-typo>
+                </div>
+              </li>
+            </ul>
+          </div> 
+
         </div>
       </div>
     </div>
@@ -37,20 +59,25 @@
 
   <div class="blip-container menu-list-prompt" v-else>
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
-      <button class="btn saveIco closeIco" @click="menuListEditCancel()">
-        <img :src="closeSvg" />
-      </button>
-      <button
-        class="btn saveIco"
-        :class="{ 'is-disabled': errors.any() }"
-        @click="menuListSave(bodyText)"
-      >
-        <img :src="approveSvg" />
-      </button>
+      <bds-button-icon 
+      class="btn saveIco closeIco"
+      icon="close"
+      variant="ghost"
+      size="short"
+      v-on:click="callToActionEditCancel()"
+    ></bds-button-icon>
+    <bds-button-icon 
+      class="btn saveIco"
+      icon="check"
+      variant="primary"
+      size="short"
+      :disabled="errors.any()"
+      v-on:click="callToActionSave(bodyText)"
+    ></bds-button-icon>      
       <div class="form-group">
         <div>
           <textarea
-            @keydown.enter="menuListSave($event)"
+            @keydown.enter="callToActionSave($event)"
             type="text"
             name="bodyText"
             :class="{ 'input-error': errors.has('bodyText') }"
@@ -68,7 +95,7 @@
         </div>
         <div>
           <textarea
-            @keydown.enter="menuListSave($event)"
+            @keydown.enter="callToActionSave($event)"
             type="text"
             name="footerText"
             :class="{ 'input-error': errors.has('footerText') }"
@@ -82,7 +109,7 @@
             v-show="errors.has('footerText')"
             class="help input-error"
             >{{ errors.first('footerText') }}</bds-typo
-          >
+          >         
         </div>
       </div>
     </form>
@@ -142,7 +169,7 @@ export default {
         this.updateImageMarginTop()
       }, 100)
     },
-    menuListSave: function($event) {
+    callToActionSave: function($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
       }
@@ -171,7 +198,7 @@ export default {
         })
       })
     },
-    menuListEditCancel: function() {
+    callToActionEditCancel: function() {
       this.cancel()
     }
   }
@@ -244,4 +271,32 @@ export default {
 .blip-card .form-group .help {
   padding: 0px;
 }
+
+.fixed-options ul {
+    margin: 0px;
+}
+
+.editing .fixed-options ul {
+  margin: 0px -10px;
+}
+
+.fixed-options ul .align-center {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  > bds-icon {
+    margin-right: 10px;
+    color: var(--color-primary, #1E6BF1) !important;    
+  }
+  > bds-typo {
+    color: var(--color-primary, #1E6BF1);
+  }
+
+}
+
+.blip-card .fixed-options li div, .blip-card .fixed-options li span{
+  width: auto;
+}
+
+
 </style>
