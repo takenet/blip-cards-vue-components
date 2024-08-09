@@ -80,11 +80,8 @@
       :unsupported-content-msg="translations.unsupportedContent"
       :position="position"
       :document="document"
-      :on-save="saveCard"
       :editable="editable"
-      :on-deleted="deleteCard"
       :deletable="deletable"
-      :editing="isCardEditing"
       :on-cancel="cancel"
     />
 
