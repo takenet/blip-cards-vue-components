@@ -111,6 +111,52 @@
             >{{ errors.first('footerText') }}</bds-typo
           >         
         </div>
+        <div>
+          <textarea
+            @keydown.enter="callToActionSave($event)"
+            type="text"
+            name="headerText"
+            :class="{ 'input-error': errors.has('headerText') }"
+            v-validate="'required'"
+            class="form-control"
+            v-auto-expand
+            v-model="headerText"
+          />
+          <bds-typo
+            variant="fs-12"
+            v-show="errors.has('headerText')"
+            class="help input-error"
+            >{{ errors.first('headerText') }}</bds-typo
+          >         
+        </div>
+        <div>
+          <textarea
+            @keydown.enter="callToActionSave($event)"
+            type="text"
+            name="url"
+            :class="{ 'input-error': errors.has('url') }"
+            v-validate="'required'"
+            class="form-control"
+            v-auto-expand
+            v-model="url"
+          />
+          <bds-typo
+            variant="fs-12"
+            v-show="errors.has('url')"
+            class="help input-error"
+            >{{ errors.first('url') }}</bds-typo
+          >
+        </div>
+        <div class="form-group">
+          <select class="form-control">
+            <option disabled value>Target</option>
+            <option value="blank">Blank</option>
+            <option value="self">Self</option>
+            <option value="selfCompact">SelfCompact</option>
+            <option value="selfTall">SelfTall</option>
+          </select>
+        </div>
+      
       </div>
     </form>
   </div>
@@ -119,7 +165,6 @@
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
 import { isFailedMessage } from '../../utils/misc'
-import Editable from '../Editable'
 
 export default {
   name: 'menu-list-prompt',
@@ -144,35 +189,29 @@ export default {
       buttonText: undefined,
       bodyText: undefined,
       footerText: undefined,
+      selectedOption: undefined,
+      url: undefined,
       isFailedMessage
     }
   },
   updated: function() {
     this.$emit('updated')
   },
-  mounted: function() {
-    this.updateImageMarginTop()
-  },
+
   methods: {
     init: function() {
       this.headerText = this.document.interactive.header.text
       this.bodyText = this.document.interactive.body.text
       this.footerText = this.document.interactive.footer.text
-      this.buttonText = this.document.interactive.action.button
+      this.url = this.document.interactive.action.parameters.url
+      this.selectedOption = { label: {}, value: {} }
     },
-    updateImageMarginTop: function() {
-      this.$emit('updated')
 
-      if (!Editable) return
-
-      setTimeout(() => {
-        this.updateImageMarginTop()
-      }, 100)
-    },
     callToActionSave: function($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
       }
+      this.selectedOption = { label: {}, value: {} }
 
       this.$validator.validateAll().then((result) => {
         if (!result) return
