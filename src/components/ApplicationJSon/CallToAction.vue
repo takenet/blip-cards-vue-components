@@ -17,10 +17,24 @@
         v-on:click="toggleEdit"
       ></bds-button-icon>         
         <div class="disable-selection">
-          <div class="header-text">
+          <div
+            v-if="headerText"
+            class="header-text">
             <bds-typo
               variant="fs-16"
               bold="bold"
+              line-height="plus"
+              class="disable-selection typo"
+              v-bind:class="{ readonly: readonly }"
+              >{{ headerText }}</bds-typo
+            >
+          </div>
+          <div
+            :class="headerText ? 'body-text' : 'header-text'"
+          >
+            <bds-typo
+              variant="fs-16"
+              :bold="headerText ? 'regular' : 'bold'"
               line-height="plus"
               class="disable-selection typo"
               v-bind:class="{ readonly: readonly }"
@@ -37,7 +51,6 @@
               >{{ footerText }}</bds-typo
             >
           </div>
-
           <div class="fixed-options">
             <ul>
               <li
@@ -79,6 +92,16 @@
           <textarea
             @keydown.enter="callToActionSave($event)"
             type="text"
+            name="headerText"
+            :class="{ 'input-error': errors.has('headerText') }"
+            v-validate="'required'"
+            class="form-control"
+            v-auto-expand
+            v-model="headerText"
+          />
+          <textarea
+            @keydown.enter="callToActionSave($event)"
+            type="text"
             name="bodyText"
             :class="{ 'input-error': errors.has('bodyText') }"
             v-validate="'required'"
@@ -115,8 +138,8 @@
           <textarea
             @keydown.enter="callToActionSave($event)"
             type="text"
-            name="headerText"
-            :class="{ 'input-error': errors.has('headerText') }"
+            name="displayText"
+            :class="{ 'input-error': errors.has('displayText') }"
             v-validate="'required'"
             class="form-control"
             v-auto-expand
@@ -124,9 +147,9 @@
           />
           <bds-typo
             variant="fs-12"
-            v-show="errors.has('headerText')"
+            v-show="errors.has('displayText')"
             class="help input-error"
-            >{{ errors.first('headerText') }}</bds-typo
+            >{{ errors.first('displayText') }}</bds-typo
           >         
         </div>
         <div>
