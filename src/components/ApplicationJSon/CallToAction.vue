@@ -46,7 +46,7 @@
               >
                 <div class="align-center">
                   <bds-icon class="typo" name="link" size="medium"  ></bds-icon>
-                  <bds-typo variant="fs-16">{{headerText}}</bds-typo>
+                  <bds-typo variant="fs-16">{{displayText}}</bds-typo>
                 </div>
               </li>
             </ul>
@@ -120,7 +120,7 @@
             v-validate="'required'"
             class="form-control"
             v-auto-expand
-            v-model="headerText"
+            v-model="displayText"
           />
           <bds-typo
             variant="fs-12"
@@ -180,6 +180,7 @@ export default {
       bodyText: undefined,
       footerText: undefined,
       selectedOption: undefined,
+      displayText: undefined,
       url: undefined,
       isFailedMessage
     }
@@ -194,6 +195,7 @@ export default {
       this.bodyText = this.document.interactive.body.text
       this.footerText = this.document.interactive.footer.text
       this.url = this.document.interactive.action.parameters.url
+      this.displayText = this.document.interactive.action.parameters.display_text
     },
     callToActionSelectedOption: function() {
       let win = window.open(this.url, '_blank')
@@ -325,6 +327,10 @@ export default {
 
 .blip-card .fixed-options li div, .blip-card .fixed-options li span{
   width: auto;
+}
+
+.menu-list-prompt .bubble{
+  padding: 10px 0 0 0;
 }
 
 
