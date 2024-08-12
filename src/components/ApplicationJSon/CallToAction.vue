@@ -41,7 +41,7 @@
           <div class="fixed-options">
             <ul>
               <li
-                @click="(editable ? null :select(item))"
+                v-on:click="callToActionSelectedOption()"
                 :class="editable ? '' : ' pointer'"
               >
                 <div class="align-center">
@@ -146,17 +146,7 @@
             class="help input-error"
             >{{ errors.first('url') }}</bds-typo
           >
-        </div>
-        <div class="form-group">
-          <select class="form-control">
-            <option disabled value>Target</option>
-            <option value="blank">Blank</option>
-            <option value="self">Self</option>
-            <option value="selfCompact">SelfCompact</option>
-            <option value="selfTall">SelfTall</option>
-          </select>
-        </div>
-      
+        </div>      
       </div>
     </form>
   </div>
@@ -204,15 +194,15 @@ export default {
       this.bodyText = this.document.interactive.body.text
       this.footerText = this.document.interactive.footer.text
       this.url = this.document.interactive.action.parameters.url
-      this.selectedOption = { label: {}, value: {} }
     },
-
+    callToActionSelectedOption: function() {
+      let win = window.open(this.url, '_blank')
+      win.focus()
+    },
     callToActionSave: function($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
       }
-      this.selectedOption = { label: {}, value: {} }
-
       this.$validator.validateAll().then((result) => {
         if (!result) return
 
