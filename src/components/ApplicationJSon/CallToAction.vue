@@ -30,6 +30,7 @@
             >
           </div>
           <div
+            v-if="bodyText"
             :class="headerText ? 'body-text' : 'header-text'"
           >
             <bds-typo
@@ -41,7 +42,9 @@
               >{{ bodyText }}</bds-typo
             >
           </div>
-          <div class="footer-text">
+          <div 
+            v-if="footerText"
+            class="footer-text">
             <bds-typo
               variant="fs-16"
               bold="regular"
@@ -52,7 +55,9 @@
             >
           </div>
           <div class="fixed-options">
-            <ul>
+            <ul
+              :class="headerText || bodyText || footer ? '' : 'border-top-none'"
+            >
               <li
                 v-on:click="callToActionSelectedOption()"
                 :class="editable ? '' : ' pointer'"
@@ -94,7 +99,6 @@
             type="text"
             name="headerText"
             :class="{ 'input-error': errors.has('headerText') }"
-            v-validate="'required'"
             class="form-control"
             v-auto-expand
             v-model="headerText"
@@ -104,7 +108,6 @@
             type="text"
             name="bodyText"
             :class="{ 'input-error': errors.has('bodyText') }"
-            v-validate="'required'"
             class="form-control"
             v-auto-expand
             v-model="bodyText"
@@ -122,7 +125,6 @@
             type="text"
             name="footerText"
             :class="{ 'input-error': errors.has('footerText') }"
-            v-validate="'required'"
             class="form-control"
             v-auto-expand
             v-model="footerText"
@@ -214,9 +216,9 @@ export default {
 
   methods: {
     init: function() {
-      this.headerText = this.document.interactive.header.text
-      this.bodyText = this.document.interactive.body.text
-      this.footerText = this.document.interactive.footer.text
+      this.headerText = this.document.interactive.header ? this.document.interactive.header.text : ''
+      this.bodyText = this.document.interactive.body ? this.document.interactive.body.text : ''
+      this.footerText = this.document.interactive.footer ? this.document.interactive.footer.text : ''
       this.url = this.document.interactive.action.parameters.url
       this.displayText = this.document.interactive.action.parameters.display_text
     },
@@ -354,6 +356,10 @@ export default {
 
 .call-to-action .bubble{
   padding: 10px 0 0 0;
+}
+
+.border-top-none li {
+  border-top: none !important;
 }
 
 
