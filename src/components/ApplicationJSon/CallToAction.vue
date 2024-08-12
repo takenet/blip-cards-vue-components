@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isEditing" class="blip-container menu-list-prompt">
+  <div v-if="!isEditing" class="blip-container call-to-action">
     <div :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
         <bds-button-icon v-if="deletable && !isEditing"
@@ -70,7 +70,7 @@
     </div>
   </div>
 
-  <div class="blip-container menu-list-prompt" v-else>
+  <div class="blip-container call-to-action" v-else>
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <bds-button-icon 
       class="btn saveIco closeIco"
@@ -180,7 +180,7 @@ import { default as base } from '../../mixins/baseComponent.js'
 import { isFailedMessage } from '../../utils/misc'
 
 export default {
-  name: 'menu-list-prompt',
+  name: 'call-to-action',
   mixins: [base],
   props: {
     status: {
@@ -262,7 +262,7 @@ export default {
 <style scoped lang="scss">
 @import '../../styles/variables.scss';
 
-.menu-list-prompt .bubble {
+.call-to-action .bubble {
   padding: $bubble-padding;
   padding-left: 0px;
   padding-right: 0px;
@@ -352,7 +352,7 @@ export default {
   width: auto;
 }
 
-.menu-list-prompt .bubble{
+.call-to-action .bubble{
   padding: 10px 0 0 0;
 }
 
