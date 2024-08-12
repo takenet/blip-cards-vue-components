@@ -1,7 +1,9 @@
 <template>
   <div v-if="!isEditing" class="blip-container call-to-action">
     <div :class="isFailedMessage(status, position)">
-      <div :class="'bubble ' + position">
+      <div
+      :class="headerText || bodyText || footer ? 'bubble ' + position + ' bubble-padding-top-10': 'bubble ' + position"
+      >
         <bds-button-icon v-if="deletable && !isEditing"
         class="editIco trashIco icon-margin"
         icon="trash"
@@ -354,7 +356,7 @@ export default {
   width: auto;
 }
 
-.call-to-action .bubble{
+.call-to-action .bubble.bubble-padding-top-10 {
   padding: 10px 0 0 0;
 }
 
