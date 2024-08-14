@@ -4,6 +4,13 @@
       <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo || (onFailedClickIcon && group.status === 'failed'), [group.position]: true}">
+        <blip-card-group-member
+          v-if="(group.memberName || group.memberPhoneNumber) && group.hasNotification"
+          :position="group.position"
+          :group-member="group.memberName ? group.memberName : group.memberPhoneNumber"
+          :is-external-message="checkIsExternalMessage(group.msgs[0])"
+          :is-group="true"
+        />
         <blip-card
           v-for="message in group.msgs"
           :id="message.id"
@@ -169,7 +176,9 @@ export default {
         photo: this.documents[0].photo,
         date: this.documents[0].date,
         hasNotification: this.showNotification(this.documents[0]),
-        status: this.documents[0].status
+        status: this.documents[0].status,
+        memberName: 'Member Name',
+        memberPhoneNumber: '5531999999999'
       }
       for (let i = 1; i < this.documents.length; i++) {
         const lastMessage = group.msgs[group.msgs.length - 1]
@@ -181,9 +190,10 @@ export default {
           group.date = currentMessage.date
           group.status = currentMessage.status
           group.reason = currentMessage.reason
+          group.memberName = 'Member Name'
+          group.memberPhoneNumber = '5531999999999'
         } else {
           groups.push(group)
-
           group = {
             msgs: [currentMessage],
             position: currentMessage.position,
@@ -191,7 +201,9 @@ export default {
             date: currentMessage.date,
             hasNotification: this.showNotification(currentMessage),
             status: currentMessage.status,
-            reason: currentMessage.reason
+            reason: currentMessage.reason,
+            memberName: 'Member Name',
+            memberPhoneNumber: '5531999999999'
           }
         }
       }
