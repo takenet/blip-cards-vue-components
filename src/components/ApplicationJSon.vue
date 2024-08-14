@@ -1,5 +1,20 @@
 <template>
   <div class="blip-container">
+
+    <call-to-action
+      v-if="document.type === 'interactive' && document.interactive.type === 'cta_url'"
+      class="blip-card"
+      :postback-value-msg="translations.postbackValue"
+      :status="status"
+      :position="position"
+      :document="fullDocument.content"
+      :editable="editable"
+      :on-deleted="onDeleted"
+      :deletable="deletable"
+      :readonly="readonly"
+      @updated="emitUpdate"
+    />
+
     <menu-list-prompt
       v-if="document.type === 'interactive' && document.interactive.type === 'list'"
       class="blip-card"
@@ -65,11 +80,8 @@
       :unsupported-content-msg="translations.unsupportedContent"
       :position="position"
       :document="document"
-      :on-save="saveCard"
       :editable="editable"
-      :on-deleted="deleteCard"
       :deletable="deletable"
-      :editing="isCardEditing"
       :on-cancel="cancel"
     />
 
@@ -87,6 +99,7 @@ import MenuList from './ApplicationJSon/MenuList'
 import { default as base } from '../mixins/baseComponent.js'
 import { isFailedMessage } from '../utils/misc'
 import MenuListPrompt from './ApplicationJSon/MenuListPrompt.vue'
+import CallToAction from './ApplicationJSon/CallToAction.vue'
 
 export default {
   name: 'application-json',
@@ -123,7 +136,8 @@ export default {
   mixins: [base],
   components: {
     MenuList,
-    MenuListPrompt
+    MenuListPrompt,
+    CallToAction
   },
   methods: {
     emitUpdate() {

@@ -146,6 +146,9 @@
         <button class="button" @click="sendContact">
           ENVIAR Contato
         </button>
+        <button class="button" @click="sendCallToAction">
+          ENVIAR Conteúdo dinâmico (CTA)
+        </button>
         <button class="button" @click="sendMenuList">
           ENVIAR Menu List
         </button>
@@ -810,6 +813,37 @@ export default {
           },
           firstName: 'Contact',
           lastName: 'Last Name'
+        }
+      })
+      this.send()
+    },
+    sendCallToAction: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@wa.gw.msging.net',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'cta_url',
+            header: {
+              text: 'Available Dates'
+            },
+            body: {
+              text: 'Tap the button below to see available dates.'
+            },
+            footer: {
+              text: 'Dates subject to change.'
+            },
+            action: {
+              name: 'cta_url',
+              parameters: {
+                display_text: 'See Dates',
+                url: 'https://developers.facebook.com/docs/whatsapp/cloud-api/messages/interactive-cta-url-messages'
+              }
+            }
+          }
         }
       })
       this.send()
