@@ -344,10 +344,10 @@ export default {
   margin: 0 auto;
   > bds-icon {
     margin-right: 10px;
-    color: var(--color-primary, #1E6BF1) !important;    
+    color: $color-primary !important;    
   }
   > bds-typo {
-    color: var(--color-primary, #1E6BF1);
+    color: $color-primary;
   }
 
 }
