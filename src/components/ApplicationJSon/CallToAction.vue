@@ -363,6 +363,4 @@ export default {
 .border-top-none li {
   border-top: none !important;
 }
-
-
 </style>
