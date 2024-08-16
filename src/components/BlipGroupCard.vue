@@ -177,8 +177,8 @@ export default {
         date: this.documents[0].date,
         hasNotification: this.showNotification(this.documents[0]),
         status: this.documents[0].status,
-        memberName: 'Member Name',
-        memberPhoneNumber: '5531999999999'
+        memberName: this.documents[0].metadata ? this.documents[0].metadata.memberName : '',
+        memberPhoneNumber: this.documents[0].metadata ? this.documents[0].metadata.memberPhoneNumber : ''
       }
       for (let i = 1; i < this.documents.length; i++) {
         const lastMessage = group.msgs[group.msgs.length - 1]
@@ -190,8 +190,8 @@ export default {
           group.date = currentMessage.date
           group.status = currentMessage.status
           group.reason = currentMessage.reason
-          group.memberName = 'Member Name'
-          group.memberPhoneNumber = '5531999999999'
+          group.memberName = this.documents[0].metadata ? this.documents[0].metadata.memberName : ''
+          group.memberPhoneNumber = this.documents[0].metadata ? this.documents[0].metadata.memberPhoneNumber : ''
         } else {
           groups.push(group)
           group = {
@@ -202,8 +202,8 @@ export default {
             hasNotification: this.showNotification(currentMessage),
             status: currentMessage.status,
             reason: currentMessage.reason,
-            memberName: 'Member Name',
-            memberPhoneNumber: '5531999999999'
+            memberName: this.documents[0].metadata ? this.documents[0].metadata.memberName : '',
+            memberPhoneNumber: this.documents[0].metadata ? this.documents[0].metadata.memberPhoneNumber : ''
           }
         }
       }

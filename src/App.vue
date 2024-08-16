@@ -333,7 +333,8 @@ export default {
         document: doc,
         date: this.date,
         position: this.position,
-        status: this.msgStatus
+        status: this.msgStatus,
+        metadata: this.metadata
       })
     },
     sendText: function() {
@@ -1705,7 +1706,11 @@ export default {
       width: 700,
       position: 'left',
       isSample: 'true',
-      date: '08:32 PM',
+      date: '08:35 PM',
+      metadata: {
+        memberName: 'Member Name',
+        memberPhoneNumber: '5531999999999'
+      },
       photo: false,
       group: false,
       msgStatus: 'accepted',
