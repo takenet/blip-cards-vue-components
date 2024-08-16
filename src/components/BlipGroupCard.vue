@@ -5,10 +5,9 @@
       </div>
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo || (onFailedClickIcon && group.status === 'failed'), [group.position]: true}">
         <blip-card-group-member
-          v-if="(group.memberName || group.memberPhoneNumber) && group.hasNotification"
+          v-if="(group.memberName || group.memberPhoneNumber)"
           :position="group.position"
           :group-member="group.memberName ? group.memberName : group.memberPhoneNumber"
-          :is-external-message="checkIsExternalMessage(group.msgs[0])"
           :is-group="true"
         />
         <blip-card
@@ -177,8 +176,8 @@ export default {
         date: this.documents[0].date,
         hasNotification: this.showNotification(this.documents[0]),
         status: this.documents[0].status,
-        memberName: this.documents[0].metadata ? this.documents[0].metadata.memberName : '',
-        memberPhoneNumber: this.documents[0].metadata ? this.documents[0].metadata.memberPhoneNumber : ''
+        memberName: this.documents[0].document.metadata ? this.documents[0].document.metadata.memberName : '',
+        memberPhoneNumber: this.documents[0].document.metadata ? this.documents[0].document.metadata.memberPhoneNumber : ''
       }
       for (let i = 1; i < this.documents.length; i++) {
         const lastMessage = group.msgs[group.msgs.length - 1]
@@ -190,8 +189,8 @@ export default {
           group.date = currentMessage.date
           group.status = currentMessage.status
           group.reason = currentMessage.reason
-          group.memberName = this.documents[0].metadata ? this.documents[0].metadata.memberName : ''
-          group.memberPhoneNumber = this.documents[0].metadata ? this.documents[0].metadata.memberPhoneNumber : ''
+          group.memberName = currentMessage.document.metadata ? currentMessage.document.metadata.memberName : ''
+          group.memberPhoneNumber = currentMessage.document.metadata ? currentMessage.document.metadata.memberPhoneNumber : ''
         } else {
           groups.push(group)
           group = {
@@ -202,8 +201,8 @@ export default {
             hasNotification: this.showNotification(currentMessage),
             status: currentMessage.status,
             reason: currentMessage.reason,
-            memberName: this.documents[0].metadata ? this.documents[0].metadata.memberName : '',
-            memberPhoneNumber: this.documents[0].metadata ? this.documents[0].metadata.memberPhoneNumber : ''
+            memberName: currentMessage.document.metadata ? currentMessage.document.metadata.memberName : '',
+            memberPhoneNumber: currentMessage.document.metadata ? currentMessage.document.metadata.memberPhoneNumber : ''
           }
         }
       }
