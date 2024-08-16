@@ -103,7 +103,7 @@
             <a v-if="showReadMoreOrLessButtonLink" @click="toggleTranscriptionTextSize">{{ readMoreOrLessDisplayText }}</a>
           </bds-typo>
         </div>
-        <div class="action">
+        <div class="action" v-if="canShowAction">
           <div>
             <span class="pointer" @click="transcribeAudio" v-if="isTranscriptionActionVisible">{{ translations.audioTranscription.action }}</span>
           </div>
@@ -219,6 +219,11 @@ export default {
       return this.transcription && this.transcription.audioEnabled
         ? this.transcription.audioEnabled
         : false
+    },
+    canShowAction() {
+      return this.isTranscriptionActionVisible ||
+        this.loadingTranscription ||
+        (this.transcriptionText.length > 0 && this.transcriptionText.length > this.transcriptionTextLimits.longTextLength)
     },
     isTranscriptionActionVisible() {
       return this.transcriptionText.length === 0 && !this.loadingTranscription
@@ -406,20 +411,38 @@ export default {
     transcribeAudio: async function() {
       if (this.transcription.onAsyncTranscribe) {
         this.loadingTranscription = true
-        const text = await this.transcription.onAsyncTranscribe(this.audioUri)
+
+        let refreshedAudioUri = this.audioUri
+        if (this.onAudioValidateUri) {
+          refreshedAudioUri = await this.onAudioValidateUri(this.audioUri)
+        }
+
+        const text = await this.transcription.onAsyncTranscribe(refreshedAudioUri)
         if (text) {
           this.transcriptionText = text
         }
+
         this.loadingTranscription = false
+        this.scrollToBottom()
       }
     },
     openFullTranscription: function() {
       if (this.transcription.onOpenMfeModal) {
-        this.transcription.onOpenMfeModal()
+        this.transcription.onOpenMfeModal({
+          url: undefined,
+          transcriptions: [ this.transcriptionText ],
+          mediaDuration: this.totalTime
+        })
       }
     },
     toggleTranscriptionTextSize: function() {
       this.transcriptionTextExpanded = !this.transcriptionTextExpanded
+      this.scrollToBottom()
+    },
+    scrollToBottom: function() {
+      setTimeout(() => {
+        this.transcription.scrollToBottom()
+      }, 50)
     }
   }
 }

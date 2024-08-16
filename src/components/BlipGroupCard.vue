@@ -147,7 +147,8 @@ export default {
         callRecordingEnabled: false,
         limits: {},
         onAsyncTranscribe: (url) => {},
-        onOpenMfeModal: (data) => {}
+        onOpenMfeModal: (data) => {},
+        scrollToBottom: () => {}
       })
     }
   },
