@@ -12,7 +12,7 @@ import BlipCallsEndCard from './components/BlipCallsEndCard'
 import BlipCallsVoiceRequest from './components/BlipCallsVoiceRequest'
 import BlipCard from './components/BlipCard'
 import BlipCardDate from './components/BlipCardDate'
-import BlipCardGroupMember from './components/BlipCardGroupMember'
+import BlipCardMember from './components/BlipCardMember'
 import BlipGroupCard from './components/BlipGroupCard'
 import BlipListCard from './components/BlipListCard'
 import BlipSelect from './components/BlipSelect'
@@ -100,7 +100,7 @@ function install(Vue) {
   components.push(Vue.component(Contact.name, Contact))
   components.push(Vue.component(InteractiveButton.name, InteractiveButton))
   components.push(Vue.component(BlipCardDate.name, BlipCardDate))
-  components.push(Vue.component(BlipCardGroupMember.name, BlipCardGroupMember))
+  components.push(Vue.component(BlipCardMember.name, BlipCardMember))
   components.push(Vue.component(ApplicationJSon.name, ApplicationJSon))
   components.push(Vue.component(MenuListPrompt.name, MenuListPrompt))
   components.push(Vue.component(MenuList.name, MenuList))

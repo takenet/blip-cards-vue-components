@@ -4,10 +4,10 @@
       <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo || (onFailedClickIcon && group.status === 'failed'), [group.position]: true}">
-        <blip-card-group-member
+        <blip-card-member
           v-if="(group.memberName || group.memberPhoneNumber)"
           :position="group.position"
-          :group-member="group.memberName ? group.memberName : group.memberPhoneNumber"
+          :member-info="group.memberName ? group.memberName : group.memberPhoneNumber"
           :is-group="true"
         />
         <blip-card

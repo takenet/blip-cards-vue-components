@@ -1,18 +1,18 @@
 <template>
   <div class="flex" :class="`${isGroup ? 'group-' : ''}notification ` + position">
-    {{ groupMember }}
+    {{ memberInfo }}
   </div>
 </template>
 
 <script>
 export default {
-  name: 'blip-card-group-member',
+  name: 'blip-card-member',
   props: {
     position: {
       type: String,
       default: 'left'
     },
-    groupMember: {
+    memberInfo: {
       type: String
     },
     isGroup: {
