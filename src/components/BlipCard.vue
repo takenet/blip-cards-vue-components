@@ -21,6 +21,7 @@
           :length="length"
           :position="position"
           :document="document.metadata['#blip.payload.text']"
+          :member-info="memberInfo"
           :full-document="editableDocument"
           :date="date"
           :on-save="saveCard"
@@ -43,6 +44,7 @@
           :length="length"
           :position="position"
           :document="editableDocument.content"
+          :member-info="memberInfo"
           :full-document="editableDocument"
           :date="date"
           :on-save="saveCard"
@@ -72,6 +74,7 @@
           :status="status"
           :position="position"
           :document="editableDocument.content"
+          :member-info="memberInfo"          
           :full-document="editableDocument"
           :date="date"
           :on-media-selected="onMediaSelected"
@@ -621,6 +624,7 @@
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 import { checkIsExternalMessage } from '../utils/externalMessages.js'
+import { getMemberInfo } from '../utils/getMemberInfo.js'
 
 const supportedRepliedTypes = [
   MessageTypesConstants.TEXT_MESSAGE,
@@ -783,6 +787,9 @@ export default {
     },
     externalMessage() {
       return checkIsExternalMessage(this.document)
+    },
+    memberInfo() {
+      return getMemberInfo(this.document)
     }
   }
 }

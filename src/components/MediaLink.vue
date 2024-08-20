@@ -1,6 +1,13 @@
 <template>
   <div :class="'blip-container media-link ' + document.type.split('/')[0] + isFailedMessage(status, position)"
     id="blip-container">
+    <blip-card-member
+      v-if="memberInfo"
+      :document="document"
+      :position="position"
+      :member-info="memberInfo"
+      :is-group="false"
+    />      
     <div :class="'bubble ' + position" id='media-link'>
       <blip-image
         :image-uri-msg="titleMsg"
@@ -148,6 +155,10 @@ export default {
     },
     transcription: {
       type: Object
+    },
+    memberInfo: {
+      type: String,
+      default: ''
     }
   },
   data: function() {
