@@ -184,7 +184,9 @@ export default {
         const currentMessage = this.documents[i]
         const isLastMessageExternal = checkIsExternalMessage(lastMessage.document)
         const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
-        if (this.compareMessages(lastMessage, currentMessage) && (isLastMessageExternal === isCurrentMessageExternal)) {
+        if (this.compareMessages(lastMessage, currentMessage) &&
+          (isLastMessageExternal === isCurrentMessageExternal) &&
+          (currentMessage.document.metadata.memberPhoneNumber === lastMessage.document.metadata.memberPhoneNumber)) {
           group.msgs.push(currentMessage)
           group.date = currentMessage.date
           group.status = currentMessage.status
