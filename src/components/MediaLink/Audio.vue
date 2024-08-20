@@ -111,7 +111,7 @@
             <bds-loading-spinner size="small" :color="transcriptionSpinnerColor"></bds-loading-spinner>
             <bds-typo class="typo" variant="f-16">{{ translations.audioTranscription.loading }}</bds-typo>
           </div>
-          <div v-if="transcriptionText.length > 0 && transcriptionText.length > transcriptionTextLimits.longTextLength">
+          <div v-if="transcriptionText.length > 0">
             <div class="pointer full-transcription" @click="openFullTranscription">
               <bds-icon class="typo" name="external-file" theme="outline" type="icon" size="medium" />
               <bds-typo class="typo" variant="f-16">{{ translations.audioTranscription.fullTranscription }}</bds-typo>
@@ -423,7 +423,7 @@ export default {
         }
 
         this.loadingTranscription = false
-        this.scrollToBottom()
+        this.scrollToElement()
       }
     },
     openFullTranscription: function() {
@@ -437,11 +437,16 @@ export default {
     },
     toggleTranscriptionTextSize: function() {
       this.transcriptionTextExpanded = !this.transcriptionTextExpanded
-      this.scrollToBottom()
+      this.scrollToElement()
     },
-    scrollToBottom: function() {
+    scrollToElement: function() {
+      if (!this.transcription.scrollTo) {
+        return
+      }
+
+      const messageId = this.fullDocument ? this.fullDocument.id : ''
       setTimeout(() => {
-        this.transcription.scrollToBottom()
+        this.transcription.scrollTo(messageId)
       }, 50)
     }
   }

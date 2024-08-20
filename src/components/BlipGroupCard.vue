@@ -148,7 +148,7 @@ export default {
         limits: {},
         onAsyncTranscribe: (url) => {},
         onOpenMfeModal: (data) => {},
-        scrollToBottom: () => {}
+        scrollTo: (elementId) => {}
       })
     }
   },
