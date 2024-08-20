@@ -329,12 +329,11 @@ export default {
           'messageEmitter': 'externalMessages'
         }
       }
-      if (this.group) {
-        doc.metadata = {
-          ...doc.metadata,
-          'memberName': 'Member Name',
-          'memberPhoneNumber': '5531999999999'
-        }
+
+      doc.metadata = {
+        ...doc.metadata,
+        'memberName': 'Member Name',
+        'memberPhoneNumber': '5531999999999'
       }
 
       this.documents.push({
