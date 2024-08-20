@@ -58,13 +58,13 @@
               <textarea
                 @keydown.enter="saveData($event)"
                 name="bodyText"
-                v-auto-expand
-                class="form-control"
-                v-validate="'required'"
-                :class="{'input-error': errors.has('bodyText') }"
-                v-model="bodyText"
+                class="form-control"    
+                :class="{'input-error': errors.has('bodyText') }"        
                 maxlength="1024"
                 placeholder="Body text"
+                v-model="bodyText"
+                v-auto-expand
+                v-validate="'required'"
               ></textarea>
               <span
                 v-show="errors.has('bodyText')"
@@ -77,10 +77,10 @@
                 type="text"
                 name="buttonText"
                 class="form-control"
-                v-validate="'required'"
-                v-model="buttonText"
                 maxlength="20"
                 placeholder="Button text"
+                v-validate="'required'"
+                v-model="buttonText"
               >
               <span
                 v-show="errors.has('buttonText')"
