@@ -329,6 +329,13 @@ export default {
           'messageEmitter': 'externalMessages'
         }
       }
+
+      doc.metadata = {
+        ...doc.metadata,
+        'memberName': 'Member Name',
+        'memberPhoneNumber': '5531999999999'
+      }
+
       this.documents.push({
         document: doc,
         date: this.date,

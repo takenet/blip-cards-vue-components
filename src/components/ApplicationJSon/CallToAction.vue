@@ -363,4 +363,11 @@ export default {
 .border-top-none li {
   border-top: none !important;
 }
+
+.blip-card .fixed-options ul {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+
 </style>

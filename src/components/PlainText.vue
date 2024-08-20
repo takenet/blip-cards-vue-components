@@ -5,6 +5,13 @@
       class="blip-container plain-text"
       :class="isFailedMessage(status, position)"
     >
+      <blip-card-member
+        v-if="memberInfo"
+        :document="document"
+        :position="position"
+        :member-info="memberInfo"
+        :is-group="false"
+      />
       <div :class="'bubble ' + position">
         <bds-button-icon v-if="deletable"
           class="editIco trashIco icon-button-margin icon-button-top"
@@ -111,6 +118,10 @@ export default {
     failedToSendMsg: {
       type: String,
       default: 'Falha ao enviar a mensagem.'
+    },
+    memberInfo: {
+      type: String,
+      default: ''
     }
   },
   computed: {
