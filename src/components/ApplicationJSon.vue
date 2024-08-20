@@ -67,9 +67,14 @@
     <blip-calls-voice-request
       v-if="document.type === 'interactive' && document.interactive.type === 'voice_call'"
       class="blip-card"
+      :document="document"
       :position="position"
-      :body-text="document.interactive.body.text"
-      :action-text="document.interactive.action.parameters.display_text"
+      :on-save="onSave"
+      :on-deleted="onDeleted"
+      :on-cancel="onCancel"
+      :editable="editable"
+      :deletable="deletable"
+      :editing="editing"
     />
 
     <unsuported-content
