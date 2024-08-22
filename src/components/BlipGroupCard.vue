@@ -209,14 +209,6 @@ export default {
           group.date = currentMessage.date
           group.status = currentMessage.status
           group.reason = currentMessage.reason
-
-          if (hasCurrentMessageDocumentMetadata) {
-            group.memberName = currentMessage.document.metadata.memberName
-            group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
-          } else {
-            group.memberName = ''
-            group.memberPhoneNumber = ''
-          }
         } else {
           groups.push(group)
           group = {
@@ -228,14 +220,14 @@ export default {
             status: currentMessage.status,
             reason: currentMessage.reason
           }
+        }
 
-          if (hasCurrentMessageDocumentMetadata) {
-            group.memberName = currentMessage.document.metadata.memberName
-            group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
-          } else {
-            group.memberName = ''
-            group.memberPhoneNumber = ''
-          }
+        if (hasCurrentMessageDocumentMetadata) {
+          group.memberName = currentMessage.document.metadata.memberName
+          group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
+        } else {
+          group.memberName = ''
+          group.memberPhoneNumber = ''
         }
       }
 
