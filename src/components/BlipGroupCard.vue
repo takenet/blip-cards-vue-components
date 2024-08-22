@@ -167,33 +167,56 @@ export default {
   computed: {
     groupedDocuments() {
       let groups = []
+
       if (this.documents.length === 0) {
         return
       }
+
       let group = {
         msgs: [this.documents[0]],
         position: this.documents[0].position,
         photo: this.documents[0].photo,
         date: this.documents[0].date,
         hasNotification: this.showNotification(this.documents[0]),
-        status: this.documents[0].status,
-        memberName: this.documents[0].document.metadata ? this.documents[0].document.metadata.memberName : '',
-        memberPhoneNumber: this.documents[0].document.metadata ? this.documents[0].document.metadata.memberPhoneNumber : ''
+        status: this.documents[0].status
       }
+
+      let document = this.documents[0].document
+
+      if (document && document.metadata) {
+        group.memberName = document.metadata.memberName
+        group.memberPhoneNumber = document.metadata.memberPhoneNumber
+      } else {
+        group.memberName = ''
+        group.memberPhoneNumber = ''
+      }
+
       for (let i = 1; i < this.documents.length; i++) {
         const lastMessage = group.msgs[group.msgs.length - 1]
         const currentMessage = this.documents[i]
         const isLastMessageExternal = checkIsExternalMessage(lastMessage.document)
         const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
+
+        const hasLastMessageDocumentMetadata = lastMessage.document && lastMessage.document.metadata
+        const hasCurrentMessageDocumentMetadata = currentMessage.document && currentMessage.document.metadata
+
         if (this.compareMessages(lastMessage, currentMessage) &&
-          (isLastMessageExternal === isCurrentMessageExternal) &&
-          (currentMessage.document.metadata.memberPhoneNumber === lastMessage.document.metadata.memberPhoneNumber)) {
+          isLastMessageExternal === isCurrentMessageExternal &&
+          hasLastMessageDocumentMetadata &&
+          hasCurrentMessageDocumentMetadata &&
+          currentMessage.document.metadata.memberPhoneNumber === lastMessage.document.metadata.memberPhoneNumber) {
           group.msgs.push(currentMessage)
           group.date = currentMessage.date
           group.status = currentMessage.status
           group.reason = currentMessage.reason
-          group.memberName = currentMessage.document.metadata ? currentMessage.document.metadata.memberName : ''
-          group.memberPhoneNumber = currentMessage.document.metadata ? currentMessage.document.metadata.memberPhoneNumber : ''
+
+          if (hasCurrentMessageDocumentMetadata) {
+            group.memberName = currentMessage.document.metadata.memberName
+            group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
+          } else {
+            group.memberName = ''
+            group.memberPhoneNumber = ''
+          }
         } else {
           groups.push(group)
           group = {
@@ -203,13 +226,21 @@ export default {
             date: currentMessage.date,
             hasNotification: this.showNotification(currentMessage),
             status: currentMessage.status,
-            reason: currentMessage.reason,
-            memberName: currentMessage.document.metadata ? currentMessage.document.metadata.memberName : '',
-            memberPhoneNumber: currentMessage.document.metadata ? currentMessage.document.metadata.memberPhoneNumber : ''
+            reason: currentMessage.reason
+          }
+
+          if (hasCurrentMessageDocumentMetadata) {
+            group.memberName = currentMessage.document.metadata.memberName
+            group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
+          } else {
+            group.memberName = ''
+            group.memberPhoneNumber = ''
           }
         }
       }
+
       groups.push(group)
+
       return groups
     }
   },
