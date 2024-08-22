@@ -43,7 +43,8 @@
       <br />
       <input type="checkbox" value="false" v-model="group" /> Group Messages
       <br />
-      <input type="checkbox" value="false" v-model="isExternalMessage" /> External Message
+      <input type="checkbox" value="false" v-model="isExternalMessage" />
+      External Message
 
       <div>
         <h1>Status notification:</h1>
@@ -148,6 +149,9 @@
         </button>
         <button class="button" @click="sendCallToAction">
           ENVIAR Conteúdo dinâmico (CTA)
+        </button>
+        <button class="button" @click="sendJsonText">
+          ENVIAR Text Flow
         </button>
         <button class="button" @click="sendMenuList">
           ENVIAR Menu List
@@ -326,7 +330,7 @@ export default {
       if (this.isExternalMessage) {
         doc.metadata = {
           ...doc.metadata,
-          'messageEmitter': 'externalMessages'
+          messageEmitter: 'externalMessages'
         }
       }
 
@@ -847,7 +851,45 @@ export default {
               name: 'cta_url',
               parameters: {
                 display_text: 'See Dates',
-                url: 'https://developers.facebook.com/docs/whatsapp/cloud-api/messages/interactive-cta-url-messages'
+                url:
+                  'https://developers.facebook.com/docs/whatsapp/cloud-api/messages/interactive-cta-url-messages'
+              }
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendJsonText: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@wa.gw.msging.net',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'flow',
+            header: {
+              text: 'text'
+            },
+            body: {
+              text: 'Teste'
+            },
+            footer: {
+              text: 'Energisa'
+            },
+            action: {
+              name: 'flow',
+              parameters: {
+                flow_message_version: '200',
+                flow_id: '356521493857549',
+                flow_cta: 'ver ',
+                flow_action: 'navigate',
+                flow_token: 'unused',
+                flow_action_payload: {
+                  screen: 'PREFERENCES'
+                }
               }
             }
           }

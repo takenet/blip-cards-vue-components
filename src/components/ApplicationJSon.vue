@@ -1,8 +1,30 @@
 <template>
   <div class="blip-container">
+    <json-text
+      v-if="
+        document.type === 'interactive' && document.interactive.type === 'flow'
+      "
+      class="blip-card"
+      :failed-to-send-msg="translations.failedToSend"
+      :show-more-msg="translations.showMore"
+      :status="status"
+      :position="position"
+      :document="fullDocument.content"
+      :editable="editable"
+      :on-deleted="onDeleted"
+      :deletable="deletable"
+      :readonly="readonly"
+      :date="date"
+      :on-metadata-edit="isMetadataReady"
+      :on-cancel="cancel"
+      :external-message-text="translations.externalMessageText"
+    />
 
     <call-to-action
-      v-if="document.type === 'interactive' && document.interactive.type === 'cta_url'"
+      v-if="
+        document.type === 'interactive' &&
+          document.interactive.type === 'cta_url'
+      "
       class="blip-card"
       :postback-value-msg="translations.postbackValue"
       :status="status"
@@ -16,7 +38,9 @@
     />
 
     <menu-list-prompt
-      v-if="document.type === 'interactive' && document.interactive.type === 'list'"
+      v-if="
+        document.type === 'interactive' && document.interactive.type === 'list'
+      "
       class="blip-card"
       :postback-value-msg="translations.postbackValue"
       :status="status"
@@ -30,7 +54,9 @@
     />
 
     <menu-list
-      v-if="document.type === 'interactive' && document.interactive.type === 'list'"
+      v-if="
+        document.type === 'interactive' && document.interactive.type === 'list'
+      "
       class="blip-card"
       :add-button-msg="translations.addButton"
       :not-enough-options-msg="translations.notEnoughOptions"
@@ -49,7 +75,10 @@
     />
 
     <interactive-button
-      v-if="document.type === 'interactive' && document.interactive.type === 'button'"
+      v-if="
+        document.type === 'interactive' &&
+          document.interactive.type === 'button'
+      "
       class="blip-card"
       :document="document"
       :full-document="fullDocument"
@@ -65,7 +94,10 @@
     />
 
     <blip-calls-voice-request
-      v-if="document.type === 'interactive' && document.interactive.type === 'voice_call'"
+      v-if="
+        document.type === 'interactive' &&
+          document.interactive.type === 'voice_call'
+      "
       class="blip-card"
       :document="document"
       :position="position"
@@ -105,6 +137,7 @@ import { default as base } from '../mixins/baseComponent.js'
 import { isFailedMessage } from '../utils/misc'
 import MenuListPrompt from './ApplicationJSon/MenuListPrompt.vue'
 import CallToAction from './ApplicationJSon/CallToAction.vue'
+import JsonText from './ApplicationJSon/JsonText.vue'
 
 export default {
   name: 'application-json',
@@ -131,6 +164,10 @@ export default {
     deletable: {
       type: Boolean,
       default: true
+    },
+    whatappComponent: {
+      type: String,
+      default: 'This message is a WhatsApp Flows component'
     }
   },
   data: function() {
@@ -142,7 +179,8 @@ export default {
   components: {
     MenuList,
     MenuListPrompt,
-    CallToAction
+    CallToAction,
+    JsonText
   },
   methods: {
     emitUpdate() {
