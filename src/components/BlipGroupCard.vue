@@ -9,7 +9,7 @@
           :position="group.position"
           :member-info="group.memberName ? group.memberName : group.memberPhoneNumber"
           :is-group="true"
-        />
+        /> 
         <blip-card
           v-for="message in group.msgs"
           :id="message.id"
