@@ -13,7 +13,7 @@ function getInnerDocument(msg) {
 function getMemberInfo(msg) {
   const innerDocument = getInnerDocument(msg)
 
-  if (!innerDocument.metadata) {
+  if (!innerDocument || !innerDocument.metadata) {
     return ''
   }
 
@@ -27,7 +27,7 @@ function getMemberInfo(msg) {
 function getMemberPhoneNumber(msg) {
   const innerDocument = getInnerDocument(msg)
 
-  if (!innerDocument.metadata) {
+  if (!innerDocument || !innerDocument.metadata) {
     return ''
   }
 
