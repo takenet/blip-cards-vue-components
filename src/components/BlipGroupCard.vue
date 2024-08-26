@@ -200,7 +200,6 @@ export default {
         const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
 
         const currentMessageMemberInfo = getMemberInfo(currentMessage.document)
-
         const lastMemberPhoneNumber = getMemberPhoneNumber(lastMessage.document)
         const currentMemberPhoneNumber = getMemberPhoneNumber(currentMessage.document)
 
