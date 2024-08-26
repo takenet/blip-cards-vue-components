@@ -73,6 +73,7 @@
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 import { checkIsExternalMessage } from '../utils/externalMessages.js'
+import { getMemberInfo, getMemberPhoneNumber } from '../utils/memberUtils.js'
 
 export default {
   name: 'blip-group-card',
@@ -194,28 +195,26 @@ export default {
       for (let i = 1; i < this.documents.length; i++) {
         const lastMessage = group.msgs[group.msgs.length - 1]
         const currentMessage = this.documents[i]
+
         const isLastMessageExternal = checkIsExternalMessage(lastMessage.document)
         const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
 
-        const hasLastMessageDocumentMetadata = lastMessage.document && lastMessage.document.metadata
-        const hasCurrentMessageDocumentMetadata = currentMessage.document && currentMessage.document.metadata
+        const currentMessageMemberInfo = getMemberInfo(currentMessage.document)
+
+        const lastMemberPhoneNumber = getMemberPhoneNumber(lastMessage.document)
+        const currentMemberPhoneNumber = getMemberPhoneNumber(currentMessage.document)
 
         if (this.compareMessages(lastMessage, currentMessage) &&
           isLastMessageExternal === isCurrentMessageExternal &&
-          hasLastMessageDocumentMetadata &&
-          hasCurrentMessageDocumentMetadata &&
-          currentMessage.document.metadata.memberPhoneNumber === lastMessage.document.metadata.memberPhoneNumber) {
+          lastMemberPhoneNumber === currentMemberPhoneNumber) {
           group.msgs.push(currentMessage)
           group.date = currentMessage.date
           group.status = currentMessage.status
           group.reason = currentMessage.reason
 
-          if (hasCurrentMessageDocumentMetadata) {
+          if (currentMessageMemberInfo) {
             group.memberName = currentMessage.document.metadata.memberName
             group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
-          } else {
-            group.memberName = ''
-            group.memberPhoneNumber = ''
           }
         } else {
           groups.push(group)
@@ -229,12 +228,9 @@ export default {
             reason: currentMessage.reason
           }
 
-          if (hasCurrentMessageDocumentMetadata) {
+          if (currentMessageMemberInfo) {
             group.memberName = currentMessage.document.metadata.memberName
             group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
-          } else {
-            group.memberName = ''
-            group.memberPhoneNumber = ''
           }
         }
       }
