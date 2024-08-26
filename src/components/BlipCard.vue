@@ -624,7 +624,7 @@
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 import { checkIsExternalMessage } from '../utils/externalMessages.js'
-import { getMemberInfo } from '../utils/getMemberInfo.js'
+import { getMemberInfo } from '../utils/memberUtils.js'
 
 const supportedRepliedTypes = [
   MessageTypesConstants.TEXT_MESSAGE,
