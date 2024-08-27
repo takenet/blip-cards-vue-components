@@ -223,7 +223,7 @@ export default {
     canShowAction() {
       return this.isTranscriptionActionVisible ||
         this.loadingTranscription ||
-        (this.transcriptionText.length > 0 && this.transcriptionText.length > this.transcriptionTextLimits.longTextLength)
+        (this.transcriptionText.length > 0)
     },
     isTranscriptionActionVisible() {
       return this.transcriptionText.length === 0 && !this.loadingTranscription

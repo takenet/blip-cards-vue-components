@@ -47,6 +47,13 @@
       External Message
 
       <div>
+        <h1>Member Data:</h1>
+        <input type="checkbox" value="false" v-model="hasMemberData" /> Has Member Data
+        <input v-model="memberName" /> Name
+        <input v-model="memberPhone" /> Phone
+      </div>
+
+      <div>
         <h1>Status notification:</h1>
         <form>
           <input
@@ -334,10 +341,12 @@ export default {
         }
       }
 
-      doc.metadata = {
-        ...doc.metadata,
-        'memberName': 'Member Name',
-        'memberPhoneNumber': '5531999999999'
+      if (this.hasMemberData) {
+        doc.metadata = {
+          ...doc.metadata,
+          'memberName': this.memberName,
+          'memberPhoneNumber': this.memberPhone
+        }
       }
 
       this.documents.push({
@@ -1769,7 +1778,10 @@ export default {
       translations: {
         failedToSend: 'Falha ao enviar a mensagem.'
       },
-      isExternalMessage: false
+      isExternalMessage: false,
+      hasMemberData: false,
+      memberName: undefined,
+      memberPhone: undefined
     }
   },
   components: {}
