@@ -15,41 +15,41 @@
       @updated="emitUpdate"
     />
 
-    <menu-list-prompt
-      v-if="document.type === 'interactive' && document.interactive.type === 'list'"
-      class="blip-card"
-      :postback-value-msg="translations.postbackValue"
-      :status="status"
-      :position="position"
-      :document="fullDocument.content"
-      :editable="editable"
-      :on-deleted="onDeleted"
-      :deletable="deletable"
-      :readonly="readonly"
-      @updated="emitUpdate"
-    />
+    <div v-else-if="document.type === 'interactive' && document.interactive.type === 'list'">
+      <menu-list-prompt
+        class="blip-card"
+        :postback-value-msg="translations.postbackValue"
+        :status="status"
+        :position="position"
+        :document="fullDocument.content"
+        :editable="editable"
+        :on-deleted="onDeleted"
+        :deletable="deletable"
+        :readonly="readonly"
+        @updated="emitUpdate"
+      />
 
-    <menu-list
-      v-if="document.type === 'interactive' && document.interactive.type === 'list'"
-      class="blip-card"
-      :add-button-msg="translations.addButton"
-      :not-enough-options-msg="translations.notEnoughOptions"
-      :text-msg="translations.text"
-      :apply-msg="translations.apply"
-      :cancel-msg="translations.cancel"
-      :postback-value-msg="translations.postbackValue"
-      :status="status"
-      :position="position"
-      :document="fullDocument.content"
-      :editable="editable"
-      :on-deleted="onDeleted"
-      :deletable="deletable"
-      :readonly="readonly"
-      @updated="emitUpdate"
-    />
+      <menu-list
+        class="blip-card"
+        :add-button-msg="translations.addButton"
+        :not-enough-options-msg="translations.notEnoughOptions"
+        :text-msg="translations.text"
+        :apply-msg="translations.apply"
+        :cancel-msg="translations.cancel"
+        :postback-value-msg="translations.postbackValue"
+        :status="status"
+        :position="position"
+        :document="fullDocument.content"
+        :editable="editable"
+        :on-deleted="onDeleted"
+        :deletable="deletable"
+        :readonly="readonly"
+        @updated="emitUpdate"
+      />
+    </div>
 
     <interactive-button
-      v-if="document.type === 'interactive' && document.interactive.type === 'button'"
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'button'"
       class="blip-card"
       :document="document"
       :full-document="fullDocument"
@@ -65,7 +65,7 @@
     />
 
     <blip-calls-voice-request
-      v-if="document.type === 'interactive' && document.interactive.type === 'voice_call'"
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'voice_call'"
       class="blip-card"
       :document="document"
       :position="position"
