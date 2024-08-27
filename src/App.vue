@@ -146,6 +146,9 @@
         <button class="button" @click="sendRaw">
           ENVIAR Unsupported Content
         </button>
+        <button class="button" @click="sendApplicationJsonUnsupportedContent">
+          ENVIAR ApplicationJson Unsupported Content
+        </button>
         <button class="button" @click="sendSurveyContent">ENVIAR Survey</button>
         <button class="button" @click="toogleBlipGroupCard">
           CRIAR/DESTRUIR scroll
@@ -795,6 +798,18 @@ export default {
         type: 'application/vnd.lime.chatstater+json',
         content: {
           state: 'composing'
+        }
+      })
+      this.send()
+    },
+    sendApplicationJsonUnsupportedContent: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'application/json',
+        content: {
+          recipient_type: 'unsupported',
+          type: 'unsupported'
         }
       })
       this.send()
