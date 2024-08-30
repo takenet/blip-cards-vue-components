@@ -1,8 +1,25 @@
 <template>
   <div class="blip-container">
+    <json-text
+      v-if="document.type === 'interactive' && document.interactive.type === 'flow'"
+      class="blip-card"
+      :failed-to-send-msg="translations.failedToSend"
+      :show-more-msg="translations.showMore"
+      :status="status"
+      :position="position"
+      :document="fullDocument.content"
+      :editable="editable"
+      :on-deleted="onDeleted"
+      :deletable="deletable"
+      :readonly="readonly"
+      :date="date"
+      :on-metadata-edit="isMetadataReady"
+      :on-cancel="cancel"
+      :external-message-text="translations.externalMessageText"
+    />
 
-    <call-to-action
-      v-if="document.type === 'interactive' && document.interactive.type === 'cta_url'"
+     <call-to-action
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'cta_url'"
       class="blip-card"
       :postback-value-msg="translations.postbackValue"
       :status="status"
@@ -105,6 +122,7 @@ import { default as base } from '../mixins/baseComponent.js'
 import { isFailedMessage } from '../utils/misc'
 import MenuListPrompt from './ApplicationJSon/MenuListPrompt.vue'
 import CallToAction from './ApplicationJSon/CallToAction.vue'
+import JsonText from './ApplicationJSon/JsonText.vue'
 
 export default {
   name: 'application-json',
@@ -131,6 +149,10 @@ export default {
     deletable: {
       type: Boolean,
       default: true
+    },
+    whatappComponent: {
+      type: String,
+      default: 'This message is a WhatsApp Flows component'
     }
   },
   data: function() {
@@ -142,7 +164,8 @@ export default {
   components: {
     MenuList,
     MenuListPrompt,
-    CallToAction
+    CallToAction,
+    JsonText
   },
   methods: {
     emitUpdate() {
