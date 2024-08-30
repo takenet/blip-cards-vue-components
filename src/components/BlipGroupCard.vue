@@ -1,15 +1,36 @@
 <template>
   <div class="blip-container">
-    <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
-      <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
-      </div>
-      <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo || (onFailedClickIcon && group.status === 'failed'), [group.position]: true}">
+    <div
+      class="blip-message-group"
+      v-for="group in groupedDocuments"
+      :key="group.id"
+    >
+      <div
+        :class="'blip-card-photo ' + group.position"
+        v-if="group.photo && group.position === 'left'"
+        :style="{
+          bottom: '10px',
+          width: '25px',
+          height: '25px',
+          'background-image': 'url(&quot;' + group.photo + '&quot;)'
+        }"
+      ></div>
+      <div
+        class="blip-card-group"
+        :class="{
+          'blip-container--with-photo':
+            group.photo || (onFailedClickIcon && group.status === 'failed'),
+          [group.position]: true
+        }"
+      >
         <blip-card-member
-          v-if="(group.memberName || group.memberPhoneNumber)"
+          v-if="group.memberName || group.memberPhoneNumber"
           :position="group.position"
-          :member-info="group.memberName ? group.memberName : group.memberPhoneNumber"
+          :member-info="
+            group.memberName ? group.memberName : group.memberPhoneNumber
+          "
           :is-group="true"
-        /> 
+        />
         <blip-card
           v-for="message in group.msgs"
           :id="message.id"
@@ -32,7 +53,7 @@
           :on-unsupported-type="onUnsupportedType"
           :on-location-error="onLocationError"
           :translations="translations"
-          :class="messageClass(message) + isFailedMessageGroup(message,group)"
+          :class="messageClass(message) + isFailedMessageGroup(message, group)"
           :disable-link="disableLink"
           :on-audio-validate-uri="onAudioValidateUri"
           :readonly="readonly"
@@ -53,17 +74,28 @@
         />
       </div>
       <span v-if="onFailedClickIcon && group.status === 'failed'">
-        <bds-icon v-if="group.position === 'right'"
+        <bds-icon
+          v-if="group.position === 'right'"
           name="info"
           theme="solid"
           :aria-label="translations.failedToSend"
           @click="onFailedClickIcon(group)"
-          class="icon-message-failed">
+          class="icon-message-failed"
+        >
         </bds-icon>
       </span>
       <span v-else>
-        <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '10px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
-        </div>
+        <div
+          :class="'blip-card-photo ' + group.position"
+          v-if="group.photo && group.position === 'right'"
+          :style="{
+            bottom: '10px',
+            right: '0%',
+            width: '25px',
+            height: '25px',
+            'background-image': 'url(&quot;' + group.photo + '&quot;)'
+          }"
+        ></div>
       </span>
     </div>
   </div>
@@ -196,20 +228,33 @@ export default {
         const lastMessage = group.msgs[group.msgs.length - 1]
         const currentMessage = this.documents[i]
 
-        const isLastMessageExternal = checkIsExternalMessage(lastMessage.document)
-        const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
+        const isLastMessageExternal = checkIsExternalMessage(
+          lastMessage.document
+        )
+        const isCurrentMessageExternal = checkIsExternalMessage(
+          currentMessage.document
+        )
 
         const currentMessageMemberInfo = getMemberInfo(currentMessage.document)
         const lastMemberPhoneNumber = getMemberPhoneNumber(lastMessage.document)
-        const currentMemberPhoneNumber = getMemberPhoneNumber(currentMessage.document)
+        const currentMemberPhoneNumber = getMemberPhoneNumber(
+          currentMessage.document
+        )
 
-        if (this.compareMessages(lastMessage, currentMessage) &&
+        if (
+          this.compareMessages(lastMessage, currentMessage) &&
           isLastMessageExternal === isCurrentMessageExternal &&
-          lastMemberPhoneNumber === currentMemberPhoneNumber) {
+          lastMemberPhoneNumber === currentMemberPhoneNumber
+        ) {
           group.msgs.push(currentMessage)
           group.date = currentMessage.date
           group.status = currentMessage.status
           group.reason = currentMessage.reason
+          if (currentMessageMemberInfo) {
+            group.memberName = currentMessage.document.metadata.memberName
+            group.memberPhoneNumber =
+              currentMessage.document.metadata.memberPhoneNumber
+          }
         } else {
           groups.push(group)
           group = {
@@ -223,12 +268,10 @@ export default {
           }
         }
 
-        if (hasCurrentMessageDocumentMetadata) {
+        if (currentMessageMemberInfo) {
           group.memberName = currentMessage.document.metadata.memberName
-          group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
-        } else {
-          group.memberName = ''
-          group.memberPhoneNumber = ''
+          group.memberPhoneNumber =
+            currentMessage.document.metadata.memberPhoneNumber
         }
       }
 
@@ -242,7 +285,11 @@ export default {
       if (message.type === MessageTypesConstants.THREAD_SUMMARY) {
         return ''
       }
-      return message.status === 'failed' && message.position === 'right' && group.hasNotification ? ' failed-message' : ''
+      return message.status === 'failed' &&
+        message.position === 'right' &&
+        group.hasNotification
+        ? ' failed-message'
+        : ''
     },
     failedMessageNotification(type) {
       if (type === MessageTypesConstants.THREAD_SUMMARY) {
