@@ -19,7 +19,7 @@
     />
 
      <call-to-action
-      v-if="document.type === 'interactive' && document.interactive.type === 'cta_url'"
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'cta_url'"
       class="blip-card"
       :postback-value-msg="translations.postbackValue"
       :status="status"
