@@ -212,8 +212,8 @@ export default {
           group.reason = currentMessage.reason
 
           if (currentMessageMemberInfo) {
-            group.memberName = currentMessage.document.metadata.memberName
-            group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
+            group.memberName = currentMessage.document.metadata['#memberName']
+            group.memberPhoneNumber = currentMessage.document.metadata['#memberPhoneNumber']
           }
         } else {
           groups.push(group)
@@ -228,8 +228,8 @@ export default {
           }
 
           if (currentMessageMemberInfo) {
-            group.memberName = currentMessage.document.metadata.memberName
-            group.memberPhoneNumber = currentMessage.document.metadata.memberPhoneNumber
+            group.memberName = currentMessage.document.metadata['#memberName']
+            group.memberPhoneNumber = currentMessage.document.metadata['#memberPhoneNumber']
           }
         }
       }

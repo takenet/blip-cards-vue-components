@@ -17,9 +17,9 @@ function getMemberInfo(msg) {
     return ''
   }
 
-  const memberInfo = innerDocument.metadata.memberName
-    ? innerDocument.metadata.memberName
-    : innerDocument.metadata.memberPhoneNumber
+  const memberInfo = innerDocument.metadata['#memberName']
+    ? innerDocument.metadata['#memberName']
+    : innerDocument.metadata['#memberPhoneNumber']
 
   return memberInfo || ''
 }
@@ -31,7 +31,7 @@ function getMemberPhoneNumber(msg) {
     return ''
   }
 
-  return innerDocument.metadata.memberPhoneNumber || ''
+  return innerDocument.metadata['#memberPhoneNumber'] || ''
 }
 
 export { getMemberInfo, getMemberPhoneNumber }

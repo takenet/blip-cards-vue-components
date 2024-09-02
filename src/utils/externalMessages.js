@@ -10,8 +10,8 @@ function checkIsExternalMessage(msg) {
   const isExternalMessage = Boolean(
     innerDocument &&
     innerDocument.metadata &&
-    innerDocument.metadata['messageEmitter'] &&
-    innerDocument.metadata['messageEmitter'] === 'externalMessages'
+    innerDocument.metadata['#messageEmitter'] &&
+    innerDocument.metadata['#messageEmitter'] === 'externalMessages'
   )
 
   return isExternalMessage
