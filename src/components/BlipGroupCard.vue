@@ -185,8 +185,8 @@ export default {
       let document = this.documents[0].document
 
       if (document && document.metadata) {
-        group.memberName = document.metadata.memberName
-        group.memberPhoneNumber = document.metadata.memberPhoneNumber
+        group.memberName = document.metadata['#memberName']
+        group.memberPhoneNumber = document.metadata['#memberPhoneNumber']
       } else {
         group.memberName = ''
         group.memberPhoneNumber = ''
