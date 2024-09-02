@@ -336,15 +336,15 @@ export default {
       if (this.isExternalMessage) {
         doc.metadata = {
           ...doc.metadata,
-          'messageEmitter': 'externalMessages'
+          '#messageEmitter': 'externalMessages'
         }
       }
 
       if (this.hasMemberData) {
         doc.metadata = {
           ...doc.metadata,
-          'memberName': this.memberName,
-          'memberPhoneNumber': this.memberPhone
+          '#memberName': this.memberName,
+          '#memberPhoneNumber': this.memberPhone
         }
       }
 
