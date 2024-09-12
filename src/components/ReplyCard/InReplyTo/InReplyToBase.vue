@@ -3,8 +3,31 @@
     <template v-if="isAcceptableTextType">
       <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
       <div class="in-reply-to-message">
-        <in-reply-to-text
+        <in-reply-to-text id="text" v-if="isTextPlain"
           :in-reply-to="inReplyTo"
+        />
+        <in-reply-to-media-link id="media-link" v-else-if="isMediaLink"
+          :in-reply-to="inReplyTo.value"
+          :on-media-selected="onMediaSelected"
+          :video-uri-msg="translations.videoUri"
+          :async-fetch-media="asyncFetchMedia"
+          @updated="updatedPhotoMargin"
+          :failed-to-send-msg="translations.failedToSend"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :supported-formats-msg="translations.supportedFormats"
+          :file-url-msg="translations.fileUrl"
+          :title-msg="translations.title"
+          :image-uri-msg="translations.imageUri"
+          :text-msg="translations.text"
+          :position="position"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :on-audio-validate-uri="onAudioValidateUri"
         />
       </div>
     </template>
@@ -39,6 +62,23 @@
       failedMessage: {
         type: String,
         default: 'Falha ao carregar mensagem'
+      },
+      onMediaSelected: {
+        type: Function
+      },
+      asyncFetchMedia: {
+        type: Function
+      },
+      updatedPhotoMargin: {
+        type: Function
+      },
+      translations: {
+        type: Object,
+        default: () => ({})
+      },
+      position: {
+        type: String,
+        default: 'left'
       }
     },
     computed: {
@@ -57,7 +97,12 @@
           this.inReplyTo.value.interactive.header.type === 'text'
       },
       isTextPlain() {
+        console.log('isTextPlain', this.inReplyTo.value)
         return this.inReplyTo.type === 'text/plain'
+      },
+      isMediaLink() {
+        console.log('isMediaLink ', this.inReplyTo.type)
+        return this.inReplyTo.type === 'application/vnd.lime.media-link+json'
       },
       isSelectType() {
         return this.inReplyTo.type === 'application/vnd.lime.select+json'
@@ -71,7 +116,7 @@
         )
       },
       isAcceptableTextType() {
-        return this.isTextPlain || this.isSelectType || this.isAcceptableInteractiveType
+        return this.isTextPlain || this.isSelectType || this.isAcceptableInteractiveType || this.isMediaLink
       },
       hasFailedToLoad() {
         return Boolean(this.inReplyTo.type === undefined || this.inReplyTo.value === undefined)

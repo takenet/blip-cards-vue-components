@@ -1,6 +1,9 @@
 <template>
   <div>
     <div class="float" style="width: 200px">
+      <button class="button" @click="sendReplyImageMessageWithText">
+          ENVIAR Reply Message de Imagem com Texto
+        </button>
       <div>
         <h1>Width:</h1>
         <input v-model="width" />
@@ -104,6 +107,10 @@
 
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
+        
+        <button class="button" @click="sendReplyImageMessageWithText">
+          ENVIAR Reply Message de Imagem com Texto
+        </button>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendTextEmail">
           ENVIAR Texto contendo email
@@ -172,6 +179,7 @@
         <button class="button" @click="sendReplyButton">
           ENVIAR Reply Button
         </button>
+        
         <button class="button" @click="sendReplyMessage">
           ENVIAR Reply Message
         </button>
@@ -1123,6 +1131,30 @@ export default {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
             type: 'text/plain',
             value: 'in reply to text'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyImageMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+            }
           }
         }
       })

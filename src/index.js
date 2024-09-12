@@ -38,6 +38,7 @@ import WebLink from './components/WebLink'
 // Reply components
 import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
 import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
+import InReplyToMediaLink from './components/ReplyCard/InReplyTo/InReplyToMediaLink'
 import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
 import RepliedWithMediaLink from './components/ReplyCard/Replied/RepliedWithMediaLink'
 import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
@@ -116,6 +117,7 @@ function install(Vue) {
   // In Reply To
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))
+  components.push(Vue.component(InReplyToMediaLink.name, InReplyToMediaLink))
 
   // Reaction components
   components.push(Vue.component(ReactionCard.name, ReactionCard))
