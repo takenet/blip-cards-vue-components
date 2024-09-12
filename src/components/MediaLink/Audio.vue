@@ -103,7 +103,7 @@
             <a v-if="showReadMoreOrLessButtonLink" @click="toggleTranscriptionTextSize">{{ readMoreOrLessDisplayText }}</a>
           </bds-typo>
         </div>
-        <div class="action">
+        <div class="action" v-if="canShowAction">
           <div>
             <span class="pointer" @click="transcribeAudio" v-if="isTranscriptionActionVisible">{{ translations.audioTranscription.action }}</span>
           </div>
@@ -111,7 +111,7 @@
             <bds-loading-spinner size="small" :color="transcriptionSpinnerColor"></bds-loading-spinner>
             <bds-typo class="typo" variant="f-16">{{ translations.audioTranscription.loading }}</bds-typo>
           </div>
-          <div v-if="transcriptionText.length > 0 && transcriptionText.length > transcriptionTextLimits.longTextLength">
+          <div v-if="transcriptionText.length > 0">
             <div class="pointer full-transcription" @click="openFullTranscription">
               <bds-icon class="typo" name="external-file" theme="outline" type="icon" size="medium" />
               <bds-typo class="typo" variant="f-16">{{ translations.audioTranscription.fullTranscription }}</bds-typo>
@@ -219,6 +219,11 @@ export default {
       return this.transcription && this.transcription.audioEnabled
         ? this.transcription.audioEnabled
         : false
+    },
+    canShowAction() {
+      return this.isTranscriptionActionVisible ||
+        this.loadingTranscription ||
+        (this.transcriptionText.length > 0)
     },
     isTranscriptionActionVisible() {
       return this.transcriptionText.length === 0 && !this.loadingTranscription
@@ -406,20 +411,43 @@ export default {
     transcribeAudio: async function() {
       if (this.transcription.onAsyncTranscribe) {
         this.loadingTranscription = true
-        const text = await this.transcription.onAsyncTranscribe(this.audioUri)
+
+        let refreshedAudioUri = this.audioUri
+        if (this.onAudioValidateUri) {
+          refreshedAudioUri = await this.onAudioValidateUri(this.audioUri)
+        }
+
+        const text = await this.transcription.onAsyncTranscribe(refreshedAudioUri)
         if (text) {
           this.transcriptionText = text
         }
+
         this.loadingTranscription = false
+        this.scrollToElement()
       }
     },
     openFullTranscription: function() {
       if (this.transcription.onOpenMfeModal) {
-        this.transcription.onOpenMfeModal()
+        this.transcription.onOpenMfeModal({
+          url: undefined,
+          transcriptions: [ this.transcriptionText ],
+          mediaDuration: this.totalTime
+        })
       }
     },
     toggleTranscriptionTextSize: function() {
       this.transcriptionTextExpanded = !this.transcriptionTextExpanded
+      this.scrollToElement()
+    },
+    scrollToElement: function() {
+      if (!this.transcription.scrollTo) {
+        return
+      }
+
+      const messageId = this.fullDocument ? this.fullDocument.id : ''
+      setTimeout(() => {
+        this.transcription.scrollTo(messageId)
+      }, 50)
     }
   }
 }

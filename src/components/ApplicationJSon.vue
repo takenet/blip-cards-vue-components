@@ -1,7 +1,25 @@
 <template>
   <div class="blip-container">
-    <menu-list-prompt
-      v-if="document.type === 'interactive' && document.interactive.type === 'list'"
+    <json-text
+      v-if="document.type === 'interactive' && document.interactive.type === 'flow'"
+      class="blip-card"
+      :failed-to-send-msg="translations.failedToSend"
+      :show-more-msg="translations.showMore"
+      :status="status"
+      :position="position"
+      :document="fullDocument.content"
+      :editable="editable"
+      :on-deleted="onDeleted"
+      :deletable="deletable"
+      :readonly="readonly"
+      :date="date"
+      :on-metadata-edit="isMetadataReady"
+      :on-cancel="cancel"
+      :external-message-text="translations.externalMessageText"
+    />
+
+     <call-to-action
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'cta_url'"
       class="blip-card"
       :postback-value-msg="translations.postbackValue"
       :status="status"
@@ -14,24 +32,38 @@
       @updated="emitUpdate"
     />
 
-    <menu-list
-      v-else-if="document.type === 'interactive' && document.interactive.type === 'list'"
-      class="blip-card"
-      :add-button-msg="translations.addButton"
-      :not-enough-options-msg="translations.notEnoughOptions"
-      :text-msg="translations.text"
-      :apply-msg="translations.apply"
-      :cancel-msg="translations.cancel"
-      :postback-value-msg="translations.postbackValue"
-      :status="status"
-      :position="position"
-      :document="fullDocument.content"
-      :editable="editable"
-      :on-deleted="onDeleted"
-      :deletable="deletable"
-      :readonly="readonly"
-      @updated="emitUpdate"
-    />
+    <div v-else-if="document.type === 'interactive' && document.interactive.type === 'list'">
+      <menu-list-prompt
+        class="blip-card"
+        :postback-value-msg="translations.postbackValue"
+        :status="status"
+        :position="position"
+        :document="fullDocument.content"
+        :editable="editable"
+        :on-deleted="onDeleted"
+        :deletable="deletable"
+        :readonly="readonly"
+        @updated="emitUpdate"
+      />
+
+      <menu-list
+        class="blip-card"
+        :add-button-msg="translations.addButton"
+        :not-enough-options-msg="translations.notEnoughOptions"
+        :text-msg="translations.text"
+        :apply-msg="translations.apply"
+        :cancel-msg="translations.cancel"
+        :postback-value-msg="translations.postbackValue"
+        :status="status"
+        :position="position"
+        :document="fullDocument.content"
+        :editable="editable"
+        :on-deleted="onDeleted"
+        :deletable="deletable"
+        :readonly="readonly"
+        @updated="emitUpdate"
+      />
+    </div>
 
     <interactive-button
       v-else-if="document.type === 'interactive' && document.interactive.type === 'button'"
@@ -52,7 +84,14 @@
     <blip-calls-voice-request
       v-else-if="document.type === 'interactive' && document.interactive.type === 'voice_call'"
       class="blip-card"
+      :document="document"
       :position="position"
+      :on-save="onSave"
+      :on-deleted="onDeleted"
+      :on-cancel="onCancel"
+      :editable="editable"
+      :deletable="deletable"
+      :editing="editing"
       :body-text="document.interactive.body.text"
       :action-text="document.interactive.action.parameters.display_text"
     />
@@ -76,11 +115,8 @@
       :unsupported-content-msg="translations.unsupportedContent"
       :position="position"
       :document="document"
-      :on-save="saveCard"
       :editable="editable"
-      :on-deleted="deleteCard"
       :deletable="deletable"
-      :editing="isCardEditing"
       :on-cancel="cancel"
     />
 
@@ -98,6 +134,8 @@ import MenuList from './ApplicationJSon/MenuList'
 import { default as base } from '../mixins/baseComponent.js'
 import { isFailedMessage } from '../utils/misc'
 import MenuListPrompt from './ApplicationJSon/MenuListPrompt.vue'
+import CallToAction from './ApplicationJSon/CallToAction.vue'
+import JsonText from './ApplicationJSon/JsonText.vue'
 
 export default {
   name: 'application-json',
@@ -124,6 +162,10 @@ export default {
     deletable: {
       type: Boolean,
       default: true
+    },
+    whatappComponent: {
+      type: String,
+      default: 'This message is a WhatsApp Flows component'
     }
   },
   data: function() {
@@ -134,7 +176,9 @@ export default {
   mixins: [base],
   components: {
     MenuList,
-    MenuListPrompt
+    MenuListPrompt,
+    CallToAction,
+    JsonText
   },
   methods: {
     emitUpdate() {

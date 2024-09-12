@@ -43,7 +43,15 @@
       <br />
       <input type="checkbox" value="false" v-model="group" /> Group Messages
       <br />
-      <input type="checkbox" value="false" v-model="isExternalMessage" /> External Message
+      <input type="checkbox" value="false" v-model="isExternalMessage" />
+      External Message
+
+      <div>
+        <h1>Member Data:</h1>
+        <input type="checkbox" value="false" v-model="hasMemberData" /> Has Member Data
+        <input v-model="memberName" /> Name
+        <input v-model="memberPhone" /> Phone
+      </div>
 
       <div>
         <h1>Status notification:</h1>
@@ -139,12 +147,21 @@
         <button class="button" @click="sendRaw">
           ENVIAR Unsupported Content
         </button>
+        <button class="button" @click="sendApplicationJsonUnsupportedContent">
+          ENVIAR ApplicationJson Unsupported Content
+        </button>
         <button class="button" @click="sendSurveyContent">ENVIAR Survey</button>
         <button class="button" @click="toogleBlipGroupCard">
           CRIAR/DESTRUIR scroll
         </button>
         <button class="button" @click="sendContact">
           ENVIAR Contato
+        </button>
+        <button class="button" @click="sendCallToAction">
+          ENVIAR Conteúdo dinâmico (CTA)
+        </button>
+        <button class="button" @click="sendJsonText">
+          ENVIAR Text Flow
         </button>
         <button class="button" @click="sendMenuList">
           ENVIAR Menu List
@@ -323,9 +340,18 @@ export default {
       if (this.isExternalMessage) {
         doc.metadata = {
           ...doc.metadata,
-          'messageEmitter': 'externalMessages'
+          '#messageEmitter': 'externalMessages'
         }
       }
+
+      if (this.hasMemberData) {
+        doc.metadata = {
+          ...doc.metadata,
+          '#memberName': this.memberName,
+          '#memberPhoneNumber': this.memberPhone
+        }
+      }
+
       this.documents.push({
         document: doc,
         date: this.date,
@@ -780,6 +806,18 @@ export default {
       })
       this.send()
     },
+    sendApplicationJsonUnsupportedContent: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'application/json',
+        content: {
+          recipient_type: 'unsupported',
+          type: 'unsupported'
+        }
+      })
+      this.send()
+    },
     sendSurveyContent: function() {
       this.json = JSON.stringify({
         id: '1',
@@ -810,6 +848,75 @@ export default {
           },
           firstName: 'Contact',
           lastName: 'Last Name'
+        }
+      })
+      this.send()
+    },
+    sendCallToAction: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@wa.gw.msging.net',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'cta_url',
+            header: {
+              text: 'Available Dates'
+            },
+            body: {
+              text: 'Tap the button below to see available dates.'
+            },
+            footer: {
+              text: 'Dates subject to change.'
+            },
+            action: {
+              name: 'cta_url',
+              parameters: {
+                display_text: 'See Dates',
+                url:
+                  'https://developers.facebook.com/docs/whatsapp/cloud-api/messages/interactive-cta-url-messages'
+              }
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendJsonText: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@wa.gw.msging.net',
+        type: 'application/json',
+        content: {
+          recipient_type: 'individual',
+          type: 'interactive',
+          interactive: {
+            type: 'flow',
+            header: {
+              text: 'text'
+            },
+            body: {
+              text: 'Teste'
+            },
+            footer: {
+              text: 'Energisa'
+            },
+            action: {
+              name: 'flow',
+              parameters: {
+                flow_message_version: '200',
+                flow_id: '356521493857549',
+                flow_cta: 'ver ',
+                flow_action: 'navigate',
+                flow_token: 'unused',
+                flow_action_payload: {
+                  screen: 'PREFERENCES'
+                }
+              }
+            }
+          }
         }
       })
       this.send()
@@ -1686,7 +1793,10 @@ export default {
       translations: {
         failedToSend: 'Falha ao enviar a mensagem.'
       },
-      isExternalMessage: false
+      isExternalMessage: false,
+      hasMemberData: false,
+      memberName: undefined,
+      memberPhone: undefined
     }
   },
   components: {}

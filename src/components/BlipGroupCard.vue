@@ -4,6 +4,12 @@
       <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
       <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo || (onFailedClickIcon && group.status === 'failed'), [group.position]: true}">
+        <blip-card-member
+          v-if="(group.memberName || group.memberPhoneNumber)"
+          :position="group.position"
+          :member-info="group.memberName ? group.memberName : group.memberPhoneNumber"
+          :is-group="true"
+        /> 
         <blip-card
           v-for="message in group.msgs"
           :id="message.id"
@@ -67,6 +73,7 @@
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 import { checkIsExternalMessage } from '../utils/externalMessages.js'
+import { getMemberInfo, getMemberPhoneNumber } from '../utils/memberUtils.js'
 
 export default {
   name: 'blip-group-card',
@@ -147,7 +154,8 @@ export default {
         callRecordingEnabled: false,
         limits: {},
         onAsyncTranscribe: (url) => {},
-        onOpenMfeModal: (data) => {}
+        onOpenMfeModal: (data) => {},
+        scrollTo: (elementId) => {}
       })
     }
   },
@@ -160,9 +168,11 @@ export default {
   computed: {
     groupedDocuments() {
       let groups = []
+
       if (this.documents.length === 0) {
         return
       }
+
       let group = {
         msgs: [this.documents[0]],
         position: this.documents[0].position,
@@ -171,19 +181,42 @@ export default {
         hasNotification: this.showNotification(this.documents[0]),
         status: this.documents[0].status
       }
+
+      let document = this.documents[0].document
+
+      if (document && document.metadata) {
+        group.memberName = document.metadata['#memberName']
+        group.memberPhoneNumber = document.metadata['#memberPhoneNumber']
+      } else {
+        group.memberName = ''
+        group.memberPhoneNumber = ''
+      }
+
       for (let i = 1; i < this.documents.length; i++) {
         const lastMessage = group.msgs[group.msgs.length - 1]
         const currentMessage = this.documents[i]
+
         const isLastMessageExternal = checkIsExternalMessage(lastMessage.document)
         const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
-        if (this.compareMessages(lastMessage, currentMessage) && (isLastMessageExternal === isCurrentMessageExternal)) {
+
+        const currentMessageMemberInfo = getMemberInfo(currentMessage.document)
+        const lastMemberPhoneNumber = getMemberPhoneNumber(lastMessage.document)
+        const currentMemberPhoneNumber = getMemberPhoneNumber(currentMessage.document)
+
+        if (this.compareMessages(lastMessage, currentMessage) &&
+          isLastMessageExternal === isCurrentMessageExternal &&
+          lastMemberPhoneNumber === currentMemberPhoneNumber) {
           group.msgs.push(currentMessage)
           group.date = currentMessage.date
           group.status = currentMessage.status
           group.reason = currentMessage.reason
+
+          if (currentMessageMemberInfo) {
+            group.memberName = currentMessage.document.metadata['#memberName']
+            group.memberPhoneNumber = currentMessage.document.metadata['#memberPhoneNumber']
+          }
         } else {
           groups.push(group)
-
           group = {
             msgs: [currentMessage],
             position: currentMessage.position,
@@ -193,9 +226,16 @@ export default {
             status: currentMessage.status,
             reason: currentMessage.reason
           }
+
+          if (currentMessageMemberInfo) {
+            group.memberName = currentMessage.document.metadata['#memberName']
+            group.memberPhoneNumber = currentMessage.document.metadata['#memberPhoneNumber']
+          }
         }
       }
+
       groups.push(group)
+
       return groups
     }
   },
