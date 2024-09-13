@@ -59,7 +59,7 @@
             >
           </div>
           <div v-if="buttonText" class="button-container">
-                <div class="align-center">
+                <div>
                   <bds-typo variant="fs-16">{{buttonText}}</bds-typo>
                 </div>
           </div> 
@@ -205,10 +205,6 @@ export default {
           ...this.document.interactive.footer,
           text: this.footerText
         })
-        this.save({
-          ...this.document.interactive.action,
-          button: this.buttonText
-        })
       })
     },
     jsonTextEditCancel: function() {
@@ -289,21 +285,19 @@ export default {
 
 .button-container {
   display: flex;
-  align-items: center; /* Alinha verticalmente no centro */
-  justify-content: center; /* Alinha horizontalmente no centro */
+  align-items: center; 
+  justify-content: center; 
   border-top: 0.5px solid $color-content-ghost;
   cursor: pointer;
-}
 
-.button-container .align-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.3rem;
+  > div {
+    margin: 8px 0;
+  }
 
-  > bds-typo {
+  bds-typo {
     color: $color-primary;
   }
+
 }
 
 
