@@ -1,8 +1,7 @@
 <template>
   <div>
-    <div>Media link</div>
-    <div>{{inReplyTo.type}}</div>
-    <blip-image
+    <div id="reply">
+      <blip-mini-image
         :image-uri-msg="titleMsg"
         :title-msg="titleMsg"
         :text-msg="textMsg"
@@ -22,7 +21,7 @@
         :editing="editing"
         :async-fetch-media="asyncFetchMedia"
       />
-      <blip-audio
+      <blip-mini-audio
         :file-url-msg="fileUrlMsg"
         :document="inReplyTo"
         :full-document="inReplyTo"
@@ -38,7 +37,7 @@
         :on-audio-validate-uri="onAudioValidateUri"
         :async-fetch-media="asyncFetchMedia"
       />
-      <blip-video
+      <blip-mini-video
         :video-uri-msg="videoUriMsg"
         :document="inReplyTo"
         :full-document="inReplyTo"
@@ -72,102 +71,124 @@
         :async-fetch-media="asyncFetchMedia"
       />
     </div>
+  </div>
 </template>
 
 <script>
-  export default {
-    name: 'in-reply-to-media-link',
-    mixins: [],
-    props: {
-      inReplyTo: {
-        type: Object,
-        default: {}
-      },
-      asyncFetchMedia: {
-        type: Function
-      },
-      onMediaSelected: {
-        type: Function
-      },
-      translations: {
-        type: Object,
-        default: () => ({})
-      },
-      failedToSendMsg: {
-        type: String,
-        default: 'Falha ao enviar a mensagem'
-      },
-      aspectRatioMsg: String,
-      supportedFormatsMsg: String,
-      fileUrlMsg: String,
-      imageUriMsg: String,
-      videoUriMsg: String,
-      titleMsg: String,
-      textMsg: String,
-      onAudioValidateUri: {
-        type: Function
-      },
-      position: {
-        type: String,
-        default: 'left'
+import BlipMiniImage from '../../MediaLink/MiniImage'
+import BlipMiniAudio from '../../MediaLink/MiniAudio'
+import BlipMiniVideo from '../../MediaLink/MiniVideo'
+import BlipFile from '../../MediaLink/MiniBlipFile'
+import { default as base } from '../../../mixins/baseComponent.js'
+
+export default {
+  name: 'in-reply-to-media-link',
+  mixins: [base],
+  props: {
+    inReplyTo: {
+      type: Object,
+      default: {}
+    },
+    asyncFetchMedia: {
+      type: Function
+    },
+    onMediaSelected: {
+      type: Function
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
+    },
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem'
+    },
+    aspectRatioMsg: String,
+    supportedFormatsMsg: String,
+    fileUrlMsg: String,
+    imageUriMsg: String,
+    videoUriMsg: String,
+    titleMsg: String,
+    textMsg: String,
+    onAudioValidateUri: {
+      type: Function
+    },
+    position: {
+      type: String,
+      default: 'left'
+    }
+  },
+  components: {
+    BlipMiniImage,
+    BlipMiniAudio,
+    BlipMiniVideo,
+    BlipMiniFile
+  },
+  computed: {
+    isApplicationJsonType() {
+      return this.inReplyTo.type === 'application/json'
+    },
+    interactiveHeader() {
+      return this.inReplyTo.value.interactive.header
+    },
+    interactiveHeaderText() {
+      return this.inReplyTo.value.interactive.header.text
+    },
+    interactiveBodyText() {
+      return this.inReplyTo.value.interactive.body.text
+    },
+    inReplyToText() {
+      switch (this.inReplyTo.type) {
+        case 'text/plain':
+          return this.inReplyTo.value
+        case 'application/vnd.lime.select+json':
+          return this.inReplyTo.value.text
+        case 'application/json':
+          return this.interactiveHeader
+            ? this.interactiveHeaderText
+            : this.interactiveBodyText
+        default:
+          return ''
       }
     },
-    computed: {
-      isApplicationJsonType() {
-        return this.inReplyTo.type === 'application/json'
-      },
-      interactiveHeader() {
-        return this.inReplyTo.value.interactive.header
-      },
-      interactiveHeaderText() {
-        return this.inReplyTo.value.interactive.header.text
-      },
-      interactiveBodyText() {
-        return this.inReplyTo.value.interactive.body.text
-      },
-      inReplyToText() {
-        switch (this.inReplyTo.type) {
-          case 'text/plain':
-            return this.inReplyTo.value
-          case 'application/vnd.lime.select+json':
-            return this.inReplyTo.value.text
-          case 'application/json':
-            return this.interactiveHeader ? this.interactiveHeaderText : this.interactiveBodyText
-          default:
-            return ''
-        }
-      },
-      inReplyToDescription() {
-        return this.isApplicationJsonType && this.interactiveHeader ? this.interactiveBodyText : ''
-      },
-      hasDescription() {
-        return Boolean(this.inReplyToDescription)
-      }
+    inReplyToDescription() {
+      return this.isApplicationJsonType && this.interactiveHeader
+        ? this.interactiveBodyText
+        : ''
+    },
+    hasDescription() {
+      return Boolean(this.inReplyToDescription)
+    }
+  },
+  methods: {
+    emitUpdate() {
+      this.$emit('updated')
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  @import '../../../styles/variables.scss';
+@import '../../../styles/variables.scss';
 
-  .message-inReplyTo-text {
-    display: -webkit-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-box-orient: vertical;
-    margin: 0;
-    text-align: left;
+.message-inReplyTo-text {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  margin: 0;
+  text-align: left;
 
-    &.single {
-      -webkit-line-clamp: 3;
-    }
-
-    &.title {
-      -webkit-line-clamp: 1;
-    }
-
-    &.description {
-      -webkit-line-clamp: 2;
-    }
+  &.single {
+    -webkit-line-clamp: 3;
   }
+
+  &.title {
+    -webkit-line-clamp: 1;
+  }
+
+  &.description {
+    -webkit-line-clamp: 2;
+  }
+}
 </style>

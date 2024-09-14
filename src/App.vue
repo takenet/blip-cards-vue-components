@@ -1,9 +1,6 @@
 <template>
   <div>
     <div class="float" style="width: 200px">
-      <button class="button" @click="sendReplyImageMessageWithText">
-          ENVIAR Reply Message de Imagem com Texto
-        </button>
       <div>
         <h1>Width:</h1>
         <input v-model="width" />
@@ -107,10 +104,6 @@
 
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
-        
-        <button class="button" @click="sendReplyImageMessageWithText">
-          ENVIAR Reply Message de Imagem com Texto
-        </button>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendTextEmail">
           ENVIAR Texto contendo email
@@ -179,43 +172,6 @@
         <button class="button" @click="sendReplyButton">
           ENVIAR Reply Button
         </button>
-        
-        <button class="button" @click="sendReplyMessage">
-          ENVIAR Reply Message
-        </button>
-        <button class="button" @click="sendReplyTextMessageWithDocument">
-          ENVIAR Reply Message de Texto com Documento
-        </button>
-        <button class="button" @click="sendReplyTextMessageWithVideo">
-          ENVIAR Reply Message de Texto com Video
-        </button>
-        <button class="button" @click="sendReplyTextMessageWithAudio">
-          ENVIAR Reply Message de Texto com Audio
-        </button>
-        <button class="button" @click="sendReplyTextMessageWithImage">
-          ENVIAR Reply Message de Texto com Imagem
-        </button>
-        <button class="button" @click="sendReplyMessageInReplyToMenu">
-          ENVIAR Reply Message de Menu
-        </button>
-        <button class="button" @click="sendReplyMessageInReplyToMenuList">
-          ENVIAR Reply Message de Menu List
-        </button>
-        <button
-          class="button"
-          @click="sendReplyMessageInReplyToMenuListMultiSection"
-        >
-          ENVIAR Reply Message de Menu List Multi Section
-        </button>
-        <button class="button" @click="sendReplyMessageInReplyToReplyButton">
-          ENVIAR Reply Message de Reply Buttton
-        </button>
-        <button
-          class="button"
-          @click="sendReplyMessageInReplyToReplyButtonWithoutHeader"
-        >
-          ENVIAR Reply Message de Reply Buttton sem header
-        </button>
         <button class="button" @click="sendReactionToText">
           ENVIAR Reaction de texto
         </button>
@@ -255,6 +211,54 @@
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
+        <div>
+          <h1>Reply Examples:</h1>
+          <button class="button" @click="sendReplyMessage">
+            ENVIAR Reply Message
+          </button>
+          <button class="button" @click="sendReplyTextMessageWithDocument">
+            ENVIAR Reply Message de Texto com Documento
+          </button>
+          <button class="button" @click="sendReplyTextMessageWithVideo">
+            ENVIAR Reply Message de Texto com Video
+          </button>
+          <button class="button" @click="sendReplyTextMessageWithAudio">
+            ENVIAR Reply Message de Texto com Audio
+          </button>
+          <button class="button" @click="sendReplyTextMessageWithImage">
+            ENVIAR Reply Message de Texto com Imagem
+          </button>
+          <button class="button" @click="sendReplyMessageInReplyToMenu">
+            ENVIAR Reply Message de Menu
+          </button>
+          <button class="button" @click="sendReplyMessageInReplyToMenuList">
+            ENVIAR Reply Message de Menu List
+          </button>
+          <button
+            class="button"
+            @click="sendReplyMessageInReplyToMenuListMultiSection"
+          >
+            ENVIAR Reply Message de Menu List Multi Section
+          </button>
+          <button class="button" @click="sendReplyMessageInReplyToReplyButton">
+            ENVIAR Reply Message de Reply Buttton
+          </button>
+          <button
+            class="button"
+            @click="sendReplyMessageInReplyToReplyButtonWithoutHeader"
+          >
+            ENVIAR Reply Message de Reply Buttton sem header
+          </button>
+          <button class="button" @click="sendReplyImageMessageWithText">
+            ENVIAR Reply Message de Imagem com Texto
+          </button>
+          <button class="button" @click="sendReplyAudioMessageWithText">
+            ENVIAR Reply Message de Audio com Texto
+          </button>
+          <button class="button" @click="sendReplyVideoMessageWithText">
+            ENVIAR Reply Message de Video com Texto
+          </button>
+        </div>  
       </div>
 
       <div v-else>
@@ -1154,6 +1158,53 @@ export default {
               type: 'image/jpeg',
               uri:
                 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyAudioMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'audio/mp3',
+              uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3'
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyVideoMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'video/mp4',
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
             }
           }
         }

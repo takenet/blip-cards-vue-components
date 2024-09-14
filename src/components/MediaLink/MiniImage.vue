@@ -1,21 +1,5 @@
 <template>
   <div class="image-container">
-    <bds-button-icon
-      v-if="deletable && !isEditing"
-      class="editIco trashIco"
-      icon="trash"
-      variant="delete"
-      size="short"
-      v-on:click="trash(document)"
-    ></bds-button-icon>
-    <bds-button-icon
-      v-if="editable && !isEditing"
-      class="editIco"
-      icon="edit"
-      variant="primary"
-      size="short"
-      v-on:click="toggleEdit"
-    ></bds-button-icon>
     <div class="header" :id="id" v-if="!isEditing">
       <div v-if="simplified">
         <bds-grid gap="4" align-items="center" justify-content="space-between">
