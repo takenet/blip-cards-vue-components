@@ -249,6 +249,10 @@
           >
             ENVIAR Reply Message de Reply Buttton sem header
           </button>
+          
+          <button class="button" @click="sendReplyImageMessageWithImage">
+            ENVIAR Reply Message de Imagem com Imagem
+          </button>
           <button class="button" @click="sendReplyImageMessageWithText">
             ENVIAR Reply Message de Imagem com Texto
           </button>
@@ -1150,6 +1154,34 @@ export default {
           replied: {
             type: 'text/plain',
             value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyImageMessageWithImage: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+            }
           },
           inReplyTo: {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',

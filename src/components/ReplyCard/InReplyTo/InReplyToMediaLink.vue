@@ -53,7 +53,7 @@
         :editing="editing"
         :async-fetch-media="asyncFetchMedia"
       />
-      <blip-file
+      <blip-mini-file
         :title-msg="titleMsg"
         :document="inReplyTo"
         :full-document="inReplyTo"
@@ -78,7 +78,7 @@
 import BlipMiniImage from '../../MediaLink/MiniImage'
 import BlipMiniAudio from '../../MediaLink/MiniAudio'
 import BlipMiniVideo from '../../MediaLink/MiniVideo'
-import BlipFile from '../../MediaLink/MiniBlipFile'
+import BlipMiniFile from '../../MediaLink/MiniBlipFile'
 import { default as base } from '../../../mixins/baseComponent.js'
 
 export default {
