@@ -163,6 +163,5 @@ export default {
 .reply-container {
   text-align: left;
   padding: 1rem;
-  border: 5px solid red;
 }
 </style>
