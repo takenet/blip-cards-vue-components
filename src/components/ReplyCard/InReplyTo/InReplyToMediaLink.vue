@@ -1,5 +1,5 @@
 <template>
-  <div id="reply" class="in-reply-to-message-mediaLink">
+  <div id="reply">
     <blip-image
       :image-uri-msg="titleMsg"
       :title-msg="titleMsg"
@@ -58,7 +58,7 @@
       :on-audio-validate-uri="onAudioValidateUri"
       :async-fetch-media="asyncFetchMedia"
       :simplified="true"
-      class="in-reaction-to-audio"
+      class="in-reply-to-message-audio"
     />
     <blip-video
       :video-uri-msg="videoUriMsg"
@@ -197,24 +197,10 @@ export default {
 <style lang="scss" scoped>
 @import '../../../styles/variables.scss';
 
-.message-inReplyTo-text {
-  display: -webkit-box;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-box-orient: vertical;
-  margin: 0;
-  text-align: left;
-
-  &.single {
-    -webkit-line-clamp: 3;
-  }
-
-  &.title {
-    -webkit-line-clamp: 1;
-  }
-
-  &.description {
-    -webkit-line-clamp: 2;
-  }
+.in-reply-to-message-audio{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 </style>

@@ -62,7 +62,8 @@
       />
       
       <location
-        class="blip-card in-reaction-to-location"
+        class="blip-card in-reply-to-message-others"
+        v-else-if="inReplyTo.type === 'application/vnd.lime.location+json'"
         :failed-to-send-msg="translations.failedToSend"
         :latitude-msg="translations.latitude"
         :longitude-msg="translations.longitude"
@@ -158,7 +159,6 @@ export default {
       )
     },
     isTextPlain() {
-      this.inReplyTovalue()
       return this.inReplyTo.type === 'text/plain'
     },
     inReplyTovalue() {
