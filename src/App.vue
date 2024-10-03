@@ -1359,7 +1359,7 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'audio/mp3',
-              uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3'
+              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
             }
           },
           inReplyTo: {

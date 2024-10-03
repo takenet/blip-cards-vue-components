@@ -46,6 +46,7 @@
       </div>
     </div>
     <blip-card-date
+      v-if="!simplified"
       :status="status"
       :position="position"
       :date="date"
@@ -115,8 +116,10 @@
 import { default as base } from '../mixins/baseComponent.js'
 import DefaultMap from '../assets/img/DefaultMap.png'
 import { isFailedMessage } from '../utils/misc'
+import BlipCardDate from './BlipCardDate.vue'
 
 export default {
+  components: { BlipCardDate },
   name: 'location',
   mixins: [base],
   props: {
