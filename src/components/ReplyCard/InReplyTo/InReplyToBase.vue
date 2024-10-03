@@ -1,9 +1,8 @@
 <template>
   <div
-    v-if="isAcceptableTextType || hasFailedToLoad"
     class="in-reply-to-message-container"
   >
-    <template v-if="isAcceptableTextType">
+    <template v-if="!hasFailedToLoad">
       <span
         class="in-reply-to-message-bar"
         :class="{ 'own-message': isOwnMessage }"
@@ -12,8 +11,10 @@
         id="text"
         v-if="isTextPlain"
         :in-reply-to="inReplyTo"
+        class="in-reply-to-message-text"
       />
       <in-reply-to-media-link
+        class="in-reply-to-message-others"
         id="media-link"
         v-else-if="isMediaLink"
         :in-reply-to="inReplyTo.value"
@@ -38,46 +39,44 @@
         :on-cancel="cancel"
         :on-audio-validate-uri="onAudioValidateUri"
       />
-      <location
-        class="blip-card in-reaction-to-location"
-        v-else-if="inReplyTo.type === 'application/vnd.lime.location+json'"
-        :failed-to-send-msg="translations.failedToSend"
-        :latitude-msg="translations.latitude"
-        :longitude-msg="translations.longitude"
-        :text-msg="translations.text"
-        :status="status"
-        :position="position"
-        :document="inReplyToValue"
-        :full-document="inReplyTo"
-        :date="date"
-        :on-save="saveCard"
-        :editable="editable"
-        :on-deleted="deleteCard"
-        :on-metadata-edit="isMetadataReady"
-        :deletable="deletable"
-        :editing="isCardEditing"
-        :on-cancel="cancel"
-        :simplified="true"
-      />
       <web-link
-        class="blip-card in-reaction-to-padding"
+        class="blip-card in-reply-to-message-others"
         v-else-if="inReplyTo.type === 'application/vnd.lime.web-link+json'"
         :page-url-msg="translations.pageUrl"
         :title-msg="translations.title"
         :description-msg="translations.description"
         :failed-to-send-msg="translations.failedToSend"
-        :status="status"
         :position="position"
-        :document="inReplyToValue"
-        :full-document="inReplyTo"
+        :document="inReplyTo.Value"
+        :full-document="inReplyTo.value"
         :date="date"
-        :on-save="saveCard"
+        :on-save="onSave"
         :editable="editable"
         :on-open-link="onOpenLink"
-        :on-deleted="deleteCard"
+        :on-deleted="onDeleted"
         :on-metadata-edit="isMetadataReady"
         :deletable="deletable"
-        :editing="isCardEditing"
+        :editing="editing"
+        :on-cancel="cancel"
+        :simplified="true"
+      />
+      
+      <location
+        class="blip-card in-reaction-to-location"
+        :failed-to-send-msg="translations.failedToSend"
+        :latitude-msg="translations.latitude"
+        :longitude-msg="translations.longitude"
+        :text-msg="translations.text"
+        :position="position"
+        :document="inReplyTovalue"
+        :full-document="inReplyTo.Value"
+        :date="date"
+        :on-save="onSave"
+        :editable="editable"
+        :on-deleted="onDeleted"
+        :on-metadata-edit="isMetadataReady"
+        :deletable="deletable"
+        :editing="editing"
         :on-cancel="cancel"
         :simplified="true"
       />
@@ -159,8 +158,15 @@ export default {
       )
     },
     isTextPlain() {
-      console.log('isTextPlain', this.inReplyTo.value)
+      this.inReplyTovalue()
       return this.inReplyTo.type === 'text/plain'
+    },
+    inReplyTovalue() {
+      console.log('inReplyTovalue')
+      console.log(this.inReplyTo.value)
+      console.log(this.inReplyTo)
+      console.log(this.inReplyTo.value.value)
+      return this.inReplyTo.value
     },
     isMediaLink() {
       console.log('isMediaLink ', this.inReplyTo.type)
@@ -177,14 +183,7 @@ export default {
           this.isInteractiveTypeButtonWithoutTextHeader)
       )
     },
-    isAcceptableTextType() {
-      return true || (
-        this.isTextPlain ||
-        this.isSelectType ||
-        this.isAcceptableInteractiveType ||
-        this.isMediaLink
-      )
-    },
+
     hasFailedToLoad() {
       return Boolean(
         this.inReplyTo.type === undefined || this.inReplyTo.value === undefined
@@ -196,6 +195,14 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../../styles/variables.scss';
+
+.in-reply-to-message-text {
+  padding: 0.5rem;
+}
+
+.in-reply-to-message-others {
+  padding-left: 0.5rem;
+}
 
 .in-reply-to-message-bar {
   flex: none;

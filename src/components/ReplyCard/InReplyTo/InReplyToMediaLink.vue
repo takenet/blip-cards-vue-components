@@ -196,9 +196,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../../styles/variables.scss';
-.in-reply-to-message-mediaLink {
-  padding-left: 0.5rem;
-}
 
 .message-inReplyTo-text {
   display: -webkit-box;
