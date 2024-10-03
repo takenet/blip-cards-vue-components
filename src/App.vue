@@ -249,9 +249,14 @@
           >
             ENVIAR Reply Message de Reply Buttton sem header
           </button>
-          
           <button class="button" @click="sendReplyImageMessageWithImage">
             ENVIAR Reply Message de Imagem com Imagem
+          </button>
+          <button class="button" @click="sendReplyLocationMessageWithText">
+            ENVIAR Reply Message de Localização com Texto
+          </button>
+          <button class="button" @click="sendReplyWebLinkMessageWithText">
+            ENVIAR Reply Message de Web Link com Texto
           </button>
           <button class="button" @click="sendReplyImageMessageWithText">
             ENVIAR Reply Message de Imagem com Texto
@@ -1160,6 +1165,7 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'image/jpeg',
+              title: 'texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo',
               uri:
                 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
             }
@@ -1237,6 +1243,55 @@ export default {
               type: 'video/mp4',
               uri:
                 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyLocationMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.location+json',
+            value: {
+              latitude: -19.918899,
+              longitude: -43.959275,
+              altitude: 853,
+              text: 'Takes place'
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyWebLinkMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.web-link+json',
+            value: {
+              uri: 'http://limeprotocol.org/content-types.html#web-link',
+              target: 'self',
+              text: 'Segue documentação do web-link'
             }
           }
         }

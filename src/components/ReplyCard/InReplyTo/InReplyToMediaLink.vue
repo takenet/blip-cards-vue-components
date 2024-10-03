@@ -1,84 +1,110 @@
 <template>
-  <div>
-    <div id="reply">
-      <blip-mini-image
-        :image-uri-msg="titleMsg"
-        :title-msg="titleMsg"
-        :text-msg="textMsg"
-        :aspect-ratio-msg="aspectRatioMsg"
-        :supported-formats-msg="supportedFormatsMsg"
-        :document="inReplyTo"
-        :full-document="inReplyTo"
-        :date="date"
-        v-if="inReplyTo.type.indexOf('image') != -1"
-        :editable="editable"
-        :on-media-selected="onMediaSelected"
-        :on-save="save"
-        :on-deleted="onDeleted"
-        :on-metadata-edit="isMetadataReady"
-        :deletable="deletable"
-        :on-cancel="onCancel"
-        :editing="editing"
-        :async-fetch-media="asyncFetchMedia"
-      />
-      <blip-mini-audio
-        :file-url-msg="fileUrlMsg"
-        :document="inReplyTo"
-        :full-document="inReplyTo"
-        :date="date"
-        v-else-if="inReplyTo.type.indexOf('audio') != -1"
-        :editable="editable"
-        :on-save="save"
-        :on-deleted="onDeleted"
-        :on-metadata-edit="isMetadataReady"
-        :deletable="deletable"
-        :on-cancel="onCancel"
-        :editing="editing"
-        :on-audio-validate-uri="onAudioValidateUri"
-        :async-fetch-media="asyncFetchMedia"
-      />
-      <blip-mini-video
-        :video-uri-msg="videoUriMsg"
-        :document="inReplyTo"
-        :full-document="inReplyTo"
-        :date="date"
-        @updated="emitUpdate"
-        v-else-if="inReplyTo.type.indexOf('video') != -1"
-        :editable="editable"
-        :on-save="save"
-        :on-deleted="onDeleted"
-        :on-metadata-edit="isMetadataReady"
-        :deletable="deletable"
-        :on-cancel="onCancel"
-        :editing="editing"
-        :async-fetch-media="asyncFetchMedia"
-      />
-      <blip-mini-file
-        :title-msg="titleMsg"
-        :document="inReplyTo"
-        :full-document="inReplyTo"
-        :position="position"
-        :date="date"
-        v-else
-        :editable="editable"
-        :on-media-selected="onMediaSelected"
-        :on-save="save"
-        :on-deleted="onDeleted"
-        :on-metadata-edit="isMetadataReady"
-        :deletable="deletable"
-        :on-cancel="onCancel"
-        :editing="editing"
-        :async-fetch-media="asyncFetchMedia"
-      />
-    </div>
+  <div id="reply" class="in-reply-to-message-mediaLink">
+    <blip-image
+      :image-uri-msg="titleMsg"
+      :title-msg="titleMsg"
+      :text-msg="textMsg"
+      :aspect-ratio-msg="aspectRatioMsg"
+      :supported-formats-msg="supportedFormatsMsg"
+      :document="inReplyTo"
+      :full-document="inReplyTo"
+      :date="date"
+      v-if="inReplyTo.type.indexOf('image') != -1"
+      :editable="editable"
+      :on-media-selected="onMediaSelected"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"
+      :async-fetch-media="asyncFetchMedia"
+      :simplified="true"      
+    />
+    <blip-sticker
+      :supported-formats-msg="supportedFormatsMsg"
+      :document="inReplyTo"
+      :full-document="inReplyTo"
+      :date="date"
+      v-else-if="inReplyTo.type.indexOf('sticker') != -1"
+      :editable="editable"
+      :on-media-selected="onMediaSelected"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"
+      :async-fetch-media="asyncFetchMedia"
+      :simplified="true"
+      
+    />
+    <blip-audio
+      :file-url-msg="fileUrlMsg"
+      :document="inReplyTo"
+      :full-document="inReplyTo"
+      :date="date"
+      v-else-if="
+        inReplyTo.type.indexOf('audio') != -1 ||
+          inReplyTo.type.indexOf('voice') != -1
+      "
+      :editable="editable"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"
+      :on-audio-validate-uri="onAudioValidateUri"
+      :async-fetch-media="asyncFetchMedia"
+      :simplified="true"
+      class="in-reaction-to-audio"
+    />
+    <blip-video
+      :video-uri-msg="videoUriMsg"
+      :document="inReplyTo"
+      :full-document="inReplyTo"
+      :date="date"
+      @updated="emitUpdate"
+      v-else-if="inReplyTo.type.indexOf('video') != -1"
+      :editable="editable"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"
+      :async-fetch-media="asyncFetchMedia"
+      :simplified="true"
+      
+    />
+    <blip-file
+      :title-msg="titleMsg"
+      :document="inReplyTo"
+      :full-document="inReplyTo"
+      :position="position"
+      :date="date"
+      v-else
+      :editable="editable"
+      :on-media-selected="onMediaSelected"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"
+      :async-fetch-media="asyncFetchMedia"
+      :simplified="true"
+      
+    />
   </div>
 </template>
 
 <script>
-import BlipMiniImage from '../../MediaLink/MiniImage'
-import BlipMiniAudio from '../../MediaLink/MiniAudio'
-import BlipMiniVideo from '../../MediaLink/MiniVideo'
-import BlipMiniFile from '../../MediaLink/MiniBlipFile'
+import BlipImage from '../../MediaLink/Image'
+import BlipAudio from '../../MediaLink/Audio'
+import BlipVideo from '../../MediaLink/Video'
+import BlipFile from '../../MediaLink/BlipFile'
 import { default as base } from '../../../mixins/baseComponent.js'
 
 export default {
@@ -119,10 +145,10 @@ export default {
     }
   },
   components: {
-    BlipMiniImage,
-    BlipMiniAudio,
-    BlipMiniVideo,
-    BlipMiniFile
+    BlipImage,
+    BlipAudio,
+    BlipVideo,
+    BlipFile
   },
   computed: {
     isApplicationJsonType() {
@@ -170,6 +196,9 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../../styles/variables.scss';
+.in-reply-to-message-mediaLink {
+  padding-left: 0.5rem;
+}
 
 .message-inReplyTo-text {
   display: -webkit-box;
