@@ -267,6 +267,10 @@
           <button class="button" @click="sendReplyVideoMessageWithText">
             ENVIAR Reply Message de Video com Texto
           </button>
+          <button class="button" @click="sendReplyFileMessageWithText">
+            ENVIAR Reply Message de Documento com Texto
+          </button>
+          
         </div>  
       </div>
 
@@ -1243,6 +1247,32 @@ export default {
               type: 'video/mp4',
               uri:
                 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyFileMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              uri:
+                'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+              title: 'pdf_open_parameters.pdf',
+              type: 'application/pdf',
+              size: '5540'
             }
           }
         }

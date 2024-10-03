@@ -58,6 +58,7 @@
           :deletable="deletable"
           :editing="editing"
           :on-cancel="cancel"
+          :on-open-link="onOpenLink"
           :on-audio-validate-uri="onAudioValidateUri"
         />
         <replied-base
@@ -116,6 +117,9 @@ export default {
       default: 'Falha ao enviar a mensagem'
     },
     asyncFetchMedia: {
+      type: Function
+    },
+    onOpenLink: {
       type: Function
     },
     status: {

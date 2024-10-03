@@ -129,6 +129,9 @@
       updatedPhotoMargin: {
         type: Function
       },
+      onOpenLink: {
+        type: Function
+      },
       translations: {
         type: Object,
         default: () => ({})

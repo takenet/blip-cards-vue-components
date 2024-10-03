@@ -222,8 +222,6 @@ export default {
   },
   methods: {
     init: async function() {
-      console.log(' -------> init image')
-      console.log(this.document)
       this.imageUri = isAuthenticatedMediaLink(this.document)
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri

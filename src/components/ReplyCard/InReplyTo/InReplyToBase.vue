@@ -40,14 +40,14 @@
         :on-audio-validate-uri="onAudioValidateUri"
       />
       <web-link
-        class="blip-card in-reply-to-message-others"
+        class="blip-card in-reply-to-padding"
         v-else-if="inReplyTo.type === 'application/vnd.lime.web-link+json'"
         :page-url-msg="translations.pageUrl"
         :title-msg="translations.title"
         :description-msg="translations.description"
         :failed-to-send-msg="translations.failedToSend"
         :position="position"
-        :document="inReplyTo.Value"
+        :document="inReplyTovalue"
         :full-document="inReplyTo.value"
         :date="date"
         :on-save="onSave"
@@ -122,6 +122,9 @@ export default {
     asyncFetchMedia: {
       type: Function
     },
+    onOpenLink: {
+      type: Function
+    },
     updatedPhotoMargin: {
       type: Function
     },
@@ -159,6 +162,10 @@ export default {
       )
     },
     isTextPlain() {
+      console.log('inReplyTovalue')
+      console.log(this.inReplyTo.value)
+      console.log(this.inReplyTo)
+      console.log(this.inReplyTo.value.value)
       return this.inReplyTo.type === 'text/plain'
     },
     inReplyTovalue() {
@@ -203,6 +210,12 @@ export default {
 .in-reply-to-message-others {
   padding-left: 0.5rem;
 }
+.in-reply-to-padding {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 
 .in-reply-to-message-bar {
   flex: none;

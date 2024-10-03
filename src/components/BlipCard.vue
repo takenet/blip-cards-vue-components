@@ -498,6 +498,7 @@
           :text-msg="translations.text"
           :video-uri-msg="translations.videoUri"
           :on-audio-validate-uri="onAudioValidateUri"
+          :on-open-link="onOpenLink"
           :reply-text="translations.replyText"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
