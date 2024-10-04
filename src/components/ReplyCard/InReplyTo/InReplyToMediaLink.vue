@@ -37,7 +37,6 @@
       :editing="editing"
       :async-fetch-media="asyncFetchMedia"
       :simplified="true"
-      
     />
     <blip-audio
       :file-url-msg="fileUrlMsg"
@@ -76,7 +75,6 @@
       :editing="editing"
       :async-fetch-media="asyncFetchMedia"
       :simplified="true"
-      
     />
     <blip-file
       :title-msg="titleMsg"
@@ -95,7 +93,6 @@
       :editing="editing"
       :async-fetch-media="asyncFetchMedia"
       :simplified="true"
-      
     />
   </div>
 </template>
