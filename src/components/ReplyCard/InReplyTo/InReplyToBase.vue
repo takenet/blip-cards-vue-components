@@ -7,7 +7,7 @@
     <template v-if="!hasFailedToLoad">
       <in-reply-to-text
         id="text"
-        v-if="isTextPlain"
+        v-if="isAcceptableTextType"
         :in-reply-to="inReplyTo"
         class="in-reply-to-message-text"
       />
@@ -202,6 +202,9 @@ export default {
           this.isInteractiveTypeButtonWithTextHeader ||
           this.isInteractiveTypeButtonWithoutTextHeader)
       )
+    },
+    isAcceptableTextType() {
+      return this.isTextPlain || this.isSelectType || this.isAcceptableInteractiveType
     },
 
     hasFailedToLoad() {
