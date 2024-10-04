@@ -101,6 +101,11 @@
         <input type="radio" :value="false" v-model="disableLink" /> Yes <br />
         <input type="radio" :value="true" v-model="disableLink" /> No <br />
       </div>
+      <div>
+        <button class="button" @click="toogleBlipGroupCard">
+          CRIAR/DESTRUIR scroll
+        </button>
+      </div>
 
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
@@ -151,9 +156,6 @@
           ENVIAR ApplicationJson Unsupported Content
         </button>
         <button class="button" @click="sendSurveyContent">ENVIAR Survey</button>
-        <button class="button" @click="toogleBlipGroupCard">
-          CRIAR/DESTRUIR scroll
-        </button>
         <button class="button" @click="sendContact">
           ENVIAR Contato
         </button>

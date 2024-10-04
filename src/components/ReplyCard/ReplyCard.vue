@@ -48,6 +48,7 @@
           :on-cancel="cancel"
           :on-open-link="onOpenLink"
           :on-audio-validate-uri="onAudioValidateUri"
+          :replyingToCustomer="translations.failedToLoad"
         />
         <replied-base
           v-if="replied"

@@ -5,93 +5,104 @@
       :class="{ 'own-message': isOwnMessage }"
     ></span>
     <template v-if="!hasFailedToLoad">
-      <in-reply-to-text
-        id="text"
-        v-if="isAcceptableTextType"
-        :in-reply-to="inReplyTo"
-        class="in-reply-to-message-text"
-      />
-      <in-reply-to-media-link
-        class="in-reply-to-message-others"
-        id="media-link"
-        v-else-if="isMediaLink"
-        :in-reply-to="inReplyTo.value"
-        :on-media-selected="onMediaSelected"
-        :video-uri-msg="translations.videoUri"
-        :async-fetch-media="asyncFetchMedia"
-        @updated="updatedPhotoMargin"
-        :failed-to-send-msg="translations.failedToSend"
-        :aspect-ratio-msg="translations.aspectRatio"
-        :supported-formats-msg="translations.supportedFormats"
-        :file-url-msg="translations.fileUrl"
-        :title-msg="translations.title"
-        :image-uri-msg="translations.imageUri"
-        :text-msg="translations.text"
-        :position="position"
-        :on-save="onSave"
-        :editable="editable"
-        :on-deleted="onDeleted"
-        :on-metadata-edit="isMetadataReady"
-        :deletable="deletable"
-        :editing="editing"
-        :on-cancel="cancel"
-        :on-audio-validate-uri="onAudioValidateUri"
-      />
-      <web-link
-        class="blip-card in-reply-to-padding"
-        v-else-if="inReplyTo.type === 'application/vnd.lime.web-link+json'"
-        :page-url-msg="translations.pageUrl"
-        :title-msg="translations.title"
-        :description-msg="translations.description"
-        :failed-to-send-msg="translations.failedToSend"
-        :position="position"
-        :document="inReplyTovalue"
-        :full-document="inReplyTo.value"
-        :on-save="onSave"
-        :editable="editable"
-        :on-open-link="onOpenLink"
-        :on-deleted="onDeleted"
-        :on-metadata-edit="isMetadataReady"
-        :deletable="deletable"
-        :editing="editing"
-        :on-cancel="cancel"
-        :simplified="true"
-      />
-      <location
-        class="blip-card in-reply-to-message-others"
-        v-else-if="inReplyTo.type === 'application/vnd.lime.location+json'"
-        :failed-to-send-msg="translations.failedToSend"
-        :latitude-msg="translations.latitude"
-        :longitude-msg="translations.longitude"
-        :text-msg="translations.text"
-        :position="position"
-        :document="inReplyTovalue"
-        :full-document="inReplyTo.Value"
-        :on-save="onSave"
-        :editable="editable"
-        :on-deleted="onDeleted"
-        :on-metadata-edit="isMetadataReady"
-        :deletable="deletable"
-        :editing="editing"
-        :on-cancel="cancel"
-        :simplified="true"
-      />
-      <unsuported-content
-        v-else
-        class="in-reply-to-padding"
-        style="margin-bottom: 0px"
-        :failed-to-send-msg="translations.failedToSend"
-        :unsupported-content-msg="translations.unsupportedContent"
-        :position="position"
-        :document="document"
-        :on-save="saveCard"
-        :editable="editable"
-        :on-deleted="deleteCard"
-        :deletable="deletable"
-        :editing="isCardEditing"
-        :on-cancel="cancel"
-        :simplified="true"
-      />
+      <div>
+        <div class="replying-to">
+        <bds-typo
+          v-if="replyingToCustomer"
+          
+          variant="fs-14"
+          bold="semi-bold" 
+          >{{ replyingTo }}
+        </bds-typo>
+        </div>
+        <in-reply-to-text
+          id="text"
+          v-if="isAcceptableTextType"
+          :in-reply-to="inReplyTo"
+          class="in-reply-to-message-text"
+        />
+        <in-reply-to-media-link
+          class="in-reply-to-message-others"
+          id="media-link"
+          v-else-if="isMediaLink"
+          :in-reply-to="inReplyTo.value"
+          :on-media-selected="onMediaSelected"
+          :video-uri-msg="translations.videoUri"
+          :async-fetch-media="asyncFetchMedia"
+          @updated="updatedPhotoMargin"
+          :failed-to-send-msg="translations.failedToSend"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :supported-formats-msg="translations.supportedFormats"
+          :file-url-msg="translations.fileUrl"
+          :title-msg="translations.title"
+          :image-uri-msg="translations.imageUri"
+          :text-msg="translations.text"
+          :position="position"
+          :on-save="onSave"
+          :editable="editable"
+          :on-deleted="onDeleted"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="editing"
+          :on-cancel="cancel"
+          :on-audio-validate-uri="onAudioValidateUri"
+        />
+        <web-link
+          class="blip-card in-reply-to-padding"
+          v-else-if="inReplyTo.type === 'application/vnd.lime.web-link+json'"
+          :page-url-msg="translations.pageUrl"
+          :title-msg="translations.title"
+          :description-msg="translations.description"
+          :failed-to-send-msg="translations.failedToSend"
+          :position="position"
+          :document="inReplyTovalue"
+          :full-document="inReplyTo.value"
+          :on-save="onSave"
+          :editable="editable"
+          :on-open-link="onOpenLink"
+          :on-deleted="onDeleted"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="editing"
+          :on-cancel="cancel"
+          :simplified="true"
+        />
+        <location
+          class="blip-card in-reply-to-message-others"
+          v-else-if="inReplyTo.type === 'application/vnd.lime.location+json'"
+          :failed-to-send-msg="translations.failedToSend"
+          :latitude-msg="translations.latitude"
+          :longitude-msg="translations.longitude"
+          :text-msg="translations.text"
+          :position="position"
+          :document="inReplyTovalue"
+          :full-document="inReplyTo.Value"
+          :on-save="onSave"
+          :editable="editable"
+          :on-deleted="onDeleted"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="editing"
+          :on-cancel="cancel"
+          :simplified="true"
+        />
+        <unsuported-content
+          v-else
+          class="in-reply-to-padding"
+          style="margin-bottom: 0px"
+          :failed-to-send-msg="translations.failedToSend"
+          :unsupported-content-msg="translations.unsupportedContent"
+          :position="position"
+          :document="document"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :simplified="true"
+        />
+      </div>
     </template>
     <div class="failed-message" v-else-if="hasFailedToLoad">
       <bds-icon name="warning" theme="outline" aria-label="Warning"></bds-icon>
@@ -126,6 +137,9 @@ export default {
     failedMessage: {
       type: String,
       default: 'Falha ao carregar mensagem'
+    },
+    replyingToCustomer: {
+      type: String
     },
     onMediaSelected: {
       type: Function
@@ -202,12 +216,25 @@ export default {
       )
     },
     isAcceptableTextType() {
-      return this.isTextPlain || this.isSelectType || this.isAcceptableInteractiveType
+      return (
+        this.isTextPlain ||
+        this.isSelectType ||
+        this.isAcceptableInteractiveType
+      )
     },
 
     hasFailedToLoad() {
       return Boolean(
         this.inReplyTo.type === undefined || this.inReplyTo.value === undefined
+      )
+    },
+    replyingTo() {
+      console.log(this.translations)
+      console.log(this.translations.replyingTo)
+      console.log(this.replyingToCustomer)
+      return this.translations.replyingTo.replace(
+        /\{customer\}/g,
+        this.replyingToCustomer
       )
     }
   }
@@ -217,12 +244,19 @@ export default {
 <style lang="scss" scoped>
 @import '../../../styles/variables.scss';
 
+.replying-to {
+  color: $color-primary;
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
+  border: 5px solid red;
+}
 .in-reply-to-message-text {
   padding: 0.5rem;
 }
 
 .in-reply-to-message-others {
-  padding-left: 0.5rem;
+  padding-left: 0.5rem;  
+  border: 5px solid green;
 }
 .in-reply-to-padding {
   padding-top: 1rem;
