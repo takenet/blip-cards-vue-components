@@ -340,6 +340,7 @@
             :on-location-error="selected"
             :disable-link="disableLink"
             :readonly="readonly"
+            :translations="translations"
           />
         </div>
       </div>
@@ -1183,7 +1184,8 @@ export default {
               title: 'texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo',
               uri:
                 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
-            }
+            },
+            direction: 'sent'
           }
         }
       })
@@ -1211,7 +1213,8 @@ export default {
               type: 'image/jpeg',
               uri:
                 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
-            }
+            },
+            direction: 'sent'
           }
         }
       })
@@ -1234,7 +1237,8 @@ export default {
             value: {
               type: 'audio/mp3',
               uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3'
-            }
+            },
+            direction: 'sent'
           }
         }
       })
@@ -1258,7 +1262,8 @@ export default {
               type: 'video/mp4',
               uri:
                 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
-            }
+            },
+            direction: 'sent'
           }
         }
       })
@@ -1284,7 +1289,8 @@ export default {
               title: 'pdf_open_parameters.pdf',
               type: 'application/pdf',
               size: '5540'
-            }
+            },
+            direction: 'sent'
           }
         }
       })
@@ -1309,7 +1315,8 @@ export default {
               longitude: -43.959275,
               altitude: 853,
               text: 'Takes place'
-            }
+            },
+            direction: 'sent'
           }
         }
       })
@@ -1333,7 +1340,8 @@ export default {
               uri: 'http://limeprotocol.org/content-types.html#web-link',
               target: 'self',
               text: 'Segue documentação do web-link'
-            }
+            },
+            direction: 'sent'
           }
         }
       })
@@ -1355,7 +1363,8 @@ export default {
             type: 'application/vnd.lime.chatstater+json',
             value: {
               state: 'composing'
-            }
+            },
+            direction: 'sent'
           }
         }
       })
@@ -1375,7 +1384,8 @@ export default {
           inReplyTo: {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
             value: 'in reply to undefined',
-            type: 'text/plain'
+            type: 'text/plain',
+            direction: 'sent'
           }
         }
       })
@@ -2064,7 +2074,58 @@ export default {
       deletable: true,
       readonly: false,
       translations: {
-        failedToSend: 'Falha ao enviar a mensagem.'
+        failedToSend: 'Falha ao enviar a mensagem.',
+        failedToLoadThreadSummary: 'Falha ao carregar o resumo da conversa.',
+        userWaitingAttendance: 'Chatbot {chatbotIdentity} encaminhou a conversa para atendimento',
+        closedAttendantMsg: 'Atendente {agentIdentity} encerrou o atendimento',
+        closedClientMsg: 'Cliente encerrou o atendimento',
+        showMore: 'Ver mais',
+        aspectRatio: 'Proporção da tela',
+        supportedFormats: 'Formatos suportados: JPEG,JPG,PNG,GIF',
+        fileUrl: 'URL do arquivo',
+        title: 'Título',
+        titleThreadSummary: 'Resumo da conversa',
+        imageUri: 'Uri da imagem',
+        text: 'Texto',
+        videoUri: 'Uri do vídeo',
+        cancel: 'Cancelar',
+        setPayload: 'Definir carga',
+        addButton: 'Adicionar Botão',
+        link: 'Link',
+        description: 'Descrição',
+        uri: 'Uri',
+        postbackMimetype: 'Mime type do postback',
+        postbackValue: 'Valor de postback',
+        addOption: 'Adicionar Opção',
+        notEnoughOptions: 'Requer pelo menos uma opção',
+        pageUrl: 'URL da página',
+        introduction: 'Mensagem de texto de introdução',
+        latitude: 'Latitude',
+        longitude: 'Longitude',
+        RequestLocationButtonLabel: 'Enviar Localização',
+        unsupportedContent: 'Conteúdo não suportado',
+        messageTemplate: 'Modelo de mensagem: ',
+        phoneLabel: 'Telefone',
+        mailLabel: 'E-mail',
+        addressLabel: 'Endereço',
+        failedToLoad: 'Falha ao carregar mensagem',
+        reactionText: 'Reação',
+        removedReactionText: 'Reação removida',
+        replyText: 'Resposta',
+        startCallMsg: 'Início da chamada de {callType} {callTime}',
+        endCallMsg: 'Fim da chamada de {callType} {callTime}',
+        videoMsg: 'vídeo',
+        audioMsg: 'áudio',
+        videoCallMsg: 'Chamada de vídeo',
+        voiceCallMsg: 'Ligação',
+        successStatusMsg: 'Finalizada',
+        failedStatusMsg: 'Falha',
+        cancelStatusMsg: 'Cancelada',
+        notAnsweredStatusMsg: 'Não atendida',
+        preparingRecordingMsg: 'Preparando gravação',
+        loadRecordingMsg: 'Carregar gravação',
+        downloadRecordingLabel: 'Baixar gravação',
+        replyingTo: 'Respondendo a {customer}'
       },
       isExternalMessage: false,
       hasMemberData: false,
