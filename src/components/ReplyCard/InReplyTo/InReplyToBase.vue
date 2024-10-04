@@ -59,8 +59,7 @@
         :editing="editing"
         :on-cancel="cancel"
         :simplified="true"
-      />
-      
+      />      
       <location
         class="blip-card in-reply-to-message-others"
         v-else-if="inReplyTo.type === 'application/vnd.lime.location+json'"
@@ -78,6 +77,22 @@
         :on-metadata-edit="isMetadataReady"
         :deletable="deletable"
         :editing="editing"
+        :on-cancel="cancel"
+        :simplified="true"
+      />
+      <unsuported-content
+        v-else
+        class="in-reply-to-padding"
+        style="margin-bottom: 0px"
+        :failed-to-send-msg="translations.failedToSend"
+        :unsupported-content-msg="translations.unsupportedContent"
+        :position="position"
+        :document="document"
+        :on-save="saveCard"
+        :editable="editable"
+        :on-deleted="deleteCard"
+        :deletable="deletable"
+        :editing="isCardEditing"
         :on-cancel="cancel"
         :simplified="true"
       />
