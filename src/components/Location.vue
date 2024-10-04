@@ -46,7 +46,6 @@
       </div>
     </div>
     <blip-card-date
-      v-if="!simplified"
       :status="status"
       :position="position"
       :date="date"
