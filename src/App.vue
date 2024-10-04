@@ -249,14 +249,25 @@
           >
             ENVIAR Reply Message de Reply Buttton sem header
           </button>
+
+          <button class="button" @click="sendReplyTextMessageWithFailed">
+            ENVIAR Reply Message de Falha
+          </button>
+          
           <button class="button" @click="sendReplyImageMessageWithImage">
             ENVIAR Reply Message de Imagem com Imagem
           </button>
           <button class="button" @click="sendReplyLocationMessageWithText">
             ENVIAR Reply Message de Localização com Texto
           </button>
+          <button class="button" @click="sendReplyUnsuportedContentMessageWithText">
+            ENVIAR Reply Message de 'Conteudo não suportado' com Texto
+          </button>
+          <button class="button" @click="sendReplyFailedMessageWithText">
+            ENVIAR Reply Message de Falha com Texto
+          </button>          
           <button class="button" @click="sendReplyWebLinkMessageWithText">
-            ENVIAR Reply Message de Web Link com Texto
+            ENVIAR Reply Message de 'Web Link' com Texto
           </button>
           <button class="button" @click="sendReplyImageMessageWithText">
             ENVIAR Reply Message de Imagem com Texto
@@ -1328,6 +1339,48 @@ export default {
       })
       this.send()
     },
+    sendReplyUnsuportedContentMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.chatstater+json',
+            value: {
+              state: 'composing'
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyFailedMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: undefined,
+            value: 'replied text undefined'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            value: 'in reply to undefined',
+            type: 'text/plain'
+          }
+        }
+      })
+      this.send()
+    },
     sendReplyTextMessageWithDocument: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -1420,6 +1473,26 @@ export default {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
             type: 'text/plain',
             value: 'in reply to Imagem'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyTextMessageWithFailed: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: undefined,
+            value: 'in reply to undefined'
           }
         }
       })

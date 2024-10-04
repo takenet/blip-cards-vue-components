@@ -1,12 +1,10 @@
 <template>
-  <div
-    class="in-reply-to-message-container"
-  >
+  <div class="in-reply-to-message-container">
+    <span
+      class="in-reply-to-message-bar"
+      :class="{ 'own-message': isOwnMessage }"
+    ></span>
     <template v-if="!hasFailedToLoad">
-      <span
-        class="in-reply-to-message-bar"
-        :class="{ 'own-message': isOwnMessage }"
-      ></span>
       <in-reply-to-text
         id="text"
         v-if="isTextPlain"
@@ -59,7 +57,7 @@
         :editing="editing"
         :on-cancel="cancel"
         :simplified="true"
-      />      
+      />
       <location
         class="blip-card in-reply-to-message-others"
         v-else-if="inReplyTo.type === 'application/vnd.lime.location+json'"
@@ -226,11 +224,11 @@ export default {
   padding-left: 0.5rem;
 }
 .in-reply-to-padding {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
 
 .in-reply-to-message-bar {
   flex: none;
