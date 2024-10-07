@@ -19,12 +19,12 @@
       :image-uri-msg="translations.imageUri"
       :text-msg="translations.text"
       :position="position"
-      :on-save="saveCard"
+      :on-save="onSave"
       :editable="editable"
-      :on-deleted="deleteCard"
+      :on-deleted="onDeleted"
       :on-metadata-edit="isMetadataReady"
       :deletable="deletable"
-      :editing="isCardEditing"
+      :editing="editing"
       :on-cancel="cancel"
       :on-audio-validate-uri="onAudioValidateUri"
     />
@@ -33,9 +33,11 @@
 </template>
   
 <script>
+  import { default as base } from '../../../mixins/baseComponent.js'
+  
   export default {
     name: 'replied-base',
-    mixins: [],
+    mixins: [base],
     props: {
       replied: {
         type: Object,
@@ -48,6 +50,9 @@
         type: Function
       },
       updatedPhotoMargin: {
+        type: Function
+      },
+      onAudioValidateUri: {
         type: Function
       },
       translations: {

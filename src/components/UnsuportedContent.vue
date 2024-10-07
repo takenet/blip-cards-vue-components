@@ -1,13 +1,16 @@
 <template>
   <div :class="'blip-container unsuported-content ' + position">
-    <div :class="'bubble ' + position">
+    <div :class="simplified ? '' : 'bubble ' + position">
       <div class="unsuported-content-icons">
         <bds-icon v-if="fromMessageTemplate == true" size="small" alt="Alert" name="megaphone"></bds-icon>
         <bds-icon v-else-if="position === 'right'" size="small" alt="Alert" name="warning"></bds-icon>
         <bds-icon v-else size="small" alt="Alert" name="warning"></bds-icon>
-        <span>
-          {{ unsupportedContentMsg }}
-        </span>
+        <bds-typo
+          tag="span"
+          margin="false"
+          class="unsuported-text typo"
+          v-html="sanitize(unsupportedContentMsg)">
+        </bds-typo>
       </div>
     </div>
     <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon"
@@ -58,6 +61,10 @@ export default {
     },
     onFailedClickIcon: {
       type: Function
+    },
+    simplified: {
+      type: Boolean,
+      default: false
     }
   },
   data: function () {
@@ -91,7 +98,6 @@ export default {
 
 .unsuported-content.right {
     justify-content: right;
-    margin-left: 0.5em;
 }
 
 .unsuported-content.left {
@@ -141,5 +147,16 @@ export default {
   border-radius: 15px;
   white-space: normal;
   font-size: 13px;
+}
+
+.unsuported-text {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  margin: 0;
+  text-align: left;
+  -webkit-line-clamp: 1;
+  max-width: 150px;
 }
 </style>
