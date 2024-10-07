@@ -101,6 +101,11 @@
         <input type="radio" :value="false" v-model="disableLink" /> Yes <br />
         <input type="radio" :value="true" v-model="disableLink" /> No <br />
       </div>
+      <div>
+        <button class="button" @click="toogleBlipGroupCard">
+          CRIAR/DESTRUIR scroll
+        </button>
+      </div>
 
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
@@ -151,9 +156,6 @@
           ENVIAR ApplicationJson Unsupported Content
         </button>
         <button class="button" @click="sendSurveyContent">ENVIAR Survey</button>
-        <button class="button" @click="toogleBlipGroupCard">
-          CRIAR/DESTRUIR scroll
-        </button>
         <button class="button" @click="sendContact">
           ENVIAR Contato
         </button>
@@ -171,42 +173,6 @@
         </button>
         <button class="button" @click="sendReplyButton">
           ENVIAR Reply Button
-        </button>
-        <button class="button" @click="sendReplyMessage">
-          ENVIAR Reply Message
-        </button>
-        <button class="button" @click="sendReplyTextMessageWithDocument">
-          ENVIAR Reply Message de Texto com Documento
-        </button>
-        <button class="button" @click="sendReplyTextMessageWithVideo">
-          ENVIAR Reply Message de Texto com Video
-        </button>
-        <button class="button" @click="sendReplyTextMessageWithAudio">
-          ENVIAR Reply Message de Texto com Audio
-        </button>
-        <button class="button" @click="sendReplyTextMessageWithImage">
-          ENVIAR Reply Message de Texto com Imagem
-        </button>
-        <button class="button" @click="sendReplyMessageInReplyToMenu">
-          ENVIAR Reply Message de Menu
-        </button>
-        <button class="button" @click="sendReplyMessageInReplyToMenuList">
-          ENVIAR Reply Message de Menu List
-        </button>
-        <button
-          class="button"
-          @click="sendReplyMessageInReplyToMenuListMultiSection"
-        >
-          ENVIAR Reply Message de Menu List Multi Section
-        </button>
-        <button class="button" @click="sendReplyMessageInReplyToReplyButton">
-          ENVIAR Reply Message de Reply Buttton
-        </button>
-        <button
-          class="button"
-          @click="sendReplyMessageInReplyToReplyButtonWithoutHeader"
-        >
-          ENVIAR Reply Message de Reply Buttton sem header
         </button>
         <button class="button" @click="sendReactionToText">
           ENVIAR Reaction de texto
@@ -247,6 +213,78 @@
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
+        <div>
+          <h1>Reply Examples:</h1>
+          <button class="button" @click="sendReplyMessage">
+            ENVIAR Reply Message
+          </button>
+          <button class="button" @click="sendReplyTextMessageWithDocument">
+            ENVIAR Reply Message de Texto com Documento
+          </button>
+          <button class="button" @click="sendReplyTextMessageWithVideo">
+            ENVIAR Reply Message de Texto com Video
+          </button>
+          <button class="button" @click="sendReplyTextMessageWithAudio">
+            ENVIAR Reply Message de Texto com Audio
+          </button>
+          <button class="button" @click="sendReplyTextMessageWithImage">
+            ENVIAR Reply Message de Texto com Imagem
+          </button>
+          <button class="button" @click="sendReplyMessageInReplyToMenu">
+            ENVIAR Reply Message de Menu
+          </button>
+          <button class="button" @click="sendReplyMessageInReplyToMenuList">
+            ENVIAR Reply Message de Menu List
+          </button>
+          <button
+            class="button"
+            @click="sendReplyMessageInReplyToMenuListMultiSection"
+          >
+            ENVIAR Reply Message de Menu List Multi Section
+          </button>
+          <button class="button" @click="sendReplyMessageInReplyToReplyButton">
+            ENVIAR Reply Message de Reply Buttton
+          </button>
+          <button
+            class="button"
+            @click="sendReplyMessageInReplyToReplyButtonWithoutHeader"
+          >
+            ENVIAR Reply Message de Reply Buttton sem header
+          </button>
+
+          <button class="button" @click="sendReplyTextMessageWithFailed">
+            ENVIAR Reply Message de Falha
+          </button>
+          
+          <button class="button" @click="sendReplyImageMessageWithImage">
+            ENVIAR Reply Message de Imagem com Imagem
+          </button>
+          <button class="button" @click="sendReplyLocationMessageWithText">
+            ENVIAR Reply Message de Localização com Texto
+          </button>
+          <button class="button" @click="sendReplyUnsuportedContentMessageWithText">
+            ENVIAR Reply Message de 'Conteudo não suportado' com Texto
+          </button>
+          <button class="button" @click="sendReplyFailedMessageWithText">
+            ENVIAR Reply Message de Falha com Texto
+          </button>          
+          <button class="button" @click="sendReplyWebLinkMessageWithText">
+            ENVIAR Reply Message de 'Web Link' com Texto
+          </button>
+          <button class="button" @click="sendReplyImageMessageWithText">
+            ENVIAR Reply Message de Imagem com Texto
+          </button>
+          <button class="button" @click="sendReplyAudioMessageWithText">
+            ENVIAR Reply Message de Audio com Texto
+          </button>
+          <button class="button" @click="sendReplyVideoMessageWithText">
+            ENVIAR Reply Message de Video com Texto
+          </button>
+          <button class="button" @click="sendReplyFileMessageWithText">
+            ENVIAR Reply Message de Documento com Texto
+          </button>
+          
+        </div>  
       </div>
 
       <div v-else>
@@ -304,6 +342,7 @@
             :on-location-error="selected"
             :disable-link="disableLink"
             :readonly="readonly"
+            :translations="translations"
           />
         </div>
       </div>
@@ -1128,6 +1167,232 @@ export default {
       })
       this.send()
     },
+    sendReplyImageMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              title: 'texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+            },
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyImageMessageWithImage: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+            }
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+            },
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyAudioMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'audio/mp3',
+              uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3'
+            },
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyVideoMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'video/mp4',
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+            },
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyFileMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              uri:
+                'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+              title: 'pdf_open_parameters.pdf',
+              type: 'application/pdf',
+              size: '5540'
+            },
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyLocationMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.location+json',
+            value: {
+              latitude: -19.918899,
+              longitude: -43.959275,
+              altitude: 853,
+              text: 'Takes place'
+            },
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyWebLinkMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.web-link+json',
+            value: {
+              uri: 'http://limeprotocol.org/content-types.html#web-link',
+              target: 'self',
+              text: 'Segue documentação do web-link'
+            },
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyUnsuportedContentMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.chatstater+json',
+            value: {
+              state: 'composing'
+            },
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyFailedMessageWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: undefined,
+            value: 'replied text undefined'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            value: 'in reply to undefined',
+            type: 'text/plain',
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
     sendReplyTextMessageWithDocument: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -1189,7 +1454,7 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'audio/mp3',
-              uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3'
+              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
             }
           },
           inReplyTo: {
@@ -1220,6 +1485,26 @@ export default {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
             type: 'text/plain',
             value: 'in reply to Imagem'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyTextMessageWithFailed: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: undefined,
+            value: 'in reply to undefined'
           }
         }
       })
@@ -1791,7 +2076,58 @@ export default {
       deletable: true,
       readonly: false,
       translations: {
-        failedToSend: 'Falha ao enviar a mensagem.'
+        failedToSend: 'Falha ao enviar a mensagem.',
+        failedToLoadThreadSummary: 'Falha ao carregar o resumo da conversa.',
+        userWaitingAttendance: 'Chatbot {chatbotIdentity} encaminhou a conversa para atendimento',
+        closedAttendantMsg: 'Atendente {agentIdentity} encerrou o atendimento',
+        closedClientMsg: 'Cliente encerrou o atendimento',
+        showMore: 'Ver mais',
+        aspectRatio: 'Proporção da tela',
+        supportedFormats: 'Formatos suportados: JPEG,JPG,PNG,GIF',
+        fileUrl: 'URL do arquivo',
+        title: 'Título',
+        titleThreadSummary: 'Resumo da conversa',
+        imageUri: 'Uri da imagem',
+        text: 'Texto',
+        videoUri: 'Uri do vídeo',
+        cancel: 'Cancelar',
+        setPayload: 'Definir carga',
+        addButton: 'Adicionar Botão',
+        link: 'Link',
+        description: 'Descrição',
+        uri: 'Uri',
+        postbackMimetype: 'Mime type do postback',
+        postbackValue: 'Valor de postback',
+        addOption: 'Adicionar Opção',
+        notEnoughOptions: 'Requer pelo menos uma opção',
+        pageUrl: 'URL da página',
+        introduction: 'Mensagem de texto de introdução',
+        latitude: 'Latitude',
+        longitude: 'Longitude',
+        RequestLocationButtonLabel: 'Enviar Localização',
+        unsupportedContent: 'Conteúdo não suportado',
+        messageTemplate: 'Modelo de mensagem: ',
+        phoneLabel: 'Telefone',
+        mailLabel: 'E-mail',
+        addressLabel: 'Endereço',
+        failedToLoad: 'Falha ao carregar mensagem',
+        reactionText: 'Reação',
+        removedReactionText: 'Reação removida',
+        replyText: 'Resposta',
+        startCallMsg: 'Início da chamada de {callType} {callTime}',
+        endCallMsg: 'Fim da chamada de {callType} {callTime}',
+        videoMsg: 'vídeo',
+        audioMsg: 'áudio',
+        videoCallMsg: 'Chamada de vídeo',
+        voiceCallMsg: 'Ligação',
+        successStatusMsg: 'Finalizada',
+        failedStatusMsg: 'Falha',
+        cancelStatusMsg: 'Cancelada',
+        notAnsweredStatusMsg: 'Não atendida',
+        preparingRecordingMsg: 'Preparando gravação',
+        loadRecordingMsg: 'Carregar gravação',
+        downloadRecordingLabel: 'Baixar gravação',
+        replyingTo: 'Respondendo a {customer}'
       },
       isExternalMessage: false,
       hasMemberData: false,

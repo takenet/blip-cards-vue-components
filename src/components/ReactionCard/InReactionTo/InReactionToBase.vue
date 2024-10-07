@@ -75,6 +75,7 @@
       />
       <unsuported-content
         v-else
+        class="blip-card in-reaction-to-padding"
         style="margin-bottom: 0px"
         :failed-to-send-msg="translations.failedToSend"
         :unsupported-content-msg="translations.unsupportedContent"
@@ -86,6 +87,7 @@
         :deletable="deletable"
         :editing="isCardEditing"
         :on-cancel="cancel"
+        :simplified="true"
       />
     </div>
     <div class="failed-message in-reaction-to-padding" v-if="hasFailedToLoad">
@@ -127,6 +129,9 @@
         type: Function
       },
       updatedPhotoMargin: {
+        type: Function
+      },
+      onOpenLink: {
         type: Function
       },
       translations: {
