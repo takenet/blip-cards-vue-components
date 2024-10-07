@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="message-replied-container">
     <bds-typo
       tag="p"
       variant="fs-16"
@@ -64,6 +64,10 @@
 
 <style lang="scss" scoped>
   @import '../../../styles/variables.scss';
+
+  .message-replied-container {
+    padding: 0.5rem;
+  }
 
   .message-replied-text {
     display: -webkit-box;

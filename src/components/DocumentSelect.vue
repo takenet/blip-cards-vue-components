@@ -23,7 +23,7 @@
         <div
           v-if="this.document.header.value.uri"
           :class="'ratio ratio' + aspect"
-          :style="'background-image: url(&quot;' + this.document.header.value.uri + '&quot;)'"
+       
         ></div>
 
         <div

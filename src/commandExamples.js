@@ -1,5 +1,87 @@
 export const commandExamples = [
   {
+    buttonLabel: 'Reply Message document - Alfredo',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'Testando'
+        },
+        inReplyTo: {
+          id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'application/pdf',
+            size: 679931,
+            uri: 'file://329178773590723',
+            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV9jMWIxNzk3NS1hODI4LTQ5ZTctOGY0Zi0xNThmYTA1NGUyZDI=',
+            previewType: 'application/pdf',
+            title: 'Reply-Message.pdf',
+            text: 'Este é um documento de teste.',
+            authorizationRealm: 'blip'
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Message com vídeo - Alfredo',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'video/mp4',
+          value: {
+            type: 'video/mp4',
+            size: 174999,
+            uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+            title: 'Chatblip_plataforma.png'
+          }
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Message image - Alfredo',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'image/png',
+          value: {
+            type: 'image/png',
+            size: 174999,
+            uri: 'https://imgs.search.brave.com/Z6yOUNQL5Hgc6CX4NrRFJJ1llO1M_vL61fUFpfSXa-8/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/Zm90b3MtcHJlbWl1/bS9mb3RvZ3JhZmlh/LWRlLWNhY2hvcnJv/LWNhY2hvcnJpbmhv/LWJvbml0b18xMjg4/NjU3LTEzOTY0Lmpw/Zz9zaXplPTYyNiZl/eHQ9anBn',
+            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV9lZmJhN2ZmOS0xMDA2LTQ1YjQtYWY1ZS05MmZlNTkzNTQ1YmY=',
+            previewType: 'image/png',
+            title: 'Chatblip_plataforma.png'
+          }
+        }
+      }
+    }
+  },
+  {
     buttonLabel: 'Texto',
     command: {
       id: '1',

@@ -71,6 +71,9 @@ import PhoneNumberButton from './components/TemplateContent/Buttons/PhoneNumberB
 import WebsiteButton from './components/TemplateContent/Buttons/WebsiteButton'
 import MediaContent from './components/TemplateContent/MediaContent/MediaContent'
 import TemplateContent from './components/TemplateContent/TemplateContent'
+import InReplyToImage from './components/ReplyCard/InReplyTo/InReplyToImage.vue'
+import InReplyToVideo from './components/ReplyCard/InReplyTo/InReplyToVideo.vue'
+import InReplyToDocument from './components/ReplyCard/InReplyTo/InReplyToDocument.vue'
 
 function install(Vue) {
   let components = []
@@ -116,6 +119,9 @@ function install(Vue) {
   // In Reply To
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))
+  components.push(Vue.component(InReplyToImage.name, InReplyToImage))
+  components.push(Vue.component(InReplyToVideo.name, InReplyToVideo))
+  components.push(Vue.component(InReplyToDocument.name, InReplyToDocument))
 
   // Reaction components
   components.push(Vue.component(ReactionCard.name, ReactionCard))
