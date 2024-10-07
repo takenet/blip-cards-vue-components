@@ -947,7 +947,7 @@ export default {
               parameters: {
                 flow_message_version: '200',
                 flow_id: '356521493857549',
-                flow_cta: 'ver ',
+                flow_cta: 'ver',
                 flow_action: 'navigate',
                 flow_token: 'unused',
                 flow_action_payload: {
