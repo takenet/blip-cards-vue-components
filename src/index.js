@@ -74,6 +74,8 @@ import TemplateContent from './components/TemplateContent/TemplateContent'
 import InReplyToImage from './components/ReplyCard/InReplyTo/InReplyToImage.vue'
 import InReplyToVideo from './components/ReplyCard/InReplyTo/InReplyToVideo.vue'
 import InReplyToDocument from './components/ReplyCard/InReplyTo/InReplyToDocument.vue'
+import InReplyToAudio from './components/ReplyCard/InReplyTo/InReplyToAudio.vue'
+import InReplyToLocation from './components/ReplyCard/InReplyTo/InReplyToLocation.vue'
 
 function install(Vue) {
   let components = []
@@ -122,6 +124,8 @@ function install(Vue) {
   components.push(Vue.component(InReplyToImage.name, InReplyToImage))
   components.push(Vue.component(InReplyToVideo.name, InReplyToVideo))
   components.push(Vue.component(InReplyToDocument.name, InReplyToDocument))
+  components.push(Vue.component(InReplyToAudio.name, InReplyToAudio))
+  components.push(Vue.component(InReplyToLocation.name, InReplyToLocation))
 
   // Reaction components
   components.push(Vue.component(ReactionCard.name, ReactionCard))

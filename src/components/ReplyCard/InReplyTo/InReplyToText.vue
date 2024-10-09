@@ -1,19 +1,25 @@
 <template>
   <div class="message-replied-container">
-    <bds-typo
-      tag="p"
-      variant="fs-16"
-      :bold="hasDescription ? 'bold' : 'regular'"
-      margin="false"
-      class="message-replied-text typo"
-      :class="{ 'single': !hasDescription, 'title': hasDescription }" v-html="sanitize(inReplyToText)"></bds-typo>
-    <bds-typo
-      v-if="hasDescription"
-      tag="p"
-      variant="fs-16"
-      bold="regular"
-      margin="false"
-      class="message-replied-text description typo-light" v-html="sanitize(inReplyToDescription)"></bds-typo>
+    <bds-grid container direction="row" gap="1" justifyContent="space-between" align-items="center">
+      <bds-icon theme="outline" name="link" size="large" v-if="isLink"/>
+      <bds-typo
+        tag="p"
+        variant="fs-16"
+        :bold="hasDescription ? 'bold' : 'regular'"
+        margin="false"
+        class="message-replied-text typo"
+        :class="{ 'single': !hasDescription, 'title': hasDescription }" v-html="sanitize(inReplyToText)"
+      />
+      
+      <bds-typo
+        v-if="hasDescription"
+        tag="p"
+        variant="fs-16"
+        bold="regular"
+        margin="false"
+        class="message-replied-text description typo-light" v-html="sanitize(inReplyToDescription)"
+      />
+    </bds-grid>
   </div>
 </template>
 
@@ -57,6 +63,12 @@
       },
       hasDescription() {
         return Boolean(this.inReplyToDescription)
+      },
+
+      isLink() {
+        const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}(\/[a-zA-Z0-9-_#?&=.]+)*\/?$/
+
+        return urlPattern.test(this.inReplyTo.value)
       }
     }
   }

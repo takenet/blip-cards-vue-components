@@ -1,5 +1,78 @@
 export const commandExamples = [
   {
+    buttonLabel: 'Reply Location Alfredo',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'wamid.HBgMNTU0Nzk3NjU4OTkwFQIAEhgUM0E5MThEMThGNTcwMDM0MzA1MzEA',
+          type: 'application/vnd.lime.location+json',
+          value: {
+            latitude: -26.34436416626,
+            longitude: -48.836044311523
+          },
+          direction: 'received'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Message com audio - Alfredo',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'audio/mp4',
+          value: {
+            type: 'audio/mpeg',
+            size: 49536,
+            uri: 'file://1510242399685029',
+            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV84NTQ5MmRhMS02NTVhLTQzMGQtOWE2OS1mYzMzZGExMThjNzA=',
+            previewType: 'audio/mpeg',
+            title: '1728410934312.mp3',
+            text: 'testando',
+            authorizationRealm: 'blip'
+          }
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Message link',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: 'https://dev.azure.com/curupira/Takepedia/_wiki/wikis/Takepedia.wiki/5053/Visualizar-e-contribuir-nos-projetos-no-Github-da-Take'
+        }
+      }
+    }
+  },
+  {
     buttonLabel: 'Reply Message document - Alfredo',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -13,12 +86,12 @@ export const commandExamples = [
         },
         inReplyTo: {
           id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
-          type: 'application/vnd.lime.media-link+json',
+          type: 'application/pdf',
           value: {
             type: 'application/pdf',
             size: 679931,
             uri: 'file://329178773590723',
-            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV9jMWIxNzk3NS1hODI4LTQ5ZTctOGY0Zi0xNThmYTA1NGUyZDI=',
+            previewUri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
             previewType: 'application/pdf',
             title: 'Reply-Message.pdf',
             text: 'Este é um documento de teste.',
@@ -43,12 +116,12 @@ export const commandExamples = [
         },
         inReplyTo: {
           id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
-          type: 'video/mp4',
+          type: 'application/vnd.lime.media-link+json',
           value: {
             type: 'video/mp4',
             size: 174999,
             uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-            title: 'Chatblip_plataforma.png'
+            text: 'Olha que imagem bonista. Está uma imagem de teste para o componente de imagens e vamos ver se está renderizando corretamente'
           }
         }
       }
@@ -72,10 +145,11 @@ export const commandExamples = [
           value: {
             type: 'image/png',
             size: 174999,
-            uri: 'https://imgs.search.brave.com/Z6yOUNQL5Hgc6CX4NrRFJJ1llO1M_vL61fUFpfSXa-8/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/Zm90b3MtcHJlbWl1/bS9mb3RvZ3JhZmlh/LWRlLWNhY2hvcnJv/LWNhY2hvcnJpbmhv/LWJvbml0b18xMjg4/NjU3LTEzOTY0Lmpw/Zz9zaXplPTYyNiZl/eHQ9anBn',
-            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV9lZmJhN2ZmOS0xMDA2LTQ1YjQtYWY1ZS05MmZlNTkzNTQ1YmY=',
+            uri: 'https://love.doghero.com.br/wp-content/uploads/2019/09/Golden.jpg.jpg',
+            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV82NGZlZDllYy03NWI3LTRjZGYtOTVhMS1kZGIwM2VmNDMyOGU=',
             previewType: 'image/png',
-            title: 'Chatblip_plataforma.png'
+            title: 'Chatblip_plataforma.png',
+            authorizationRealm: 'blip'
           }
         }
       }

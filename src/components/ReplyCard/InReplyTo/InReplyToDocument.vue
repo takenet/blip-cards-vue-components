@@ -1,29 +1,32 @@
 <template>
     <bds-grid container direction="row" gap="8" justifyContent="space-between" align-items="center">
-      <bds-grid container direction="row" gap="2" justifyContent="space-between" align-items="flex-end">
-        <bds-icon theme="outline" name="file-empty-file" size="large" />
-        <bds-typo>
-            {{ this.inReplyTo.value.title }}
-        </bds-typo>
-      </bds-grid>
-
-    
-
-      <div 
-      class="image-replied"
-        :style="'background-image: url(&quot;' + inReplyTo.value.previewUri + '&quot;)'"
-      ></div>
+      <blip-file
+        title-msg="titleMsg"
+        document="replied"
+        full-document="replied"
+       
+        simplified
+      />    
     </bds-grid>
 </template>
   
 <script>
+  import BlipFile from '../../../components/MediaLink/BlipFile.vue'
+  
   export default {
     name: 'in-reply-to-document',
-    mixins: [],
     props: {
       inReplyTo: {
         type: Object,
         default: () => ({})
+      }
+    },
+    components: {
+      BlipFile
+    },
+    methods: {
+      created() {
+        console.log(this.inReplyTo.value.previewUri)
       }
     }
   }

@@ -1,0 +1,36 @@
+<template>
+  <div class="container-location">
+    <location
+      class="blip-card"   
+      :document="getDocument()"
+      simplified
+    />
+  </div>
+</template>
+  
+<script>
+  export default {
+    name: 'in-reply-to-location',
+    props: {
+      inReplyTo: {
+        type: Object,
+        default: () => ({})
+      }
+    },
+    methods: {
+      getDocument() {
+        return {
+          latitude: this.inReplyTo.value.latitude,
+          longitude: this.inReplyTo.value.longitude,
+          text: 'Localização'
+        }
+      }
+    }
+  }
+</script>
+
+<style scoped>
+  .container-location {
+    padding-left: 10px;
+  }  
+</style>

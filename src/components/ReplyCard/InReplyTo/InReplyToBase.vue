@@ -22,6 +22,16 @@
           :in-reply-to="inReplyTo"
           v-if="isDocumentReply"
         />
+
+        <in-reply-to-audio
+          :in-reply-to="inReplyTo"
+          v-if="isAudioReply"
+        />
+
+        <in-reply-to-location
+          :in-reply-to="inReplyTo"
+          v-if="isReplyLocation"
+        />       
       </div>
     </template>
     <div class="failed-message" v-else-if="hasFailedToLoad">
@@ -87,6 +97,12 @@
       isDocumentReply() {
         return this.inReplyTo.value.type === 'application/pdf'
       },
+      isAudioReply() {
+        return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('audio')
+      },
+      isReplyLocation() {
+        return this.inReplyTo.type.includes('location')
+      },
       isAcceptableInteractiveType() {
         return (
           this.inReplyTo.type === 'application/json' &&
@@ -102,7 +118,9 @@
           this.isAcceptableInteractiveType ||
           this.isImageReply ||
           this.isVideoReply ||
-          this.isDocumentReply
+          this.isDocumentReply ||
+          this.isAudioReply ||
+          this.isReplyLocation
         )
       },
       hasFailedToLoad() {
