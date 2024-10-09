@@ -86,6 +86,13 @@
         default: 'Resposta'
       }
     },
+    data() {
+      return {
+        saveCard: this.onSave,
+        deleteCard: this.onDeleted,
+        isCardEditing: this.editing
+      }
+    },
     computed: {
       isOwnMessage() {
         return this.fullDocument.direction === this.fullDocument.content.inReplyTo.direction
