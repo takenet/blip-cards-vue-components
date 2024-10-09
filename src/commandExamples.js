@@ -73,7 +73,7 @@ export const commandExamples = [
     }
   },
   {
-    buttonLabel: 'Reply Message document - Alfredo',
+    buttonLabel: 'Reply Message document',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
       to: 'to@msging.net',
@@ -94,7 +94,37 @@ export const commandExamples = [
             previewUri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
             previewType: 'application/pdf',
             title: 'Reply-Message.pdf',
-            text: 'Este é um documento de teste.',
+            text: '',
+            authorizationRealm: 'blip'
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Message document - Without text',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'Testando'
+        },
+        inReplyTo: {
+          id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
+          type: 'application/pdf',
+          value: {
+            type: 'application/pdf',
+            size: 679931,
+            uri: 'file://329178773590723',
+            previewUri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
+            previewType: 'application/pdf',
+            title: 'Reply-Message.pdf',
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur quis velit ut suscipit. Integer sit amet aliquam lacus, et bibendum neque. Nulla facilisi. Sed eu metus viverra, viverra dolor et, porttitor elit. Sed semper commodo viverra. Nunc sodales arcu sed justo volutpat, id auctor lacus egestas. Suspendisse potenti. Duis sit amet nibh tempor, pellentesque felis eget, ultrices nisl.',
             authorizationRealm: 'blip'
           },
           direction: 'sent'
