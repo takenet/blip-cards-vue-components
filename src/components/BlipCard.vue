@@ -380,6 +380,19 @@
           :transcription="transcription"
         />
 
+        <blip-calls-permission-reply
+          v-else-if="document.type === 'application/vnd.iris.calls.customer-permission+json'"
+          class="blip-card"
+          :accept-response-text="translations.callsPermissionReplyAcceptText"
+          :reject-response-text="translations.callsPermissionReplyRejectText"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="editableDocument.content"
+          :member-info="memberInfo"
+          :date="date"
+        />
+
         <template-content
           v-else-if="document.content.type === 'template-content'"
           class="blip-card"

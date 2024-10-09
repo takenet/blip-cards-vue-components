@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { default as base } from '../mixins/baseComponent.js'
+import { default as base } from '../../mixins/baseComponent.js'
 
 export default {
   name: 'blip-calls-voice-request',
@@ -103,7 +103,7 @@ export default {
       type: String
     },
     actionText: {
-      type: String,
+      type: String
     }
   },
   methods: {
@@ -127,7 +127,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/variables.scss';
+@import '../../styles/variables.scss';
 
 .blip-container.calls-voice-request {
   .bubble {
