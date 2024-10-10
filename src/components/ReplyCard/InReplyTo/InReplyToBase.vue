@@ -1,57 +1,43 @@
 <template>
-  <div v-if="isAcceptableTextType || hasFailedToLoad" class="in-reply-to-message-container">
-    <template v-if="isAcceptableTextType">
-      <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
-      <div class="in-reply-to-message">
-        <in-reply-to-text
-          :in-reply-to="inReplyTo"
-           v-if="isTextPlain"
-        />
+  <div class="in-reply-to-message-container">
+    <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
+    <div class="in-reply-to-message">
+      <in-reply-to-text
+        :in-reply-to="inReplyTo"
+          v-if="isTextPlain"
+      />
 
-        <in-reply-to-image
-          :in-reply-to="inReplyTo"
-          v-if="isImageReply"
-        />
+      <in-reply-to-image
+        :in-reply-to="inReplyTo"
+        v-if="isImageReply"
+      />
 
-        <in-reply-to-video
-          :in-reply-to="inReplyTo"
-          v-if="isVideoReply"
-        />
+      <in-reply-to-video
+        :in-reply-to="inReplyTo"
+        v-if="isVideoReply"
+      />
 
-        <in-reply-to-document
-          :in-reply-to="inReplyTo"
-          v-if="isDocumentReply"
-        />
+      <in-reply-to-document
+        :in-reply-to="inReplyTo"
+        v-if="isDocumentReply"
+      />
 
-        <in-reply-to-audio
-          :in-reply-to="inReplyTo"
-          v-if="isAudioReply"
-        />
+      <in-reply-to-audio
+        :in-reply-to="inReplyTo"
+        v-if="isAudioReply"
+      />
 
-        <in-reply-to-location
-          :in-reply-to="inReplyTo"
-          v-if="isLocationReply"
-          :translations="translations"
-        />
-        
-        <in-reply-to-unsupported-content
-          :in-reply-to="inReplyTo"
-          :translations="translations"
-          v-if="isUnsupportedContentReply"
-        />
-      </div>
-    </template>
-    <div class="failed-message" v-else-if="hasFailedToLoad">
-      <bds-icon name="warning" theme="outline" aria-label="Warning"></bds-icon>
-      <bds-typo
-        tag="p"
-        variant="fs-16"
-        bold="regular"
-        margin="false"
-        italic="true"
-        class="typo"
-        >{{ failedMessage }}
-      </bds-typo>
+      <in-reply-to-location
+        :in-reply-to="inReplyTo"
+        v-if="isLocationReply"
+        :translations="translations"
+      />
+      
+      <in-reply-to-unsupported-content
+        :in-reply-to="inReplyTo"
+        :translations="translations"
+        v-if="isUnsupportedContentReply"
+      />
     </div>
   </div>
 </template>
@@ -67,10 +53,6 @@
       isOwnMessage: {
         type: Boolean,
         default: false
-      },
-      failedMessage: {
-        type: String,
-        default: 'Falha ao carregar mensagem'
       },
       translations: {
         type: Object,
@@ -114,7 +96,7 @@
         return this.inReplyTo.type.includes('location')
       },
       isUnsupportedContentReply() {
-        return this.inReplyTo.type === 'template'
+        return !this.isAcceptableTextType
       },
       isAcceptableInteractiveType() {
         return (
@@ -133,12 +115,8 @@
           this.isVideoReply ||
           this.isDocumentReply ||
           this.isAudioReply ||
-          this.isLocationReply ||
-          this.isUnsupportedContentReply
+          this.isLocationReply
         )
-      },
-      hasFailedToLoad() {
-        return Boolean(this.inReplyTo.type === undefined || this.inReplyTo.value === undefined)
       }
     }
   }
