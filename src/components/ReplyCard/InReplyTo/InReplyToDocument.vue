@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import BlipFile from '../../../components/MediaLink/BlipFile.vue'
 import mime from 'mime-types'
 
 export default {
@@ -27,9 +26,6 @@ export default {
       type: Object,
       default: () => ({})
     }
-  },
-  components: {
-    BlipFile
   },
   computed: {
     mimeType() {
