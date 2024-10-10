@@ -31,6 +31,7 @@
         <in-reply-to-location
           :in-reply-to="inReplyTo"
           v-if="isLocationReply"
+          :translations="translations"
         />
         
         <in-reply-to-unsupported-content

@@ -15,6 +15,10 @@
       inReplyTo: {
         type: Object,
         default: () => ({})
+      },
+      translations: {
+        type: Object,
+        default: () => ({})
       }
     },
     methods: {
@@ -22,7 +26,7 @@
         return {
           latitude: this.inReplyTo.value.latitude,
           longitude: this.inReplyTo.value.longitude,
-          text: 'Localização'
+          text: this.translations.location
         }
       }
     }

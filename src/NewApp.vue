@@ -87,7 +87,8 @@ export default {
           readMore: 'Ler mais',
           readLess: 'Ler menos'
         },
-        unsupportedContent: 'Conteúdo não suportado'
+        unsupportedContent: 'Conteúdo não suportado',
+        location: 'Localização'
       },
       selected: () => {},
       save: () => {},
