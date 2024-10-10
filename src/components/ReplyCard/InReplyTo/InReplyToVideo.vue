@@ -1,24 +1,23 @@
 <template>
-  <bds-grid container direction="row" gap="3" justifyContent="space-between" align-items="center" >
-    <bds-grid container direction="row" gap="1" justifyContent="space-between" align-items="flex-start" class="container-video">
-        <bds-icon theme="outline" name="video" size="large" />        
-
-        <bds-grid direction="column"  style="margin-top: -23px;">
-            <bds-typo margin="false">
-            {{ timeVideo }}      
-          </bds-typo>
-          <bds-typo margin="false" class="text-video " v-if="this.inReplyTo.value.text">
-            {{ this.inReplyTo.value.text }}  
-          </bds-typo>
-        </bds-grid>
+  <bds-grid direction="row" justifyContent="space-between" gap="3">
+    <bds-grid direction="row" justifyContent="space-between" align-items="center" gap="1" padding="y-2">
+      <bds-grid margin="x-1" align-items="center" style="height: 100%;" >
+        <bds-icon theme="outline" name="video" size="medium" class="typo" />
+      </bds-grid>
+      <bds-grid direction="column" >
+        <bds-typo tag="span" variant="fs-14" bold="regular" class="typo">{{ timeVideo }}</bds-typo>
+        <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
+          v-if="this.inReplyTo.value.text">{{ this.inReplyTo.value.text }}</bds-typo>
+      </bds-grid>
     </bds-grid>
-
-    <video
-      :src="inReplyTo.value.uri"
-      ref="video"
-      @loadedmetadata="captureThumbnail"
-      class="image-replied"
-    />
+    <bds-grid>
+      <video
+        :src="inReplyTo.value.uri"
+        ref="video"
+        @loadedmetadata="captureThumbnail"
+        class="video-replied"
+      />
+    </bds-grid>
   </bds-grid>
 </template>
 
@@ -67,18 +66,17 @@ export default {
 </script>
 
 <style scoped>
-.container-video {
-  max-height: 150px;
-}
 
-.image-replied {
-  max-width: 180px;
-}
+  .video-replied {
+    max-height: 95px;
+  }
 
-.text-video {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px; 
-}
+  .multiline-text-overflow-ellipsis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 </style>
