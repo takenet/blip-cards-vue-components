@@ -1,7 +1,7 @@
 <template>
   <bds-grid direction="row" justifyContent="space-between">
-    <bds-grid direction="row" justifyContent="space-between" align-items="center" padding="y-2">
-      <bds-grid margin="x-1" align-items="flex-start" style="height: 100%;">
+    <bds-grid direction="row" justifyContent="space-between" align-items="center" padding="y-2" margin="x-1" gap="1">
+      <bds-grid align-items="flex-start" style="height: 100%;">
         <bds-icon theme="outline" name="file-empty-file" size="medium" class="typo" />
       </bds-grid>
       <bds-grid direction="column">
