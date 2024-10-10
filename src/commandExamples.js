@@ -13,6 +13,27 @@ export const commandExamples = [
         },
         inReplyTo: {
           id: 'wamid.HBgMNTU0Nzk3NjU4OTkwFQIAEhgUM0E5MThEMThGNTcwMDM0MzA1MzEA',
+          type: 'template',
+          value: {},
+          direction: 'received'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Location Alfredo',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'wamid.HBgMNTU0Nzk3NjU4OTkwFQIAEhgUM0E5MThEMThGNTcwMDM0MzA1MzEA',
           type: 'application/vnd.lime.location+json',
           value: {
             latitude: -26.34436416626,
@@ -73,7 +94,7 @@ export const commandExamples = [
     }
   },
   {
-    buttonLabel: 'Reply Message document',
+    buttonLabel: 'Reply Message document - Without text',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
       to: 'to@msging.net',
@@ -103,7 +124,7 @@ export const commandExamples = [
     }
   },
   {
-    buttonLabel: 'Reply Message document - Without text',
+    buttonLabel: 'Reply Message document',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
       to: 'to@msging.net',

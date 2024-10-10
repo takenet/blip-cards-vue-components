@@ -1,16 +1,16 @@
 <template>
   <bds-grid direction="row" justifyContent="space-between">
-    <bds-grid container direction="row" justifyContent="space-between" align-items="flex-start" padding="y-2">
-      <bds-grid>
-        <bds-icon theme="outline" name="file-empty-file" size="medium" />
+    <bds-grid direction="row" justifyContent="space-between" align-items="center" padding="y-2">
+      <bds-grid margin="x-1" align-items="flex-start" style="height: 100%;">
+        <bds-icon theme="outline" name="file-empty-file" size="medium" class="typo" />
       </bds-grid>
       <bds-grid direction="column">
-        <bds-typo margin="false" tag="span" variant="fs-14" bold="regular">{{ this.inReplyTo.value.title }}</bds-typo>
-        <bds-typo margin="false" tag="span" variant="fs-14" bold="regular" class="multiline-text-overflow-ellipsis"
+        <bds-typo tag="span" variant="fs-14" bold="regular" class="typo">{{ this.inReplyTo.value.title }}</bds-typo>
+        <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
           v-if="this.inReplyTo.value.text">{{ this.inReplyTo.value.text }}</bds-typo>
       </bds-grid>
     </bds-grid>
-    <bds-grid>
+    <bds-grid margin="x-1">
       <img class="image-replied" :src="mimeType | fileIconFilter" />
     </bds-grid>
   </bds-grid>
