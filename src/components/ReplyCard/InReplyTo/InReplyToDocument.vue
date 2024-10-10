@@ -29,11 +29,7 @@ export default {
   },
   computed: {
     mimeType() {
-      let extension = mime.extension(this.inReplyTo.value.type)
-      if (extension) {
-        return this.inReplyTo.value.type
-      }
-      return mime.lookup(this.inReplyTo.value.uri)
+      return mime.extension(this.inReplyTo.value.type) ? this.inReplyTo.value.type : mime.lookup(this.inReplyTo.value.uri)
     }
   }
 }
