@@ -7,7 +7,11 @@
           <bds-icon class="typo" name="redo" size="small" type="icon"></bds-icon>
           <bds-typo class="typo" variant="fs-14" italic="true">{{ replyText }}</bds-typo>
         </bds-grid>
-        <in-reply-to-base :in-reply-to="inReplyTo" :is-own-message="isOwnMessage" :failed-message="translations.failedToLoad" />
+        <in-reply-to-base
+          :in-reply-to="inReplyTo"
+          :is-own-message="isOwnMessage"
+          :failed-message="translations.failedToLoad"
+          :translations="translations" />
         <replied-base v-if="replied" 
           :replied="replied" 
           :updatedPhotoMargin="updatedPhotoMargin"
