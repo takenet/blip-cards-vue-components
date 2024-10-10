@@ -30,8 +30,14 @@
 
         <in-reply-to-location
           :in-reply-to="inReplyTo"
-          v-if="isReplyLocation"
-        />       
+          v-if="isLocationReply"
+        />
+        
+        <in-reply-to-unsupported-content
+          :in-reply-to="inReplyTo"
+          :translations="translations"
+          v-if="isUnsupportedContentReply"
+        />
       </div>
     </template>
     <div class="failed-message" v-else-if="hasFailedToLoad">
@@ -52,7 +58,6 @@
 <script>
   export default {
     name: 'in-reply-to-base',
-    mixins: [],
     props: {
       inReplyTo: {
         type: Object,
@@ -65,6 +70,10 @@
       failedMessage: {
         type: String,
         default: 'Falha ao carregar mensagem'
+      },
+      translations: {
+        type: Object,
+        default: () => ({})
       }
     },
     computed: {
@@ -100,8 +109,11 @@
       isAudioReply() {
         return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('audio')
       },
-      isReplyLocation() {
+      isLocationReply() {
         return this.inReplyTo.type.includes('location')
+      },
+      isUnsupportedContentReply() {
+        return this.inReplyTo.type === 'template'
       },
       isAcceptableInteractiveType() {
         return (
@@ -120,7 +132,8 @@
           this.isVideoReply ||
           this.isDocumentReply ||
           this.isAudioReply ||
-          this.isReplyLocation
+          this.isLocationReply ||
+          this.isUnsupportedContentReply
         )
       },
       hasFailedToLoad() {
