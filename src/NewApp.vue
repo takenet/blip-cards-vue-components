@@ -86,7 +86,8 @@ export default {
           title: 'Transcrição de áudio',
           readMore: 'Ler mais',
           readLess: 'Ler menos'
-        }
+        },
+        unsupportedContent: 'Conteúdo não suportado'
       },
       selected: () => {},
       save: () => {},

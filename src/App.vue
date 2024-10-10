@@ -1821,7 +1821,8 @@ export default {
       deletable: true,
       readonly: false,
       translations: {
-        failedToSend: 'Falha ao enviar a mensagem.'
+        failedToSend: 'Falha ao enviar a mensagem.',
+        unsupportedContent: 'Conteúdo não suportado'
       },
       isExternalMessage: false,
       hasMemberData: false,
