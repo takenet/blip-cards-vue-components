@@ -1,6 +1,6 @@
 export const commandExamples = [
   {
-    buttonLabel: 'Reply Location Alfredo',
+    buttonLabel: 'Reply Unsupported Content',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
       to: 'to@msging.net',
