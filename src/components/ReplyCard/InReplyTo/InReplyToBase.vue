@@ -24,13 +24,14 @@
         />
 
         <in-reply-to-audio
-          :in-reply-to="inReplyTo"
           v-if="isAudioReply"
+          :in-reply-to="inReplyTo"
+          :translations="translations"
         />
 
         <in-reply-to-location
-          :in-reply-to="inReplyTo"
           v-if="isLocationReply"
+          :in-reply-to="inReplyTo"
           :translations="translations"
         />
         

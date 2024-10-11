@@ -1,6 +1,6 @@
 <template>
   <bds-grid direction="row" justifyContent="space-between" gap="3">
-    <bds-grid direction="row" justifyContent="space-between" align-items="center" gap="1" padding="y-2">
+    <bds-grid direction="row" justifyContent="space-between" align-items="center" padding="y-2">
       <bds-grid margin="x-1" align-items="center" style="height: 100%;" >
         <bds-icon theme="outline" name="video" size="medium" class="typo" />
       </bds-grid>
@@ -69,6 +69,8 @@ export default {
 
   .video-replied {
     max-height: 95px;
+    margin-right: -4px;
+    border-radius: 0 !important;
   }
 
   .multiline-text-overflow-ellipsis {

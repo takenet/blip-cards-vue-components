@@ -23,9 +23,11 @@
     },
     methods: {
       getDocument() {
+        const { latitude, longitude } = this.inReplyTo.value
+
         return {
-          latitude: this.inReplyTo.value.latitude,
-          longitude: this.inReplyTo.value.longitude,
+          latitude,
+          longitude,
           text: this.translations.location
         }
       }

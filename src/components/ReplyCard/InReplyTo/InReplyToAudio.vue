@@ -1,13 +1,14 @@
 <template>
-  <bds-grid container direction="row" gap="8" justifyContent="space-between">
-    <bds-grid container direction="row" gap="1" align-items="center" class="container-audio" padding="1">
-      <bds-icon theme="outline" name="audio" size="large" />
-      <bds-typo style="margin-top: -20px;">
-        {{ this.timeAudio }}
-      </bds-typo>
+  <bds-grid direction="row" padding="y-2" margin="x-1" align-items="center" gap="1">
+    <bds-grid>
+      <bds-icon name="audio" theme="outline" size="medium" class="typo" />
     </bds-grid>
+    <bds-grid>
+      <bds-typo variant="fs-14" bold="regular" class="typo">{{ timeAudio || translations.labelAudio }}</bds-typo>
+    </bds-grid>
+
     <audio id="audio" :src="inReplyTo.value.uri" preload="metadata"></audio>
-  </bds-grid>
+  </bds-grid>  
 </template>
 
 <script>
@@ -16,6 +17,10 @@ export default {
   mixins: [],
   props: {
     inReplyTo: {
+      type: Object,
+      default: () => ({})
+    },
+    translations: {
       type: Object,
       default: () => ({})
     }

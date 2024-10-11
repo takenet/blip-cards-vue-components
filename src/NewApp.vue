@@ -88,7 +88,8 @@ export default {
           readLess: 'Ler menos'
         },
         unsupportedContent: 'Conteúdo não suportado',
-        location: 'Localização'
+        location: 'Localização',
+        labelAudio: 'Audio'
       },
       selected: () => {},
       save: () => {},

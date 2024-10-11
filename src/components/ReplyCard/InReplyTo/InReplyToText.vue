@@ -1,7 +1,7 @@
 <template>
   <div class="message-replied-container">
     <bds-grid container direction="row" gap="1" justifyContent="space-between" align-items="center">
-      <bds-icon theme="outline" name="link" size="large" v-if="isLink"/>
+      <bds-icon theme="outline" name="link" size="medium" class="typo" v-if="isLink"/>
       <bds-typo
         tag="p"
         variant="fs-16"
