@@ -107,6 +107,10 @@ export default {
     }
   },
   methods: {
+    init: function() {
+      this.actionText = this.document.interactive.action.parameters.display_text
+      this.bodyText = this.document.interactive.body.text
+    },
     saveData: function($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
@@ -132,15 +136,15 @@ export default {
 .blip-container.calls-voice-request {
   .bubble {
     text-align: start;
-    overflow: hidden;
     padding: 8px 16px;
     max-width: 368px !important;
   }
 
   .divider {
-    border: 1px solid $color-content-ghost;
+    border-top: 1px solid $color-content-ghost;
     margin-top: 8px;
     margin-bottom: 8px;
+    width: 100%;
   }
 
   .action {

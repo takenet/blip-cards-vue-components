@@ -74,7 +74,7 @@
       :date="date"
       :on-save="onSave"
       :on-deleted="onDeleted"
-      :on-`ta-edit="onMetadataEdit"
+      :on-metadata-edit="onMetadataEdit"
       :on-cancel="onCancel"
       :editable="editable"
       :deletable="deletable"
