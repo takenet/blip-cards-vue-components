@@ -96,10 +96,10 @@
         return this.inReplyTo.type === 'application/vnd.lime.select+json'
       },
       isImageReply() {
-        return this.inReplyTo.value.type === 'image/png'
+        return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('image')
       },
       isVideoReply() {
-        return this.inReplyTo.value.type === 'video/mp4'
+        return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('video')
       },
       isDocumentReply() {
         return this.inReplyTo.value.type === 'application/pdf'
