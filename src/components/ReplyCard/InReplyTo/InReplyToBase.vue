@@ -1,11 +1,11 @@
 <template>
-  <div v-if="isAcceptableTextType || hasFailedToLoad" class="in-reply-to-message-container">
-    <template v-if="isAcceptableTextType">
+  <div class="in-reply-to-message-container">
+    <template>
       <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
-      <div class="in-reply-to-message">
+      <div>
         <in-reply-to-text
           :in-reply-to="inReplyTo"
-           v-if="isTextPlain"
+          v-if="isTextPlain"
         />
 
         <in-reply-to-image
@@ -42,7 +42,7 @@
         />
       </div>
     </template>
-    <div class="failed-message" v-else-if="hasFailedToLoad">
+    <div class="failed-message" v-if="hasFailedToLoad">
       <bds-icon name="warning" theme="outline" aria-label="Warning"></bds-icon>
       <bds-typo
         tag="p"
@@ -68,10 +68,6 @@
       isOwnMessage: {
         type: Boolean,
         default: false
-      },
-      failedMessage: {
-        type: String,
-        default: 'Falha ao carregar mensagem'
       },
       translations: {
         type: Object,
@@ -115,7 +111,7 @@
         return this.inReplyTo.type.includes('location')
       },
       isUnsupportedContentReply() {
-        return this.inReplyTo.type === 'template'
+        return !this.isAcceptableTextType
       },
       isAcceptableInteractiveType() {
         return (
@@ -134,12 +130,8 @@
           this.isVideoReply ||
           this.isDocumentReply ||
           this.isAudioReply ||
-          this.isLocationReply ||
-          this.isUnsupportedContentReply
+          this.isLocationReply
         )
-      },
-      hasFailedToLoad() {
-        return Boolean(this.inReplyTo.type === undefined || this.inReplyTo.value === undefined)
       }
     }
   }
