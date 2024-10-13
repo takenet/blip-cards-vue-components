@@ -58,6 +58,11 @@
               >{{ footerText }}</bds-typo
             >
           </div>
+          <div v-if="buttonText" class="button-container">
+                <div>
+                  <bds-typo variant="fs-16">{{buttonText}}</bds-typo>
+                </div>
+          </div> 
         </div>
       </div>
     </div>
@@ -175,6 +180,9 @@ export default {
       this.footerText = this.document.interactive.footer
         ? this.document.interactive.footer.text
         : ''
+      this.buttonText = this.document.interactive.action.parameters
+        ? this.document.interactive.action.parameters.flow_cta
+        : ''
     },
     jsonTextSave: function($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) {
@@ -274,6 +282,25 @@ export default {
   padding: 0px;
 }
 
+
+.button-container {
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  border-top: 0.5px solid $color-content-ghost;
+  cursor: pointer;
+
+  > div {
+    margin: 8px 0;
+  }
+
+  bds-typo {
+    color: $color-primary;
+  }
+
+}
+
+
 .fixed-options ul {
   margin: 0px;
 }
@@ -282,10 +309,12 @@ export default {
   margin: 0px -10px;
 }
 
+
 .fixed-options ul .align-center {
   display: flex;
   align-items: center;
   margin: 0 auto;
+  
   > bds-icon {
     margin-right: 10px;
     color: $color-primary !important;
