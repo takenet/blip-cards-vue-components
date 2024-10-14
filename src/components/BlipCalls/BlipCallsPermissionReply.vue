@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     init: function () {
-      this.text = this.document.response === 'Accept'
+      this.text = this.document.response.toLowerCase() === 'accept'
         ? this.acceptResponseText
         : this.rejectResponseText
     }
