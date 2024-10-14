@@ -16,10 +16,6 @@ export default {
   name: 'blip-calls-permission-reply',
   mixins: [base],
   props: {
-    document: {
-      type: String,
-      required: true
-    },
     acceptResponseText: {
       type: String,
       required: true
