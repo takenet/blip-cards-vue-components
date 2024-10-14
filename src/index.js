@@ -7,9 +7,11 @@ import Vue2TouchEvents from 'vue2-touch-events'
 import ApplicationJSon from './components/ApplicationJSon'
 import MenuList from './components/ApplicationJSon/MenuList'
 import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
-import BlipCalls from './components/BlipCalls'
-import BlipCallsEndCard from './components/BlipCallsEndCard'
-import BlipCallsVoiceRequest from './components/BlipCallsVoiceRequest'
+import BlipCalls from './components/BlipCalls/BlipCalls'
+import BlipCallsEndCard from './components/BlipCalls/BlipCallsEndCard'
+import BlipCallsVoiceRequest from './components/BlipCalls/BlipCallsVoiceRequest'
+import BlipCallsPermissionRequest from './components/BlipCalls/BlipCallsPermissionRequest'
+import BlipCallsPermissionReply from './components/BlipCalls/BlipCallsPermissionReply'
 import BlipCard from './components/BlipCard'
 import BlipCardDate from './components/BlipCardDate'
 import BlipCardMember from './components/BlipCardMember'
@@ -84,6 +86,8 @@ function install(Vue) {
   components.push(Vue.component(BlipCalls.name, BlipCalls))
   components.push(Vue.component(BlipCallsEndCard.name, BlipCallsEndCard))
   components.push(Vue.component(BlipCallsVoiceRequest.name, BlipCallsVoiceRequest))
+  components.push(Vue.component(BlipCallsPermissionRequest.name, BlipCallsPermissionRequest))
+  components.push(Vue.component(BlipCallsPermissionReply.name, BlipCallsPermissionReply))
   components.push(Vue.component(Redirect.name, Redirect))
   components.push(Vue.component(PlainText.name, PlainText))
   components.push(Vue.component(MediaLink.name, MediaLink))

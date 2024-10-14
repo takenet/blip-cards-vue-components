@@ -146,12 +146,12 @@
 </template>
 
 <script>
-import { default as base } from '../mixins/baseComponent.js'
-import { linkify, isFailedMessage } from '../utils/misc'
-import BlipAudio from './MediaLink/Audio'
-import BlipVideo from './MediaLink/Video'
-import blipCallsStatus from '../enums/blipCallsStatus.enum'
-import blipCallsType from '../enums/blipCallsType.enum'
+import { default as base } from '../../mixins/baseComponent.js'
+import { linkify, isFailedMessage } from '../../utils/misc.js'
+import BlipAudio from '.././MediaLink/Audio'
+import BlipVideo from '.././MediaLink/Video'
+import blipCallsStatus from '../../enums/blipCallsStatus.enum.js'
+import blipCallsType from '../../enums/blipCallsType.enum.js'
 
 export default {
   name: 'blip-calls-end-card',
@@ -465,7 +465,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../styles/variables.scss';
+@import '../../styles/variables.scss';
 
 $space-0: var(--space-0, 0);
 $space-05: var(--space-05, 0.25rem);
