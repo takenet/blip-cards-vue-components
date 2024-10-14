@@ -20,25 +20,22 @@ export default {
       type: String,
       required: true
     },
-    status: {
-      type: String,
-      default: ''
-    },
-    length: {
-      type: Number,
-      default: 532
-    },
-    memberInfo: {
-      type: String,
-      default: ''
-    },
     acceptResponseText: {
       type: String,
-      default: ''
+      required: true
     },
     rejectResponseText: {
       type: String,
-      default: ''
+      required: true
+    },
+    status: {
+      type: String
+    },
+    length: {
+      type: Number
+    },
+    memberInfo: {
+      type: String
     }
   },
   data: function () {

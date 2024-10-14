@@ -26,16 +26,20 @@ export default {
   mixins: [base],
   props: {
     bodyTitle: {
-      type: String
+      type: String,
+      required: true
     },
     bodyText: {
-      type: String
+      type: String,
+      required: true
     },
     leftActionLabel: {
-      type: String
+      type: String,
+      required: true
     },
     rightActionLabel: {
-      type: String
+      type: String,
+      required: true
     }
   },
   computed: {

@@ -100,10 +100,12 @@ export default {
   mixins: [base],
   props: {
     bodyText: {
-      type: String
+      type: String,
+      required: true
     },
     actionText: {
-      type: String
+      type: String,
+      required: true
     }
   },
   methods: {
