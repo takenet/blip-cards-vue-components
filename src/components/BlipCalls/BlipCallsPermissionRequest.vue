@@ -69,9 +69,10 @@ export default {
   }
 
   .divider {
-    border: 1px solid $color-content-ghost;
+    border-top: 1px solid $color-content-ghost;
     margin-top: 8px;
     margin-bottom: 8px;
+    width: 100%;
   }
 
   .action {
