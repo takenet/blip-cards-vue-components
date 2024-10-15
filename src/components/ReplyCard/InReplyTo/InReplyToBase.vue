@@ -1,14 +1,48 @@
 <template>
-  <div v-if="isAcceptableTextType || hasFailedToLoad" class="in-reply-to-message-container">
-    <template v-if="isAcceptableTextType">
+  <div class="in-reply-to-message-container">
+    <template>
       <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
-      <div class="in-reply-to-message">
+      <div>
         <in-reply-to-text
           :in-reply-to="inReplyTo"
+          v-if="isTextPlain"
+        />
+
+        <in-reply-to-image
+          :in-reply-to="inReplyTo"
+          v-if="isImageReply"
+        />
+
+        <in-reply-to-video
+          :in-reply-to="inReplyTo"
+          v-if="isVideoReply"
+        />
+
+        <in-reply-to-document
+          :in-reply-to="inReplyTo"
+          v-if="isDocumentReply"
+        />
+
+        <in-reply-to-audio
+          v-if="isAudioReply"
+          :in-reply-to="inReplyTo"
+          :translations="translations"
+        />
+
+        <in-reply-to-location
+          v-if="isLocationReply"
+          :in-reply-to="inReplyTo"
+          :translations="translations"
+        />
+        
+        <in-reply-to-unsupported-content
+          :in-reply-to="inReplyTo"
+          :translations="translations"
+          v-if="isUnsupportedContentReply"
         />
       </div>
     </template>
-    <div class="failed-message" v-else-if="hasFailedToLoad">
+    <div class="failed-message" v-if="hasFailedToLoad">
       <bds-icon name="warning" theme="outline" aria-label="Warning"></bds-icon>
       <bds-typo
         tag="p"
@@ -26,7 +60,6 @@
 <script>
   export default {
     name: 'in-reply-to-base',
-    mixins: [],
     props: {
       inReplyTo: {
         type: Object,
@@ -36,9 +69,9 @@
         type: Boolean,
         default: false
       },
-      failedMessage: {
-        type: String,
-        default: 'Falha ao carregar mensagem'
+      translations: {
+        type: Object,
+        default: () => ({})
       }
     },
     computed: {
@@ -62,6 +95,24 @@
       isSelectType() {
         return this.inReplyTo.type === 'application/vnd.lime.select+json'
       },
+      isImageReply() {
+        return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('image')
+      },
+      isVideoReply() {
+        return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('video')
+      },
+      isDocumentReply() {
+        return this.inReplyTo.value.type === 'application/pdf'
+      },
+      isAudioReply() {
+        return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('audio')
+      },
+      isLocationReply() {
+        return this.inReplyTo.type.includes('location')
+      },
+      isUnsupportedContentReply() {
+        return !this.isAcceptableTextType
+      },
       isAcceptableInteractiveType() {
         return (
           this.inReplyTo.type === 'application/json' &&
@@ -71,10 +122,16 @@
         )
       },
       isAcceptableTextType() {
-        return this.isTextPlain || this.isSelectType || this.isAcceptableInteractiveType
-      },
-      hasFailedToLoad() {
-        return Boolean(this.inReplyTo.type === undefined || this.inReplyTo.value === undefined)
+        return (
+          this.isTextPlain ||
+          this.isSelectType ||
+          this.isAcceptableInteractiveType ||
+          this.isImageReply ||
+          this.isVideoReply ||
+          this.isDocumentReply ||
+          this.isAudioReply ||
+          this.isLocationReply
+        )
       }
     }
   }
@@ -102,19 +159,16 @@
     border: 1px solid $color-content-ghost;
     border-radius: 0.5rem;
     margin-bottom: 1rem;
+    padding-bottom: -10px;
 
     .skeleton {
       height: 2.5rem;
     }
-  }
+  } 
 
-  .in-reply-to-message {
+  .failed-message {
+    display: flex;
+    gap: 0.5rem;
     padding: 0.5rem;
   }
-
-.failed-message {
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem;
-}
 </style>

@@ -104,6 +104,7 @@
 
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
+        <button class="button" @click="sendReplyMessage1">Alfredo Teste</button>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendTextEmail">
           ENVIAR Texto contendo email
@@ -1128,6 +1129,35 @@ export default {
       })
       this.send()
     },
+    sendReplyMessage1: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'image/png',
+            value: {
+              type: 'image/png',
+              size: 174999,
+              uri: 'https://hmgmediastore.blip.ai/secure-medias/Media_efba7ff9-1006-45b4-af5e-92fe593545bf?sv=2024-05-04&st=2024-10-02T20%3A35%3A32Z&se=2024-10-02T21%3A05%3A32Z&sr=b&sp=r&sig=MWLAOx1LVqyDzVXn2CkRrDFwwnJynWdwuQ5Lq317C%2Bo%3D&secure=true',
+              previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV9lZmJhN2ZmOS0xMDA2LTQ1YjQtYWY1ZS05MmZlNTkzNTQ1YmY=',
+              previewType: 'image/png',
+              title: 'Chatblip_plataforma.png',
+              text: '',
+              authorizationRealm: 'blip'
+            }
+          }
+        }
+      })
+      this.send()
+    },
     sendReplyTextMessageWithDocument: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -1791,7 +1821,8 @@ export default {
       deletable: true,
       readonly: false,
       translations: {
-        failedToSend: 'Falha ao enviar a mensagem.'
+        failedToSend: 'Falha ao enviar a mensagem.',
+        unsupportedContent: 'Conteúdo não suportado'
       },
       isExternalMessage: false,
       hasMemberData: false,

@@ -40,6 +40,12 @@ import WebLink from './components/WebLink'
 // Reply components
 import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
 import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
+import InReplyToImage from './components/ReplyCard/InReplyTo/InReplyToImage.vue'
+import InReplyToVideo from './components/ReplyCard/InReplyTo/InReplyToVideo.vue'
+import InReplyToDocument from './components/ReplyCard/InReplyTo/InReplyToDocument.vue'
+import InReplyToAudio from './components/ReplyCard/InReplyTo/InReplyToAudio.vue'
+import InReplyToLocation from './components/ReplyCard/InReplyTo/InReplyToLocation.vue'
+import InReplyToUnsupportedContent from './components/ReplyCard/InReplyTo/InReplyToUnsupportedContent.vue'
 import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
 import RepliedWithMediaLink from './components/ReplyCard/Replied/RepliedWithMediaLink'
 import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
@@ -113,13 +119,21 @@ function install(Vue) {
 
   // Reply components
   components.push(Vue.component(ReplyCard.name, ReplyCard))
+
   // Replied
   components.push(Vue.component(RepliedBase.name, RepliedBase))
   components.push(Vue.component(RepliedWithText.name, RepliedWithText))
   components.push(Vue.component(RepliedWithMediaLink.name, RepliedWithMediaLink))
+
   // In Reply To
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))
+  components.push(Vue.component(InReplyToImage.name, InReplyToImage))
+  components.push(Vue.component(InReplyToVideo.name, InReplyToVideo))
+  components.push(Vue.component(InReplyToDocument.name, InReplyToDocument))
+  components.push(Vue.component(InReplyToAudio.name, InReplyToAudio))
+  components.push(Vue.component(InReplyToLocation.name, InReplyToLocation))
+  components.push(Vue.component(InReplyToUnsupportedContent.name, InReplyToUnsupportedContent))
 
   // Reaction components
   components.push(Vue.component(ReactionCard.name, ReactionCard))

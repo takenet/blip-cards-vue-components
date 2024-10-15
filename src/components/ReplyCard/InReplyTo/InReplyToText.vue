@@ -1,19 +1,25 @@
 <template>
-  <div>
-    <bds-typo
-      tag="p"
-      variant="fs-16"
-      :bold="hasDescription ? 'bold' : 'regular'"
-      margin="false"
-      class="message-replied-text typo"
-      :class="{ 'single': !hasDescription, 'title': hasDescription }" v-html="sanitize(inReplyToText)"></bds-typo>
-    <bds-typo
-      v-if="hasDescription"
-      tag="p"
-      variant="fs-16"
-      bold="regular"
-      margin="false"
-      class="message-replied-text description typo-light" v-html="sanitize(inReplyToDescription)"></bds-typo>
+  <div class="message-replied-container">
+    <bds-grid container direction="row" gap="1" justifyContent="space-between" align-items="center">
+      <bds-icon theme="outline" name="link" size="medium" class="typo" v-if="isLink"/>
+      <bds-typo
+        tag="p"
+        variant="fs-16"
+        :bold="hasDescription ? 'bold' : 'regular'"
+        margin="false"
+        class="message-replied-text typo"
+        :class="{ 'single': !hasDescription, 'title': hasDescription }" v-html="sanitize(inReplyToText)"
+      />
+      
+      <bds-typo
+        v-if="hasDescription"
+        tag="p"
+        variant="fs-16"
+        bold="regular"
+        margin="false"
+        class="message-replied-text description typo-light" v-html="sanitize(inReplyToDescription)"
+      />
+    </bds-grid>
   </div>
 </template>
 
@@ -57,6 +63,12 @@
       },
       hasDescription() {
         return Boolean(this.inReplyToDescription)
+      },
+
+      isLink() {
+        const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}(\/[a-zA-Z0-9-_#?&=.]+)*\/?$/
+
+        return urlPattern.test(this.inReplyTo.value)
       }
     }
   }
@@ -64,6 +76,10 @@
 
 <style lang="scss" scoped>
   @import '../../../styles/variables.scss';
+
+  .message-replied-container {
+    padding: 0.5rem;
+  }
 
   .message-replied-text {
     display: -webkit-box;
