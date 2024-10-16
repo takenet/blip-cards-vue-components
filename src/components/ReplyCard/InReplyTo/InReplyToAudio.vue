@@ -6,12 +6,12 @@
     <bds-grid>
       <bds-typo variant="fs-14" bold="regular" class="typo">{{ timeAudio || translations.labelAudio }}</bds-typo>
     </bds-grid>
-
-    <audio id="audio" :src="inReplyTo.value.uri" preload="metadata"></audio>
   </bds-grid>  
 </template>
 
 <script>
+import { tryCreateLocalMediaUri, isAuthenticatedMediaLink } from '../../../utils/media.js'
+
 export default {
   name: 'in-reply-to-audio',
   mixins: [],
@@ -23,16 +23,39 @@ export default {
     translations: {
       type: Object,
       default: () => ({})
+    },
+    document: {
+      type: Object
     }
   },
   data: () => ({
-    timeAudio: null
+    timeAudio: null,
+    audio: undefined
   }),
-  mounted() {
-    const audioElement = this.$el.querySelector('#audio')
+  mounted: async function() {
+    const me = this
+    const { previewUri } = me.inReplyTo.value
+    const document = Object.assign(me.inReplyTo.value, {uri: previewUri})
 
-    audioElement.onloadedmetadata = () => {
-      const duration = audioElement.duration
+    if (isAuthenticatedMediaLink(document)) {
+      let url = await tryCreateLocalMediaUri(me.inReplyTo.value, me.asyncFetchMedia)
+      me.initAudio(url)
+    } else {
+      me.initAudio(me.inReplyTo.value.uri)
+    }
+  },
+  methods: {
+    initAudio: function(uri) {
+      const me = this
+      me.audio = new Audio()
+
+      me.audio.addEventListener('loadedmetadata', me.audioLoaded)
+
+      me.audio.src = uri
+      me.audio.load()
+    },
+    audioLoaded: function() {
+      const duration = this.audio.duration
       const minutes = Math.floor(duration / 60)
       const seconds = Math.floor(duration % 60)
 

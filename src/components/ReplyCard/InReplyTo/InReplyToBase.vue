@@ -27,6 +27,7 @@
           v-if="isAudioReply"
           :in-reply-to="inReplyTo"
           :translations="translations"
+          :document="document"
         />
 
         <in-reply-to-location
@@ -72,6 +73,9 @@
       translations: {
         type: Object,
         default: () => ({})
+      },
+      document: {
+        type: Object
       }
     },
     computed: {

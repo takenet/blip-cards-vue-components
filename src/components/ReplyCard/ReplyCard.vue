@@ -11,7 +11,8 @@
           :in-reply-to="inReplyTo"
           :is-own-message="isOwnMessage"
           :failed-message="translations.failedToLoad"
-          :translations="translations" />
+          :translations="translations"
+          :document="this.document"/>
         <replied-base v-if="replied" 
           :replied="replied" 
           :updatedPhotoMargin="updatedPhotoMargin"

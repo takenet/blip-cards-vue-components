@@ -61,11 +61,11 @@ export const commandExamples = [
           type: 'audio/mp4',
           value: {
             type: 'audio/mpeg',
-            size: 49536,
-            uri: 'file://1510242399685029',
-            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV84NTQ5MmRhMS02NTVhLTQzMGQtOWE2OS1mYzMzZGExMThjNzA=',
+            size: 49152,
+            uri: 'file://1252255886195048',
+            previewUri: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4',
             previewType: 'audio/mpeg',
-            title: '1728410934312.mp3',
+            title: '1728997590936.mp3',
             text: 'Lorem Ipsum is a placeholder text commonly used in graphic design, typography, and web development to demonstrate the layout and visual aspects of a document or website before the actual content is available. The text is typically a scrambled version of Latin phrases and words, making it nonsensical but visually similar to real text.',
             authorizationRealm: 'blip'
           }
