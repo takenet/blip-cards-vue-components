@@ -1,5 +1,5 @@
 <template>
-  <bds-grid direction="row" padding="y-2" margin="x-1" align-items="center" gap="1">
+  <bds-grid direction="row" padding="y-1" margin="x-1" align-items="center" gap="1">
     <bds-grid>
       <bds-icon name="audio" theme="outline" size="medium" class="typo" />
     </bds-grid>
@@ -26,6 +26,9 @@ export default {
     },
     document: {
       type: Object
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data: () => ({

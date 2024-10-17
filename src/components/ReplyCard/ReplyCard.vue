@@ -12,7 +12,8 @@
           :is-own-message="isOwnMessage"
           :failed-message="translations.failedToLoad"
           :translations="translations"
-          :document="this.document"/>
+          :document="this.document"
+          :async-fetch-media="asyncFetchMedia"/>
         <replied-base v-if="replied" 
           :replied="replied" 
           :updatedPhotoMargin="updatedPhotoMargin"
