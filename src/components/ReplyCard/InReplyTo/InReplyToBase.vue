@@ -28,6 +28,7 @@
           :in-reply-to="inReplyTo"
           :translations="translations"
           :document="document"
+          :async-fetch-media="asyncFetchMedia"
         />
 
         <in-reply-to-location
@@ -76,6 +77,9 @@
       },
       document: {
         type: Object
+      },
+      asyncFetchMedia: {
+        type: Function
       }
     },
     computed: {
