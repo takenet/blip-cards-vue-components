@@ -1,6 +1,6 @@
 export const commandExamples = [
   {
-    buttonLabel: 'Location',
+    buttonLabel: 'Reply with Location',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
       to: 'to@msging.net',
@@ -8,14 +8,14 @@ export const commandExamples = [
       type: 'application/vnd.lime.reply+json',
       content: {
         replied: {
-          type: 'application/vnd.lime.reply+json',
+          type: 'application/vnd.lime.location+json',
           value: {
-            latitude: -26.34450340271,
-            longitude: -48.836101531982
+            latitude: -15.8419349,
+            longitude: -48.0303289
           }
         },
         inReplyTo: {
-          id: 'fwd:fwd:c23139b8-9075-41a5-87e3-92bdcb498bf8',
+          id: 'wamid.HBgMNTUzMTkxOTQ5ODA2FQIAEhgWM0VCMDgyQjJCRTUwMUMyRTJFQjc1NAA=',
           type: 'text/plain',
           value: 'pode me mandar sua localização',
           direction: 'sent'
