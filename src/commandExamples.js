@@ -1,5 +1,29 @@
 export const commandExamples = [
   {
+    buttonLabel: 'Location',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'application/vnd.lime.reply+json',
+          value: {
+            latitude: -26.34450340271,
+            longitude: -48.836101531982
+          }
+        },
+        inReplyTo: {
+          id: 'fwd:fwd:c23139b8-9075-41a5-87e3-92bdcb498bf8',
+          type: 'text/plain',
+          value: 'pode me mandar sua localização',
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
     buttonLabel: 'Reply Unsupported Content',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -75,6 +99,66 @@ export const commandExamples = [
   },
   {
     buttonLabel: 'Reply link',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: 'https://dev.azure.com/curupira/Takepedia/_wiki/wikis/Takepedia.wiki/5053/Visualizar-e-contribuir-nos-projetos-no-Github-da-Take \n testandoo'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply text',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: ' Testanndo um teste'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'NOVO',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: 'Testando um link qualquer https://dev.azure.com/curupira/Takepedia/_wiki/wikis/Takepedia.wiki/5053/Visualizar-e-contribuir-nos-projetos-no-Github-da-Take'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply link - Without description',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
       to: 'to@msging.net',

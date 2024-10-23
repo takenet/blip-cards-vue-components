@@ -1,6 +1,7 @@
 <template>
   <div class="blip-container reply-card"
     id="blip-container">
+ 
     <div :class="'bubble ' + position">
       <div class="reply-container">
         <bds-grid direction="row" align-items="flex-start" gap="half" margin="b-half">
@@ -12,8 +13,7 @@
           :is-own-message="isOwnMessage"
           :failed-message="translations.failedToLoad"
           :translations="translations"
-          :document="this.document"
-          :async-fetch-media="asyncFetchMedia"/>
+          :document="this.document"/>
         <replied-base v-if="replied" 
           :replied="replied" 
           :updatedPhotoMargin="updatedPhotoMargin"
