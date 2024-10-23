@@ -142,7 +142,7 @@
         )
       },
       hasFailedToLoad() {
-        return Boolean(!this.inReactionTo || this.inReactionTo.type === undefined || this.inReactionTo.value === undefined)
+        return Boolean(!this.inReplyTo || this.inReplyTo.type === undefined || this.inReplyTo.value === undefined)
       }
     }
   }
