@@ -53,7 +53,7 @@
         margin="false"
         italic="true"
         class="typo"
-        >{{ failedMessage }}
+        >{{ translations.failedMessage }}
       </bds-typo>
     </div>
   </div>
@@ -140,6 +140,9 @@
           this.isAudioReply ||
           this.isLocationReply
         )
+      },
+      hasFailedToLoad() {
+        return Boolean(!this.inReactionTo || this.inReactionTo.type === undefined || this.inReactionTo.value === undefined)
       }
     }
   }

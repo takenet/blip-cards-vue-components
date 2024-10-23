@@ -171,7 +171,7 @@
         return this.isTextPlain || this.isSelectType || this.isAcceptableInteractiveType
       },
       hasFailedToLoad() {
-        return Boolean(this.inReactionTo.type === undefined || this.inReactionTo.value === undefined)
+        return Boolean(!this.inReactionTo || this.inReactionTo.type === undefined || this.inReactionTo.value === undefined)
       },
       inReactionToValue() {
         return this.inReactionTo.value
