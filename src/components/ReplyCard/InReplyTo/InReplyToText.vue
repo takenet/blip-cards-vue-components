@@ -52,7 +52,6 @@
         return this.inReplyTo.value.interactive.body.text
       },
       inReplyToText() {
-        alert(this.inReplyTo.type)
         switch (this.inReplyTo.type) {
           case 'text/plain':
             return this.inReplyTo.value
