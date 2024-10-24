@@ -50,6 +50,7 @@ import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
 import RepliedWithMediaLink from './components/ReplyCard/Replied/RepliedWithMediaLink'
 import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
 import ReplyCard from './components/ReplyCard/ReplyCard'
+import InReplyToActiveMessage from './components/ReplyCard/InReplyTo/InReplyToActiveMessage.vue'
 
 // Reaction components
 import InReactionToBase from './components/ReactionCard/InReactionTo/InReactionToBase'
@@ -134,6 +135,7 @@ function install(Vue) {
   components.push(Vue.component(InReplyToAudio.name, InReplyToAudio))
   components.push(Vue.component(InReplyToLocation.name, InReplyToLocation))
   components.push(Vue.component(InReplyToUnsupportedContent.name, InReplyToUnsupportedContent))
+  components.push(Vue.component(InReplyToActiveMessage.name, InReplyToActiveMessage))
 
   // Reaction components
   components.push(Vue.component(ReactionCard.name, ReactionCard))

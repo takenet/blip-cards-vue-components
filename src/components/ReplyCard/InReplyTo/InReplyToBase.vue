@@ -36,6 +36,12 @@
           :in-reply-to="inReplyTo"
           :translations="translations"
         />
+
+        <in-reply-to-active-message
+          v-if="isActiveMessageReply"
+          :in-reply-to="inReplyTo"
+          :translations="translations"
+        />
         
         <in-reply-to-unsupported-content
           :in-reply-to="inReplyTo"
@@ -60,92 +66,108 @@
 </template>
 
 <script>
-  export default {
-    name: 'in-reply-to-base',
-    props: {
-      inReplyTo: {
-        type: Object,
-        default: () => ({})
-      },
-      isOwnMessage: {
-        type: Boolean,
-        default: false
-      },
-      translations: {
-        type: Object,
-        default: () => ({})
-      },
-      document: {
-        type: Object
-      },
-      asyncFetchMedia: {
-        type: Function
-      }
+import { MediaLinkTypesConstants } from '../../../utils/MediaLinkTypesConstants'
+
+export default {
+  name: 'in-reply-to-base',
+  props: {
+    inReplyTo: {
+      type: Object,
+      default: () => ({})
     },
-    computed: {
-      isInteractiveTypeButtonWithTextHeader() {
-        return this.inReplyTo.value.interactive.type === 'button' &&
-          this.inReplyTo.value.interactive.header &&
-          this.inReplyTo.value.interactive.header.type === 'text'
-      },
-      isInteractiveTypeButtonWithoutTextHeader() {
-        return this.inReplyTo.value.interactive.type === 'button' &&
-          !this.inReplyTo.value.interactive.header &&
-          Boolean(this.inReplyTo.value.interactive.body.text)
-      },
-      isInteractiveTypeListWithTextHeader() {
-        return this.inReplyTo.value.interactive.type === 'list' &&
-          this.inReplyTo.value.interactive.header.type === 'text'
-      },
-      isTextPlain() {
-        return this.inReplyTo.type === 'text/plain'
-      },
-      isSelectType() {
-        return this.inReplyTo.type === 'application/vnd.lime.select+json'
-      },
-      isImageReply() {
-        return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('image')
-      },
-      isVideoReply() {
-        return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('video')
-      },
-      isDocumentReply() {
-        return this.inReplyTo.value.type === 'application/pdf'
-      },
-      isAudioReply() {
-        return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('audio')
-      },
-      isLocationReply() {
-        return this.inReplyTo.type.includes('location')
-      },
-      isUnsupportedContentReply() {
-        return !this.isAcceptableTextType
-      },
-      isAcceptableInteractiveType() {
-        return (
-          this.inReplyTo.type === 'application/json' &&
-          (this.isInteractiveTypeListWithTextHeader ||
-            this.isInteractiveTypeButtonWithTextHeader ||
-            this.isInteractiveTypeButtonWithoutTextHeader)
-        )
-      },
-      isAcceptableTextType() {
-        return (
-          this.isTextPlain ||
-          this.isSelectType ||
-          this.isAcceptableInteractiveType ||
-          this.isImageReply ||
-          this.isVideoReply ||
-          this.isDocumentReply ||
-          this.isAudioReply ||
-          this.isLocationReply
-        )
-      },
-      hasFailedToLoad() {
-        return Boolean(!this.inReplyTo || this.inReplyTo.type === undefined || this.inReplyTo.value === undefined)
-      }
+    isOwnMessage: {
+      type: Boolean,
+      default: false
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
+    },
+    document: {
+      type: Object
+    },
+    asyncFetchMedia: {
+      type: Function
+    }
+  },
+  computed: {
+    isInteractiveTypeButtonWithTextHeader() {
+      return this.inReplyTo.value.interactive.type === 'button' &&
+        this.inReplyTo.value.interactive.header &&
+        this.inReplyTo.value.interactive.header.type === 'text'
+    },
+    isInteractiveTypeButtonWithoutTextHeader() {
+      return this.inReplyTo.value.interactive.type === 'button' &&
+        !this.inReplyTo.value.interactive.header &&
+        Boolean(this.inReplyTo.value.interactive.body.text)
+    },
+    isInteractiveTypeListWithTextHeader() {
+      return this.inReplyTo.value.interactive.type === 'list' &&
+        this.inReplyTo.value.interactive.header.type === 'text'
+    },
+    isTextPlain() {
+      return this.inReplyTo.type === 'text/plain'
+    },
+    isSelectType() {
+      return this.inReplyTo.type === 'application/vnd.lime.select+json'
+    },
+    isImageReply() {
+      return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('image')
+    },
+    isVideoReply() {
+      return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('video')
+    },
+    isDocumentReply() {
+      return this.inReplyTo.type === 'application/vnd.lime.media-link+json' && this.isMediaTypeDocument(this.inReplyTo.value.type)
+    },
+    isAudioReply() {
+      return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('audio')
+    },
+    isLocationReply() {
+      return this.inReplyTo.type.includes('location')
+    },
+    isActiveMessageReply() {
+      console.log(this.inReplyTo.type, this.inReplyTo.value.type)
+      return this.inReplyTo.type === 'application/json' && this.inReplyTo.value.type === 'template'
+    },
+    isUnsupportedContentReply() {
+      return !this.isAcceptableTextType
+    },
+    isAcceptableInteractiveType() {
+      return (
+        this.inReplyTo.type === 'application/json' &&
+        this.inReplyTo.value.interactive &&
+        (this.isInteractiveTypeListWithTextHeader ||
+          this.isInteractiveTypeButtonWithTextHeader ||
+          this.isInteractiveTypeButtonWithoutTextHeader)
+      )
+    },
+    isAcceptableTextType() {
+      return (
+        this.isTextPlain ||
+        this.isSelectType ||
+        this.isAcceptableInteractiveType ||
+        this.isImageReply ||
+        this.isVideoReply ||
+        this.isDocumentReply ||
+        this.isAudioReply ||
+        this.isLocationReply ||
+        this.isActiveMessageReply
+      )
+    },
+    hasFailedToLoad() {
+      return Boolean(!this.inReplyTo || this.inReplyTo.type === undefined || this.inReplyTo.value === undefined)
+    }
+  },
+  methods: {
+    isMediaTypeDocument(type) {
+      return Object
+        .values(MediaLinkTypesConstants)
+        .filter(mediaLinkType => type.includes(mediaLinkType))
+        .length === 0
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
