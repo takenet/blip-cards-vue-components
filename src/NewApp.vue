@@ -89,7 +89,8 @@ export default {
         },
         unsupportedContent: 'Conteúdo não suportado',
         location: 'Localização',
-        labelAudio: 'Audio'
+        labelAudio: 'Audio',
+        messageTemplate: 'Modelo de mensagem: '
       },
       selected: () => {},
       save: () => {},
