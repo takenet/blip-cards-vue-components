@@ -590,3 +590,18 @@
 .bold-color {
   color: $color-surface-1
 }
+
+.single-line-text-overflow-ellipsis {
+  overflow: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+}
+
+.multiline-text-overflow-ellipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
