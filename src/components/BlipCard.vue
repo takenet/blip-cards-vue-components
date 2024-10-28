@@ -89,6 +89,7 @@
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :transcription="transcription"
+          :reply-callback="replyCallback"
         />
 
         <document-select
@@ -148,6 +149,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :reply-callback="replyCallback"
         />
 
         <blip-select
