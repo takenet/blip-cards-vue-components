@@ -46,7 +46,6 @@
           </div>
         </div>
       </div>
-
       <blip-card-reply
         :document="fullDocument"
         :reply-callback="replyCallback"
@@ -152,7 +151,8 @@ export default {
       default: false
     },
     replyCallback: {
-      type: Function
+      type: Function,
+      default: undefined
     }
   },
   data: function() {

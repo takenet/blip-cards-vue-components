@@ -1,35 +1,41 @@
 <template>
   <div v-if="!isEditing" class="blip-container request-location" :class="isFailedMessage(status, position)">
-    <div :class="`bubble ${position}`">
-      <bds-button-icon v-if="deletable"
-        class="editIco trashIco icon-button-margin icon-button-top"
-        icon="trash"
-        variant="delete"
-        size="short"
-        v-on:click="trash(document)"
-      ></bds-button-icon>
-      <bds-button-icon v-if="editable"
-        class="editIco icon-button-margin icon-button-top"
-        icon="edit"
-        variant="primary"
-        size="short"
-        v-on:click="toggleEdit"
-      ></bds-button-icon>
-      <div v-if="!previewDocument.hasPreview" class="label-wrappper">
-        <span>{{ previewDocument.content }}</span>
-      </div>
-      <div v-else class="label-wrapper">
-        <div v-show="!showContent">
-          <span>{{ previewDocument.previewContent }}</span>
+    <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
+      <div :class="`bubble ${position}`">
+        <bds-button-icon v-if="deletable"
+          class="editIco trashIco icon-button-margin icon-button-top"
+          icon="trash"
+          variant="delete"
+          size="short"
+          v-on:click="trash(document)"
+        ></bds-button-icon>
+        <bds-button-icon v-if="editable"
+          class="editIco icon-button-margin icon-button-top"
+          icon="edit"
+          variant="primary"
+          size="short"
+          v-on:click="toggleEdit"
+        ></bds-button-icon>
+        <div v-if="!previewDocument.hasPreview" class="label-wrappper">
+          <span>{{ previewDocument.content }}</span>
         </div>
-        <transition name="slide-fade">
-          <div v-show="showContent">
-            <span>{{ previewDocument.content }}</span>
+        <div v-else class="label-wrapper">
+          <div v-show="!showContent">
+            <span>{{ previewDocument.previewContent }}</span>
           </div>
-        </transition>
-        <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
+          <transition name="slide-fade">
+            <div v-show="showContent">
+              <span>{{ previewDocument.content }}</span>
+            </div>
+          </transition>
+          <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
+        </div>
       </div>
-    </div>
+      <blip-card-reply
+        :document="fullDocument"
+        :reply-callback="replyCallback"
+      />
+    </bds-grid>
 
     <div class="flex" v-if="date" :class="'notification ' + position">
       <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
@@ -131,6 +137,10 @@ export default {
       default: navigator.language.toLowerCase().startsWith('pt')
             ? 'Enviar Localização'
             : 'Send Location'
+    },
+    replyCallback: {
+      type: Function,
+      default: undefined
     }
   },
   computed: {

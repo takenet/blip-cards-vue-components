@@ -277,6 +277,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :on-location-error="onLocationError"
+          :reply-callback="replyCallback"
         />
 
         <lime-input

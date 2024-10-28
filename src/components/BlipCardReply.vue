@@ -43,6 +43,7 @@ export default {
 .blip-card {
   .blip-card-reply-button {
     display: none;
+    margin-bottom: 5px;
   }
 
   &:hover {
