@@ -15,8 +15,6 @@
         <plain-text
           v-if="document.metadata && document.metadata['#blip.payload.text']"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
-          :show-more-msg="translations.showMore"
           :status="status"
           :length="length"
           :position="position"
@@ -32,15 +30,13 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :is-external-message="externalMessage"
-          :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
+          :translations="translations"
         />
 
         <plain-text
           v-else-if="document.type === 'text/plain'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
-          :show-more-msg="translations.showMore"
           :status="status"
           :length="length"
           :position="position"
@@ -57,8 +53,8 @@
           :on-cancel="cancel"
           :disable-link="disableLink"
           :is-external-message="externalMessage"
-          :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
+          :translations="translations"
         />
 
         <media-link
@@ -442,6 +438,7 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <contact
@@ -620,6 +617,9 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :reply-callback="replyCallback"
+          :full-document="editableDocument"
+          :translations="translations"
         />
       </div>
       <div

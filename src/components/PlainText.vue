@@ -42,6 +42,7 @@
         <blip-card-reply
           :document="fullDocument"
           :reply-callback="replyCallback"
+          :reply-tooltip-text="replyTooltipText"
         />
       </bds-grid>
       
@@ -50,8 +51,6 @@
         :position="position"
         :date="date"
         :failed-to-send-msg="failedToSendMsg"
-        :is-external-message="isExternalMessage"
-        :external-message-text="externalMessageText"
       />
     </div>
   </div>
@@ -120,14 +119,6 @@ export default {
       type: Boolean,
       default: false
     },
-    showMoreMsg: {
-      type: String,
-      default: 'Ver mais'
-    },
-    failedToSendMsg: {
-      type: String,
-      default: 'Falha ao enviar a mensagem.'
-    },
     memberInfo: {
       type: String,
       default: ''
@@ -135,6 +126,10 @@ export default {
     replyCallback: {
       type: Function,
       default: undefined
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {
@@ -154,8 +149,16 @@ export default {
   data: () => ({
     text: undefined,
     showContent: undefined,
-    isFailedMessage
+    isFailedMessage,
+    failedToSendMsg: 'Falha ao enviar a mensagem.',
+    showMoreMsg: 'Ver mais',
+    replyTooltipText: 'Responder'
   }),
+  mounted() {
+    this.failedToSendMsg = this.translations.failedToSend
+    this.showMoreMsg = this.translations.showMore
+    this.replyTooltipText = this.translations.replyTooltipText
+  },
   methods: {
     init: function() {
       this.text = this.document
