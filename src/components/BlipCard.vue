@@ -246,6 +246,7 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <request-location
@@ -274,6 +275,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :on-location-error="onLocationError"
+          :reply-callback="replyCallback"
         />
 
         <lime-input

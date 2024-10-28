@@ -1,50 +1,56 @@
 <template>
   <div v-if="!isEditing" class="location" :class="isFailedMessage(status, position) + ' ' + getBlipContainer">
-    <div :class="simplified ? '' : 'bubble ' + position" :style=" simplified ? '' : 'width: ' + bubbleWidth">
-      <bds-button-icon v-if="deletable"
-        class="editIco trashIco icon-button-margin"
-        icon="trash"
-        variant="delete"
-        size="short"
-        v-on:click="trash(document)"
-      ></bds-button-icon>
-      <bds-button-icon v-if="editable"
-        class="editIco icon-button-margin"
-        icon="edit"
-        variant="primary"
-        size="short"
-        v-on:click="toggleEdit"
-      ></bds-button-icon>
-      <div v-if="simplified" class="header">
-        <bds-grid gap="4" align-items="center" justify-content="space-between">
-          <bds-grid margin="r-1" align-items="center" gap="1">
-            <bds-icon class="typo" size="small" name="localization" theme="outline"></bds-icon>
-            <bds-typo
-              tag="span"
-              margin="false"
-              class="location-simplified-text typo"
-              v-html="sanitize(document.text)">
-            </bds-typo>
+    <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
+      <div :class="simplified ? '' : 'bubble ' + position" :style=" simplified ? '' : 'width: ' + bubbleWidth">
+        <bds-button-icon v-if="deletable"
+          class="editIco trashIco icon-button-margin"
+          icon="trash"
+          variant="delete"
+          size="short"
+          v-on:click="trash(document)"
+        ></bds-button-icon>
+        <bds-button-icon v-if="editable"
+          class="editIco icon-button-margin"
+          icon="edit"
+          variant="primary"
+          size="short"
+          v-on:click="toggleEdit"
+        ></bds-button-icon>
+        <div v-if="simplified" class="header">
+          <bds-grid gap="4" align-items="center" justify-content="space-between">
+            <bds-grid margin="r-1" align-items="center" gap="1">
+              <bds-icon class="typo" size="small" name="localization" theme="outline"></bds-icon>
+              <bds-typo
+                tag="span"
+                margin="false"
+                class="location-simplified-text typo"
+                v-html="sanitize(document.text)">
+              </bds-typo>
+            </bds-grid>
+            <bds-grid>
+              <div class="location-preview-container">
+                <div class="ratio ratio1-1 pointer" :style="styleObject" id="simplifiedLocation"></div>
+              </div>
+            </bds-grid>
           </bds-grid>
-          <bds-grid>
-            <div class="location-preview-container">
-              <div class="ratio ratio1-1 pointer" :style="styleObject" id="simplifiedLocation"></div>
-            </div>
-          </bds-grid>
-        </bds-grid>
-      </div>
-      <div v-if="!simplified" class="header">
-        <div
-          class="ratio ratio1-1"
-          :style="styleObject"
-          @click="(editable ? null : handleLocationLink())"
-          :class="editable ? '' : ' pointer'"
-        ></div>
-        <div class="title" v-if="document.text">
-          <span v-if="document.text" v-html="sanitize(document.text)"></span>
+        </div>
+        <div v-if="!simplified" class="header">
+          <div
+            class="ratio ratio1-1"
+            :style="styleObject"
+            @click="(editable ? null : handleLocationLink())"
+            :class="editable ? '' : ' pointer'"
+          ></div>
+          <div class="title" v-if="document.text">
+            <span v-if="document.text" v-html="sanitize(document.text)"></span>
+          </div>
         </div>
       </div>
-    </div>
+      <blip-card-reply
+        :document="fullDocument"
+        :reply-callback="replyCallback"
+      />
+    </bds-grid>
     <blip-card-date
       :status="status"
       :position="position"
@@ -143,6 +149,10 @@ export default {
     simplified: {
       type: Boolean,
       default: false
+    },
+    replyCallback: {
+      type: Function,
+      default: undefined
     }
   },
   data: function() {

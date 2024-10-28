@@ -13,7 +13,7 @@
         :is-group="false"
       />
 
-      <bds-grid direction="row" justifyContent="space-between" gap="1" align-items="center">
+      <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
         <div :class="'bubble ' + position">
           <bds-button-icon v-if="deletable"
             class="editIco trashIco icon-button-margin icon-button-top"
