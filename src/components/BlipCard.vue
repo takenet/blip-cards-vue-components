@@ -153,6 +153,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :reply-callback="replyCallback"
         />
 
         <blip-select
@@ -247,6 +248,7 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <request-location

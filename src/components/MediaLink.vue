@@ -8,7 +8,7 @@
       :member-info="memberInfo"
       :is-group="false"
     />     
-    <bds-grid direction="row" justifyContent="space-between" gap="1" align-items="center">
+    <bds-grid direction="row" justifyContent="space-between" gap="1" align-items="center" :direction="position === 'left' ? 'row' : 'row-reverse'">
       <div :class="'bubble ' + position" id='media-link'>
         <blip-image
           :image-uri-msg="titleMsg"
