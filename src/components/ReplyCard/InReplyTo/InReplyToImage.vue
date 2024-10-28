@@ -33,16 +33,7 @@ export default {
 </script>
 
 <style scoped>
-  .image-replied {
-    max-height: 80px;
-  }
-
-  .multiline-text-overflow-ellipsis {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.image-replied {
+  max-height: 80px;
+}
 </style>

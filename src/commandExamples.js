@@ -1,5 +1,152 @@
 export const commandExamples = [
   {
+    buttonLabel: 'Reply Mensagem Ativa - Imagem',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'activecampaign:c3ae9a65-4283-4c3d-bd1f-e85f636ad728',
+          type: 'application/json',
+          value: {
+            type: 'template',
+            template: {
+              language: {
+                policy: 'deterministic',
+                code: 'es'
+              },
+              name: 'sample_movie_ticket_confirmation',
+              components: [
+                {
+                  type: 'header',
+                  parameters: [
+                    {
+                      image: {
+                        link: 'https://sample-videos.com/img/Sample-jpg-image-50kb.jpg'
+                      },
+                      type: 'image'
+                    }
+                  ]
+                },
+                {
+                  type: 'body',
+                  parameters: [
+                    {
+                      text: 'A',
+                      type: 'text'
+                    },
+                    {
+                      text: 'B',
+                      type: 'text'
+                    },
+                    {
+                      text: 'C',
+                      type: 'text'
+                    },
+                    {
+                      text: 'D',
+                      type: 'text'
+                    }
+                  ]
+                }
+              ]
+            },
+            templateContent: {
+              name: 'sample_movie_ticket_confirmation',
+              language: 'es',
+              components: [
+                {
+                  type: 'HEADER',
+                  format: 'IMAGE'
+                },
+                {
+                  type: 'BODY',
+                  text: 'Tu entrada para *{{1}}*\n*Hora* - {{2}}\n*Lugar* - {{3}}\n*Asientos* - {{4}}'
+                },
+                {
+                  type: 'FOOTER',
+                  text: 'Este mensaje proviene de un negocio no verificado.'
+                }
+              ]
+            }
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Mensagem Ativa',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'activecampaign:c3ae9a65-4283-4c3d-bd1f-e85f636ad728',
+          type: 'application/json',
+          value: {
+            type: 'template',
+            template: {
+              language: {
+                policy: 'deterministic',
+                code: 'pt_BR'
+              },
+              name: 'automation_test_text_simple_channels',
+              components: []
+            },
+            templateContent: {
+              name: 'automation_test_text_simple_channels',
+              language: 'pt_BR',
+              components: [
+                {
+                  type: 'BODY',
+                  text: 'Esta mensagem foi gerada por um teste.'
+                }
+              ]
+            }
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply with Location',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'application/vnd.lime.location+json',
+          value: {
+            latitude: -15.8419349,
+            longitude: -48.0303289
+          }
+        },
+        inReplyTo: {
+          id: 'wamid.HBgMNTUzMTkxOTQ5ODA2FQIAEhgWM0VCMDgyQjJCRTUwMUMyRTJFQjc1NAA=',
+          type: 'text/plain',
+          value: 'pode me mandar sua localização',
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
     buttonLabel: 'Reply Unsupported Content',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -88,6 +235,66 @@ export const commandExamples = [
         inReplyTo: {
           id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
           type: 'text/plain',
+          value: 'https://dev.azure.com/curupira/Takepedia/_wiki/wikis/Takepedia.wiki/5053/Visualizar-e-contribuir-nos-projetos-no-Github-da-Take \n testandoo'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply text',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: ' Testanndo um teste'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'NOVO',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: 'Testando um link qualquer https://dev.azure.com/curupira/Takepedia/_wiki/wikis/Takepedia.wiki/5053/Visualizar-e-contribuir-nos-projetos-no-Github-da-Take'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply link - Without description',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
           value: 'https://dev.azure.com/curupira/Takepedia/_wiki/wikis/Takepedia.wiki/5053/Visualizar-e-contribuir-nos-projetos-no-Github-da-Take'
         }
       }
@@ -107,7 +314,7 @@ export const commandExamples = [
         },
         inReplyTo: {
           id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
-          type: 'application/pdf',
+          type: 'application/vnd.lime.media-link+json',
           value: {
             type: 'application/pdf',
             size: 679931,
@@ -123,7 +330,7 @@ export const commandExamples = [
     }
   },
   {
-    buttonLabel: 'Reply Document',
+    buttonLabel: 'Reply Document (PDF)',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
       to: 'to@msging.net',
@@ -136,7 +343,7 @@ export const commandExamples = [
         },
         inReplyTo: {
           id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
-          type: 'application/pdf',
+          type: 'application/vnd.lime.media-link+json',
           value: {
             type: 'application/pdf',
             size: 679931,
@@ -145,6 +352,66 @@ export const commandExamples = [
             previewType: 'application/pdf',
             title: 'Reply-Message.pdf',
             text: 'Lorem Ipsum is a placeholder text commonly used in graphic design, typography, and web development to demonstrate the layout and visual aspects of a document or website before the actual content is available. The text is typically a scrambled version of Latin phrases and words, making it nonsensical but visually similar to real text.',
+            authorizationRealm: 'blip'
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Document (TXT)',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'Testando'
+        },
+        inReplyTo: {
+          id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'text/plain',
+            size: 5,
+            uri: 'file://329178773590723',
+            previewUri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
+            previewType: 'text/plain',
+            title: 'Reply-Message.txt',
+            text: '',
+            authorizationRealm: 'blip'
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Document (DOCX)',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'Testando'
+        },
+        inReplyTo: {
+          id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            size: 6446,
+            uri: 'file://329178773590723',
+            previewUri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
+            previewType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            title: 'Reply-Message.docx',
+            text: '',
             authorizationRealm: 'blip'
           },
           direction: 'sent'

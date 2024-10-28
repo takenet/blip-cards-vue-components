@@ -41,13 +41,4 @@ export default {
   max-width: 40px;
   width: 40px;
 }
-
-.multiline-text-overflow-ellipsis {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 </style>

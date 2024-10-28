@@ -1,5 +1,7 @@
 export const MediaLinkTypesConstants = {
   AUDIO: 'audio',
   IMAGE: 'image',
-  VIDEO: 'video'
+  STICKER: 'sticker',
+  VIDEO: 'video',
+  VOICE: 'voice'
 }

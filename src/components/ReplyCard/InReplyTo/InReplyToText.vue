@@ -1,16 +1,21 @@
 <template>
   <div class="message-replied-container">
-    <bds-grid container direction="row" gap="1" justifyContent="space-between" align-items="center">
-      <bds-icon theme="outline" name="link" size="medium" class="typo" v-if="isLink"/>
+    <bds-grid direction="column"  gap="1">
+      <bds-grid container direction="row" gap="1" justifyContent="space-between" v-if="isLink">
+        <bds-icon theme="outline" name="link" size="medium" class="typo"/>
+        <bds-typo>{{  getText().link ?  getText().link : '' }}</bds-typo>
+      </bds-grid>
+     
       <bds-typo
+        v-if="getText().text"
         tag="p"
         variant="fs-16"
         :bold="hasDescription ? 'bold' : 'regular'"
         margin="false"
         class="message-replied-text typo"
-        :class="{ 'single': !hasDescription, 'title': hasDescription }" v-html="sanitize(inReplyToText)"
-      />
-      
+        :class="{ 'single': !hasDescription, 'title': hasDescription }"
+      >{{ getText().text }}</bds-typo>
+
       <bds-typo
         v-if="hasDescription"
         tag="p"
@@ -64,11 +69,27 @@
       hasDescription() {
         return Boolean(this.inReplyToDescription)
       },
-
       isLink() {
-        const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}(\/[a-zA-Z0-9-_#?&=.]+)*\/?$/
+        const urlPattern = /(https?:\/\/[^\s]+)/g
+        const matches = this.inReplyTo.value.match(urlPattern)
 
-        return urlPattern.test(this.inReplyTo.value)
+        return matches && matches.length === 1
+      }
+    },
+    methods: {
+      getText() {
+        const urlPattern = /(https?:\/\/[^\s]+)/g
+        const matches = this.inReplyTo.value.match(urlPattern)
+
+        if (matches && matches.length === 1) {
+          const link = matches[0]
+          return {
+            text: this.inReplyTo.value.replace(urlPattern, '').trim(),
+            link
+          }
+        }
+
+        return {text: this.inReplyTo.value}
       }
     }
   }

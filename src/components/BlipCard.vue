@@ -641,7 +641,8 @@ import { getMemberInfo } from '../utils/memberUtils.js'
 
 const supportedRepliedTypes = [
   MessageTypesConstants.TEXT_MESSAGE,
-  MessageTypesConstants.MEDIALINK_MESSAGE
+  MessageTypesConstants.MEDIALINK_MESSAGE,
+  MessageTypesConstants.LOCATION
 ]
 
 export default {
