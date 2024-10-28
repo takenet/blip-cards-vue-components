@@ -4,6 +4,8 @@
       v-if="previewDocument.content != null && previewDocument.content.length > 0"
       class="blip-container plain-text"
       :class="isFailedMessage(status, position)"
+      @mouseover="handleMouseOver" 
+      @mouseleave="handleMouseLeave"
     >
       <blip-card-member
         v-if="memberInfo"
@@ -12,30 +14,42 @@
         :member-info="memberInfo"
         :is-group="false"
       />
-      <div :class="'bubble ' + position">
-        <bds-button-icon v-if="deletable"
-          class="editIco trashIco icon-button-margin icon-button-top"
-          icon="trash"
-          variant="delete"
-          size="short"
-          v-on:click="trash(document)"
-        ></bds-button-icon>
-        <bds-button-icon v-if="editable"
-          class="editIco icon-button-margin icon-button-top"
-          icon="edit"
-          variant="primary"
-          size="short"
-          v-on:click="toggleEdit"
-        ></bds-button-icon> 
-        <div v-if="!previewDocument.hasPreview" v-html="previewDocument.content"></div>
-        <div v-else>
-          <div v-show="!showContent" v-html="previewDocument.previewContent"></div>
-          <transition name="slide-fade">
-            <div v-show="showContent" v-html="previewDocument.content"></div>
-          </transition>
-          <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
+
+      <bds-grid direction="row" justifyContent="space-between" gap="1" align-items="center">
+        <div :class="'bubble ' + position">
+          <bds-button-icon v-if="deletable"
+            class="editIco trashIco icon-button-margin icon-button-top"
+            icon="trash"
+            variant="delete"
+            size="short"
+            v-on:click="trash(document)"
+          ></bds-button-icon>
+          <bds-button-icon v-if="editable"
+            class="editIco icon-button-margin icon-button-top"
+            icon="edit"
+            variant="primary"
+            size="short"
+            v-on:click="toggleEdit"
+          ></bds-button-icon> 
+          <div v-if="!previewDocument.hasPreview" v-html="previewDocument.content"></div>
+          <div v-else>
+            <div v-show="!showContent" v-html="previewDocument.previewContent"></div>
+            <transition name="slide-fade">
+              <div v-show="showContent" v-html="previewDocument.content"></div>
+            </transition>
+            <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
+          </div>
         </div>
-      </div>
+
+        <bds-button-icon
+          icon="redo"
+          variant="ghost"
+          size="short"
+          @click="replyMessage"
+          v-if="showButtoReply"
+        />
+      </bds-grid>
+      
       <blip-card-date
         :status="status"
         :position="position"
@@ -138,13 +152,12 @@ export default {
       }
     }
   },
-  data: function() {
-    return {
-      text: undefined,
-      showContent: undefined,
-      isFailedMessage
-    }
-  },
+  data: () => ({
+    text: undefined,
+    showContent: undefined,
+    isFailedMessage,
+    showButtoReply: false
+  }),
   methods: {
     init: function() {
       this.text = this.document
@@ -163,6 +176,24 @@ export default {
 
       this.showContent = false
       this.save(this.text)
+    },
+    replyMessage: function() {
+      window.onmessage({
+        data: {
+          type: 'setIsReplying',
+          value: true,
+          inReplyTo: {
+            type: 'text/plain',
+            value: this.document
+          }
+        }
+      })
+    },
+    handleMouseOver() {
+      this.showButtoReply = true
+    },
+    handleMouseLeave() {
+      this.showButtoReply = false
     }
   }
 }
