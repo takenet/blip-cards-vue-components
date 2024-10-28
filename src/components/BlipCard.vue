@@ -33,6 +33,7 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <plain-text
@@ -57,6 +58,7 @@
           :disable-link="disableLink"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <media-link
@@ -702,6 +704,9 @@ export default {
     },
     transcription: {
       type: Object
+    },
+    replyCallback: {
+      type: Function
     }
   },
   data() {

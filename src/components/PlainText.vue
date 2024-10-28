@@ -4,8 +4,6 @@
       v-if="previewDocument.content != null && previewDocument.content.length > 0"
       class="blip-container plain-text"
       :class="isFailedMessage(status, position)"
-      @mouseover="handleMouseOver" 
-      @mouseleave="handleMouseLeave"
     >
       <blip-card-member
         v-if="memberInfo"
@@ -41,12 +39,9 @@
           </div>
         </div>
 
-        <bds-button-icon
-          icon="redo"
-          variant="ghost"
-          size="short"
-          @click="replyMessage"
-          v-if="showButtoReply"
+        <blip-card-reply
+          :document="fullDocument"
+          :reply-callback="replyCallback"
         />
       </bds-grid>
       
@@ -136,6 +131,10 @@ export default {
     memberInfo: {
       type: String,
       default: ''
+    },
+    replyCallback: {
+      type: Function,
+      default: undefined
     }
   },
   computed: {
@@ -155,8 +154,7 @@ export default {
   data: () => ({
     text: undefined,
     showContent: undefined,
-    isFailedMessage,
-    showButtoReply: false
+    isFailedMessage
   }),
   methods: {
     init: function() {
@@ -176,24 +174,6 @@ export default {
 
       this.showContent = false
       this.save(this.text)
-    },
-    replyMessage: function() {
-      window.onmessage({
-        data: {
-          type: 'setIsReplying',
-          value: true,
-          inReplyTo: {
-            type: 'text/plain',
-            value: this.document
-          }
-        }
-      })
-    },
-    handleMouseOver() {
-      this.showButtoReply = true
-    },
-    handleMouseLeave() {
-      this.showButtoReply = false
     }
   }
 }
