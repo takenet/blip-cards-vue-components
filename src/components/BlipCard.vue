@@ -93,6 +93,7 @@
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :transcription="transcription"
+          :reply-callback="replyCallback"
         />
 
         <document-select
