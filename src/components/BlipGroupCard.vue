@@ -39,6 +39,7 @@
           :async-fetch-media="asyncFetchMedia"
           :on-async-fetch-session="onAsyncFetchSession"
           :transcription="transcription"
+          :reply-callback="replyCallback"
         />
         <blip-card-date
           v-if="group.date && group.hasNotification"
@@ -157,6 +158,9 @@ export default {
         onOpenMfeModal: (data) => {},
         scrollTo: (elementId) => {}
       })
+    },
+    replyCallback: {
+      type: Function
     }
   },
   data() {
