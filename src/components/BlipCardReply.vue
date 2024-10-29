@@ -38,8 +38,20 @@ export default {
   },
   methods: {
     replyMessage() {
+      let dados = {}
+
+      dados.data = {
+        type: 'setIsReplying',
+        value: true,
+        inReplyTo: {
+          type: this.document.type,
+          value: this.document.content
+        }
+      }
+
+      console.log(dados)
       if (this.replyCallback) {
-        this.replyCallback(this.document)
+        this.replyCallback(dados)
       } else {
         throw new Error('Reply callback is not defined')
       }

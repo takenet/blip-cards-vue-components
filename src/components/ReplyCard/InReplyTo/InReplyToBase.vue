@@ -11,11 +11,13 @@
         <in-reply-to-image
           :in-reply-to="inReplyTo"
           v-if="isImageReply"
+          :async-fetch-media="asyncFetchMedia"
         />
 
         <in-reply-to-video
           :in-reply-to="inReplyTo"
           v-if="isVideoReply"
+          :async-fetch-media="asyncFetchMedia"
         />
 
         <in-reply-to-document

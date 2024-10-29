@@ -204,6 +204,8 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
+          :transcription="transcription"
         />
 
         <survey
@@ -464,6 +466,7 @@
           :address-label="translations.addressLabel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <application-json

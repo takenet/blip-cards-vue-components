@@ -14,12 +14,14 @@
     </bds-grid>
     
     <bds-grid>
-      <img class="image-replied" :src="inReplyTo.value.uri" />
+      <img class="image-replied" :src="uriImage" />
     </bds-grid>
   </bds-grid>
 </template>
 
 <script>
+import { tryCreateLocalMediaUri, isAuthenticatedMediaLink } from '../../../utils/media.js'
+
 export default {
   name: 'in-reply-to-image',
   mixins: [],
@@ -27,6 +29,28 @@ export default {
     inReplyTo: {
       type: Object,
       default: () => ({})
+    },
+    asyncFetchMedia: {
+      type: Function
+    }
+  },
+  data: () => ({
+    uriImage: undefined
+  }),
+  mounted: async function() {
+    const me = this
+    const document = me.inReplyTo.value
+
+    if (isAuthenticatedMediaLink(document)) {
+      let url = await tryCreateLocalMediaUri(me.inReplyTo.value, me.asyncFetchMedia)
+      me.initImage(url)
+    } else {
+      me.initImage(me.inReplyTo.value.uri)
+    }
+  },
+  methods: {
+    initImage: function(uri) {
+      this.uriImage = uri
     }
   }
 }
