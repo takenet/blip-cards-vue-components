@@ -38,22 +38,80 @@ export default {
   },
   methods: {
     replyMessage() {
-      let dados = {}
+      let inReplyTo = this.formatMessage(this.document)
 
-      dados.data = {
-        type: 'setIsReplying',
-        value: true,
-        inReplyTo: {
-          type: this.document.type,
-          value: this.document.content
-        }
-      }
+      console.log(inReplyTo)
 
-      console.log(dados)
       if (this.replyCallback) {
-        this.replyCallback(dados)
+        this.replyCallback({data: {
+          type: 'setIsReplying',
+          value: true,
+          inReplyTo
+        }})
       } else {
         throw new Error('Reply callback is not defined')
+      }
+    },
+
+    formatMessage(message) {
+      const formats = {
+        'template-content': this.formatTemplate,
+        'text/plain': this.formatText,
+        'application/vnd.lime.media-link+json': this.formatMedia,
+        'application/vnd.lime.location+json': this.formatLocation
+      }
+
+      let type = message.type || message.content.type
+
+      if (type === 'application/json' && message.content.type === 'template-content') {
+        type = 'template-content'
+      }
+
+      if (formats[type]) {
+        return formats[type](message)
+      }
+
+      return {
+        type: message.content.type || message.type,
+        value: message.content
+      }
+    },
+
+    formatTemplate(message) {
+      let type = 'template'
+
+      return {
+        type: 'application/json',
+        value: {...message.content, type}
+      }
+    },
+
+    formatImage(message) {
+      return {
+        type: 'image',
+        value: message.content.value || message.content
+      }
+    },
+    formatText(message) {
+      return {
+        type: 'text/plain',
+        value: message.content.value || message.content
+      }
+    },
+    formatMedia(message) {
+      if (message.content.type.includes('image') || (message.content.value && message.content.value.type.includes('image'))) {
+        return this.formatImage(message)
+      }
+
+      return {
+        type: message.type,
+        value: message.content
+      }
+    },
+    formatLocation (message) {
+      return {
+        type: message.type,
+        value: message.content
       }
     }
   }

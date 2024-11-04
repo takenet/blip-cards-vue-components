@@ -4,7 +4,7 @@
       <bds-icon name="audio" theme="outline" size="medium" class="typo" />
     </bds-grid>
     <bds-grid>
-      <bds-typo variant="fs-14" bold="regular" class="typo">{{ timeAudio || translations.labelAudio }}</bds-typo>
+      <bds-typo variant="fs-14" bold="regular" class="typo">{{ timeAudio || translations.labelAudio || 'Audio' }}</bds-typo>
     </bds-grid>
   </bds-grid>  
 </template>

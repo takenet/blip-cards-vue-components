@@ -126,10 +126,9 @@ export default {
       return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('audio')
     },
     isLocationReply() {
-      return this.inReplyTo.type.includes('location')
+      return this.inReplyTo.type && this.inReplyTo.type.includes('location')
     },
     isActiveMessageReply() {
-      console.log(this.inReplyTo.type, this.inReplyTo.value.type)
       return this.inReplyTo.type === 'application/json' && this.inReplyTo.value.type === 'template'
     },
     isUnsupportedContentReply() {

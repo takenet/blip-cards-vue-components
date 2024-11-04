@@ -416,6 +416,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :disable-link="disableLink"
+          :reply-callback="replyCallback"
         />
 
         <unsuported-content
@@ -520,6 +521,7 @@
           :reply-text="translations.replyText"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <reaction-card
