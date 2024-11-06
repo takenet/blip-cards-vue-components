@@ -1,14 +1,17 @@
 <template>
-  <bds-grid direction="row" justifyContent="space-between" gap="2">
-    <bds-grid direction="row"  gap="1"  align-items="center">
-      <bds-grid direction="row" padding="1" gap="1" >
-        <bds-grid>
-          <bds-icon theme="outline" name="video" size="medium" class="typo" />
-        </bds-grid>
-        <bds-grid direction="column" >
-          <bds-typo tag="span" variant="fs-14" bold="regular" class="typo">{{ timeVideo }}</bds-typo>
-          <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
-            v-if="this.inReplyTo.value.text">{{ this.inReplyTo.value.text }}</bds-typo>
+  <bds-grid direction="row" justifyContent="space-between" gap="2" class="container-reply-item">
+    <bds-grid direction="row" gap="1" align-items="center">
+      <bds-grid direction="column" padding="1" gap="1">
+        <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
+        <bds-grid direction="row" gap="1" >
+          <bds-grid>
+            <bds-icon theme="outline" name="video" size="medium" class="typo" />
+          </bds-grid>
+          <bds-grid direction="column" >
+            <bds-typo tag="span" variant="fs-14" bold="regular" class="typo">{{ timeVideo || translations.video }}</bds-typo>
+            <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
+              v-if="this.inReplyTo.value.text">{{ this.inReplyTo.value.text }}</bds-typo>
+          </bds-grid>
         </bds-grid>
       </bds-grid>
     </bds-grid>
@@ -30,6 +33,18 @@ export default {
   mixins: [],
   props: {
     inReplyTo: {
+      type: Object,
+      default: () => ({})
+    },
+    replyingToText: {
+      type: String,
+      default: null
+    },
+    isReplyingOnInput: {
+      type: Boolean,
+      default: true
+    },
+    translations: {
       type: Object,
       default: () => ({})
     }

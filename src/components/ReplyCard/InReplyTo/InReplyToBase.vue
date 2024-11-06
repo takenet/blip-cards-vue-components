@@ -1,56 +1,66 @@
 <template>
-  <div class="in-reply-to-message-container">
+  <div class="in-reply-to-message-container" :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput }">
     <template>
-      <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
-      <div>
-        <in-reply-to-text
-          :in-reply-to="inReplyTo"
-          v-if="isTextPlain"
-        />
+      <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>   
+      <in-reply-to-text
+        :in-reply-to="inReplyTo"
+        v-if="isTextPlain"
+        :replying-to-text="replyingToText"
+      />
 
-        <in-reply-to-image
-          :in-reply-to="inReplyTo"
-          v-if="isImageReply"
-          :async-fetch-media="asyncFetchMedia"
-        />
+      <in-reply-to-image
+        v-if="isImageReply"
+        :in-reply-to="inReplyTo"
+        :replying-to-text="replyingToText"
+        :async-fetch-media="asyncFetchMedia"
+        :is-replying-on-input="isReplyingOnInput"
+        :translations="translations"
+      />
 
-        <in-reply-to-video
-          :in-reply-to="inReplyTo"
-          v-if="isVideoReply"
-          :async-fetch-media="asyncFetchMedia"
-        />
+      <in-reply-to-video
+        v-if="isVideoReply"
+        :in-reply-to="inReplyTo"
+        :replying-to-text="replyingToText"
+        :async-fetch-media="asyncFetchMedia"
+        :translations="translations"
+      />
 
-        <in-reply-to-document
-          :in-reply-to="inReplyTo"
-          v-if="isDocumentReply"
-        />
+      <in-reply-to-document
+        v-if="isDocumentReply"
+        :in-reply-to="inReplyTo"
+        :replying-to-text="replyingToText"
+        :translations="translations"
+      />
 
-        <in-reply-to-audio
-          v-if="isAudioReply"
-          :in-reply-to="inReplyTo"
-          :translations="translations"
-          :document="document"
-          :async-fetch-media="asyncFetchMedia"
-        />
+      <in-reply-to-audio
+        v-if="isAudioReply"
+        :in-reply-to="inReplyTo"
+        :translations="translations"
+        :document="document"
+        :async-fetch-media="asyncFetchMedia"
+        :replying-to-text="replyingToText"
+      />
 
-        <in-reply-to-location
-          v-if="isLocationReply"
-          :in-reply-to="inReplyTo"
-          :translations="translations"
-        />
+      <in-reply-to-location
+        v-if="isLocationReply"
+        :in-reply-to="inReplyTo"
+        :translations="translations"
+        :replying-to-text="replyingToText"
+      />
 
-        <in-reply-to-active-message
-          v-if="isActiveMessageReply"
-          :in-reply-to="inReplyTo"
-          :translations="translations"
-        />
-        
-        <in-reply-to-unsupported-content
-          :in-reply-to="inReplyTo"
-          :translations="translations"
-          v-if="isUnsupportedContentReply"
-        />
-      </div>
+      <in-reply-to-active-message
+        v-if="isActiveMessageReply"
+        :in-reply-to="inReplyTo"
+        :translations="translations"
+        :replying-to-text="replyingToText"
+      />
+      
+      <in-reply-to-unsupported-content
+        v-if="isUnsupportedContentReply"
+        :in-reply-to="inReplyTo"
+        :translations="translations"
+        :replying-to-text="replyingToText"
+      />
     </template>
     <div class="failed-message" v-if="hasFailedToLoad">
       <bds-icon name="warning" theme="outline" aria-label="Warning"></bds-icon>
@@ -90,6 +100,14 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    replyingToText: {
+      type: String,
+      default: null
+    },
+    isReplyingOnInput: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -184,21 +202,29 @@ export default {
     &.own-message {
       background-color: $color-content-ghost;
     }
-  }
+  }  
 
   .in-reply-to-message-container {
-    display: flex;
+    display: block;
     overflow: hidden;
     background-color: $color-surface-3;
     border: 1px solid $color-content-ghost;
     border-radius: 0.5rem;
-    margin-bottom: 1rem;
     padding-bottom: -10px;
 
     .skeleton {
       height: 2.5rem;
     }
   } 
+
+  .container-reply-item {
+    max-height: 110px;
+    justify-content: space-between; 
+  }
+
+  .in-reply-to-message-container-margin {
+    margin-bottom: 1rem;
+  }
 
   .failed-message {
     display: flex;

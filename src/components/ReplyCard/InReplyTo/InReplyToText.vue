@@ -1,6 +1,7 @@
 <template>
   <div class="message-replied-container">
     <bds-grid direction="column"  gap="1">
+      <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
       <bds-grid container direction="row" gap="1" justifyContent="space-between" v-if="isLink">
         <bds-icon theme="outline" name="link" size="medium" class="typo"/>
         <bds-typo>{{  getText().link ?  getText().link : '' }}</bds-typo>
@@ -36,6 +37,10 @@
       inReplyTo: {
         type: Object,
         default: () => ({})
+      },
+      replyingToText: {
+        type: String,
+        default: null
       }
     },
     computed: {

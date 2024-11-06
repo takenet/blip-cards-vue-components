@@ -23,7 +23,7 @@ export default {
       required: true
     },
     replyCallback: {
-      type: Function,
+      type: Function | undefined,
       required: true
     },
     replyTooltipText: {
@@ -40,13 +40,12 @@ export default {
     replyMessage() {
       let inReplyTo = this.formatMessage(this.document)
 
-      console.log(inReplyTo)
-
       if (this.replyCallback) {
         this.replyCallback({data: {
           type: 'setIsReplying',
           value: true,
-          inReplyTo
+          inReplyTo,
+          direction: this.document.direction
         }})
       } else {
         throw new Error('Reply callback is not defined')

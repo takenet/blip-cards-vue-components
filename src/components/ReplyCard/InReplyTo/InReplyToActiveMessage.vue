@@ -1,14 +1,17 @@
 <template>
-  <bds-grid direction="row" justifyContent="space-between" gap="2">
-    <bds-grid direction="row"  gap="1"  align-items="center">
-      <bds-grid direction="row" padding="1" gap="1" >
-        <bds-grid>
-          <bds-icon theme="outline" name="paperplane" size="medium" class="typo" />
-        </bds-grid>
-        <bds-grid direction="column" >
-          <bds-typo tag="span" variant="fs-14" bold="regular" class="typo single-line-text-overflow-ellipsis">{{ templateTitle }}</bds-typo>
-          <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
-            v-if="templateText">{{ templateText }}</bds-typo>
+  <bds-grid direction="row" justifyContent="space-between" gap="2" class="container-reply-item">
+    <bds-grid direction="row" gap="1" align-items="center">
+      <bds-grid direction="column" padding="1" gap="1">
+        <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
+        <bds-grid direction="row" gap="1" >
+          <bds-grid>
+            <bds-icon theme="outline" name="paperplane" size="medium" class="typo" />
+          </bds-grid>
+          <bds-grid direction="column" >
+            <bds-typo tag="span" variant="fs-14" bold="regular" class="typo">{{ templateTitle }}</bds-typo>
+            <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
+              v-if="templateText">{{ templateText }}</bds-typo>
+          </bds-grid>
         </bds-grid>
       </bds-grid>
     </bds-grid>
@@ -29,6 +32,7 @@
     </bds-grid>
   </bds-grid>
 </template>
+
   
 <script>
 import { parseComponentImage, parseComponentVideo } from '@/utils/TemplateContent'
@@ -43,6 +47,10 @@ export default {
     translations: {
       type: Object,
       default: () => ({})
+    },
+    replyingToText: {
+      type: String,
+      default: null
     }
   },
   computed: {
@@ -115,11 +123,11 @@ export default {
 
 <style scoped>
 .image-replied {
-  max-height: 80px;
+  max-height: 110px;
 }
 
 .video-replied {
-  max-height: 95px;
+  max-height: 110px;
   margin-right: -4px;
   border-radius: 0 !important;
 }
