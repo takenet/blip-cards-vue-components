@@ -22,6 +22,7 @@
         ref="video"
         @loadedmetadata="captureThumbnail"
         class="video-replied"
+        :class="!this.inReplyTo.value.text ? 'simplified' : 'full-height'"
       />
     </bds-grid>
   </bds-grid>
@@ -84,9 +85,16 @@ export default {
 </script>
 
 <style scoped>
-.video-replied {
-  max-height: 95px;
-  margin-right: -4px;
-  border-radius: 0 !important;
-}
+  .video-replied {  
+    margin-right: -4px;
+    border-radius: 0 !important;
+  }
+
+  .simplified {
+    max-height: 95px;
+  }
+
+  .full-height {
+    max-height: 110px;
+  }
 </style>

@@ -2,7 +2,7 @@
   <bds-grid direction="row" justifyContent="space-between" gap="2" class="container-reply-item">
     <bds-grid direction="row" gap="1" align-items="center">
       <bds-grid direction="column" padding="1" gap="1">
-        <bds-typo variant="fs-14" bold="bold" :margin="false" class="typo text-replying">{{replyingToText}}</bds-typo>
+        <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
         <bds-grid direction="row" gap="1" >
           <bds-grid>
             <bds-icon theme="outline" name="file-image" size="medium" class="typo" />
@@ -17,7 +17,7 @@
     </bds-grid>
     
     <bds-grid>
-      <img class="image-replied" :src="uriImage" />
+      <img :class="this.inReplyTo.value.text ? 'image-replied' : 'image-replied-simplified'" :src="uriImage" />
     </bds-grid>
   </bds-grid>
 </template>
@@ -69,7 +69,10 @@ export default {
 
 <style scoped>
 .image-replied { 
-  max-width: 110px;
   max-height: 110px;
+}
+
+.image-replied-simplified {
+  max-height: 80px;
 }
 </style>

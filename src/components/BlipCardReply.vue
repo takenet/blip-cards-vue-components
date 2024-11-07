@@ -26,7 +26,7 @@ export default {
       type: Function | undefined,
       required: true
     },
-    replyTooltipText: {
+    tooltipText: {
       type: String,
       default: 'Responder'
     }
@@ -54,24 +54,20 @@ export default {
 
     formatMessage(message) {
       const formats = {
-        'template-content': this.formatTemplate,
         'text/plain': this.formatText,
         'application/vnd.lime.media-link+json': this.formatMedia,
-        'application/vnd.lime.location+json': this.formatLocation
+        'application/vnd.lime.location+json': this.formatLocation,
+        'application/json': this.formatTemplate
       }
 
       let type = message.type || message.content.type
-
-      if (type === 'application/json' && message.content.type === 'template-content') {
-        type = 'template-content'
-      }
 
       if (formats[type]) {
         return formats[type](message)
       }
 
       return {
-        type: message.content.type || message.type,
+        type: type,
         value: message.content
       }
     },
@@ -109,7 +105,7 @@ export default {
     },
     formatLocation (message) {
       return {
-        type: message.type,
+        type: 'application/vnd.lime.location+json',
         value: message.content
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isEditing" class="location" :class="isFailedMessage(status, position) + ' ' + getBlipContainer">
     <bds-grid justifyContent="space-between" gap="1" align-items="center" :direction="position === 'left' ? 'row' : 'row-reverse'">
-      <div :class="simplified ? '' : 'bubble ' + position" :style=" simplified ? '' : 'width: ' + bubbleWidth">
+      <div :class="simplified ? '' : 'bubble ' + position" :style=" simplified ? '' : 'width: ' + bubbleWidth" style="width: 100%;">
         <bds-button-icon v-if="deletable"
           class="editIco trashIco icon-button-margin"
           icon="trash"
@@ -19,7 +19,7 @@
         <div v-if="simplified" class="header">
           <bds-grid direction="row" justifyContent="space-between" gap="2" class="container-reply-item">
             <bds-grid direction="row" gap="1" align-items="center">
-              <bds-grid direction="column" padding="1" gap="1">
+              <bds-grid direction="column" gap="1">
                 <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
                 <bds-grid direction="row" gap="1" >
                   <bds-grid>
@@ -273,8 +273,10 @@ export default {
 
 .location {
   .header {
+    display: block;
     overflow: hidden;
     border-radius: inherit;
+    width: 100%
   }
 
   .blip-location-metadata {
@@ -324,6 +326,11 @@ export default {
   width: 70px;
   height: 70px;
   align-items: center;
+}
+
+.container-reply-item {
+  max-height: 110px;
+  justify-content: space-between; 
 }
 
 .location-simplified-text {
