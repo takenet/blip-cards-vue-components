@@ -15,8 +15,6 @@
         <plain-text
           v-if="document.metadata && document.metadata['#blip.payload.text']"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
-          :show-more-msg="translations.showMore"
           :status="status"
           :length="length"
           :position="position"
@@ -32,14 +30,13 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :is-external-message="externalMessage"
-          :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
+          :translations="translations"
         />
 
         <plain-text
           v-else-if="document.type === 'text/plain'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
-          :show-more-msg="translations.showMore"
           :status="status"
           :length="length"
           :position="position"
@@ -56,7 +53,8 @@
           :on-cancel="cancel"
           :disable-link="disableLink"
           :is-external-message="externalMessage"
-          :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
+          :translations="translations"
         />
 
         <media-link
@@ -91,6 +89,7 @@
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :transcription="transcription"
+          :reply-callback="replyCallback"
         />
 
         <document-select
@@ -150,6 +149,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :reply-callback="replyCallback"
         />
 
         <blip-select
@@ -204,6 +204,8 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
+          :transcription="transcription"
         />
 
         <survey
@@ -244,6 +246,7 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <request-location
@@ -272,6 +275,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :on-location-error="onLocationError"
+          :reply-callback="replyCallback"
         />
 
         <lime-input
@@ -412,6 +416,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :disable-link="disableLink"
+          :reply-callback="replyCallback"
         />
 
         <unsuported-content
@@ -438,6 +443,7 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <contact
@@ -461,6 +467,7 @@
           :address-label="translations.addressLabel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <application-json
@@ -514,6 +521,7 @@
           :reply-text="translations.replyText"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <reaction-card
@@ -616,6 +624,9 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :reply-callback="replyCallback"
+          :full-document="editableDocument"
+          :translations="translations"
         />
       </div>
       <div
@@ -702,6 +713,9 @@ export default {
     },
     transcription: {
       type: Object
+    },
+    replyCallback: {
+      type: Function
     }
   },
   data() {

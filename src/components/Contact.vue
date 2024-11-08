@@ -5,6 +5,7 @@
       class="blip-container contact"
       :class="isFailedMessage(status, position)"
     >
+    <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg">
@@ -31,6 +32,13 @@
           </div>
         </div>
       </div>
+
+      <blip-card-reply
+        :document="fullDocument"
+        :reply-callback="replyCallback"
+        :reply-tooltip-text="replyTooltipText"
+      />
+    </bds-grid>
 
       <blip-card-date
         :status="status"
@@ -110,14 +118,26 @@ export default {
     addressLabel: {
       type: String,
       default: 'Endereço'
+    },
+    replyCallback: {
+      type: Function,
+      default: undefined
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: function() {
     return {
       text: undefined,
       showContent: undefined,
-      isFailedMessage
+      isFailedMessage,
+      replyTooltipText: 'Responder'
     }
+  },
+  mounted() {
+    this.replyTooltipText = this.translations.replyTooltipText
   },
   methods: {
     init: function() {

@@ -15,6 +15,7 @@ import BlipCallsPermissionReply from './components/BlipCalls/BlipCallsPermission
 import BlipCard from './components/BlipCard'
 import BlipCardDate from './components/BlipCardDate'
 import BlipCardMember from './components/BlipCardMember'
+import BlipCardReply from './components/BlipCardReply'
 import BlipGroupCard from './components/BlipGroupCard'
 import BlipListCard from './components/BlipListCard'
 import BlipSelect from './components/BlipSelect'
@@ -89,6 +90,7 @@ function install(Vue) {
   components.push(Vue.component(BlipCard.name, BlipCard))
   components.push(Vue.component(BlipGroupCard.name, BlipGroupCard))
   components.push(Vue.component(BlipListCard.name, BlipListCard))
+  components.push(Vue.component(BlipCardReply.name, BlipCardReply))
   components.push(Vue.component(Ticket.name, Ticket))
   components.push(Vue.component(BlipCalls.name, BlipCalls))
   components.push(Vue.component(BlipCallsEndCard.name, BlipCallsEndCard))

@@ -12,37 +12,45 @@
         :member-info="memberInfo"
         :is-group="false"
       />
-      <div :class="'bubble ' + position">
-        <bds-button-icon v-if="deletable"
-          class="editIco trashIco icon-button-margin icon-button-top"
-          icon="trash"
-          variant="delete"
-          size="short"
-          v-on:click="trash(document)"
-        ></bds-button-icon>
-        <bds-button-icon v-if="editable"
-          class="editIco icon-button-margin icon-button-top"
-          icon="edit"
-          variant="primary"
-          size="short"
-          v-on:click="toggleEdit"
-        ></bds-button-icon> 
-        <div v-if="!previewDocument.hasPreview" v-html="previewDocument.content"></div>
-        <div v-else>
-          <div v-show="!showContent" v-html="previewDocument.previewContent"></div>
-          <transition name="slide-fade">
-            <div v-show="showContent" v-html="previewDocument.content"></div>
-          </transition>
-          <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
+
+      <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
+        <div :class="'bubble ' + position">
+          <bds-button-icon v-if="deletable"
+            class="editIco trashIco icon-button-margin icon-button-top"
+            icon="trash"
+            variant="delete"
+            size="short"
+            v-on:click="trash(document)"
+          ></bds-button-icon>
+          <bds-button-icon v-if="editable"
+            class="editIco icon-button-margin icon-button-top"
+            icon="edit"
+            variant="primary"
+            size="short"
+            v-on:click="toggleEdit"
+          ></bds-button-icon> 
+          <div v-if="!previewDocument.hasPreview" v-html="previewDocument.content"></div>
+          <div v-else>
+            <div v-show="!showContent" v-html="previewDocument.previewContent"></div>
+            <transition name="slide-fade">
+              <div v-show="showContent" v-html="previewDocument.content"></div>
+            </transition>
+            <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
+          </div>
         </div>
-      </div>
+
+        <blip-card-reply
+          :document="fullDocument"
+          :reply-callback="replyCallback"
+          :reply-tooltip-text="replyTooltipText"
+        />
+      </bds-grid>
+      
       <blip-card-date
         :status="status"
         :position="position"
         :date="date"
         :failed-to-send-msg="failedToSendMsg"
-        :is-external-message="isExternalMessage"
-        :external-message-text="externalMessageText"
       />
     </div>
   </div>
@@ -111,17 +119,17 @@ export default {
       type: Boolean,
       default: false
     },
-    showMoreMsg: {
-      type: String,
-      default: 'Ver mais'
-    },
-    failedToSendMsg: {
-      type: String,
-      default: 'Falha ao enviar a mensagem.'
-    },
     memberInfo: {
       type: String,
       default: ''
+    },
+    replyCallback: {
+      type: Function,
+      default: undefined
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {
@@ -138,12 +146,18 @@ export default {
       }
     }
   },
-  data: function() {
-    return {
-      text: undefined,
-      showContent: undefined,
-      isFailedMessage
-    }
+  data: () => ({
+    text: undefined,
+    showContent: undefined,
+    isFailedMessage,
+    failedToSendMsg: 'Falha ao enviar a mensagem.',
+    showMoreMsg: 'Ver mais',
+    replyTooltipText: 'Responder'
+  }),
+  mounted() {
+    this.failedToSendMsg = this.translations.failedToSend
+    this.showMoreMsg = this.translations.showMore
+    this.replyTooltipText = this.translations.replyTooltipText
   },
   methods: {
     init: function() {
