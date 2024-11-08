@@ -67,7 +67,7 @@ export default {
       }
 
       return {
-        type: type,
+        type,
         value: message.content
       }
     },
