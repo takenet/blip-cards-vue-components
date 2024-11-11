@@ -431,8 +431,7 @@ export default {
         this.transcription.onOpenMfeModal({
           url: undefined,
           transcriptions: [ this.transcriptionText ],
-          mediaDuration: this.totalTime,
-          source: 'copilot'
+          mediaDuration: this.totalTime
         })
       }
     },
