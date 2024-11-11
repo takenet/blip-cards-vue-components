@@ -32,7 +32,7 @@
           <div class="sk-circle-wrapper" id="animation">
             <bds-loading-spinner size="small" color="main"></bds-loading-spinner>
           </div>
-          <video id="blipVideo"></video>
+          <video id="blipVideo" preload="metadata"></video>
         </div>
         <div class="video-player-controls" id="videoPlayerControls">
           <span v-if="isPlaying" @click="togglePlay">
@@ -183,6 +183,11 @@ export default {
     this.videoUri = isAuthenticatedMediaLink(this.document)
         ? await tryCreateLocalMediaUri(this.document, this.asyncFetchMedia)
         : this.document.uri
+
+    const videoUrl = new URL(this.videoUri)
+    if (!videoUrl.hash) {
+      this.videoUri += '#t=0.1'
+    }
 
     this._initVideo()
     document.addEventListener('fullscreenchange', this.fullScreenChange)
