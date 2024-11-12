@@ -1,7 +1,7 @@
 <template>
   <bds-tooltip
     position="top-center"
-    :tooltip-text="tooltipText"
+    :tooltip-text="replyTooltipText"
   >
     <bds-button-icon
       icon="redo"
