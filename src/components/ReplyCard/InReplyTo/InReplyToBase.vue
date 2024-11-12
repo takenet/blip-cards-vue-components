@@ -114,10 +114,10 @@ export default {
       return this.inReplyTo.type === 'application/vnd.lime.select+json'
     },
     isImageReply() {
-      return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('image')
+      return this.inReplyTo.value && this.inReplyTo.value.type && this.inReplyTo.value.type.includes('image')
     },
     isVideoReply() {
-      return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('video')
+      return this.inReplyTo.value && this.inReplyTo.value.type && this.inReplyTo.value.type.includes('video')
     },
     isDocumentReply() {
       return this.inReplyTo.type === 'application/vnd.lime.media-link+json' && this.isMediaTypeDocument(this.inReplyTo.value.type)
