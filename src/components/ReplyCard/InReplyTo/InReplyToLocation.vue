@@ -4,6 +4,7 @@
       class="blip-card"   
       :document="getDocument()"
       simplified
+      :replying-to-text="replyingToText"
     />
   </div>
 </template>
@@ -19,6 +20,10 @@
       translations: {
         type: Object,
         default: () => ({})
+      },
+      replyingToText: {
+        type: String,
+        default: null
       }
     },
     methods: {

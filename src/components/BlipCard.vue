@@ -522,6 +522,7 @@
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
+          :scroll-to-message-by-id="scrollToMessageById"
         />
 
         <reaction-card
@@ -715,6 +716,9 @@ export default {
       type: Object
     },
     replyCallback: {
+      type: Function
+    },
+    scrollToMessageById: {
       type: Function
     }
   },

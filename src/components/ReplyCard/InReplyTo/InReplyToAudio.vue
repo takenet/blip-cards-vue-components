@@ -1,12 +1,19 @@
 <template>
-  <bds-grid direction="row" padding="y-1" margin="x-1" align-items="center" gap="1">
-    <bds-grid>
-      <bds-icon name="audio" theme="outline" size="medium" class="typo" />
+  <bds-grid direction="row" justifyContent="space-between" gap="2" class="container-reply-item">
+    <bds-grid direction="row" gap="1" align-items="center">
+      <bds-grid direction="column" padding="1" gap="1">
+        <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
+        <bds-grid direction="row" gap="1" >
+          <bds-grid>
+            <bds-icon theme="outline" name="audio" size="medium" class="typo" />
+          </bds-grid>
+          <bds-grid direction="column" >
+            <bds-typo variant="fs-14" bold="regular" class="typo">{{ timeAudio || translations.labelAudio  }}</bds-typo>
+          </bds-grid>
+        </bds-grid>
+      </bds-grid>
     </bds-grid>
-    <bds-grid>
-      <bds-typo variant="fs-14" bold="regular" class="typo">{{ timeAudio || translations.labelAudio || 'Audio' }}</bds-typo>
-    </bds-grid>
-  </bds-grid>  
+  </bds-grid>
 </template>
 
 <script>
@@ -29,6 +36,10 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    replyingToText: {
+      type: String,
+      default: null
     }
   },
   data: () => ({

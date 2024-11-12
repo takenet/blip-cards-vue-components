@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isEditing" class="location" :class="isFailedMessage(status, position) + ' ' + getBlipContainer">
     <bds-grid justifyContent="space-between" gap="1" align-items="center" :direction="position === 'left' ? 'row' : 'row-reverse'">
-      <div :class="simplified ? '' : 'bubble ' + position" :style=" simplified ? '' : 'width: ' + bubbleWidth">
+      <div :class="simplified ? '' : 'bubble ' + position" :style=" simplified ? '' : 'width: ' + bubbleWidth" style="width: 100%;">
         <bds-button-icon v-if="deletable"
           class="editIco trashIco icon-button-margin"
           icon="trash"
@@ -17,16 +17,26 @@
           v-on:click="toggleEdit"
         ></bds-button-icon>
         <div v-if="simplified" class="header">
-          <bds-grid gap="4" align-items="center" justify-content="space-between">
-            <bds-grid margin="r-1" align-items="center" gap="1">
-              <bds-icon class="typo" size="small" name="localization" theme="outline"></bds-icon>
-              <bds-typo
-                tag="span"
-                margin="false"
-                class="location-simplified-text typo"
-                v-html="sanitize(document.text)">
-              </bds-typo>
+          <bds-grid direction="row" justifyContent="space-between" gap="2" class="container-reply-item">
+            <bds-grid direction="row" gap="1" align-items="center">
+              <bds-grid direction="column" gap="1">
+                <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
+                <bds-grid direction="row" gap="1" >
+                  <bds-grid>
+                    <bds-icon theme="outline" name="localization" size="medium" class="typo" />
+                  </bds-grid>
+                  <bds-grid direction="column" >
+                    <bds-typo
+                      tag="span"
+                      margin="false"
+                      class="location-simplified-text typo"
+                      v-html="sanitize(document.text)">
+                    </bds-typo>
+                  </bds-grid>
+                </bds-grid>
+              </bds-grid>
             </bds-grid>
+            
             <bds-grid>
               <div class="location-preview-container">
                 <div class="ratio ratio1-1 pointer" :style="styleObject" id="simplifiedLocation"></div>
@@ -153,6 +163,10 @@ export default {
     replyCallback: {
       type: Function,
       default: undefined
+    },
+    replyingToText: {
+      type: String,
+      default: null
     }
   },
   data: function() {
@@ -259,8 +273,10 @@ export default {
 
 .location {
   .header {
+    display: block;
     overflow: hidden;
     border-radius: inherit;
+    width: 100%
   }
 
   .blip-location-metadata {
@@ -307,9 +323,14 @@ export default {
 
 .location-preview-container {
   background-color: $color-surface-1;
-  width: 56px;
-  height: 56px;
+  width: 70px;
+  height: 70px;
   align-items: center;
+}
+
+.container-reply-item {
+  max-height: 110px;
+  justify-content: space-between; 
 }
 
 .location-simplified-text {
@@ -321,5 +342,9 @@ export default {
   text-align: left;
   -webkit-line-clamp: 1;
   max-width: 150px;
+}
+
+.container-reply-item {
+  justify-content: space-between;
 }
 </style>
