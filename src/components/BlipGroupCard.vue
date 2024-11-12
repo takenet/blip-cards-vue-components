@@ -40,6 +40,7 @@
           :on-async-fetch-session="onAsyncFetchSession"
           :transcription="transcription"
           :reply-callback="replyCallback"
+          :scroll-to-message-by-id="scrollToMessageById"
         />
         <blip-card-date
           v-if="group.date && group.hasNotification"
@@ -161,6 +162,10 @@ export default {
     },
     replyCallback: {
       type: Function
+    },
+    scrollToMessageById: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {

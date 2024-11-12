@@ -1,5 +1,9 @@
 <template>
-  <div class="in-reply-to-message-container" :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput }">
+  <div 
+    class="in-reply-to-message-container" 
+    :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput }"
+    @click="goToMessageReplyed"
+  >
     <template>
       <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>   
       <in-reply-to-text
@@ -108,6 +112,9 @@ export default {
     isReplyingOnInput: {
       type: Boolean,
       default: false
+    },
+    scrollToMessageById: {
+      type: Function
     }
   },
   computed: {
@@ -184,6 +191,9 @@ export default {
         .values(MediaLinkTypesConstants)
         .filter(mediaLinkType => type.includes(mediaLinkType))
         .length === 0
+    },
+    goToMessageReplyed() {
+      this.scrollToMessageById(this.document.inReplyTo.id)
     }
   }
 }
@@ -211,6 +221,7 @@ export default {
     border: 1px solid $color-content-ghost;
     border-radius: 0.5rem;
     padding-bottom: -10px;
+    cursor: pointer;
 
     .skeleton {
       height: 2.5rem;

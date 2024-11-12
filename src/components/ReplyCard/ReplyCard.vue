@@ -13,7 +13,9 @@
             :is-own-message="isOwnMessage"
             :failed-message="translations.failedToLoad"
             :translations="translations"
-            :document="this.document"/>
+            :document="this.document"
+            :scroll-to-message-by-id="scrollToMessageById"
+          />
           <replied-base v-if="replied" 
             :replied="replied" 
             :updatedPhotoMargin="updatedPhotoMargin"
@@ -101,6 +103,9 @@
       replyCallback: {
         type: Function,
         default: undefined
+      },
+      scrollToMessageById: {
+        type: Function
       }
     },
     data() {
