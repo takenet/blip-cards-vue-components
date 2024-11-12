@@ -32,7 +32,7 @@
           <div class="sk-circle-wrapper" id="animation">
             <bds-loading-spinner size="small" color="main"></bds-loading-spinner>
           </div>
-          <video id="blipVideo" preload="metadata"></video>
+          <video id="blipVideo" preload="metadata"></video> 
         </div>
         <div class="video-player-controls" id="videoPlayerControls">
           <span v-if="isPlaying" @click="togglePlay">
