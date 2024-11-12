@@ -5,6 +5,7 @@
       class="blip-container contact"
       :class="isFailedMessage(status, position)"
     >
+    <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
       <div :class="'bubble ' + position">
         <div v-if="deletable" class="editIco trashIco" @click="trash(document)">
           <img :src="trashSvg">
@@ -32,26 +33,21 @@
         </div>
       </div>
 
-      <div class="flex" :class="'notification ' + position" v-if="date">
-        <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
-        <img
-          v-else-if="this.status === 'accepted' && this.position === 'right'"
-          :src="checkSentSvg"
-        >
-        <img
-          v-else-if="this.status === 'received' && this.position === 'right'"
-          :src="doubleCheckReceivedSvg"
-        >
-        <img
-          v-else-if="this.status === 'consumed' && this.position === 'right'"
-          :src="doubleCheckReadSvg"
-        >
-        <div
-          v-else-if="this.status === 'failed' && this.position === 'right'"
-          class="failure"
-        >{{ failedToSendMsg }}</div>
-        <div>{{ date }}</div>
-      </div>
+      <blip-card-reply
+        :document="fullDocument"
+        :reply-callback="replyCallback"
+        :reply-tooltip-text="replyTooltipText"
+      />
+    </bds-grid>
+
+      <blip-card-date
+        :status="status"
+        :position="position"
+        :date="date"
+        :failed-to-send-msg="failedToSendMsg"
+        :is-external-message="isExternalMessage"
+        :external-message-text="externalMessageText"
+      />
     </div>
   </div>
 
@@ -122,14 +118,26 @@ export default {
     addressLabel: {
       type: String,
       default: 'Endereço'
+    },
+    replyCallback: {
+      type: Function,
+      default: undefined
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: function() {
     return {
       text: undefined,
       showContent: undefined,
-      isFailedMessage
+      isFailedMessage,
+      replyTooltipText: 'Responder'
     }
+  },
+  mounted() {
+    this.replyTooltipText = this.translations.replyTooltipText
   },
   methods: {
     init: function() {

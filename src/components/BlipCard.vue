@@ -15,12 +15,11 @@
         <plain-text
           v-if="document.metadata && document.metadata['#blip.payload.text']"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
-          :show-more-msg="translations.showMore"
           :status="status"
           :length="length"
           :position="position"
           :document="document.metadata['#blip.payload.text']"
+          :member-info="memberInfo"
           :full-document="editableDocument"
           :date="date"
           :on-save="saveCard"
@@ -30,17 +29,19 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="externalMessage"
+          :reply-callback="replyCallback"
+          :translations="translations"
         />
 
         <plain-text
           v-else-if="document.type === 'text/plain'"
           class="blip-card"
-          :failed-to-send-msg="translations.failedToSend"
-          :show-more-msg="translations.showMore"
           :status="status"
           :length="length"
           :position="position"
           :document="editableDocument.content"
+          :member-info="memberInfo"
           :full-document="editableDocument"
           :date="date"
           :on-save="saveCard"
@@ -51,6 +52,9 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :disable-link="disableLink"
+          :is-external-message="externalMessage"
+          :reply-callback="replyCallback"
+          :translations="translations"
         />
 
         <media-link
@@ -68,6 +72,7 @@
           :status="status"
           :position="position"
           :document="editableDocument.content"
+          :member-info="memberInfo"          
           :full-document="editableDocument"
           :date="date"
           :on-media-selected="onMediaSelected"
@@ -80,6 +85,11 @@
           :on-cancel="cancel"
           :on-audio-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :translations="translations"
+          :transcription="transcription"
+          :reply-callback="replyCallback"
         />
 
         <document-select
@@ -139,6 +149,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :reply-callback="replyCallback"
         />
 
         <blip-select
@@ -191,6 +202,10 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
+          :transcription="transcription"
         />
 
         <survey
@@ -229,6 +244,9 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <request-location
@@ -257,6 +275,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :on-location-error="onLocationError"
+          :reply-callback="replyCallback"
         />
 
         <lime-input
@@ -330,6 +349,54 @@
           :on-cancel="cancel"
         />
 
+        <blip-calls
+          v-else-if="document.type === 'application/vnd.iris.calls.media+json'"
+          class="blip-card"
+          :start-call-msg="translations.startCallMsg"
+          :end-call-msg="translations.endCallMsg"
+          :video-msg="translations.videoMsg"
+          :audio-msg="translations.audioMsg"
+          :video-call-msg="translations.videoCallMsg"
+          :voice-call-msg="translations.voiceCallMsg"
+          :success-status-msg="translations.successStatusMsg"
+          :failed-status-msg="translations.failedStatusMsg"
+          :cancel-status-msg="translations.cancelStatusMsg"
+          :not-answered-status-msg="translations.notAnsweredStatusMsg"
+          :preparing-recording-msg="translations.preparingRecordingMsg"
+          :load-recording-msg="translations.loadRecordingMsg"
+          :failed-to-send-msg="translations.failedToSend"
+          :download-recording-label="translations.downloadRecordingLabel"
+          :transcribe-recording-label="translations.transcribeRecordingLabel"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :on-media-validate-uri="onAudioValidateUri"
+          :async-fetch-media="asyncFetchMedia"
+          :on-async-fetch-session="onAsyncFetchSession"
+          :transcription="transcription"
+        />
+
+        <blip-calls-permission-reply
+          v-else-if="document.type === 'application/vnd.iris.calls.customer-permission+json'"
+          class="blip-card"
+          :accept-response-text="translations.callsPermissionReplyAcceptText"
+          :reject-response-text="translations.callsPermissionReplyRejectText"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="editableDocument.content"
+          :member-info="memberInfo"
+          :date="date"
+        />
+
         <template-content
           v-else-if="document.content.type === 'template-content'"
           class="blip-card"
@@ -347,7 +414,10 @@
           :on-deleted="deleteCard"
           :deletable="deletable"
           :editing="isCardEditing"
-          :on-cancel="cancel"/>
+          :on-cancel="cancel"
+          :disable-link="disableLink"
+          :reply-callback="replyCallback"
+        />
 
         <unsuported-content
           v-else-if="document.content.type === 'template'"
@@ -371,6 +441,9 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <contact
@@ -392,6 +465,9 @@
           :phone-label="translations.phoneLabel"
           :mail-label="translations.mailLabel"
           :address-label="translations.addressLabel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <application-json
@@ -443,6 +519,9 @@
           :video-uri-msg="translations.videoUri"
           :on-audio-validate-uri="onAudioValidateUri"
           :reply-text="translations.replyText"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :reply-callback="replyCallback"
         />
 
         <reaction-card
@@ -475,6 +554,37 @@
           :on-audio-validate-uri="onAudioValidateUri"
           :reaction-text="translations.reactionText"
           :removed-reaction-text="translations.removedReactionText"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+        />
+
+        <copy-and-paste-card
+          v-else-if="document.type === 'application/vnd.lime.copy-and-paste+json'"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-media-selected="onMediaSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :translations="translations"
+          :requiredFieldText="translations.requiredFieldText"
+          :copyContentText="translations.copyContentText"
+          :cancelText="translations.cancel"
+          :saveText="translations.save"
+          :headerMessage="translations.headerMessage"
+          :bodyMessage="translations.bodyMessage"
+          :footerMessage="translations.footerMessage"
+          :copyButtonMessage="translations.copyButtonMessage"
+          :copyContentMessage="translations.copyContentMessage"
         />
 
         <thread-summary
@@ -514,6 +624,9 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :reply-callback="replyCallback"
+          :full-document="editableDocument"
+          :translations="translations"
         />
       </div>
       <div
@@ -534,10 +647,13 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
+import { checkIsExternalMessage } from '../utils/externalMessages.js'
+import { getMemberInfo } from '../utils/memberUtils.js'
 
 const supportedRepliedTypes = [
   MessageTypesConstants.TEXT_MESSAGE,
-  MessageTypesConstants.MEDIALINK_MESSAGE
+  MessageTypesConstants.MEDIALINK_MESSAGE,
+  MessageTypesConstants.LOCATION
 ]
 
 export default {
@@ -590,6 +706,15 @@ export default {
       type: Function
     },
     asyncFetchMedia: {
+      type: Function
+    },
+    onAsyncFetchSession: {
+      type: Function
+    },
+    transcription: {
+      type: Object
+    },
+    replyCallback: {
       type: Function
     }
   },
@@ -687,6 +812,12 @@ export default {
   computed: {
     MessageTypesConstants() {
       return MessageTypesConstants
+    },
+    externalMessage() {
+      return checkIsExternalMessage(this.document)
+    },
+    memberInfo() {
+      return getMemberInfo(this.document)
     }
   }
 }

@@ -247,8 +247,10 @@ export default {
 
       this.$validator.validateAll().then((result) => {
         if (!result) return
-        this.styleObject['border-radius'] =
-          this.title || this.text ? '13px 13px 0px 0px' : '13px 13px 13px 0px'
+
+        this.styleObject['border-radius'] = this.title || this.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px'
 
         this.save({
           ...this.document,
@@ -271,10 +273,9 @@ export default {
       var img = new Image()
       img.onload = () => {
         this.styleObject = {
-          'border-radius':
-            this.document.title || this.document.text
-              ? '13px 13px 0px 0px'
-              : '13px 13px 13px 0px',
+          'border-radius': this.document.title || this.document.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px',
           'background-image': `url("${url}")`
         }
 
@@ -285,15 +286,14 @@ export default {
       }
       img.onerror = () => {
         this.styleObject = {
-          'border-radius':
-            this.document.title || this.document.text
-              ? '13px 13px 0px 0px'
-              : '13px 13px 13px 0px',
+          'border-radius': this.document.title || this.document.text
+            ? '13px 13px 0px 0px'
+            : '13px 13px 13px 0px',
           'background-image': `url("${
             this.position === 'right' ? BrokenWhite : Broken
           }")`,
-          'background-size': '125px',
-          opacity: '0.6'
+          opacity: '0.6',
+          'background-size': '125px'
         }
 
         this.simplifiedStyleObject = this.styleObject

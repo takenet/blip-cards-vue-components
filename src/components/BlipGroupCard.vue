@@ -3,7 +3,13 @@
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
       <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
-      <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo, [group.position]: true}">
+      <div class="blip-card-group" :class="{'blip-container--with-photo': group.photo || (onFailedClickIcon && group.status === 'failed'), [group.position]: true}">
+        <blip-card-member
+          v-if="(group.memberName || group.memberPhoneNumber)"
+          :position="group.position"
+          :member-info="group.memberName ? group.memberName : group.memberPhoneNumber"
+          :is-group="true"
+        /> 
         <blip-card
           v-for="message in group.msgs"
           :id="message.id"
@@ -14,7 +20,6 @@
           :editing="editing"
           :hide-options="hideOptions || message.hideOptions"
           :on-save="onSave"
-          :on-failed-click-icon="onFailedClickIcon"
           :status="message.status"
           :on-deleted="onDeleted"
           :on-cancel="onCancel"
@@ -32,24 +37,35 @@
           :on-audio-validate-uri="onAudioValidateUri"
           :readonly="readonly"
           :async-fetch-media="asyncFetchMedia"
+          :on-async-fetch-session="onAsyncFetchSession"
+          :transcription="transcription"
+          :reply-callback="replyCallback"
         />
-
-        <div class="flex" :class="'group-notification ' + group.position" v-if="group.date && group.hasNotification">
-          <img v-if="group.status === 'dispatched' && group.position === 'right'" class='dispatched' :src="clockSvg" draggable="false"/>
-          <img v-else-if="group.status === 'accepted' && group.position === 'right'" class='accepted' :src="checkSentSvg" draggable="false"/>
-          <img v-else-if="group.status === 'received' && group.position === 'right'" class='received' :src="doubleCheckReceivedSvg" draggable="false"/>
-          <img v-else-if="group.status === 'consumed' && group.position === 'right'" class='consumed' :src="doubleCheckReadSvg" draggable="false"/>
-          <div v-else-if="group.status === 'failed' && group.position === 'right'" class="failure">
-            {{ failedMessageNotification(group.msgs[0].type) }}
-          </div>
-          <span>{{ group.date }}</span>
-        </div>
-        <div class="flex" :class="'group-notification ' + group.position" v-else>
-          <img v-if="group.status === 'dispatched' && group.position === 'right'" :src="clockSvg" draggable="false">
-        </div>
+        <blip-card-date
+          v-if="group.date && group.hasNotification"
+          :status="group.status"
+          :position="group.position"
+          :date="group.date"
+          :failed-to-send-msg="failedMessageNotification(group.msgs[0].type)"
+          :is-external-message="checkIsExternalMessage(group.msgs[0])"
+          :external-message-text="externalMessageText"
+          :is-group="true"
+          :show-alert-icon="Boolean(onFailedClickIcon)"
+        />
       </div>
-      <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '10px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
-      </div>
+      <span v-if="onFailedClickIcon && group.status === 'failed'">
+        <bds-icon v-if="group.position === 'right'"
+          name="info"
+          theme="solid"
+          :aria-label="translations.failedToSend"
+          @click="onFailedClickIcon(group)"
+          class="icon-message-failed">
+        </bds-icon>
+      </span>
+      <span v-else>
+        <div :class="'blip-card-photo ' + group.position" v-if="group.photo && group.position === 'right'" :style="{ bottom: '10px', right: '0%', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
+        </div>
+      </span>
     </div>
   </div>
 </template>
@@ -57,6 +73,8 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
+import { checkIsExternalMessage } from '../utils/externalMessages.js'
+import { getMemberInfo, getMemberPhoneNumber } from '../utils/memberUtils.js'
 
 export default {
   name: 'blip-group-card',
@@ -126,19 +144,39 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    onAsyncFetchSession: {
+      type: Function
+    },
+    transcription: {
+      type: Object,
+      default: () => ({
+        audioEnabled: false,
+        callRecordingEnabled: false,
+        limits: {},
+        onAsyncTranscribe: (url) => {},
+        onOpenMfeModal: (data) => {},
+        scrollTo: (elementId) => {}
+      })
+    },
+    replyCallback: {
+      type: Function
     }
   },
   data() {
     return {
-      photoMargin: 0
+      photoMargin: 0,
+      checkIsExternalMessage
     }
   },
   computed: {
     groupedDocuments() {
       let groups = []
+
       if (this.documents.length === 0) {
         return
       }
+
       let group = {
         msgs: [this.documents[0]],
         position: this.documents[0].position,
@@ -147,26 +185,61 @@ export default {
         hasNotification: this.showNotification(this.documents[0]),
         status: this.documents[0].status
       }
+
+      let document = this.documents[0].document
+
+      if (document && document.metadata) {
+        group.memberName = document.metadata['#memberName']
+        group.memberPhoneNumber = document.metadata['#memberPhoneNumber']
+      } else {
+        group.memberName = ''
+        group.memberPhoneNumber = ''
+      }
+
       for (let i = 1; i < this.documents.length; i++) {
-        const message = this.documents[i]
-        if (this.compareMessages(group.msgs[group.msgs.length - 1], message)) {
-          group.msgs.push(message)
-          group.date = message.date
-          group.status = message.status
+        const lastMessage = group.msgs[group.msgs.length - 1]
+        const currentMessage = this.documents[i]
+
+        const isLastMessageExternal = checkIsExternalMessage(lastMessage.document)
+        const isCurrentMessageExternal = checkIsExternalMessage(currentMessage.document)
+
+        const currentMessageMemberInfo = getMemberInfo(currentMessage.document)
+        const lastMemberPhoneNumber = getMemberPhoneNumber(lastMessage.document)
+        const currentMemberPhoneNumber = getMemberPhoneNumber(currentMessage.document)
+
+        if (this.compareMessages(lastMessage, currentMessage) &&
+          isLastMessageExternal === isCurrentMessageExternal &&
+          lastMemberPhoneNumber === currentMemberPhoneNumber) {
+          group.msgs.push(currentMessage)
+          group.date = currentMessage.date
+          group.status = currentMessage.status
+          group.reason = currentMessage.reason
+
+          if (currentMessageMemberInfo) {
+            group.memberName = currentMessage.document.metadata['#memberName']
+            group.memberPhoneNumber = currentMessage.document.metadata['#memberPhoneNumber']
+          }
         } else {
           groups.push(group)
-
           group = {
-            msgs: [message],
-            position: message.position,
-            photo: message.photo,
-            date: message.date,
-            hasNotification: this.showNotification(message),
-            status: message.status
+            msgs: [currentMessage],
+            position: currentMessage.position,
+            photo: currentMessage.photo,
+            date: currentMessage.date,
+            hasNotification: this.showNotification(currentMessage),
+            status: currentMessage.status,
+            reason: currentMessage.reason
+          }
+
+          if (currentMessageMemberInfo) {
+            group.memberName = currentMessage.document.metadata['#memberName']
+            group.memberPhoneNumber = currentMessage.document.metadata['#memberPhoneNumber']
           }
         }
       }
+
       groups.push(group)
+
       return groups
     }
   },
@@ -193,6 +266,19 @@ export default {
 
 .blip-message-group {
   position: relative;
+
+  .icon-message-failed {
+    bottom: 10px;
+    right: 0%;
+    width: 25px;
+    height: 25px;
+    color: $color-extended-red;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
+    position: absolute;
+  }
 
   .blip-card-photo {
     background-position: center;

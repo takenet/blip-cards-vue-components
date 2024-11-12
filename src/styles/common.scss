@@ -15,6 +15,11 @@
   color: $color-extended-red;
   font-size: 10px;
   margin-right: 5px;
+
+  img {
+    margin: 0;
+    height: 13px;
+  }
 }
 
 .blip-container {
@@ -41,30 +46,30 @@
   }
 
   .bubble {
-      position: relative;
-      margin-bottom: 5px;
-      width: auto;
-      height: 100%;
-      max-width: 90%;
-      min-width: 160px;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 20px;
-      white-space: pre-line;
-      border: 1px solid $color-content-ghost;
+    position: relative;
+    margin-bottom: 5px;
+    width: auto;
+    height: 100%;
+    max-width: 90%;
+    min-width: 160px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    white-space: pre-line;
+    border: 1px solid $color-content-ghost;
   }
 
   .bubble.left {
-      border-radius: 13px 13px 13px 2px;
-      background-color: $color-surface-1;
+    border-radius: 13px 13px 13px 2px;
+    background-color: $color-surface-1;
+    color: $color-content-default;
+    float: left;
+    .typo{
       color: $color-content-default;
-      float: left;
-      .typo{
-        color: $color-content-default;
-      }
-      .typo-light{
-        color: $color-content-ghost;
-      }
+    }
+    .typo-light{
+      color: $color-content-ghost;
+    }
   }
 
   .bubble.middle {
@@ -76,28 +81,27 @@
     display: inline-block;
   }
 
-
   .ratio {
     border-radius: 0
   }
 
   .bubble.right {
-      border-radius: 13px 2px 13px 13px;
-      background-color: $color-content-default;
+    border-radius: 13px 2px 13px 13px;
+    background-color: $color-content-default;
+    color: $color-surface-1;
+    float: right;
+    .typo{
       color: $color-surface-1;
-      float: right;
-      .typo{
-        color: $color-surface-1;
-      }      
-      .typo-light{
-        color: $color-surface-2;
-      }
-      .failed-message > bds-icon{
-        color: $color-surface-2;
-      }
-      .in-reply-to-message-container,.in-reaction-to-message-container{
-        background-color: $color-content-disable;
-      }
+    }      
+    .typo-light{
+      color: $color-surface-2;
+    }
+    .failed-message > bds-icon{
+      color: $color-surface-2;
+    }
+    .in-reply-to-message-container,.in-reaction-to-message-container{
+      background-color: $color-content-disable;
+    }
   }
 
   .notification {
@@ -227,15 +231,15 @@
     }
 
     img {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-      }
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
 
     .title {
       text-align: left;
@@ -390,7 +394,6 @@
   .text-left {
     text-align: left;
   }
-
 
   .dashed-border {
     border: 1px dashed $color-content-ghost;
@@ -584,4 +587,21 @@
   top: -30px !important;
 }
 
+.bold-color {
+  color: $color-surface-1
+}
 
+.single-line-text-overflow-ellipsis {
+  overflow: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+}
+
+.multiline-text-overflow-ellipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
