@@ -1801,8 +1801,13 @@ export default {
         to: 'to@wa.gw.msging.net',
         type: 'application/vnd.lime.external+json',
         content: {
-          type: 'text/plain',
-          content: 'Enviando mensagem externa'
+          type: 'application/vnd.lime.media-link+json',
+          content: {
+            type: 'image/jpeg',
+            uri:
+            'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
+            size: '1'
+          }
         }
       })
       this.send()
