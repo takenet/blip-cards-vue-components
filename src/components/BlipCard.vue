@@ -610,6 +610,30 @@
           :disable-link="disableLink"
         />
 
+        <blip-external
+          v-else-if="document.type === MessageTypesConstants.BLIP_EXTERNAL"
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :show-more-msg="translations.showMore"
+          :status="status"
+          :length="length"
+          :position="position"
+          :document="editableDocument.content"
+          :member-info="memberInfo"
+          :full-document="editableDocument"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :disable-link="disableLink"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+        />     
+           
         <unsuported-content
           v-else
           class="blip-card"

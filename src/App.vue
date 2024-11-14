@@ -248,6 +248,9 @@
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
+        <button class="button" @click="sendExternalMessage">
+          ENVIAR Mensagem Externa
+        </button>
       </div>
 
       <div v-else>
@@ -1787,6 +1790,19 @@ export default {
             text: 'Copiar código Pix',
             value: 'Value'
           }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessage: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'text/plain',
+          content: 'Enviando mensagem externa'
         }
       })
       this.send()

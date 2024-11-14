@@ -3,5 +3,6 @@ export const MessageTypesConstants = {
   MEDIALINK_MESSAGE: 'application/vnd.lime.media-link+json',
   REDIRECT_MESSAGE: 'application/vnd.lime.redirect+json',
   TEXT_MESSAGE: 'text/plain',
-  LOCATION: 'application/vnd.lime.location+json'
+  LOCATION: 'application/vnd.lime.location+json',
+  BLIP_EXTERNAL: 'application/vnd.lime.external+json'
 }
