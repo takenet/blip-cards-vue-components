@@ -48,8 +48,8 @@
 
       <div>
         <h1>Member Data:</h1>
-        <input type="checkbox" value="false" v-model="hasMemberData" /> Has Member Data
-        <input v-model="memberName" /> Name
+        <input type="checkbox" value="false" v-model="hasMemberData" /> Has
+        Member Data <input v-model="memberName" /> Name
         <input v-model="memberPhone" /> Phone
       </div>
 
@@ -248,8 +248,11 @@
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
-        <button class="button" @click="sendExternalMessage">
-          ENVIAR Mensagem Externa
+        <button class="button" @click="sendExternalMessageText">
+          ENVIAR mensagem de texto externa
+        </button>
+        <button class="button" @click="sendExternalMessageImage">
+          ENVIAR mensagem de imagem externa
         </button>
       </div>
 
@@ -1149,8 +1152,10 @@ export default {
             value: {
               type: 'image/png',
               size: 174999,
-              uri: 'https://hmgmediastore.blip.ai/secure-medias/Media_efba7ff9-1006-45b4-af5e-92fe593545bf?sv=2024-05-04&st=2024-10-02T20%3A35%3A32Z&se=2024-10-02T21%3A05%3A32Z&sr=b&sp=r&sig=MWLAOx1LVqyDzVXn2CkRrDFwwnJynWdwuQ5Lq317C%2Bo%3D&secure=true',
-              previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV9lZmJhN2ZmOS0xMDA2LTQ1YjQtYWY1ZS05MmZlNTkzNTQ1YmY=',
+              uri:
+                'https://hmgmediastore.blip.ai/secure-medias/Media_efba7ff9-1006-45b4-af5e-92fe593545bf?sv=2024-05-04&st=2024-10-02T20%3A35%3A32Z&se=2024-10-02T21%3A05%3A32Z&sr=b&sp=r&sig=MWLAOx1LVqyDzVXn2CkRrDFwwnJynWdwuQ5Lq317C%2Bo%3D&secure=true',
+              previewUri:
+                'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV9lZmJhN2ZmOS0xMDA2LTQ1YjQtYWY1ZS05MmZlNTkzNTQ1YmY=',
               previewType: 'image/png',
               title: 'Chatblip_plataforma.png',
               text: '',
@@ -1794,7 +1799,7 @@ export default {
       })
       this.send()
     },
-    sendExternalMessage: function() {
+    sendExternalMessageImage: function() {
       this.json = JSON.stringify({
         id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
         from: 'from@wa.gw.msging.net',
@@ -1805,9 +1810,22 @@ export default {
           content: {
             type: 'image/jpeg',
             uri:
-            'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
+              'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
             size: '1'
           }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessageText: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'text/plain',
+          content: 'Messagem de Eco'
         }
       })
       this.send()

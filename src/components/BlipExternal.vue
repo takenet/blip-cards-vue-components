@@ -1,29 +1,21 @@
 <template>
-  <div class="blip-container blip-external">
-    <h1>Soy yo!</h1>
-    <blip-card class="blip-card"
-      :document="this.document"
-      :editing="editing"
-      :hide-options="hideOptions"
-      :on-save="onSave"
-      :on-deleted="onDeleted"
-      :on-cancel="onCancel"
+  <div class="blip-container">
+    <blip-card
+      :document="document"
+      :full-document="fullDocument"
+      :position="position"
+      :date="date"
       :editable="editable"
-      :deletable="deletable"
-      :length="length"
-      :on-selected="onSelected"
       :on-media-selected="onMediaSelected"
-      :on-open-link="onOpenLink"
-      :on-unsupported-type="onUnsupportedType"
-      :on-location-error="onLocationError"
-      :translations="translations"
-      :disable-link="disableLink"
-      :on-audio-validate-uri="onAudioValidateUri"
-      :readonly="readonly"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"
       :async-fetch-media="asyncFetchMedia"
-      :on-async-fetch-session="onAsyncFetchSession"
-      :transcription="transcription"
-      :reply-callback="replyCallback"
+      :is-external-message="true"
+      :external-message-text="externalMessageText"
     />
   </div>
 </template>
@@ -95,7 +87,8 @@ export default {
   },
   computed: {
     Test() {
-      return console.log(this.$props.fullDocument)
+      console.log(this.document)
+      console.log(this.fullDocument)
     }
   }
 }
