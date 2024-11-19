@@ -457,7 +457,7 @@ export default {
     },
     async onTranscribe() {
       if (this.transcription && this.transcription.onOpenMfeModal) {
-        await this.transcription.onOpenMfeModal({ url: this.document.media.uri })
+        await this.transcription.onOpenMfeModal({ url: this.document.media.uri, source: 'calls' })
       }
     }
   }
