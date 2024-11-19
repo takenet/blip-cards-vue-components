@@ -254,6 +254,30 @@
         <button class="button" @click="sendExternalMessageImage">
           ENVIAR mensagem de imagem externa
         </button>
+        <button class="button" @click="sendExternalMessageSticker">
+          ENVIAR mensagem de sticker externa
+        </button>
+        <button class="button" @click="sendExternalMessageAudio">
+          ENVIAR mensagem de audio externa
+        </button>
+        <button class="button" @click="sendExternalMessageVideo">
+          ENVIAR mensagem de video externa
+        </button>
+        <button class="button" @click="sendExternalMessageFile">
+          ENVIAR mensagem de documento externa
+        </button>
+        <button class="button" @click="sendExternalMessageCollection">
+          ENVIAR mensagem de coleção externa
+        </button>
+        <button class="button" @click="sendExternalMessageLocation">
+          ENVIAR mensagem de localização externa
+        </button>
+        <button class="button" @click="sendExternalMessageQuickReply">
+          ENVIAR mensagem de quick reply externa
+        </button>
+        <button class="button" @click="sendExternalMessageWebLink">
+          ENVIAR mensagem de web link externa
+        </button>
       </div>
 
       <div v-else>
@@ -1799,6 +1823,19 @@ export default {
       })
       this.send()
     },
+    sendExternalMessageText: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'text/plain',
+          content: 'Messagem de Eco'
+        }
+      })
+      this.send()
+    },
     sendExternalMessageImage: function() {
       this.json = JSON.stringify({
         id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
@@ -1817,15 +1854,219 @@ export default {
       })
       this.send()
     },
-    sendExternalMessageText: function() {
+    sendExternalMessageSticker: function() {
       this.json = JSON.stringify({
         id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
         from: 'from@wa.gw.msging.net',
         to: 'to@wa.gw.msging.net',
         type: 'application/vnd.lime.external+json',
         content: {
-          type: 'text/plain',
-          content: 'Messagem de Eco'
+          type: 'application/vnd.lime.media-link+json',
+          content: {
+            type: 'sticker/webp',
+            uri:
+              'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
+          }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessageAudio: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'application/vnd.lime.media-link+json',
+          content: {
+            type: 'audio/mp3',
+            uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3',
+            size: '1'
+          }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessageVideo: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'application/vnd.lime.media-link+json',
+          content: {
+            type: 'video/mp4',
+            uri:
+              'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+            size: '1'
+          }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessageFile: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'application/vnd.lime.media-link+json',
+          content: {
+            type: 'application/pdf',
+            uri:
+              'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+            title: 'pdf_open_parameters.pdf',
+            size: '5540'
+          }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessageCollection: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'application/vnd.lime.collection+json',
+          content: {
+            itemType: 'application/vnd.lime.document-select+json',
+            items: [
+              {
+                header: {
+                  type: 'application/vnd.lime.media-link+json',
+                  value: {
+                    title: 'Title',
+                    text: 'This is a first item',
+                    type: 'image/jpeg',
+                    uri:
+                      'http://www.isharearena.com/wp-content/uploads/2012/12/wallpaper-281049.jpg'
+                  }
+                },
+                options: [
+                  {
+                    label: {
+                      type: 'application/vnd.lime.web-link+json',
+                      value: {
+                        title: 'Link',
+                        uri: 'https://server.com/first/link1'
+                      }
+                    }
+                  },
+                  {
+                    label: { type: 'text/plain', value: 'Text 1' },
+                    value: {
+                      type: 'application/json',
+                      value: { key1: 'value1', key2: 2 }
+                    }
+                  }
+                ]
+              },
+              {
+                header: {
+                  type: 'application/vnd.lime.media-link+json',
+                  value: {
+                    title: 'Title 2',
+                    text: 'This is another item',
+                    type: 'image/jpeg',
+                    uri:
+                      'http://www.freedigitalphotos.net/images/img/homepage/87357.jpg'
+                  }
+                },
+                options: [
+                  {
+                    label: {
+                      type: 'application/vnd.lime.web-link+json',
+                      value: {
+                        title: 'Second link',
+                        text: 'Weblink',
+                        uri: 'https://server.com/second/link2'
+                      }
+                    }
+                  },
+                  {
+                    label: { type: 'text/plain', value: 'Second text' },
+                    value: {
+                      type: 'application/json',
+                      value: { key3: 'value3', key4: 4 }
+                    }
+                  },
+                  {
+                    label: { type: 'text/plain', value: 'More one text' },
+                    value: {
+                      type: 'application/json',
+                      value: { key5: 'value5', key6: '6' }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessageLocation: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'application/vnd.lime.location+json',
+          content: {
+            latitude: -19.918899,
+            longitude: -43.959275,
+            altitude: 853,
+            text: 'Takes place'
+          }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessageQuickReply: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'application/vnd.lime.select+json',
+          content: {
+            scope: 'immediate',
+            text: 'Choose an option',
+            options: [
+              { text: 'First option' },
+              { order: '2', text: 'Second option' },
+              {
+                order: '3',
+                text: 'Third option',
+                type: 'application/json',
+                value: { key1: 'value1', key2: '2' }
+              }
+            ]
+          }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessageWebLink: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'application/vnd.lime.web-link+json',
+          content: {
+            uri: 'http://limeprotocol.org/content-types.html#web-link',
+            target: 'self',
+            text: 'Segue documentação do web-link'
+          }
         }
       })
       this.send()

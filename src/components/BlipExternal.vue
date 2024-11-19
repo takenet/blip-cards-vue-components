@@ -16,6 +16,7 @@
       :async-fetch-media="asyncFetchMedia"
       :is-external-message="true"
       :external-message-text="externalMessageText"
+      :translations="translations"
     />
   </div>
 </template>
