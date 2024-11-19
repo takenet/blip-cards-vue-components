@@ -5,7 +5,7 @@
       <div :class="'bubble ' + position">
         <div class="reply-container">
           <bds-grid direction="row" align-items="flex-start" gap="half" margin="b-half">
-            <bds-icon class="typo" name="redo" size="small" type="icon"></bds-icon>
+            <bds-icon class="typo" name="reply" size="small" type="icon"></bds-icon>
             <bds-typo class="typo" variant="fs-14" italic="true">{{ replyText }}</bds-typo>
           </bds-grid>
           <in-reply-to-base
