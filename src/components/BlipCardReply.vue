@@ -4,7 +4,7 @@
     :tooltip-text="replyTooltipText"
   >
     <bds-button-icon
-      icon="redo"
+      icon="reply"
       variant="ghost"
       size="short"
       @click="replyMessage"
@@ -26,7 +26,7 @@ export default {
       type: Function | undefined,
       required: true
     },
-    tooltipText: {
+    replyTooltipText: {
       type: String,
       default: 'Responder'
     }
@@ -40,13 +40,18 @@ export default {
     replyMessage() {
       let inReplyTo = this.formatMessage(this.document)
 
+      inReplyTo.id = this.document.id
+      inReplyTo.metadata = this.document.metadata
+
       if (this.replyCallback) {
-        this.replyCallback({data: {
-          type: 'setIsReplying',
-          value: true,
-          inReplyTo,
-          direction: this.document.direction
-        }})
+        this.replyCallback({
+          data: {
+            type: 'setIsReplying',
+            value: true,
+            inReplyTo,
+            direction: this.document.direction
+          }
+        })
       } else {
         throw new Error('Reply callback is not defined')
       }
@@ -65,6 +70,8 @@ export default {
       if (formats[type]) {
         return formats[type](message)
       }
+
+      console.log('formatMessage', message)
 
       return {
         type,
