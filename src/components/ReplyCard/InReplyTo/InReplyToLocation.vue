@@ -5,6 +5,7 @@
       :document="getDocument()"
       simplified
       :replying-to-text="replyingToText"
+      :translations="translations"
     />
   </div>
 </template>

@@ -32,6 +32,7 @@
       v-if="replied.type === MessageTypesConstants.LOCATION"
       class="blip-card"   
       :document="repliedValue"
+      :translations="translations"
     />
   </div>
 </template>

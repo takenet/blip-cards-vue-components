@@ -106,6 +106,7 @@
       <blip-card-reply
         :document="fullDocument"
         :reply-callback="replyCallback"
+        :reply-tooltip-text="translations.replyTooltipText"
       />
     </bds-grid>
     <blip-card-date

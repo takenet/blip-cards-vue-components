@@ -228,10 +228,7 @@
         <location
           class="blip-card"
           v-else-if="document.type === 'application/vnd.lime.location+json'"
-          :failed-to-send-msg="translations.failedToSend"
-          :latitude-msg="translations.latitude"
-          :longitude-msg="translations.longitude"
-          :text-msg="translations.text"
+          :translations="translations"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -245,7 +242,6 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :is-external-message="externalMessage"
-          :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
         />
 
