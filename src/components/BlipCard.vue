@@ -255,8 +255,9 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :is-external-message="externalMessage"
+          :is-external-message="isExternalMessage || externalMessage"
           :external-message-text="translations.externalMessageText"
+          :translations="translations"
           :reply-callback="replyCallback"
         />
 
@@ -285,6 +286,9 @@
           :hide-options="hideOptions"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="isExternalMessage || externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :translations="translations"
           :on-location-error="onLocationError"
           :reply-callback="replyCallback"
         />

@@ -43,9 +43,16 @@
       <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
       <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
       <div class="failure" v-else-if="this.status === 'failed' && this.position === 'right'">
-          {{ failedToSendMsg }}
+        {{ failedToSendMsg }}
       </div>
-      {{ date }}
+      <blip-card-date
+        :status="status"
+        :position="position"
+        :date="date"
+        :failed-to-send-msg="failedToSendMsg"
+        :is-external-message="isExternalMessage"
+        :external-message-text="externalMessageText"
+      />
     </div>
 
     <transition name="fade">

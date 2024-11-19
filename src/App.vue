@@ -272,6 +272,9 @@
         <button class="button" @click="sendExternalMessageLocation">
           ENVIAR mensagem de localização externa
         </button>
+        <button class="button" @click="sendExternalMessageRequestLocation">
+          ENVIAR mensagem de pedido de localização externa
+        </button>
         <button class="button" @click="sendExternalMessageQuickReply">
           ENVIAR mensagem de quick reply externa
         </button>
@@ -2023,6 +2026,25 @@ export default {
             longitude: -43.959275,
             altitude: 853,
             text: 'Takes place'
+          }
+        }
+      })
+      this.send()
+    },
+    sendExternalMessageRequestLocation: function() {
+      this.json = JSON.stringify({
+        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+        from: 'from@wa.gw.msging.net',
+        to: 'to@wa.gw.msging.net',
+        type: 'application/vnd.lime.external+json',
+        content: {
+          type: 'application/vnd.lime.input+json',
+          content: {
+            label: { type: 'text/plain', value: 'Send your location please!' },
+            validation: {
+              rule: 'type',
+              type: 'application/vnd.lime.location+json'
+            }
           }
         }
       })
