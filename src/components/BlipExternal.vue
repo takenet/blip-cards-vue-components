@@ -85,23 +85,6 @@ export default {
     replyCallback: {
       type: Function
     }
-  },
-  computed: {
-    Test() {
-      console.log(this.document)
-      console.log(this.fullDocument)
-    }
   }
 }
 </script>
-
-<style lang="scss">
-@import '../styles/variables.scss';
-
-.blip-external .bubble {
-  padding: $bubble-padding;
-  word-wrap: break-word;
-  min-width: auto !important;
-  text-align: left;
-}
-</style>

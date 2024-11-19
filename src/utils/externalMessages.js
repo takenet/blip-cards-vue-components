@@ -10,14 +10,19 @@ function checkIsExternalMessage(msg) {
   }
 
   const isExternalMessage = Boolean(
-    innerDocument.type === MessageTypesConstants.BLIP_EXTERNAL ||
-    (innerDocument &&
-    innerDocument.metadata &&
-    innerDocument.metadata['#messageEmitter'] &&
-    innerDocument.metadata['#messageEmitter'] === 'externalMessages')
+    CheckIfIsExternalMessageType(innerDocument) || CheckIfHasMessageEmitterMetadata(innerDocument)
   )
 
   return isExternalMessage
+}
+
+function CheckIfHasMessageEmitterMetadata(innerDocument) {
+  const { metadata } = innerDocument
+  return innerDocument && metadata && metadata['#messageEmitter'] && metadata['#messageEmitter'] === 'externalMessages'
+}
+
+function CheckIfIsExternalMessageType(innerDocument) {
+  return innerDocument && innerDocument.type === MessageTypesConstants.BLIP_EXTERNAL
 }
 
 export {
