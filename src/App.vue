@@ -48,8 +48,8 @@
 
       <div>
         <h1>Member Data:</h1>
-        <input type="checkbox" value="false" v-model="hasMemberData" /> Has Member Data
-        <input v-model="memberName" /> Name
+        <input type="checkbox" value="false" v-model="hasMemberData" /> Has
+        Member Data <input v-model="memberName" /> Name
         <input v-model="memberPhone" /> Phone
       </div>
 
@@ -248,39 +248,6 @@
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
-        <button class="button" @click="sendExternalMessageText">
-          ENVIAR mensagem externa de texto
-        </button>
-        <button class="button" @click="sendExternalMessageImage">
-          ENVIAR mensagem externa de imagem
-        </button>
-        <button class="button" @click="sendExternalMessageSticker">
-          ENVIAR mensagem externa de sticker
-        </button>
-        <button class="button" @click="sendExternalMessageAudio">
-          ENVIAR mensagem externa de audio
-        </button>
-        <button class="button" @click="sendExternalMessageVideo">
-          ENVIAR mensagem externa de video
-        </button>
-        <button class="button" @click="sendExternalMessageFile">
-          ENVIAR mensagem externa de documento
-        </button>
-        <button class="button" @click="sendExternalMessageCollection">
-          ENVIAR mensagem externa de coleção
-        </button>
-        <button class="button" @click="sendExternalMessageLocation">
-          ENVIAR mensagem externa de localização
-        </button>
-        <button class="button" @click="sendExternalMessageRequestLocation">
-          ENVIAR mensagem externa de pedido de localização
-        </button>
-        <button class="button" @click="sendExternalMessageQuickReply">
-          ENVIAR mensagem externa de quick reply
-        </button>
-        <button class="button" @click="sendExternalMessageWebLink">
-          ENVIAR mensagem externa de web link
-        </button>
       </div>
 
       <div v-else>
@@ -370,11 +337,14 @@ export default {
   methods: {
     onScroll: function(e) {},
     send: function() {
-      const doc = JSON.parse(this.json)
+      let doc = JSON.parse(this.json)
       if (this.isExternalMessage) {
-        doc.metadata = {
-          ...doc.metadata,
-          '#messageEmitter': 'externalMessages'
+        doc = {
+          id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
+          from: 'from@wa.gw.msging.net',
+          to: 'to@wa.gw.msging.net',
+          type: 'application/vnd.lime.external+json',
+          content: doc
         }
       }
 
@@ -466,7 +436,8 @@ export default {
               title: 'Welcome to mad hatter',
               text: 'Here we have the best hats for your head.',
               type: 'image/jpeg',
-              uri: 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
               aspectRatio: '1:1'
             }
           },
@@ -476,7 +447,8 @@ export default {
                 type: 'application/vnd.lime.web-link+json',
                 value: {
                   text: 'Go to our site',
-                  uri: 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+                  uri:
+                    'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
                 }
               }
             },
@@ -507,7 +479,8 @@ export default {
                   title: 'Title',
                   text: 'This is a first item',
                   type: 'image/jpeg',
-                  uri: 'http://www.isharearena.com/wp-content/uploads/2012/12/wallpaper-281049.jpg'
+                  uri:
+                    'http://www.isharearena.com/wp-content/uploads/2012/12/wallpaper-281049.jpg'
                 }
               },
               options: [
@@ -536,7 +509,8 @@ export default {
                   title: 'Title 2',
                   text: 'This is another item',
                   type: 'image/jpeg',
-                  uri: 'http://www.freedigitalphotos.net/images/img/homepage/87357.jpg'
+                  uri:
+                    'http://www.freedigitalphotos.net/images/img/homepage/87357.jpg'
                 }
               },
               options: [
@@ -578,7 +552,8 @@ export default {
         type: 'application/vnd.lime.media-link+json',
         content: {
           type: 'image/jpeg',
-          uri: 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
+          uri:
+            'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
           size: '1'
         }
       })
@@ -591,7 +566,8 @@ export default {
         type: 'application/vnd.lime.media-link+json',
         content: {
           type: 'sticker/webp',
-          uri: 'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
+          uri:
+            'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
         }
       })
       this.send()
@@ -629,7 +605,8 @@ export default {
         type: 'application/vnd.lime.media-link+json',
         content: {
           type: 'video/mp4',
-          uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+          uri:
+            'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
           size: '1'
         }
       })
@@ -654,7 +631,8 @@ export default {
         to: '128271320123982@messenger.gw.msging.net',
         type: 'application/vnd.lime.media-link+json',
         content: {
-          uri: 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+          uri:
+            'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
           title: 'pdf_open_parameters.pdf',
           type: 'application/pdf',
           size: '5540'
@@ -761,7 +739,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             content: {
               type: 'video/mp4',
-              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
               size: '1'
             }
           }
@@ -1170,8 +1149,10 @@ export default {
             value: {
               type: 'image/png',
               size: 174999,
-              uri: 'https://hmgmediastore.blip.ai/secure-medias/Media_efba7ff9-1006-45b4-af5e-92fe593545bf?sv=2024-05-04&st=2024-10-02T20%3A35%3A32Z&se=2024-10-02T21%3A05%3A32Z&sr=b&sp=r&sig=MWLAOx1LVqyDzVXn2CkRrDFwwnJynWdwuQ5Lq317C%2Bo%3D&secure=true',
-              previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV9lZmJhN2ZmOS0xMDA2LTQ1YjQtYWY1ZS05MmZlNTkzNTQ1YmY=',
+              uri:
+                'https://hmgmediastore.blip.ai/secure-medias/Media_efba7ff9-1006-45b4-af5e-92fe593545bf?sv=2024-05-04&st=2024-10-02T20%3A35%3A32Z&se=2024-10-02T21%3A05%3A32Z&sr=b&sp=r&sig=MWLAOx1LVqyDzVXn2CkRrDFwwnJynWdwuQ5Lq317C%2Bo%3D&secure=true',
+              previewUri:
+                'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV9lZmJhN2ZmOS0xMDA2LTQ1YjQtYWY1ZS05MmZlNTkzNTQ1YmY=',
               previewType: 'image/png',
               title: 'Chatblip_plataforma.png',
               text: '',
@@ -1193,7 +1174,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'application/pdf',
-              uri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
+              uri:
+                'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
               title: 'my_pdf.pdf',
               size: '5540'
             }
@@ -1218,7 +1200,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'video/mp4',
-              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
             }
           },
           inReplyTo: {
@@ -1264,7 +1247,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'image/jpeg',
-              uri: 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
             }
           },
           inReplyTo: {
@@ -1342,12 +1326,14 @@ export default {
                         {
                           id: 'id:1.0',
                           title: '🤖 Como funciona?',
-                          descriptionuri: 'Entender como o Blip funciona, seus benefícios, preços e mais'
+                          descriptionuri:
+                            'Entender como o Blip funciona, seus benefícios, preços e mais'
                         },
                         {
                           id: 'id:1.1',
                           title: '🤝 Contratar Take Blip',
-                          description: 'Quero conversar com o time de vendas para tirar dúvidas e contratar'
+                          description:
+                            'Quero conversar com o time de vendas para tirar dúvidas e contratar'
                         }
                       ]
                     }
@@ -1594,7 +1580,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'audio/mp3',
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+              uri:
+                'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
             },
             direction: 'sent'
           },
@@ -1616,7 +1603,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'voice/mp3',
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+              uri:
+                'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
             },
             direction: 'sent'
           },
@@ -1638,7 +1626,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'video/mp4',
-              uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
             },
             direction: 'sent'
           },
@@ -1660,7 +1649,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'image/jpeg',
-              uri: 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
               title: 'texto de exemplo'
             },
             direction: 'sent'
@@ -1683,7 +1673,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'sticker/webp',
-              uri: 'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
+              uri:
+                'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
             },
             direction: 'sent'
           },
@@ -1725,7 +1716,8 @@ export default {
           inReactionTo: {
             type: 'application/vnd.lime.media-link+json',
             value: {
-              uri: 'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+              uri:
+                'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
               title: 'pdf_open_parameters.pdf',
               type: 'application/pdf',
               size: '5540'
@@ -1799,271 +1791,6 @@ export default {
           button: {
             text: 'Copiar código Pix',
             value: 'Value'
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageText: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'text/plain',
-          content: 'Messagem de Eco'
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageImage: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.media-link+json',
-          content: {
-            type: 'image/jpeg',
-            uri:
-              'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
-            size: '1'
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageSticker: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.media-link+json',
-          content: {
-            type: 'sticker/webp',
-            uri:
-              'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageAudio: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.media-link+json',
-          content: {
-            type: 'audio/mp3',
-            uri: 'https://sample-videos.com/audio/mp3/crowd-cheering.mp3',
-            size: '1'
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageVideo: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.media-link+json',
-          content: {
-            type: 'video/mp4',
-            uri:
-              'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-            size: '1'
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageFile: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.media-link+json',
-          content: {
-            type: 'application/pdf',
-            uri:
-              'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
-            title: 'pdf_open_parameters.pdf',
-            size: '5540'
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageCollection: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.collection+json',
-          content: {
-            itemType: 'application/vnd.lime.document-select+json',
-            items: [
-              {
-                header: {
-                  type: 'application/vnd.lime.media-link+json',
-                  value: {
-                    title: 'Title',
-                    text: 'This is a first item',
-                    type: 'image/jpeg',
-                    uri: 'http://www.isharearena.com/wp-content/uploads/2012/12/wallpaper-281049.jpg'
-                  }
-                },
-                options: [
-                  {
-                    label: {
-                      type: 'application/vnd.lime.web-link+json',
-                      value: {
-                        title: 'Link',
-                        uri: 'https://server.com/first/link1'
-                      }
-                    }
-                  },
-                  {
-                    label: { type: 'text/plain', value: 'Text 1' },
-                    value: {
-                      type: 'application/json',
-                      value: { key1: 'value1', key2: 2 }
-                    }
-                  }
-                ]
-              },
-              {
-                header: {
-                  type: 'application/vnd.lime.media-link+json',
-                  value: {
-                    title: 'Title 2',
-                    text: 'This is another item',
-                    type: 'image/jpeg',
-                    uri: 'http://www.freedigitalphotos.net/images/img/homepage/87357.jpg'
-                  }
-                },
-                options: [
-                  {
-                    label: {
-                      type: 'application/vnd.lime.web-link+json',
-                      value: {
-                        title: 'Second link',
-                        text: 'Weblink',
-                        uri: 'https://server.com/second/link2'
-                      }
-                    }
-                  },
-                  {
-                    label: { type: 'text/plain', value: 'Second text' },
-                    value: {
-                      type: 'application/json',
-                      value: { key3: 'value3', key4: 4 }
-                    }
-                  },
-                  {
-                    label: { type: 'text/plain', value: 'More one text' },
-                    value: {
-                      type: 'application/json',
-                      value: { key5: 'value5', key6: '6' }
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageLocation: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.location+json',
-          content: {
-            latitude: -19.918899,
-            longitude: -43.959275,
-            altitude: 853,
-            text: 'Takes place'
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageRequestLocation: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.input+json',
-          content: {
-            label: { type: 'text/plain', value: 'Send your location please!' },
-            validation: {
-              rule: 'type',
-              type: 'application/vnd.lime.location+json'
-            }
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageQuickReply: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.select+json',
-          content: {
-            scope: 'immediate',
-            text: 'Choose an option',
-            options: [
-              { text: 'First option' },
-              { order: '2', text: 'Second option' },
-              {
-                order: '3',
-                text: 'Third option',
-                type: 'application/json',
-                value: { key1: 'value1', key2: '2' }
-              }
-            ]
-          }
-        }
-      })
-      this.send()
-    },
-    sendExternalMessageWebLink: function() {
-      this.json = JSON.stringify({
-        id: 'ce8cbbe1-83c1-40ea-80bd-9cf0be4d573e',
-        from: 'from@wa.gw.msging.net',
-        to: 'to@wa.gw.msging.net',
-        type: 'application/vnd.lime.external+json',
-        content: {
-          type: 'application/vnd.lime.web-link+json',
-          content: {
-            uri: 'http://limeprotocol.org/content-types.html#web-link',
-            target: 'self',
-            text: 'Segue documentação do web-link'
           }
         }
       })

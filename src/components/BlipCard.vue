@@ -52,7 +52,7 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :disable-link="disableLink"
-          :is-external-message="isExternalMessage || externalMessage"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
           :translations="translations"
@@ -86,7 +86,7 @@
           :on-cancel="cancel"
           :on-audio-validate-uri="onAudioValidateUri"
           :async-fetch-media="asyncFetchMedia"
-          :is-external-message="isExternalMessage || externalMessage"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :transcription="transcription"
@@ -123,7 +123,7 @@
           :on-selected="onSelected"
           :on-save="saveCard"
           :editable="editable"
-          :is-external-message="isExternalMessage || externalMessage"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :on-open-link="onOpenLink"
@@ -151,7 +151,7 @@
           :on-deleted="deleteCard"
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
-          :is-external-message="isExternalMessage || externalMessage"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :editing="isCardEditing"
@@ -183,7 +183,7 @@
           :on-deleted="deleteCard"
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
-          :is-external-message="isExternalMessage || externalMessage"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :hide-options="hideOptions"
@@ -212,7 +212,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :is-external-message="isExternalMessage || externalMessage"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :reply-callback="replyCallback"
@@ -255,7 +255,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :is-external-message="isExternalMessage || externalMessage"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :reply-callback="replyCallback"
@@ -286,7 +286,7 @@
           :hide-options="hideOptions"
           :editing="isCardEditing"
           :on-cancel="cancel"
-          :is-external-message="isExternalMessage || externalMessage"
+          :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :on-location-error="onLocationError"
@@ -864,7 +864,7 @@ export default {
       return MessageTypesConstants
     },
     externalMessage() {
-      return checkIsExternalMessage(this.document)
+      return this.isExternalMessage || checkIsExternalMessage(this.document)
     },
     memberInfo() {
       return getMemberInfo(this.document)
