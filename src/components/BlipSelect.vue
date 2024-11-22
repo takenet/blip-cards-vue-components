@@ -29,7 +29,14 @@
           v-else-if="this.status === 'failed' && this.position === 'right'">
           {{ failedToSendMsg }}
         </div>
-        {{ date }}
+        <blip-card-date
+          :status="status"
+          :position="position"
+          :date="date"
+          :failed-to-send-msg="failedToSendMsg"
+          :is-external-message="isExternalMessage"
+          :external-message-text="externalMessageText"
+        />
       </div>
       <transition name="fade">
       <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="!hide">
@@ -75,13 +82,6 @@
           </ul>
         </div>
       </div>
-
-      <blip-card-date
-        :status="status"
-        :position="position"
-        :date="date"
-        :failed-to-send-msg="failedToSendMsg"
-      />
     </div>
   </div>
 

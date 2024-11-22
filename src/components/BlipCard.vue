@@ -53,6 +53,7 @@
           :on-cancel="cancel"
           :disable-link="disableLink"
           :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
           :translations="translations"
         />
@@ -122,6 +123,9 @@
           :on-selected="onSelected"
           :on-save="saveCard"
           :editable="editable"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :translations="translations"
           :on-open-link="onOpenLink"
           :on-deleted="deleteCard"
           :on-metadata-edit="isMetadataReady"
@@ -147,6 +151,9 @@
           :on-deleted="deleteCard"
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :translations="translations"
           :editing="isCardEditing"
           :on-cancel="cancel"
           :reply-callback="replyCallback"
@@ -176,6 +183,9 @@
           :on-deleted="deleteCard"
           :on-metadata-edit="isMetadataReady"
           :deletable="deletable"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :translations="translations"
           :hide-options="hideOptions"
           :editing="isCardEditing"
           :on-cancel="cancel"
@@ -204,6 +214,7 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :translations="translations"
           :reply-callback="replyCallback"
           :transcription="transcription"
         />
@@ -246,6 +257,7 @@
           :on-cancel="cancel"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :translations="translations"
           :reply-callback="replyCallback"
         />
 
@@ -274,6 +286,9 @@
           :hide-options="hideOptions"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :translations="translations"
           :on-location-error="onLocationError"
           :reply-callback="replyCallback"
         />
@@ -610,6 +625,41 @@
           :disable-link="disableLink"
         />
 
+        <blip-external
+          v-else-if="document.type === MessageTypesConstants.BLIP_EXTERNAL"
+          class="blip-card"
+          @updated="updatedPhotoMargin"
+          :failed-to-send-msg="translations.failedToSend"
+          :aspect-ratio-msg="translations.aspectRatio"
+          :supported-formats-msg="translations.supportedFormats"
+          :file-url-msg="translations.fileUrl"
+          :title-msg="translations.title"
+          :image-uri-msg="translations.imageUri"
+          :text-msg="translations.text"
+          :video-uri-msg="translations.videoUri"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :member-info="memberInfo"          
+          :full-document="editableDocument"
+          :date="date"
+          :on-media-selected="onMediaSelected"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :on-metadata-edit="isMetadataReady"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+          :on-audio-validate-uri="onAudioValidateUri"
+          :async-fetch-media="asyncFetchMedia"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :translations="translations"
+          :transcription="transcription"
+          :reply-callback="replyCallback"
+        />     
+           
         <unsuported-content
           v-else
           class="blip-card"
@@ -814,7 +864,7 @@ export default {
       return MessageTypesConstants
     },
     externalMessage() {
-      return checkIsExternalMessage(this.document)
+      return this.isExternalMessage || checkIsExternalMessage(this.document)
     },
     memberInfo() {
       return getMemberInfo(this.document)

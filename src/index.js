@@ -60,6 +60,9 @@ import InReactionToText from './components/ReactionCard/InReactionTo/InReactionT
 import ReactionBase from './components/ReactionCard/Reaction/ReactionBase'
 import ReactionCard from './components/ReactionCard/ReactionCard'
 
+// External components
+import BlipExternal from './components/BlipExternal'
+
 // Validators
 import JsonValidator from './validators/jsonValidator'
 import MimeValidator from './validators/mimeValidator'
@@ -152,6 +155,9 @@ function install(Vue) {
   components.push(Vue.component(PhoneNumberButton.name, PhoneNumberButton))
   components.push(Vue.component(MediaContent.name, MediaContent))
 
+  // External component
+  components.push(Vue.component(BlipExternal.name, BlipExternal))
+
   Vue.component(Editable.name, Editable)
 
   Vue.filter('sizeInBytesFilter', SizeInBytesFilter.filter)
@@ -196,5 +202,6 @@ export default {
   RequestLocation,
   TemplateContent,
   UnsuportedContent,
+  BlipExternal,
   install
 }
