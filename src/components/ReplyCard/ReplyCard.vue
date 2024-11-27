@@ -45,7 +45,7 @@
       </div>
 
       <blip-card-reply
-        :document="blipCardReplyDocument"
+        :document="fullDocument"
         :reply-callback="replyCallback"
         :reply-tooltip-text="replyTooltipText"
       />

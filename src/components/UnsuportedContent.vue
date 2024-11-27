@@ -12,7 +12,11 @@
         </bds-grid>
       </div>
 
-      <blip-card-reply :document="fullDocument" :reply-callback="replyCallback" />
+      <blip-card-reply
+        :document="fullDocument"
+        :reply-callback="replyCallback"
+        :reply-tooltip-text="replyTooltipText"
+      />
     </bds-grid>
     <bds-icon
       v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon"

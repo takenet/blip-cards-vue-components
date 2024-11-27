@@ -10,7 +10,7 @@
           <bds-grid direction="column" >
             <bds-typo tag="span" variant="fs-14" bold="regular" class="typo">{{ this.inReplyTo.value.title || translations.document }}</bds-typo>
             <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
-              v-if="this.inReplyTo.value.text">{{ this.inReplyTo.value.text }}</bds-typo>
+              v-if="this.inReplyTo.value && this.inReplyTo.value.text">{{ this.inReplyTo.value.text }}</bds-typo>
           </bds-grid>
         </bds-grid>
       </bds-grid>

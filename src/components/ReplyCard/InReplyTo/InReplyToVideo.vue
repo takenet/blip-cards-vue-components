@@ -10,7 +10,7 @@
           <bds-grid direction="column" >
             <bds-typo tag="span" variant="fs-14" bold="regular" class="typo">{{ timeVideo || translations.video }}</bds-typo>
             <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
-              v-if="this.inReplyTo.value.text">{{ this.inReplyTo.value.text }}</bds-typo>
+              v-if="replyValueHasText">{{ this.inReplyTo.value.text }}</bds-typo>
           </bds-grid>
         </bds-grid>
       </bds-grid>
@@ -22,7 +22,7 @@
         ref="video"
         @loadedmetadata="captureThumbnail"
         class="video-replied"
-        :class="!this.inReplyTo.value.text ? 'simplified' : 'full-height'"
+        :class="replyValueHasText ? 'full-height' : 'simplified'"
       />
     </bds-grid>
   </bds-grid>
@@ -54,6 +54,11 @@ export default {
     return {
       thumbnail: null,
       timeVideo: null
+    }
+  },
+  computed: {
+    replyValueHasText() {
+      return this.inReplyTo.value && this.inReplyTo.value.text
     }
   },
   methods: {

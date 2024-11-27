@@ -78,14 +78,14 @@ export default {
         .filter(m => m.type === 'body')
 
       if (componentTemplateBody) {
-        componentTemplateBody = componentTemplateBody[0].text
+        componentTemplateBody = componentTemplateBody[0].text ? componentTemplateBody[0].text : ''
 
         if (bodyFilledVariables.length) {
           bodyFilledVariables = bodyFilledVariables[0].parameters
           const regexFindVariablesInText = /\{\{(\d+)\}\}/g
           componentTemplateBody = componentTemplateBody.replace(regexFindVariablesInText, (match, index) => {
             const variable = bodyFilledVariables[index - 1]
-            return variable ? variable.text : match
+            return variable && variable.text ? variable.text : match
           })
         }
       }
