@@ -487,7 +487,7 @@
         />
 
         <reply-card
-          v-else-if="document.type === 'application/vnd.lime.reply+json'"
+          v-else-if="document.type === MessageTypesConstants.REPLY_MESSAGE"
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :updatedPhotoMargin="updatedPhotoMargin"
@@ -791,7 +791,7 @@ export default {
       return bubbleHeight - photoHeight
     },
     resolveUnsupportedRepliedType() {
-      if (this.document.type === 'application/vnd.lime.reply+json') {
+      if (this.document.type === MessageTypesConstants.REPLY_MESSAGE) {
         const { replied } = this.document.content
         let isSupportedRepliedType = supportedRepliedTypes.includes(
           replied.type
