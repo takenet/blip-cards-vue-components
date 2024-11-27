@@ -5,5 +5,6 @@ export const MessageTypesConstants = {
   TEXT_MESSAGE: 'text/plain',
   LOCATION: 'application/vnd.lime.location+json',
   REPLY_MESSAGE: 'application/vnd.lime.reply+json',
-  APPLICATION_JSON: 'application/json'
+  APPLICATION_JSON: 'application/json',
+  BLIP_EXTERNAL: 'application/vnd.lime.external+json'
 }

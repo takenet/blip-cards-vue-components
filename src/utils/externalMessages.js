@@ -1,3 +1,5 @@
+import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
+
 function checkIsExternalMessage(msg) {
   let innerDocument
 
@@ -9,12 +11,19 @@ function checkIsExternalMessage(msg) {
 
   const isExternalMessage = Boolean(
     innerDocument &&
-    innerDocument.metadata &&
-    innerDocument.metadata['#messageEmitter'] &&
-    innerDocument.metadata['#messageEmitter'] === 'externalMessages'
+    (checkIfIsExternalMessageType(innerDocument) || checkIfHasMessageEmitterMetadata(innerDocument))
   )
 
   return isExternalMessage
+}
+
+function checkIfHasMessageEmitterMetadata(innerDocument) {
+  const { metadata } = innerDocument
+  return metadata && metadata['#messageEmitter'] && metadata['#messageEmitter'] === 'externalMessages'
+}
+
+function checkIfIsExternalMessageType(innerDocument) {
+  return innerDocument.type === MessageTypesConstants.BLIP_EXTERNAL
 }
 
 export {
