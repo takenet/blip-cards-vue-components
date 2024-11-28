@@ -54,14 +54,13 @@ export default {
     }
   },
   mounted: async function() {
-    const me = this
-    const document = me.inReplyTo.value
+    const document = this.inReplyTo.value
 
     if (isAuthenticatedMediaLink(document)) {
-      let url = await tryCreateLocalMediaUri(me.inReplyTo.value, me.asyncFetchMedia)
-      me.initImage(url)
+      let url = await tryCreateLocalMediaUri(this.inReplyTo.value, this.asyncFetchMedia)
+      this.initImage(url)
     } else {
-      me.initImage(me.inReplyTo.value.uri)
+      this.initImage(this.inReplyTo.value.uri)
     }
   },
   methods: {
