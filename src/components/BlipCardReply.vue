@@ -89,9 +89,10 @@ export default {
       }
     },
     formatImage(message) {
+      const content = message.value || message.content
       return {
         type: 'image',
-        value: message.content.value || message.content
+        value: content.value || content
       }
     },
     formatText(message) {
@@ -110,13 +111,14 @@ export default {
       }
     },
     formatMedia(message) {
-      if (message.content.type.includes('image') || (message.content.value && message.content.value.type.includes('image'))) {
+      const content = message.value || message.content
+      if (content.type.includes('image') || (content.value && content.value.type.includes('image'))) {
         return this.formatImage(message)
       }
 
       return {
         type: message.type,
-        value: message.content
+        value: content
       }
     },
     formatLocation(message) {
