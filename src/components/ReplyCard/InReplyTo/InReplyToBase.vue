@@ -42,7 +42,6 @@
         :translations="translations"
         :document="document"
         :async-fetch-media="asyncFetchMedia"
-        :on-audio-validate-uri="onAudioValidateUri"
         :replying-to-text="replyingToText"
       />
 
@@ -115,9 +114,6 @@ export default {
       default: false
     },
     scrollToMessageById: {
-      type: Function
-    },
-    onAudioValidateUri: {
       type: Function
     }
   },

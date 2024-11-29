@@ -64,7 +64,7 @@ export default {
     }
   },
   methods: {
-    initImage: function(uri) {
+    initImage(uri) {
       this.uriImage = uri
     }
   }
