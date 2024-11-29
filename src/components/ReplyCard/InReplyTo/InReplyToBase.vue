@@ -217,12 +217,11 @@ export default {
 }  
 
 .in-reply-to-message-container {
-  display: block;
+  display: flex;
   overflow: hidden;
   background-color: $color-surface-3;
   border: 1px solid $color-content-ghost;
   border-radius: 0.5rem;
-  padding-bottom: -10px;
 
   .skeleton {
     height: 2.5rem;
