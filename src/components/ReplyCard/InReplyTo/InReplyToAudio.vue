@@ -47,8 +47,7 @@ export default {
     audio: undefined
   }),
   mounted: async function() {
-    const { previewUri } = this.inReplyTo.value
-    const document = Object.assign(this.inReplyTo.value, { uri: previewUri })
+    const document = Object.assign(this.inReplyTo.value, { uri: this.inReplyTo.value.uri })
     const uri = isAuthenticatedMediaLink(document)
       ? await tryCreateLocalMediaUri(document, this.asyncFetchMedia)
       : document.uri
