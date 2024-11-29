@@ -10,14 +10,14 @@
           <bds-grid direction="column" >
             <bds-typo tag="span" variant="fs-14" bold="regular" class="typo">{{ this.inReplyTo.value.title || translations.image }}</bds-typo>
             <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
-              v-if="this.inReplyTo.value.text">{{ this.inReplyTo.value.text }}</bds-typo>
+              v-if="replyValueHasText">{{ this.inReplyTo.value.text }}</bds-typo>
           </bds-grid>
         </bds-grid>
       </bds-grid>
     </bds-grid>
     
     <bds-grid>
-      <img :class="this.inReplyTo.value.text ? 'image-replied' : 'image-replied-simplified'" :src="uriImage" />
+      <img :class="replyValueHasText ? 'image-replied' : 'image-replied-simplified'" :src="uriImage" />
     </bds-grid>
   </bds-grid>
 </template>
@@ -48,19 +48,23 @@ export default {
   data: () => ({
     uriImage: undefined
   }),
+  computed: {
+    replyValueHasText() {
+      return this.inReplyTo.value && this.inReplyTo.value.text
+    }
+  },
   mounted: async function() {
-    const me = this
-    const document = me.inReplyTo.value
+    const document = this.inReplyTo.value
 
     if (isAuthenticatedMediaLink(document)) {
-      let url = await tryCreateLocalMediaUri(me.inReplyTo.value, me.asyncFetchMedia)
-      me.initImage(url)
+      let url = await tryCreateLocalMediaUri(this.inReplyTo.value, this.asyncFetchMedia)
+      this.initImage(url)
     } else {
-      me.initImage(me.inReplyTo.value.uri)
+      this.initImage(this.inReplyTo.value.uri)
     }
   },
   methods: {
-    initImage: function(uri) {
+    initImage(uri) {
       this.uriImage = uri
     }
   }

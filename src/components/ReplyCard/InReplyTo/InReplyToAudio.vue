@@ -47,28 +47,23 @@ export default {
     audio: undefined
   }),
   mounted: async function() {
-    const me = this
-    const { previewUri } = me.inReplyTo.value
-    const document = Object.assign(me.inReplyTo.value, {uri: previewUri})
+    const document = Object.assign(this.inReplyTo.value, { uri: this.inReplyTo.value.uri })
+    const uri = isAuthenticatedMediaLink(document)
+      ? await tryCreateLocalMediaUri(document, this.asyncFetchMedia)
+      : document.uri
 
-    if (isAuthenticatedMediaLink(document)) {
-      let url = await tryCreateLocalMediaUri(me.inReplyTo.value, me.asyncFetchMedia)
-      me.initAudio(url)
-    } else {
-      me.initAudio(me.inReplyTo.value.uri)
-    }
+    this.initAudio(uri)
   },
   methods: {
-    initAudio: function(uri) {
-      const me = this
-      me.audio = new Audio()
+    initAudio(uri) {
+      this.audio = new Audio()
 
-      me.audio.addEventListener('loadedmetadata', me.audioLoaded)
+      this.audio.addEventListener('loadedmetadata', this.audioLoaded)
 
-      me.audio.src = uri
-      me.audio.load()
+      this.audio.src = uri
+      this.audio.load()
     },
-    audioLoaded: function() {
+    audioLoaded() {
       const duration = this.audio.duration
       const minutes = Math.floor(duration / 60)
       const seconds = Math.floor(duration % 60)

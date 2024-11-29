@@ -33,10 +33,6 @@
       <location
         class="blip-card in-reaction-to-location"
         v-else-if="inReactionTo.type === 'application/vnd.lime.location+json'"
-        :failed-to-send-msg="translations.failedToSend"
-        :latitude-msg="translations.latitude"
-        :longitude-msg="translations.longitude"
-        :text-msg="translations.text"
         :status="status"
         :position="position"
         :document="inReactionToValue"
@@ -50,6 +46,7 @@
         :editing="isCardEditing"
         :on-cancel="cancel"
         :simplified="true"
+        :translations="translations"
       />
       <web-link
         class="blip-card in-reaction-to-padding"

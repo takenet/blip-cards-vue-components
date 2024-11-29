@@ -59,6 +59,7 @@
       <blip-card-reply
         :document="fullDocument"
         :reply-callback="replyCallback"
+        :reply-tooltip-text="replyTooltipText"
       />
     </bds-grid>
     <blip-card-date
@@ -140,22 +141,6 @@ export default {
       type: String,
       default: ''
     },
-    latitudeMsg: {
-      type: String,
-      default: 'Latitude'
-    },
-    longitudeMsg: {
-      type: String,
-      default: 'Longitude'
-    },
-    textMsg: {
-      type: String,
-      default: 'Text'
-    },
-    failedToSendMsg: {
-      type: String,
-      default: 'Falha ao enviar a mensagem'
-    },
     simplified: {
       type: Boolean,
       default: false
@@ -167,6 +152,10 @@ export default {
     replyingToText: {
       type: String,
       default: null
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: function() {
@@ -176,7 +165,12 @@ export default {
       longitude: undefined,
       bubbleWidth: undefined,
       apiKey: undefined,
-      isFailedMessage
+      isFailedMessage,
+      replyTooltipText: '',
+      latitudeMsg: 'Latitude',
+      longitudeMsg: 'Longitude',
+      testMsg: 'Text',
+      failedToSendMsg: 'Falha ao enviar a mensagem'
     }
   },
   computed: {
@@ -238,6 +232,8 @@ export default {
       } else {
         this.bubbleWidth = width / 3 + 'px'
       }
+
+      this.translationMessagesInit()
     },
     init: function() {
       this.text = this.document.text
@@ -249,6 +245,13 @@ export default {
       if (this.$el) {
         this.mounted()
       }
+    },
+    translationMessagesInit() {
+      this.replyTooltipText = this.translations.replyTooltipText
+      this.latitudeMsg = this.translations.latitudeMsg
+      this.longitudeMsg = this.translations.longitudeMsg
+      this.testMsg = this.translations.testMsg
+      this.failedToSendMsg = this.translations.failedToSendMsg
     },
     locationSave: async function() {
       let result = await this.$validator.validateAll()

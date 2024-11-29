@@ -1,10 +1,10 @@
 <template>
   <bds-tooltip
     position="top-center"
-    :tooltip-text="tooltipText"
+    :tooltip-text="replyTooltipText"
   >
     <bds-button-icon
-      icon="redo"
+      icon="reply"
       variant="ghost"
       size="short"
       @click="replyMessage"
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { MessageTypesConstants } from '../utils/MessageTypesConstants'
+
 export default {
   name: 'blip-card-reply',
   props: {
@@ -26,7 +28,7 @@ export default {
       type: Function | undefined,
       required: true
     },
-    tooltipText: {
+    replyTooltipText: {
       type: String,
       default: 'Responder'
     }
@@ -40,72 +42,78 @@ export default {
     replyMessage() {
       let inReplyTo = this.formatMessage(this.document)
 
+      inReplyTo.id = this.document.id
+      inReplyTo.metadata = this.document.metadata
+      inReplyTo.direction = this.document.direction
+
       if (this.replyCallback) {
-        this.replyCallback({data: {
-          type: 'setIsReplying',
-          value: true,
-          inReplyTo,
-          direction: this.document.direction
-        }})
+        this.replyCallback({
+          data: {
+            show: true,
+            inReplyTo
+          }
+        })
       } else {
         throw new Error('Reply callback is not defined')
       }
     },
-
     formatMessage(message) {
-      const formats = {
-        'text/plain': this.formatText,
-        'application/vnd.lime.media-link+json': this.formatMedia,
-        'application/vnd.lime.location+json': this.formatLocation,
-        'application/json': this.formatTemplate
+      const messageType = message.type || message.content.type
+      if (MessageTypesConstants.REPLY_MESSAGE === messageType) {
+        return this.formatMessage(message.content.replied)
       }
 
-      let type = message.type || message.content.type
+      const formats = {
+        [MessageTypesConstants.TEXT_MESSAGE]: this.formatText,
+        [MessageTypesConstants.MEDIALINK_MESSAGE]: this.formatMedia,
+        [MessageTypesConstants.LOCATION]: this.formatLocation,
+        [MessageTypesConstants.APPLICATION_JSON]: this.formatTemplate
+      }
+      const format = formats[messageType]
 
-      if (formats[type]) {
-        return formats[type](message)
+      if (format) {
+        return format(message)
       }
 
       return {
-        type,
+        type: messageType,
         value: message.content
       }
     },
-
     formatTemplate(message) {
       let type = 'template'
 
       return {
-        type: 'application/json',
+        type: MessageTypesConstants.APPLICATION_JSON,
         value: {...message.content, type}
       }
     },
-
-    formatImage(message) {
-      return {
-        type: 'image',
-        value: message.content.value || message.content
-      }
-    },
     formatText(message) {
+      let value
+      if (message.content && message.content.value) {
+        value = message.content.value
+      } else if (message.content) {
+        value = message.content
+      } else if (message.value) {
+        value = message.value
+      }
+
       return {
-        type: 'text/plain',
-        value: message.content.value || message.content
+        type: MessageTypesConstants.TEXT_MESSAGE,
+        value
       }
     },
     formatMedia(message) {
-      if (message.content.type.includes('image') || (message.content.value && message.content.value.type.includes('image'))) {
-        return this.formatImage(message)
-      }
+      const content = message.value || message.content
 
       return {
         type: message.type,
-        value: message.content
+        value: content
       }
     },
-    formatLocation (message) {
+    formatLocation(message) {
       return {
-        type: 'application/vnd.lime.location+json',
+        type: MessageTypesConstants.LOCATION,
         value: message.content
       }
     }

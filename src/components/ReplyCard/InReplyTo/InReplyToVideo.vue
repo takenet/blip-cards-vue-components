@@ -10,7 +10,7 @@
           <bds-grid direction="column" >
             <bds-typo tag="span" variant="fs-14" bold="regular" class="typo">{{ timeVideo || translations.video }}</bds-typo>
             <bds-typo tag="span" variant="fs-14" bold="regular" class="typo multiline-text-overflow-ellipsis"
-              v-if="this.inReplyTo.value.text">{{ this.inReplyTo.value.text }}</bds-typo>
+              v-if="replyValueHasText">{{ this.inReplyTo.value.text }}</bds-typo>
           </bds-grid>
         </bds-grid>
       </bds-grid>
@@ -18,17 +18,19 @@
     
     <bds-grid>
       <video
-        :src="inReplyTo.value.uri"
+        :src="videoUri"
         ref="video"
         @loadedmetadata="captureThumbnail"
         class="video-replied"
-        :class="!this.inReplyTo.value.text ? 'simplified' : 'full-height'"
+        :class="replyValueHasText ? 'full-height' : 'simplified'"
       />
     </bds-grid>
   </bds-grid>
 </template>
 
 <script>
+import { tryCreateLocalMediaUri, isAuthenticatedMediaLink } from '../../../utils/media.js'
+
 export default {
   name: 'in-reply-to-video',
   mixins: [],
@@ -48,15 +50,35 @@ export default {
     translations: {
       type: Object,
       default: () => ({})
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data() {
     return {
-      thumbnail: null,
-      timeVideo: null
+      videoUri: undefined,
+      thumbnail: undefined,
+      timeVideo: undefined
     }
   },
+  computed: {
+    replyValueHasText() {
+      return this.inReplyTo.value && this.inReplyTo.value.text
+    }
+  },
+  mounted: async function() {
+    const document = this.inReplyTo.value
+    const uri = isAuthenticatedMediaLink(document)
+      ? await tryCreateLocalMediaUri(this.inReplyTo.value, this.asyncFetchMedia)
+      : document.uri
+
+    this.initVideo(uri)
+  },
   methods: {
+    initVideo(uri) {
+      this.videoUri = uri
+    },
     captureThumbnail() {
       const video = this.$refs.video
 
@@ -66,7 +88,7 @@ export default {
       video.addEventListener('seeked', () => {
         this.canvasRendered = true
         this.$nextTick(() => {
-          const canvas = this.$refs.canvas
+          const canvas = document.createElement('canvas')
           const context = canvas.getContext('2d')
           context.drawImage(video, 0, 0, 80, 80)
         })

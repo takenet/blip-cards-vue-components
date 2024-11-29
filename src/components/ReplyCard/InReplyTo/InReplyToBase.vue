@@ -1,5 +1,9 @@
 <template>
-  <div class="in-reply-to-message-container" :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput }">
+  <div 
+    class="in-reply-to-message-container" 
+    :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput, 'cursor-pointer': !!this.document }"
+    @click="goToMessageReplyed"
+  >
     <template>
       <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>   
       <in-reply-to-text
@@ -108,6 +112,9 @@ export default {
     isReplyingOnInput: {
       type: Boolean,
       default: false
+    },
+    scrollToMessageById: {
+      type: Function
     }
   },
   computed: {
@@ -132,10 +139,10 @@ export default {
       return this.inReplyTo.type === 'application/vnd.lime.select+json'
     },
     isImageReply() {
-      return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('image')
+      return this.inReplyTo.value && this.inReplyTo.value.type && this.inReplyTo.value.type.includes('image')
     },
     isVideoReply() {
-      return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('video')
+      return this.inReplyTo.value && this.inReplyTo.value.type && this.inReplyTo.value.type.includes('video')
     },
     isDocumentReply() {
       return this.inReplyTo.type === 'application/vnd.lime.media-link+json' && this.isMediaTypeDocument(this.inReplyTo.value.type)
@@ -184,51 +191,59 @@ export default {
         .values(MediaLinkTypesConstants)
         .filter(mediaLinkType => type.includes(mediaLinkType))
         .length === 0
+    },
+    goToMessageReplyed() {
+      if (this.document) {
+        this.scrollToMessageById(this.document.inReplyTo.id)
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import '../../../styles/variables.scss';
+@import '../../../styles/variables.scss';
 
-  .in-reply-to-message-bar {
-    flex: none;
-    width: 4px;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    background-color: $color-primary;
+.in-reply-to-message-bar {
+  flex: none;
+  width: 4px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  background-color: $color-primary;
 
-    &.own-message {
-      background-color: $color-content-ghost;
-    }
-  }  
-
-  .in-reply-to-message-container {
-    display: block;
-    overflow: hidden;
-    background-color: $color-surface-3;
-    border: 1px solid $color-content-ghost;
-    border-radius: 0.5rem;
-    padding-bottom: -10px;
-
-    .skeleton {
-      height: 2.5rem;
-    }
-  } 
-
-  .container-reply-item {
-    max-height: 110px;
-    justify-content: space-between; 
+  &.own-message {
+    background-color: $color-content-ghost;
   }
+}  
 
-  .in-reply-to-message-container-margin {
-    margin-bottom: 1rem;
-  }
+.in-reply-to-message-container {
+  display: flex;
+  overflow: hidden;
+  background-color: $color-surface-3;
+  border: 1px solid $color-content-ghost;
+  border-radius: 0.5rem;
 
-  .failed-message {
-    display: flex;
-    gap: 0.5rem;
-    padding: 0.5rem;
+  .skeleton {
+    height: 2.5rem;
   }
+} 
+
+.container-reply-item {
+  max-height: 110px;
+  justify-content: space-between; 
+}
+
+.in-reply-to-message-container-margin {
+  margin-bottom: 1rem;
+}
+
+.failed-message {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
 </style>

@@ -5,7 +5,7 @@
       <div :class="'bubble ' + position">
         <div class="reply-container">
           <bds-grid direction="row" align-items="flex-start" gap="half" margin="b-half">
-            <bds-icon class="typo" name="redo" size="small" type="icon"></bds-icon>
+            <bds-icon class="typo" name="reply" size="small" type="icon"></bds-icon>
             <bds-typo class="typo" variant="fs-14" italic="true">{{ replyText }}</bds-typo>
           </bds-grid>
           <in-reply-to-base
@@ -13,7 +13,11 @@
             :is-own-message="isOwnMessage"
             :failed-message="translations.failedToLoad"
             :translations="translations"
-            :document="this.document"/>
+            :document="this.document"
+            :scroll-to-message-by-id="scrollToMessageById"
+            :on-audio-validate-uri="onAudioValidateUri"
+            :async-fetch-media="asyncFetchMedia"
+          />
           <replied-base v-if="replied" 
             :replied="replied" 
             :updatedPhotoMargin="updatedPhotoMargin"
@@ -43,7 +47,7 @@
       </div>
 
       <blip-card-reply
-        :document="blipCardReplyDocument"
+        :document="fullDocument"
         :reply-callback="replyCallback"
         :reply-tooltip-text="replyTooltipText"
       />
@@ -101,6 +105,9 @@
       replyCallback: {
         type: Function,
         default: undefined
+      },
+      scrollToMessageById: {
+        type: Function
       }
     },
     data() {

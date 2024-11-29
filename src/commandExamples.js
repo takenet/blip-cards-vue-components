@@ -1,5 +1,101 @@
 export const commandExamples = [
   {
+    buttonLabel: 'Reply with image',
+    command: {
+      id: 'fwd:fwd:17c31cd0-7909-459f-99fa-9ddfddf5a3de',
+      direction: 'sent',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'image/jpeg',
+            size: 1523,
+            uri: 'https://love.doghero.com.br/wp-content/uploads/2019/09/Golden.jpg.jpg',
+            previewUri: 'https://love.doghero.com.br/wp-content/uploads/2019/09/Golden.jpg.jpg',
+            previewType: 'image/jpeg',
+            title: 'JPEG_example_JPG_RIP_001.jpg',
+            text: '',
+            authorizationRealm: 'blip'
+          }
+        },
+        inReplyTo: {
+          id: '1f8ba154-8903-417a-801f-ea599d2a03af',
+          type: 'text/plain',
+          value: 'x',
+          direction: 'sent'
+        }
+      },
+      date: '14:31',
+      status: 'accepted',
+      metadata: {
+        '$elapsedTimeToStorage': '00:00:00.0520876',
+        '#messageEmitter': 'Human',
+        'traceparent': '00-e8619ba176a9028e9dde2aff7d1eff4d-736ebe1e5afe3ec3-01',
+        '#uniqueId': '70c02671-1736-4040-a6c3-0fc2ae80c45d',
+        '#date_processed': '1732728719817',
+        'date_created': '1732728719767',
+        '$originator': 'whatsappcloudapihmg@msging.net',
+        '$claims': 'Node=whatsappcloudapihmg@msging.net/msging-application-builder-hosting-enterprise-75d49875fd-6xwfz;Identity=whatsappcloudapihmg@msging.net;DomainRole=Member;AuthenticationScheme=Transport',
+        '$internalId': '70c02671-1736-4040-a6c3-0fc2ae80c45d',
+        '$originatorSessionRemoteNode': 'enterprise.builder.hosting@msging.net/!msging-server-f944fc449-x8bkz-qubep08n',
+        '#messageKind': 'Response'
+      },
+      createDate: '2024-11-27T17:31:59.848Z',
+      relativeDate: '14:31',
+      position: 'right',
+      photo: 'https://hmgmediastore.blip.ai/public-medias/Media_d1259696-1ff7-4956-a7cb-73b20186a9db'
+    }
+  },
+  {
+    buttonLabel: 'Reply with audio',
+    command: {
+      id: 'fwd:fwd:8b67d786-200e-4a3c-b5e2-8f8e2aaf6095',
+      direction: 'sent',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'audio/mpeg',
+            size: 46848,
+            uri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV84NDA5YWI2MC03MjJjLTQ3NTgtYjZlNS03MGYwNTA3NzhhMDI=',
+            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV84NDA5YWI2MC03MjJjLTQ3NTgtYjZlNS03MGYwNTA3NzhhMDI=',
+            previewType: 'audio/mpeg',
+            title: '1732729490611.mp3',
+            text: '',
+            authorizationRealm: 'blip'
+          }
+        },
+        inReplyTo: {
+          id: '59adb7e7-3feb-4135-9484-05292679cd34',
+          type: 'text/plain',
+          value: 'a',
+          direction: 'sent'
+        }
+      },
+      date: '14:44',
+      status: 'received',
+      metadata: {
+        '$elapsedTimeToStorage': '00:00:00.0157257',
+        '#messageEmitter': 'Human',
+        'traceparent': '00-f471faf1a49fc98b6fa044aaa7eab52e-953181bfa335cd60-01',
+        '#uniqueId': '2859e6c3-73a9-425a-b01c-4805d1855a58',
+        '#date_processed': '1732729490992',
+        'date_created': '1732729490945',
+        '$originator': 'whatsappcloudapihmg@msging.net',
+        '$claims': 'Node=whatsappcloudapihmg@msging.net/msging-application-builder-hosting-enterprise-75d49875fd-6xwfz;Identity=whatsappcloudapihmg@msging.net;DomainRole=Member;AuthenticationScheme=Transport',
+        '$internalId': '2859e6c3-73a9-425a-b01c-4805d1855a58',
+        '$originatorSessionRemoteNode': 'enterprise.builder.hosting@msging.net/!msging-server-f944fc449-x8bkz-qubep08n',
+        '#messageKind': 'Response'
+      },
+      createDate: '2024-11-27T17:44:50.997Z',
+      relativeDate: '14:44',
+      position: 'right',
+      photo: 'https://hmgmediastore.blip.ai/public-medias/Media_d1259696-1ff7-4956-a7cb-73b20186a9db'
+    }
+  },
+  {
     buttonLabel: 'Reply Mensagem Ativa - Imagem',
     command: {
       id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',

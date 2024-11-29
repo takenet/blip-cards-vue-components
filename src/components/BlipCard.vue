@@ -239,10 +239,7 @@
         <location
           class="blip-card"
           v-else-if="document.type === 'application/vnd.lime.location+json'"
-          :failed-to-send-msg="translations.failedToSend"
-          :latitude-msg="translations.latitude"
-          :longitude-msg="translations.longitude"
-          :text-msg="translations.text"
+          :translations="translations"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -256,8 +253,6 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :is-external-message="externalMessage"
-          :external-message-text="translations.externalMessageText"
-          :translations="translations"
           :reply-callback="replyCallback"
         />
 
@@ -506,7 +501,7 @@
         />
 
         <reply-card
-          v-else-if="document.type === 'application/vnd.lime.reply+json'"
+          v-else-if="document.type === MessageTypesConstants.REPLY_MESSAGE"
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :updatedPhotoMargin="updatedPhotoMargin"
@@ -537,6 +532,7 @@
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
+          :scroll-to-message-by-id="scrollToMessageById"
         />
 
         <reaction-card
@@ -766,6 +762,9 @@ export default {
     },
     replyCallback: {
       type: Function
+    },
+    scrollToMessageById: {
+      type: Function
     }
   },
   data() {
@@ -841,7 +840,7 @@ export default {
       return bubbleHeight - photoHeight
     },
     resolveUnsupportedRepliedType() {
-      if (this.document.type === 'application/vnd.lime.reply+json') {
+      if (this.document.type === MessageTypesConstants.REPLY_MESSAGE) {
         const { replied } = this.document.content
         let isSupportedRepliedType = supportedRepliedTypes.includes(
           replied.type
