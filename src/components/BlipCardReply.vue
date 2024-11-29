@@ -88,13 +88,6 @@ export default {
         value: {...message.content, type}
       }
     },
-    formatImage(message) {
-      const content = message.value || message.content
-      return {
-        type: 'image',
-        value: content.value || content
-      }
-    },
     formatText(message) {
       let value
       if (message.content && message.content.value) {
@@ -112,9 +105,6 @@ export default {
     },
     formatMedia(message) {
       const content = message.value || message.content
-      if (content.type.includes('image') || (content.value && content.value.type.includes('image'))) {
-        return this.formatImage(message)
-      }
 
       return {
         type: message.type,
