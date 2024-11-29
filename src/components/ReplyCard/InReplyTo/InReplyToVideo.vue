@@ -68,7 +68,7 @@ export default {
     const document = this.inReplyTo.value
     const uri = isAuthenticatedMediaLink(document)
       ? await tryCreateLocalMediaUri(this.inReplyTo.value, this.asyncFetchMedia)
-      : this.inReplyTo.value.uri
+      : document.uri
 
     this.initVideo(uri)
   },
