@@ -15,6 +15,7 @@
             :translations="translations"
             :document="this.document"
             :scroll-to-message-by-id="scrollToMessageById"
+            :on-audio-validate-uri="onAudioValidateUri"
           />
           <replied-base v-if="replied" 
             :replied="replied" 
