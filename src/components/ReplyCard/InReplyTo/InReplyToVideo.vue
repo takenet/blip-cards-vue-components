@@ -18,7 +18,7 @@
     
     <bds-grid>
       <video
-        :src="inReplyTo.value.uri"
+        :src="videoUri"
         ref="video"
         @loadedmetadata="captureThumbnail"
         class="video-replied"
@@ -50,6 +50,9 @@ export default {
     translations: {
       type: Object,
       default: () => ({})
+    },
+    asyncFetchMedia: {
+      type: Function
     }
   },
   data() {
@@ -85,7 +88,7 @@ export default {
       video.addEventListener('seeked', () => {
         this.canvasRendered = true
         this.$nextTick(() => {
-          const canvas = this.$refs.canvas
+          const canvas = document.createElement('canvas')
           const context = canvas.getContext('2d')
           context.drawImage(video, 0, 0, 80, 80)
         })

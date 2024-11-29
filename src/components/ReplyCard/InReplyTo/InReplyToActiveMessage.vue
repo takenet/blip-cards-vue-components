@@ -103,7 +103,7 @@ export default {
       video.addEventListener('seeked', () => {
         this.canvasRendered = true
         this.$nextTick(() => {
-          const canvas = this.$refs.canvas
+          const canvas = document.createElement('canvas')
           const context = canvas.getContext('2d')
           context.drawImage(video, 0, 0, 80, 80)
         })
