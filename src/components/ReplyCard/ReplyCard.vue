@@ -16,6 +16,7 @@
             :document="this.document"
             :scroll-to-message-by-id="scrollToMessageById"
             :on-audio-validate-uri="onAudioValidateUri"
+            :async-fetch-media="asyncFetchMedia"
           />
           <replied-base v-if="replied" 
             :replied="replied" 
