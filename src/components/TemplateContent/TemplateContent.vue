@@ -1,7 +1,7 @@
 <template>
   <div class="blip-container">
     <bds-grid direction="column" :align-items="position === 'right' ? 'flex-end' : 'flex-start'">
-      <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
+      <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center" class="blip-card-container">
         <div :class="bubbleClass">
           <bds-grid direction="column" padding="y-1" gap="1" class="wrap">
             <bds-grid margin="y-1" direction="row" justify-content="flex-start" padding="x-2">
