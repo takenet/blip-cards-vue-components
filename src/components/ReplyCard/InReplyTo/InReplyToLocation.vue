@@ -44,5 +44,6 @@
 <style scoped>
   .container-location {
     padding-left: 10px;
+    width: 100%;
   }  
 </style>
