@@ -529,16 +529,10 @@
   }
 }
 
-.blip-container:hover > .editIco {
-  display: block;
-}
-
-.blip-container:hover > div > .editIco {
-  display: block;
-}
-
-.blip-container:hover > div > div > .editIco {
-  display: block;
+.blip-container:hover {
+  .editIco {
+    display: block;
+  }
 }
 
 .blip-container:after {
