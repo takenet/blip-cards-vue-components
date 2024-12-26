@@ -275,6 +275,9 @@ export default {
   watch: {
     hideOptions: function() {
       this.hide = this.hideOptions
+    },
+    document: function(){
+      this.init()
     }
   },
   methods: {
