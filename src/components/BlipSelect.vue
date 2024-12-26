@@ -276,7 +276,7 @@ export default {
     hideOptions: function() {
       this.hide = this.hideOptions
     },
-    document: function(){
+    document: function() {
       this.init()
     }
   },
