@@ -41,6 +41,7 @@
           :transcription="transcription"
           :reply-callback="replyCallback"
           :scroll-to-message-by-id="scrollToMessageById"
+          :on-image-selected="onImageSelected"
         />
         <blip-card-date
           v-if="group.date && group.hasNotification"
@@ -166,6 +167,9 @@ export default {
     scrollToMessageById: {
       type: Function,
       default: () => {}
+    },
+    onImageSelected: {
+      type: Function
     }
   },
   data() {

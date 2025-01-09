@@ -29,7 +29,8 @@
           :deletable="deletable"
           :on-cancel="onCancel"
           :editing="editing"
-          :async-fetch-media="asyncFetchMedia"/>
+          :async-fetch-media="asyncFetchMedia"
+          :on-image-selected="onImageSelected"/>
 
         <blip-sticker
           :supported-formats-msg="supportedFormatsMsg"
@@ -171,6 +172,9 @@ export default {
     replyCallback: {
       type: Function,
       default: undefined
+    },
+    onImageSelected: {
+      type: Function
     }
   },
   data: function() {
