@@ -91,6 +91,7 @@
           :translations="translations"
           :transcription="transcription"
           :reply-callback="replyCallback"
+          :on-image-selected="onImageSelected"
         />
 
         <document-select
@@ -764,6 +765,9 @@ export default {
       type: Function
     },
     scrollToMessageById: {
+      type: Function
+    },
+    onImageSelected: {
       type: Function
     }
   },

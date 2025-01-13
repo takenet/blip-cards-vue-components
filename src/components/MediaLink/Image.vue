@@ -191,6 +191,9 @@ export default {
     simplified: {
       type: Boolean,
       default: false
+    },
+    onImageSelected: {
+      type: Function
     }
   },
   data: function() {
@@ -263,7 +266,9 @@ export default {
       })
     },
     handleImageLink: function() {
-      if (this.onMediaSelected) {
+      if (this.onImageSelected) {
+        this.onImageSelected(this.imageUri)
+      } else if (this.onMediaSelected) {
         this.onMediaSelected(this.imageUri)
       } else {
         window.open(this.imageUri, '_blank', 'noopener')
