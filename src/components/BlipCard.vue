@@ -404,6 +404,7 @@
           :length="length"
           :position="position"
           :document="editableDocument.content"
+          :full-document="editableDocument"
           :member-info="memberInfo"
           :date="date"
         />

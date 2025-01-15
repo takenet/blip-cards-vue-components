@@ -1,9 +1,10 @@
 <template>
-	<plain-text 
+	<plain-text
     :status="status"
     :length="length"
     :position="position"
     :document="text"
+    :full-document="document"
     :member-info="memberInfo"
 		:date="date"
   />
