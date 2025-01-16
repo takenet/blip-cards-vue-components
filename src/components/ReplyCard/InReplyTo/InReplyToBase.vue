@@ -248,15 +248,13 @@ export default {
   color: $color-primary;
   padding-top: 0.5rem;
   padding-left: 0.5rem;
-  border: 5px solid red;
 }
 .in-reply-to-message-text {
   padding: 0.5rem;
 }
 
 .in-reply-to-message-others {
-  padding-left: 0.5rem;  
-  border: 5px solid green;
+  padding-left: 0.5rem;
 }
 .in-reply-to-padding {
   padding-top: 1rem;
