@@ -283,6 +283,13 @@
           <button class="button" @click="sendReplyFileMessageWithText">
             ENVIAR Reply Message de Documento com Texto
           </button>
+          <button class="button" @click="sendReplySticker">
+            ENVIAR Reply Sticker com Texto
+          </button>
+          <button class="button" @click="sendReplyStickerWithSticker">
+            ENVIAR Reply Sticker com Sticker
+          </button>
+          
           
         </div>  
       </div>
@@ -1088,6 +1095,58 @@ export default {
                 }
               ]
             }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplySticker: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'sticker replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'sticker/webp',
+              uri: 'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
+            },
+            direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyStickerWithSticker: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'sticker/webp',
+              uri:
+                'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
+            }
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'sticker/webp',
+              uri: 'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
+            },
+            direction: 'sent'
           }
         }
       })
