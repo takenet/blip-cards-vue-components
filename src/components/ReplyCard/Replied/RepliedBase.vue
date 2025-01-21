@@ -38,11 +38,13 @@
 </template>
   
 <script>
+
+import { default as base } from '../../../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../../../utils/MessageTypesConstants.js'
 
 export default {
   name: 'replied-base',
-  mixins: [],
+  mixins: [base],
   props: {
     replied: {
       type: Object,

@@ -66,7 +66,8 @@
         :deletable="deletable"
         :on-cancel="onCancel"
         :editing="editing"
-        :async-fetch-media="asyncFetchMedia"/>
+        :async-fetch-media="asyncFetchMedia"
+        />
       <blip-file
         :title-msg="titleMsg"
         :document="replied"

@@ -66,75 +66,75 @@
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
 
-  export default {
-    name: 'reply-card',
-    mixins: [base],
-    props: {
-      translations: {
-        type: Object,
-        default: () => ({})
-      },
-      failedToSendMsg: {
-        type: String,
-        default: 'Falha ao enviar a mensagem'
-      },
-      asyncFetchMedia: {
-        type: Function
-      },
-      status: {
-        type: String,
-        default: ''
-      },
-      onMediaSelected: {
-        type: Function
-      },
-      updatedPhotoMargin: {
-        type: Function
-      },
-      onAudioValidateUri: {
-        type: Function
-      },
-      position: {
-        type: String,
-        default: 'left'
-      },
-      replyText: {
-        type: String,
-        default: 'Resposta'
-      },
-      replyCallback: {
-        type: Function,
-        default: undefined
-      },
-      scrollToMessageById: {
-        type: Function
-      }
+export default {
+  name: 'reply-card',
+  mixins: [base],
+  props: {
+    translations: {
+      type: Object,
+      default: () => ({})
     },
-    data() {
+    failedToSendMsg: {
+      type: String,
+      default: 'Falha ao enviar a mensagem'
+    },
+    asyncFetchMedia: {
+      type: Function
+    },
+    status: {
+      type: String,
+      default: ''
+    },
+    onMediaSelected: {
+      type: Function
+    },
+    updatedPhotoMargin: {
+      type: Function
+    },
+    onAudioValidateUri: {
+      type: Function
+    },
+    position: {
+      type: String,
+      default: 'left'
+    },
+    replyText: {
+      type: String,
+      default: 'Resposta'
+    },
+    replyCallback: {
+      type: Function,
+      default: undefined
+    },
+    scrollToMessageById: {
+      type: Function
+    }
+  },
+  data() {
+    return {
+      saveCard: this.onSave,
+      deleteCard: this.onDeleted,
+      isCardEditing: this.editing,
+      replyTooltipText: 'Responder'
+    }
+  },
+  computed: {
+    isOwnMessage() {
+      return this.fullDocument.direction === this.fullDocument.content.inReplyTo.direction
+    },
+    replied() {
+      return this.document.replied
+    },
+    inReplyTo() {
+      return this.document.inReplyTo
+    },
+    blipCardReplyDocument() {
       return {
-        saveCard: this.onSave,
-        deleteCard: this.onDeleted,
-        isCardEditing: this.editing,
-        replyTooltipText: 'Responder'
-      }
-    },
-    computed: {
-      isOwnMessage() {
-        return this.fullDocument.direction === this.fullDocument.content.inReplyTo.direction
-      },
-      replied() {
-        return this.document.replied
-      },
-      inReplyTo() {
-        return this.document.inReplyTo
-      },
-      blipCardReplyDocument() {
-        return {
-          content: this.document.replied || this.document.inReplyTo
-        }
+        content: this.document.replied || this.document.inReplyTo
       }
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

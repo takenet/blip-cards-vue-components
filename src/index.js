@@ -42,12 +42,12 @@ import WebLink from './components/WebLink'
 import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
 import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
 import InReplyToImage from './components/ReplyCard/InReplyTo/InReplyToImage.vue'
+import InReplyToSticker from './components/ReplyCard/InReplyTo/InReplyToSticker.vue'
 import InReplyToVideo from './components/ReplyCard/InReplyTo/InReplyToVideo.vue'
 import InReplyToDocument from './components/ReplyCard/InReplyTo/InReplyToDocument.vue'
 import InReplyToAudio from './components/ReplyCard/InReplyTo/InReplyToAudio.vue'
 import InReplyToLocation from './components/ReplyCard/InReplyTo/InReplyToLocation.vue'
 import InReplyToUnsupportedContent from './components/ReplyCard/InReplyTo/InReplyToUnsupportedContent.vue'
-import InReplyToMediaLink from './components/ReplyCard/InReplyTo/InReplyToMediaLink'
 import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
 import RepliedWithMediaLink from './components/ReplyCard/Replied/RepliedWithMediaLink'
 import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
@@ -135,8 +135,8 @@ function install(Vue) {
   // In Reply To
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))
-  components.push(Vue.component(InReplyToMediaLink.name, InReplyToMediaLink))
   components.push(Vue.component(InReplyToImage.name, InReplyToImage))
+  components.push(Vue.component(InReplyToSticker.name, InReplyToSticker))
   components.push(Vue.component(InReplyToVideo.name, InReplyToVideo))
   components.push(Vue.component(InReplyToDocument.name, InReplyToDocument))
   components.push(Vue.component(InReplyToAudio.name, InReplyToAudio))

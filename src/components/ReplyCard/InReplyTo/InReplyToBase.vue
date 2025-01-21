@@ -13,7 +13,7 @@
       />
 
       <in-reply-to-image
-        v-if="isImageReply"
+        v-else-if="isImageReply"
         :in-reply-to="inReplyTo"
         :replying-to-text="replyingToText"
         :async-fetch-media="asyncFetchMedia"
@@ -22,7 +22,7 @@
       />
 
       <in-reply-to-video
-        v-if="isVideoReply"
+        v-else-if="isVideoReply"
         :in-reply-to="inReplyTo"
         :replying-to-text="replyingToText"
         :async-fetch-media="asyncFetchMedia"
@@ -30,14 +30,14 @@
       />
 
       <in-reply-to-document
-        v-if="isDocumentReply"
+        v-else-if="isDocumentReply"
         :in-reply-to="inReplyTo"
         :replying-to-text="replyingToText"
         :translations="translations"
       />
 
       <in-reply-to-audio
-        v-if="isAudioReply"
+        v-else-if="isAudioReply"
         :in-reply-to="inReplyTo"
         :translations="translations"
         :document="document"
@@ -46,21 +46,30 @@
       />
 
       <in-reply-to-location
-        v-if="isLocationReply"
+        v-else-if="isLocationReply"
         :in-reply-to="inReplyTo"
         :translations="translations"
         :replying-to-text="replyingToText"
       />
+      
+      <in-reply-to-sticker
+        v-else-if="isStickerReply"
+        :in-reply-to="inReplyTo"
+        :replying-to-text="replyingToText"
+        :async-fetch-media="asyncFetchMedia"
+        :is-replying-on-input="isReplyingOnInput"
+        :translations="translations"
+      />
 
       <in-reply-to-active-message
-        v-if="isActiveMessageReply"
+        v-else-if="isActiveMessageReply"
         :in-reply-to="inReplyTo"
         :translations="translations"
         :replying-to-text="replyingToText"
       />
       
       <in-reply-to-unsupported-content
-        v-if="isUnsupportedContentReply"
+        v-else
         :in-reply-to="inReplyTo"
         :translations="translations"
         :replying-to-text="replyingToText"
@@ -150,6 +159,9 @@ export default {
     isAudioReply() {
       return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('audio')
     },
+    isStickerReply() {
+      return this.inReplyTo.value && this.inReplyTo.value.type && this.inReplyTo.value.type.includes('sticker')
+    },
     isLocationReply() {
       return this.inReplyTo.type && this.inReplyTo.type.includes('location')
     },
@@ -166,19 +178,6 @@ export default {
         (this.isInteractiveTypeListWithTextHeader ||
           this.isInteractiveTypeButtonWithTextHeader ||
           this.isInteractiveTypeButtonWithoutTextHeader)
-      )
-    },
-    isAcceptableTextType() {
-      return (
-        this.isTextPlain ||
-        this.isSelectType ||
-        this.isAcceptableInteractiveType ||
-        this.isImageReply ||
-        this.isVideoReply ||
-        this.isDocumentReply ||
-        this.isAudioReply ||
-        this.isLocationReply ||
-        this.isActiveMessageReply
       )
     },
     hasFailedToLoad() {
