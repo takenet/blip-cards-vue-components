@@ -872,9 +872,6 @@ export default {
     },
     memberInfo() {
       return getMemberInfo(this.document)
-    },
-    customer() {
-      return 'Jão'
     }
   }
 }
