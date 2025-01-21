@@ -412,6 +412,7 @@
           :reply-text="translations.replyText"
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
+          :replying-to-customer="customer"
         />
 
         <template-content
@@ -791,6 +792,9 @@ export default {
     },
     memberInfo() {
       return getMemberInfo(this.document)
+    },
+    customer() {
+      return 'Jão'
     }
   }
 }
