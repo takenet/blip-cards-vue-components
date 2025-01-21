@@ -53,6 +53,20 @@
         :editing="editing"
         :async-fetch-media="asyncFetchMedia"
       />
+      <blip-sticker
+        :supported-formats-msg="supportedFormatsMsg"
+        :document="replied"
+        :full-document="replied"
+        :date="date"
+        v-else-if="replied.type.indexOf('sticker') != -1"
+        :editable="editable"
+        :on-save="save"
+        :on-deleted="onDeleted"
+        :on-metadata-edit="isMetadataReady"
+        :deletable="deletable"
+        :on-cancel="onCancel"
+        :editing="editing"
+        :async-fetch-media="asyncFetchMedia"/>
       <blip-file
         :title-msg="titleMsg"
         :document="replied"
@@ -79,6 +93,7 @@ import BlipImage from '../../MediaLink/Image'
 import BlipAudio from '../../MediaLink/Audio'
 import BlipVideo from '../../MediaLink/Video'
 import BlipFile from '../../MediaLink/BlipFile'
+import BlipSticker from '../../MediaLink/Sticker'
 import { default as base } from '../../../mixins/baseComponent.js'
 import { isFailedMessage } from '../../../utils/misc'
 
@@ -128,6 +143,7 @@ export default {
     BlipImage,
     BlipAudio,
     BlipVideo,
+    BlipSticker,
     BlipFile
   },
   methods: {
