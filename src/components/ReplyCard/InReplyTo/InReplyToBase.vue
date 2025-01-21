@@ -9,9 +9,9 @@
         <div class="replying-to">
         <bds-typo
           v-if="replyingToCustomer"
-          
           variant="fs-14"
           bold="semi-bold" 
+          class="replying-to-text"
           >{{ replyingTo }}
         </bds-typo>
         </div>
@@ -187,21 +187,12 @@ export default {
       )
     },
     isTextPlain() {
-      console.log('inReplyTovalue')
-      console.log(this.inReplyTo.value)
-      console.log(this.inReplyTo)
-      console.log(this.inReplyTo.value.value)
       return this.inReplyTo.type === 'text/plain'
     },
     inReplyTovalue() {
-      console.log('inReplyTovalue')
-      console.log(this.inReplyTo.value)
-      console.log(this.inReplyTo)
-      console.log(this.inReplyTo.value.value)
       return this.inReplyTo.value
     },
     isMediaLink() {
-      console.log('isMediaLink ', this.inReplyTo.type)
       return this.inReplyTo.type === 'application/vnd.lime.media-link+json'
     },
     isSelectType() {
@@ -245,9 +236,12 @@ export default {
 @import '../../../styles/variables.scss';
 
 .replying-to {
-  color: $color-primary;
   padding-top: 0.5rem;
   padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  .replying-to-text {
+    color: $color-primary;
+  }
 }
 .in-reply-to-message-text {
   padding: 0.5rem;
