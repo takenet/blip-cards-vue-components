@@ -290,6 +290,10 @@
             ENVIAR Reply Sticker com Sticker
           </button>
           
+          <button class="button" @click="sendReplyStickerWithText">
+            ENVIAR Reply Sticker com texto
+          </button>
+          
           
         </div>  
       </div>
@@ -1147,6 +1151,30 @@ export default {
               uri: 'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
             },
             direction: 'sent'
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyStickerWithText: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'sticker/webp',
+              uri:
+                'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
+            }
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'text/plain',
+            value: 'in reply to text'
           }
         }
       })
