@@ -7,12 +7,15 @@ import Vue2TouchEvents from 'vue2-touch-events'
 import ApplicationJSon from './components/ApplicationJSon'
 import MenuList from './components/ApplicationJSon/MenuList'
 import MenuListPrompt from './components/ApplicationJSon/MenuListPrompt'
-import BlipCalls from './components/BlipCalls'
-import BlipCallsEndCard from './components/BlipCallsEndCard'
-import BlipCallsVoiceRequest from './components/BlipCallsVoiceRequest'
+import BlipCalls from './components/BlipCalls/BlipCalls'
+import BlipCallsEndCard from './components/BlipCalls/BlipCallsEndCard'
+import BlipCallsVoiceRequest from './components/BlipCalls/BlipCallsVoiceRequest'
+import BlipCallsPermissionRequest from './components/BlipCalls/BlipCallsPermissionRequest'
+import BlipCallsPermissionReply from './components/BlipCalls/BlipCallsPermissionReply'
 import BlipCard from './components/BlipCard'
 import BlipCardDate from './components/BlipCardDate'
 import BlipCardMember from './components/BlipCardMember'
+import BlipCardReply from './components/BlipCardReply'
 import BlipGroupCard from './components/BlipGroupCard'
 import BlipListCard from './components/BlipListCard'
 import BlipSelect from './components/BlipSelect'
@@ -38,11 +41,18 @@ import WebLink from './components/WebLink'
 // Reply components
 import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
 import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
+import InReplyToImage from './components/ReplyCard/InReplyTo/InReplyToImage.vue'
+import InReplyToVideo from './components/ReplyCard/InReplyTo/InReplyToVideo.vue'
+import InReplyToDocument from './components/ReplyCard/InReplyTo/InReplyToDocument.vue'
+import InReplyToAudio from './components/ReplyCard/InReplyTo/InReplyToAudio.vue'
+import InReplyToLocation from './components/ReplyCard/InReplyTo/InReplyToLocation.vue'
+import InReplyToUnsupportedContent from './components/ReplyCard/InReplyTo/InReplyToUnsupportedContent.vue'
 import InReplyToMediaLink from './components/ReplyCard/InReplyTo/InReplyToMediaLink'
 import RepliedBase from './components/ReplyCard/Replied/RepliedBase'
 import RepliedWithMediaLink from './components/ReplyCard/Replied/RepliedWithMediaLink'
 import RepliedWithText from './components/ReplyCard/Replied/RepliedWithText'
 import ReplyCard from './components/ReplyCard/ReplyCard'
+import InReplyToActiveMessage from './components/ReplyCard/InReplyTo/InReplyToActiveMessage.vue'
 
 // Reaction components
 import InReactionToBase from './components/ReactionCard/InReactionTo/InReactionToBase'
@@ -50,6 +60,9 @@ import InReactionToMediaLink from './components/ReactionCard/InReactionTo/InReac
 import InReactionToText from './components/ReactionCard/InReactionTo/InReactionToText'
 import ReactionBase from './components/ReactionCard/Reaction/ReactionBase'
 import ReactionCard from './components/ReactionCard/ReactionCard'
+
+// External components
+import BlipExternal from './components/BlipExternal'
 
 // Validators
 import JsonValidator from './validators/jsonValidator'
@@ -81,10 +94,13 @@ function install(Vue) {
   components.push(Vue.component(BlipCard.name, BlipCard))
   components.push(Vue.component(BlipGroupCard.name, BlipGroupCard))
   components.push(Vue.component(BlipListCard.name, BlipListCard))
+  components.push(Vue.component(BlipCardReply.name, BlipCardReply))
   components.push(Vue.component(Ticket.name, Ticket))
   components.push(Vue.component(BlipCalls.name, BlipCalls))
   components.push(Vue.component(BlipCallsEndCard.name, BlipCallsEndCard))
   components.push(Vue.component(BlipCallsVoiceRequest.name, BlipCallsVoiceRequest))
+  components.push(Vue.component(BlipCallsPermissionRequest.name, BlipCallsPermissionRequest))
+  components.push(Vue.component(BlipCallsPermissionReply.name, BlipCallsPermissionReply))
   components.push(Vue.component(Redirect.name, Redirect))
   components.push(Vue.component(PlainText.name, PlainText))
   components.push(Vue.component(MediaLink.name, MediaLink))
@@ -110,14 +126,23 @@ function install(Vue) {
 
   // Reply components
   components.push(Vue.component(ReplyCard.name, ReplyCard))
+
   // Replied
   components.push(Vue.component(RepliedBase.name, RepliedBase))
   components.push(Vue.component(RepliedWithText.name, RepliedWithText))
   components.push(Vue.component(RepliedWithMediaLink.name, RepliedWithMediaLink))
+
   // In Reply To
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))
   components.push(Vue.component(InReplyToMediaLink.name, InReplyToMediaLink))
+  components.push(Vue.component(InReplyToImage.name, InReplyToImage))
+  components.push(Vue.component(InReplyToVideo.name, InReplyToVideo))
+  components.push(Vue.component(InReplyToDocument.name, InReplyToDocument))
+  components.push(Vue.component(InReplyToAudio.name, InReplyToAudio))
+  components.push(Vue.component(InReplyToLocation.name, InReplyToLocation))
+  components.push(Vue.component(InReplyToUnsupportedContent.name, InReplyToUnsupportedContent))
+  components.push(Vue.component(InReplyToActiveMessage.name, InReplyToActiveMessage))
 
   // Reaction components
   components.push(Vue.component(ReactionCard.name, ReactionCard))
@@ -131,6 +156,9 @@ function install(Vue) {
   components.push(Vue.component(WebsiteButton.name, WebsiteButton))
   components.push(Vue.component(PhoneNumberButton.name, PhoneNumberButton))
   components.push(Vue.component(MediaContent.name, MediaContent))
+
+  // External component
+  components.push(Vue.component(BlipExternal.name, BlipExternal))
 
   Vue.component(Editable.name, Editable)
 
@@ -176,5 +204,6 @@ export default {
   RequestLocation,
   TemplateContent,
   UnsuportedContent,
+  BlipExternal,
   install
 }

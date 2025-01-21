@@ -1,23 +1,31 @@
 <template>
   <div :class="'blip-container unsuported-content ' + position">
-    <div :class="simplified ? '' : 'bubble ' + position">
-      <div class="unsuported-content-icons">
-        <bds-icon v-if="fromMessageTemplate == true" size="small" alt="Alert" name="megaphone"></bds-icon>
-        <bds-icon v-else-if="position === 'right'" size="small" alt="Alert" name="warning"></bds-icon>
-        <bds-icon v-else size="small" alt="Alert" name="warning"></bds-icon>
-        <bds-typo
-          tag="span"
-          margin="false"
-          class="unsuported-text typo"
-          v-html="sanitize(unsupportedContentMsg)">
-        </bds-typo>
+    <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
+      <div :class="'bubble ' + position">
+        <bds-grid direction="row" justifyContent="space-between" gap="1" align-items="center">
+          <bds-icon v-if="fromMessageTemplate == true" size="small" alt="Alert" name="megaphone"></bds-icon>
+          <bds-icon v-else-if="position === 'right'" size="small" alt="Alert" name="warning"></bds-icon>
+          <bds-icon v-else size="small" alt="Alert" name="warning"></bds-icon>
+          <span>
+            {{ unsupportedContentMsg }}
+          </span>
+        </bds-grid>
       </div>
-    </div>
-    <bds-icon v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon"
-        name="info" theme="solid" 
-        aria-label="Active message failed reason" 
-        class="icon-active-message-failed" 
-        @click="onFailedClickIcon(fullDocument)"></bds-icon>
+
+      <blip-card-reply
+        :document="fullDocument"
+        :reply-callback="replyCallback"
+        :reply-tooltip-text="replyTooltipText"
+      />
+    </bds-grid>
+    <bds-icon
+      v-if="this.position === 'right' && this.status === 'failed' && this.onFailedClickIcon"
+      name="info"
+      theme="solid"
+      aria-label="Active message failed reason"
+      class="icon-active-message-failed"
+      @click="onFailedClickIcon(fullDocument)"
+    />
     <blip-card-date
       :status="status"
       :position="position"
@@ -47,32 +55,36 @@ export default {
       type: String,
       default: ''
     },
-    unsupportedContentMsg: {
-      type: String,
-      default: 'Unsuported Content'
-    },
     fromMessageTemplate: {
       type: Boolean,
       default: false
     },
-    failedToSendMsg: {
-      type: String,
-      default: 'Falha ao enviar a mensagem'
-    },
     onFailedClickIcon: {
       type: Function
     },
-    simplified: {
-      type: Boolean,
-      default: false
+    replyCallback: {
+      type: Function,
+      default: undefined
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: function () {
     return {
       alertSvg,
       alertWhiteSvg,
-      megaphoneSvg
+      megaphoneSvg,
+      unsupportedContentMsg: 'Unsuported Content',
+      failedToSendMsg: 'Falha ao enviar a mensagem',
+      replyTooltipText: 'Responder'
     }
+  },
+  mounted() {
+    this.unsupportedContentMsg = this.translations.unsupportedContent
+    this.failedToSendMsg = this.translations.failedToSend
+    this.replyTooltipText = this.translations.replyTooltipText
   }
 }
 </script>
@@ -86,59 +98,24 @@ export default {
   margin-right: -1px;
   margin-top: -5px;
   color: $color-extended-red;
-  cursor: pointer;  
+  cursor: pointer;
 }
 
-.unsuported-content {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.unsuported-content.right {
-    justify-content: right;
-}
-
-.unsuported-content.left {
-    justify-content: left;
-}
-
-.blip-container.unsuported-content .alert-icon {
-  height: 20px;
-  margin-right: 2px;
-}
-
-.unsuported-content-icons {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.unsuported-content-icons span{
-  max-width: calc(100% - 25px);
+.unsuported-content .bubble {
+  padding: $bubble-padding;
+  word-wrap: break-word;
+  min-width: auto !important;
+  text-align: left;
 }
 
 .blip-container.unsuported-content .bubble.left {
   background-color: $color-surface-1;
   color: $color-content-default;
-
-  .unsuported-content-icons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
 }
 
 .blip-container.unsuported-content .bubble.right {
   background-color: $color-surface-3;
   color: $color-content-default;
-
-  .unsuported-content-icons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
 }
 
 .blip-container.unsuported-content.blip-card .bubble {
@@ -146,7 +123,6 @@ export default {
   word-wrap: break-word;
   border-radius: 15px;
   white-space: normal;
-  font-size: 13px;
 }
 
 .unsuported-text {

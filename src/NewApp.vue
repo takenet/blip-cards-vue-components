@@ -22,6 +22,7 @@
           :disable-link="parameters.disableLink"
           :readonly="parameters.readonly"
           :translations="translations"
+          :reply-callback="replyMessage"
         />
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
           <blip-card
@@ -41,7 +42,8 @@
             :on-location-error="selected"
             :disable-link="parameters.disableLink"
             :readonly="parameters.readonly"
-          :translations="translations"
+            :translations="translations"
+            :reply-callback="replyMessage"
           />
         </div>
       </div>
@@ -86,7 +88,12 @@ export default {
           title: 'Transcrição de áudio',
           readMore: 'Ler mais',
           readLess: 'Ler menos'
-        }
+        },
+        unsupportedContent: 'Conteúdo não suportado',
+        location: 'Localização',
+        labelAudio: 'Audio',
+        messageTemplate: 'Modelo de mensagem: ',
+        replyTooltipText: 'Responder'
       },
       selected: () => {},
       save: () => {},
@@ -130,7 +137,10 @@ export default {
       el.scrollIntoView({ block: 'end', behavior: 'smooth' })
     },
     onScroll() {},
-    onUnsupportedType() {}
+    onUnsupportedType() {},
+    replyMessage(document) {
+      console.log('Replying to:', document)
+    }
   }
 }
 </script>

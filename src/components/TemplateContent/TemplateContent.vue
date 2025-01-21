@@ -1,45 +1,53 @@
 <template>
   <div class="blip-container">
     <bds-grid direction="column" :align-items="position === 'right' ? 'flex-end' : 'flex-start'">
-      <div :class="bubbleClass">
-        <bds-grid direction="column" padding="y-1" gap="1" class="wrap">
-          <bds-grid margin="y-1" direction="row" justify-content="flex-start" padding="x-2">
-            <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane" />
-            <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
-            <bds-typo :class="'typo ' + position + ' title-template'" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
-          </bds-grid>
+      <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center" class="blip-card-container">
+        <div :class="bubbleClass">
+          <bds-grid direction="column" padding="y-1" gap="1" class="wrap">
+            <bds-grid margin="y-1" direction="row" justify-content="flex-start" padding="x-2">
+              <bds-icon v-if="position === 'right'" size="small" color="white" alt="paperplane" name="paperplane" />
+              <bds-icon v-else size="small" alt="paperplane" name="paperplane" />
+              <bds-typo :class="'typo ' + position + ' title-template'" variant="fs-16" bold="semi-bold">{{ showTemplateContentTitle }}</bds-typo>
+            </bds-grid>
 
-          <media-content class="blip-card"
-            :failed-to-send-msg="translations.failedToSend"
-            :aspect-ratio-msg="translations.aspectRatio"
-            :supported-formats-msg="translations.supportedFormats"
-            :title-msg="translations.title"
-            :text-msg="translations.text"
-            :status="status"
-            :position="position"
-            :document="document"
-            :date="date"
-            :on-metadata-edit="isMetadataReady"
-            :on-audio-validate-uri="onAudioValidateUri"
-            :async-fetch-media="asyncFetchMedia"/>
+            <media-content class="blip-card"
+              :failed-to-send-msg="translations.failedToSend"
+              :aspect-ratio-msg="translations.aspectRatio"
+              :supported-formats-msg="translations.supportedFormats"
+              :title-msg="translations.title"
+              :text-msg="translations.text"
+              :status="status"
+              :position="position"
+              :document="document"
+              :date="date"
+              :on-metadata-edit="isMetadataReady"
+              :on-audio-validate-uri="onAudioValidateUri"
+              :async-fetch-media="asyncFetchMedia"/>
 
-          <bds-grid direction="column" justify-content="flex-start" padding="x-2">
-            <bds-typo v-if="hasTemplateContentBody"
-              v-html="showTemplateContentBody(position)"
-              :class="'typo ' + position" variant="fs-16"
-              type="span" />
+            <bds-grid direction="column" justify-content="flex-start" padding="x-2">
+              <bds-typo v-if="hasTemplateContentBody"
+                v-html="showTemplateContentBody(position)"
+                :class="'typo ' + position" variant="fs-16"
+                type="span" />
+            </bds-grid>
+            <bds-grid
+              direction="column"
+              align-items="center"
+              justify-content="center"
+              v-for="(button, index) in componentButtons" v-bind:key="index"
+            >
+              <website-button v-if="isWebsiteButton(button)" :button="button" :position="position" />
+              <phone-number-button v-if="isPhoneNumberButton(button)" :button="button" :position="position" />
+            </bds-grid>
           </bds-grid>
-          <bds-grid
-            direction="column"
-            align-items="center"
-            justify-content="center"
-            v-for="(button, index) in componentButtons" v-bind:key="index"
-          >
-            <website-button v-if="isWebsiteButton(button)" :button="button" :position="position" />
-            <phone-number-button v-if="isPhoneNumberButton(button)" :button="button" :position="position" />
-          </bds-grid>
-        </bds-grid>
-      </div>
+        </div>
+
+        <blip-card-reply
+          :document="fullDocument"
+          :reply-callback="replyCallback"
+          :reply-tooltip-text="replyTooltipText"
+        />
+      </bds-grid>
       <bds-grid
         flex-wrap="wrap"
         direction="row"
@@ -116,13 +124,16 @@ export default {
     },
     asyncFetchMedia: {
       type: Function
+    },
+    replyCallback: {
+      type: Function,
+      default: undefined
     }
   },
-  data: function () {
-    return {
-      componentButtons: []
-    }
-  },
+  data: () => ({
+    componentButtons: [],
+    replyTooltipText: 'Responder'
+  }),
   created() {
     this.componentButtons = parseComponentButtons(this.document)
   },

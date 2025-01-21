@@ -1,84 +1,57 @@
 <template>
-  <div class="blip-container reply-card" id="blip-container">
-    <div :class="'bubble ' + position">
-      <bds-button-icon v-if="deletable"
-          class="editIco trashIco icon-button-margin icon-button-top"
-          icon="trash"
-          variant="delete"
-          size="short"
-          v-on:click="trash(document)"
-        ></bds-button-icon>
-        <bds-button-icon v-if="editable"
-          class="editIco icon-button-margin icon-button-top"
-          icon="edit"
-          variant="primary"
-          size="short"
-          v-on:click="toggleEdit"
-        ></bds-button-icon> 
-      <div class="reply-container">
-        <bds-grid direction="row" align-items="flex-start" gap="half" margin="b-half">
-          <bds-icon class="typo" name="redo" size="small" type="icon"></bds-icon>
-          <bds-typo class="typo" variant="fs-14" italic="true">{{ replyText }}</bds-typo>
-        </bds-grid>
-        <in-reply-to-base
-          :in-reply-to="inReplyTo"
-          :is-own-message="isOwnMessage"
-          :failed-message="translations.failedToLoad"
-          :updatedPhotoMargin="updatedPhotoMargin"
-          :on-media-selected="onMediaSelected"
-          :translations="translations"
-          :async-fetch-media="asyncFetchMedia"
-          :failed-to-send-msg="translations.failedToSend"
-          :aspect-ratio-msg="translations.aspectRatio"
-          :supported-formats-msg="translations.supportedFormats"
-          :file-url-msg="translations.fileUrl"
-          :title-msg="translations.title"
-          :image-uri-msg="translations.imageUri"
-          :text-msg="translations.text"
-          :video-uri-msg="translations.videoUri"
-          :status="status"
-          :position="position"
-          :date="date"
-          :on-save="onSave"
-          :editable="editable"
-          :on-deleted="onDeleted"
-          :on-metadata-edit="isMetadataReady"
-          :deletable="deletable"
-          :editing="editing"
-          :on-cancel="cancel"
-          :on-open-link="onOpenLink"
-          :on-audio-validate-uri="onAudioValidateUri"
-          :replying-to-customer="replyingToCustomer"
-        />
-        <replied-base
-          v-if="replied"
-          :replied="replied"
-          :updatedPhotoMargin="updatedPhotoMargin"
-          :on-media-selected="onMediaSelected"
-          :translations="translations"
-          :async-fetch-media="asyncFetchMedia"
-          :failed-to-send-msg="translations.failedToSend"
-          :aspect-ratio-msg="translations.aspectRatio"
-          :supported-formats-msg="translations.supportedFormats"
-          :file-url-msg="translations.fileUrl"
-          :title-msg="translations.title"
-          :image-uri-msg="translations.imageUri"
-          :text-msg="translations.text"
-          :video-uri-msg="translations.videoUri"
-          :status="status"
-          :position="position"
-          :date="date"
-          :on-save="onSave"
-          :editable="editable"
-          :on-deleted="onDeleted"
-          :on-metadata-edit="isMetadataReady"
-          :deletable="deletable"
-          :editing="editing"
-          :on-cancel="cancel"
-          :on-audio-validate-uri="onAudioValidateUri"
-        />
+  <div class="blip-container reply-card"
+    id="blip-container">
+    <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
+      <div :class="'bubble ' + position">
+        <div class="reply-container">
+          <bds-grid direction="row" align-items="flex-start" gap="half" margin="b-half">
+            <bds-icon class="typo" name="reply" size="small" type="icon"></bds-icon>
+            <bds-typo class="typo" variant="fs-14" italic="true">{{ replyText }}</bds-typo>
+          </bds-grid>
+          <in-reply-to-base
+            :in-reply-to="inReplyTo"
+            :is-own-message="isOwnMessage"
+            :failed-message="translations.failedToLoad"
+            :translations="translations"
+            :document="this.document"
+            :scroll-to-message-by-id="scrollToMessageById"
+            :on-audio-validate-uri="onAudioValidateUri"
+            :async-fetch-media="asyncFetchMedia"
+          />
+          <replied-base v-if="replied" 
+            :replied="replied" 
+            :updatedPhotoMargin="updatedPhotoMargin"
+            :on-media-selected="onMediaSelected" 
+            :translations="translations"
+            :async-fetch-media="asyncFetchMedia"
+            :failed-to-send-msg="translations.failedToSend"
+            :aspect-ratio-msg="translations.aspectRatio"
+            :supported-formats-msg="translations.supportedFormats"
+            :file-url-msg="translations.fileUrl"
+            :title-msg="translations.title"
+            :image-uri-msg="translations.imageUri"
+            :text-msg="translations.text"
+            :video-uri-msg="translations.videoUri"
+            :status="status"
+            :position="position"
+            :date="date"
+            :on-save="saveCard"
+            :editable="editable"
+            :on-deleted="deleteCard"
+            :on-metadata-edit="isMetadataReady"
+            :deletable="deletable"
+            :editing="isCardEditing"
+            :on-cancel="cancel"
+            :on-audio-validate-uri="onAudioValidateUri" />
+        </div>
       </div>
-    </div>
+
+      <blip-card-reply
+        :document="fullDocument"
+        :reply-callback="replyCallback"
+        :reply-tooltip-text="replyTooltipText"
+      />
+    </bds-grid>
     <blip-card-date
       :status="status"
       :position="position"
@@ -93,64 +66,75 @@
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
 
-export default {
-  name: 'reply-card',
-  mixins: [base],
-  props: {
-    translations: {
-      type: Object,
-      default: () => ({})
+  export default {
+    name: 'reply-card',
+    mixins: [base],
+    props: {
+      translations: {
+        type: Object,
+        default: () => ({})
+      },
+      failedToSendMsg: {
+        type: String,
+        default: 'Falha ao enviar a mensagem'
+      },
+      asyncFetchMedia: {
+        type: Function
+      },
+      status: {
+        type: String,
+        default: ''
+      },
+      onMediaSelected: {
+        type: Function
+      },
+      updatedPhotoMargin: {
+        type: Function
+      },
+      onAudioValidateUri: {
+        type: Function
+      },
+      position: {
+        type: String,
+        default: 'left'
+      },
+      replyText: {
+        type: String,
+        default: 'Resposta'
+      },
+      replyCallback: {
+        type: Function,
+        default: undefined
+      },
+      scrollToMessageById: {
+        type: Function
+      }
     },
-    failedToSendMsg: {
-      type: String,
-      default: 'Falha ao enviar a mensagem'
+    data() {
+      return {
+        saveCard: this.onSave,
+        deleteCard: this.onDeleted,
+        isCardEditing: this.editing,
+        replyTooltipText: 'Responder'
+      }
     },
-    asyncFetchMedia: {
-      type: Function
-    },
-    onOpenLink: {
-      type: Function
-    },
-    status: {
-      type: String,
-      default: ''
-    },
-    onMediaSelected: {
-      type: Function
-    },
-    updatedPhotoMargin: {
-      type: Function
-    },
-    onAudioValidateUri: {
-      type: Function
-    },
-    position: {
-      type: String,
-      default: 'left'
-    },
-    replyText: {
-      type: String,
-      default: 'Resposta'
-    },
-    replyingToCustomer: {
-      type: String
-    }
-  },
-  computed: {
-    isOwnMessage() {
-      return (
-        this.fullDocument.direction ===
-        this.fullDocument.content.inReplyTo.direction
-      )
-    },
-    replied() {
-      return this.document.replied
-    },
-    inReplyTo() {
-      return this.document.inReplyTo
+    computed: {
+      isOwnMessage() {
+        return this.fullDocument.direction === this.fullDocument.content.inReplyTo.direction
+      },
+      replied() {
+        return this.document.replied
+      },
+      inReplyTo() {
+        return this.document.inReplyTo
+      },
+      blipCardReplyDocument() {
+        return {
+          content: this.document.replied || this.document.inReplyTo
+        }
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>

@@ -92,6 +92,19 @@
       :editable="editable"
       :deletable="deletable"
       :editing="editing"
+      :body-text="document.interactive.body.text"
+      :action-text="document.interactive.action.parameters.display_text"
+    />
+
+    <blip-calls-permission-request
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'call_permission_request'"
+      class="blip-card"
+      :position="position"
+      :document="document"
+      :body-title="translations.callsPermissionRequestBodyTitle"
+      :body-text="translations.callsPermissionRequestBodyText"
+      :left-action-label="translations.callsPermissionRequestLeftActionLabel"
+      :right-action-label="translations.callsPermissionRequestRightActionLabel"
     />
 
     <unsuported-content

@@ -1,110 +1,72 @@
 <template>
-  <div class="in-reply-to-message-container">
-    <span
-      class="in-reply-to-message-bar"
-      :class="{ 'own-message': isOwnMessage }"
-    ></span>
-    <template v-if="!hasFailedToLoad">
-      <div>
-        <div class="replying-to">
-        <bds-typo
-          v-if="replyingToCustomer"
-          variant="fs-14"
-          bold="semi-bold" 
-          class="replying-to-text"
-          >{{ replyingTo }}
-        </bds-typo>
-        </div>
-        <in-reply-to-text
-          id="text"
-          v-if="isAcceptableTextType"
-          :in-reply-to="inReplyTo"
-          class="in-reply-to-message-text"
-        />
-        <in-reply-to-media-link
-          class="in-reply-to-message-others"
-          id="media-link"
-          v-else-if="isMediaLink"
-          :in-reply-to="inReplyTo.value"
-          :on-media-selected="onMediaSelected"
-          :video-uri-msg="translations.videoUri"
-          :async-fetch-media="asyncFetchMedia"
-          @updated="updatedPhotoMargin"
-          :failed-to-send-msg="translations.failedToSend"
-          :aspect-ratio-msg="translations.aspectRatio"
-          :supported-formats-msg="translations.supportedFormats"
-          :file-url-msg="translations.fileUrl"
-          :title-msg="translations.title"
-          :image-uri-msg="translations.imageUri"
-          :text-msg="translations.text"
-          :position="position"
-          :on-save="onSave"
-          :editable="editable"
-          :on-deleted="onDeleted"
-          :on-metadata-edit="isMetadataReady"
-          :deletable="deletable"
-          :editing="editing"
-          :on-cancel="cancel"
-          :on-audio-validate-uri="onAudioValidateUri"
-        />
-        <web-link
-          class="blip-card in-reply-to-padding"
-          v-else-if="inReplyTo.type === 'application/vnd.lime.web-link+json'"
-          :page-url-msg="translations.pageUrl"
-          :title-msg="translations.title"
-          :description-msg="translations.description"
-          :failed-to-send-msg="translations.failedToSend"
-          :position="position"
-          :document="inReplyTovalue"
-          :full-document="inReplyTo.value"
-          :on-save="onSave"
-          :editable="editable"
-          :on-open-link="onOpenLink"
-          :on-deleted="onDeleted"
-          :on-metadata-edit="isMetadataReady"
-          :deletable="deletable"
-          :editing="editing"
-          :on-cancel="cancel"
-          :simplified="true"
-        />
-        <location
-          class="blip-card in-reply-to-message-others"
-          v-else-if="inReplyTo.type === 'application/vnd.lime.location+json'"
-          :failed-to-send-msg="translations.failedToSend"
-          :latitude-msg="translations.latitude"
-          :longitude-msg="translations.longitude"
-          :text-msg="translations.text"
-          :position="position"
-          :document="inReplyTovalue"
-          :full-document="inReplyTo.Value"
-          :on-save="onSave"
-          :editable="editable"
-          :on-deleted="onDeleted"
-          :on-metadata-edit="isMetadataReady"
-          :deletable="deletable"
-          :editing="editing"
-          :on-cancel="cancel"
-          :simplified="true"
-        />
-        <unsuported-content
-          v-else
-          class="in-reply-to-padding"
-          style="margin-bottom: 0px"
-          :failed-to-send-msg="translations.failedToSend"
-          :unsupported-content-msg="translations.unsupportedContent"
-          :position="position"
-          :document="document"
-          :on-save="saveCard"
-          :editable="editable"
-          :on-deleted="deleteCard"
-          :deletable="deletable"
-          :editing="isCardEditing"
-          :on-cancel="cancel"
-          :simplified="true"
-        />
-      </div>
+  <div 
+    class="in-reply-to-message-container" 
+    :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput, 'cursor-pointer': !!this.document }"
+    @click="goToMessageReplyed"
+  >
+    <template>
+      <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>   
+      <in-reply-to-text
+        :in-reply-to="inReplyTo"
+        v-if="isTextPlain"
+        :replying-to-text="replyingToText"
+      />
+
+      <in-reply-to-image
+        v-if="isImageReply"
+        :in-reply-to="inReplyTo"
+        :replying-to-text="replyingToText"
+        :async-fetch-media="asyncFetchMedia"
+        :is-replying-on-input="isReplyingOnInput"
+        :translations="translations"
+      />
+
+      <in-reply-to-video
+        v-if="isVideoReply"
+        :in-reply-to="inReplyTo"
+        :replying-to-text="replyingToText"
+        :async-fetch-media="asyncFetchMedia"
+        :translations="translations"
+      />
+
+      <in-reply-to-document
+        v-if="isDocumentReply"
+        :in-reply-to="inReplyTo"
+        :replying-to-text="replyingToText"
+        :translations="translations"
+      />
+
+      <in-reply-to-audio
+        v-if="isAudioReply"
+        :in-reply-to="inReplyTo"
+        :translations="translations"
+        :document="document"
+        :async-fetch-media="asyncFetchMedia"
+        :replying-to-text="replyingToText"
+      />
+
+      <in-reply-to-location
+        v-if="isLocationReply"
+        :in-reply-to="inReplyTo"
+        :translations="translations"
+        :replying-to-text="replyingToText"
+      />
+
+      <in-reply-to-active-message
+        v-if="isActiveMessageReply"
+        :in-reply-to="inReplyTo"
+        :translations="translations"
+        :replying-to-text="replyingToText"
+      />
+      
+      <in-reply-to-unsupported-content
+        v-if="isUnsupportedContentReply"
+        :in-reply-to="inReplyTo"
+        :translations="translations"
+        :replying-to-text="replyingToText"
+      />
     </template>
-    <div class="failed-message" v-else-if="hasFailedToLoad">
+    <div class="failed-message" v-if="hasFailedToLoad">
       <bds-icon name="warning" theme="outline" aria-label="Warning"></bds-icon>
       <bds-typo
         tag="p"
@@ -113,18 +75,17 @@
         margin="false"
         italic="true"
         class="typo"
-        >{{ failedMessage }}
+        >{{ translations.failedMessage }}
       </bds-typo>
     </div>
   </div>
 </template>
 
 <script>
-import { default as base } from '../../../mixins/baseComponent.js'
+import { MediaLinkTypesConstants } from '../../../utils/MediaLinkTypesConstants'
 
 export default {
   name: 'in-reply-to-base',
-  mixins: [base],
   props: {
     inReplyTo: {
       type: Object,
@@ -134,73 +95,74 @@ export default {
       type: Boolean,
       default: false
     },
-    failedMessage: {
-      type: String,
-      default: 'Falha ao carregar mensagem'
-    },
-    replyingToCustomer: {
-      type: String
-    },
-    onMediaSelected: {
-      type: Function
-    },
-    asyncFetchMedia: {
-      type: Function
-    },
-    onOpenLink: {
-      type: Function
-    },
-    updatedPhotoMargin: {
-      type: Function
-    },
-    onAudioValidateUri: {
-      type: Function
-    },
     translations: {
       type: Object,
       default: () => ({})
     },
-    position: {
+    document: {
+      type: Object
+    },
+    asyncFetchMedia: {
+      type: Function
+    },
+    replyingToText: {
       type: String,
-      default: 'left'
+      default: null
+    },
+    isReplyingOnInput: {
+      type: Boolean,
+      default: false
+    },
+    scrollToMessageById: {
+      type: Function
     }
   },
   computed: {
     isInteractiveTypeButtonWithTextHeader() {
-      return (
-        this.inReplyTo.value.interactive.type === 'button' &&
+      return this.inReplyTo.value.interactive.type === 'button' &&
         this.inReplyTo.value.interactive.header &&
         this.inReplyTo.value.interactive.header.type === 'text'
-      )
     },
     isInteractiveTypeButtonWithoutTextHeader() {
-      return (
-        this.inReplyTo.value.interactive.type === 'button' &&
+      return this.inReplyTo.value.interactive.type === 'button' &&
         !this.inReplyTo.value.interactive.header &&
         Boolean(this.inReplyTo.value.interactive.body.text)
-      )
     },
     isInteractiveTypeListWithTextHeader() {
-      return (
-        this.inReplyTo.value.interactive.type === 'list' &&
+      return this.inReplyTo.value.interactive.type === 'list' &&
         this.inReplyTo.value.interactive.header.type === 'text'
-      )
     },
     isTextPlain() {
       return this.inReplyTo.type === 'text/plain'
     },
-    inReplyTovalue() {
-      return this.inReplyTo.value
-    },
-    isMediaLink() {
-      return this.inReplyTo.type === 'application/vnd.lime.media-link+json'
-    },
     isSelectType() {
       return this.inReplyTo.type === 'application/vnd.lime.select+json'
+    },
+    isImageReply() {
+      return this.inReplyTo.value && this.inReplyTo.value.type && this.inReplyTo.value.type.includes('image')
+    },
+    isVideoReply() {
+      return this.inReplyTo.value && this.inReplyTo.value.type && this.inReplyTo.value.type.includes('video')
+    },
+    isDocumentReply() {
+      return this.inReplyTo.type === 'application/vnd.lime.media-link+json' && this.isMediaTypeDocument(this.inReplyTo.value.type)
+    },
+    isAudioReply() {
+      return this.inReplyTo.value.type && this.inReplyTo.value.type.includes('audio')
+    },
+    isLocationReply() {
+      return this.inReplyTo.type && this.inReplyTo.type.includes('location')
+    },
+    isActiveMessageReply() {
+      return this.inReplyTo.type === 'application/json' && this.inReplyTo.value.type === 'template'
+    },
+    isUnsupportedContentReply() {
+      return !this.isAcceptableTextType
     },
     isAcceptableInteractiveType() {
       return (
         this.inReplyTo.type === 'application/json' &&
+        this.inReplyTo.value.interactive &&
         (this.isInteractiveTypeListWithTextHeader ||
           this.isInteractiveTypeButtonWithTextHeader ||
           this.isInteractiveTypeButtonWithoutTextHeader)
@@ -210,23 +172,30 @@ export default {
       return (
         this.isTextPlain ||
         this.isSelectType ||
-        this.isAcceptableInteractiveType
+        this.isAcceptableInteractiveType ||
+        this.isImageReply ||
+        this.isVideoReply ||
+        this.isDocumentReply ||
+        this.isAudioReply ||
+        this.isLocationReply ||
+        this.isActiveMessageReply
       )
     },
-
     hasFailedToLoad() {
-      return Boolean(
-        this.inReplyTo.type === undefined || this.inReplyTo.value === undefined
-      )
+      return Boolean(!this.inReplyTo || this.inReplyTo.type === undefined || this.inReplyTo.value === undefined)
+    }
+  },
+  methods: {
+    isMediaTypeDocument(type) {
+      return Object
+        .values(MediaLinkTypesConstants)
+        .filter(mediaLinkType => type.includes(mediaLinkType))
+        .length === 0
     },
-    replyingTo() {
-      console.log(this.translations)
-      console.log(this.translations.replyingTo)
-      console.log(this.replyingToCustomer)
-      return this.translations.replyingTo.replace(
-        /\{customer\}/g,
-        this.replyingToCustomer
-      )
+    goToMessageReplyed() {
+      if (this.document) {
+        this.scrollToMessageById(this.document.inReplyTo.id)
+      }
     }
   }
 }
@@ -234,28 +203,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../../styles/variables.scss';
-
-.replying-to {
-  padding-top: 0.5rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  .replying-to-text {
-    color: $color-primary;
-  }
-}
-.in-reply-to-message-text {
-  padding: 0.5rem;
-}
-
-.in-reply-to-message-others {
-  padding-left: 0.5rem;
-}
-.in-reply-to-padding {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
 
 .in-reply-to-message-bar {
   flex: none;
@@ -267,7 +214,7 @@ export default {
   &.own-message {
     background-color: $color-content-ghost;
   }
-}
+}  
 
 .in-reply-to-message-container {
   display: flex;
@@ -275,16 +222,28 @@ export default {
   background-color: $color-surface-3;
   border: 1px solid $color-content-ghost;
   border-radius: 0.5rem;
-  margin-bottom: 1rem;
 
   .skeleton {
     height: 2.5rem;
   }
+} 
+
+.container-reply-item {
+  max-height: 110px;
+  justify-content: space-between; 
+}
+
+.in-reply-to-message-container-margin {
+  margin-bottom: 1rem;
 }
 
 .failed-message {
   display: flex;
   gap: 0.5rem;
   padding: 0.5rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

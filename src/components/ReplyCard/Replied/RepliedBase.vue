@@ -1,11 +1,11 @@
 <template>
   <div>
     <replied-with-text 
-      v-if="replied.type === 'text/plain'"
+      v-if="replied.type === MessageTypesConstants.TEXT_MESSAGE"
       :text="repliedValue"
     />
     <replied-with-media-link
-      v-if="replied.type === 'application/vnd.lime.media-link+json'"
+      v-if="replied.type === MessageTypesConstants.MEDIALINK_MESSAGE"
       :replied="repliedValue"
       :on-media-selected="onMediaSelected"
       :video-uri-msg="translations.videoUri"
@@ -28,47 +28,52 @@
       :on-cancel="cancel"
       :on-audio-validate-uri="onAudioValidateUri"
     />
-
+    <location
+      v-if="replied.type === MessageTypesConstants.LOCATION"
+      class="blip-card"   
+      :document="repliedValue"
+      :translations="translations"
+    />
   </div>
 </template>
   
 <script>
-  import { default as base } from '../../../mixins/baseComponent.js'
-  
-  export default {
-    name: 'replied-base',
-    mixins: [base],
-    props: {
-      replied: {
-        type: Object,
-        default: {}
-      },
-      onMediaSelected: {
-        type: Function
-      },
-      asyncFetchMedia: {
-        type: Function
-      },
-      updatedPhotoMargin: {
-        type: Function
-      },
-      onAudioValidateUri: {
-        type: Function
-      },
-      translations: {
-        type: Object,
-        default: () => ({})
-      },
-      position: {
-        type: String,
-        default: 'left'
-      }
+import { MessageTypesConstants } from '../../../utils/MessageTypesConstants.js'
+
+export default {
+  name: 'replied-base',
+  mixins: [],
+  props: {
+    replied: {
+      type: Object,
+      default: {}
     },
-    computed: {
-      repliedValue() {
-        return this.replied.value
-      }
+    onMediaSelected: {
+      type: Function
+    },
+    asyncFetchMedia: {
+      type: Function
+    },
+    updatedPhotoMargin: {
+      type: Function
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
+    },
+    position: {
+      type: String,
+      default: 'left'
+    }
+  },
+  computed: {
+    MessageTypesConstants() {
+      return MessageTypesConstants
+    },
+    repliedValue() {
+      return this.replied.value
     }
   }
+}
 </script>
   

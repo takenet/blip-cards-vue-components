@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { default as base } from '../mixins/baseComponent.js'
+import { default as base } from '../../mixins/baseComponent.js'
 
 export default {
   name: 'blip-calls',
@@ -130,7 +130,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/variables.scss';
+@import '../../styles/variables.scss';
 
 .calls {
   color: $color-content-disable;

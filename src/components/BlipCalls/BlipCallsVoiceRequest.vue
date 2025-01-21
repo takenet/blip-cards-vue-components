@@ -25,16 +25,14 @@
             bold="regular"
             >{{ bodyText }}
           </bds-typo>
+          <div class="divider" />
           <div class="action">
-            <bds-grid margin="y-1" direction="row" justify-content="center" padding="x-2">
-              <bds-icon v-if="position === 'right'" color="white" name="voip-call"/>
-              <bds-icon v-else name="voip-call"/>
-              <bds-typo
-                class="typo title-action"
-                variant="fs-16"
-                bold="regular">{{ buttonText }}
-              </bds-typo>
-            </bds-grid>
+            <bds-icon :color="position == 'right' ? 'white' : null" name="voip-call"/>
+            <bds-typo
+              class="typo title-action"
+              variant="fs-16"
+              bold="regular">{{ actionText }}
+            </bds-typo>
           </div>
         </div>
         <div v-else>
@@ -75,17 +73,17 @@
               <input
                 @keydown.enter="saveData($event)"
                 type="text"
-                name="buttonText"
+                name="actionText"
                 class="form-control"
                 maxlength="20"
                 placeholder="Button text"
                 v-validate="'required'"
-                v-model="buttonText"
+                v-model="actionText"
               >
               <span
-                v-show="errors.has('buttonText')"
+                v-show="errors.has('actionText')"
                 class="help input-error"
-              >{{ errors.first('buttonText') }}</span>
+              >{{ errors.first('actionText') }}</span>
             </div>
           </form>
         </div>
@@ -95,20 +93,24 @@
 </template>
 
 <script>
-import { default as base } from '../mixins/baseComponent.js'
+import { default as base } from '../../mixins/baseComponent.js'
 
 export default {
   name: 'blip-calls-voice-request',
   mixins: [base],
-  data: function() {
-    return {
-      buttonText: undefined,
-      bodyText: undefined
+  props: {
+    bodyText: {
+      type: String,
+      required: true
+    },
+    actionText: {
+      type: String,
+      required: true
     }
   },
   methods: {
     init: function() {
-      this.buttonText = this.document.interactive.action.parameters.display_text
+      this.actionText = this.document.interactive.action.parameters.display_text
       this.bodyText = this.document.interactive.body.text
     },
     saveData: function($event) {
@@ -123,7 +125,7 @@ export default {
       }
 
       this.document.interactive.body.text = this.bodyText
-      this.document.interactive.action.parameters.display_text = this.buttonText
+      this.document.interactive.action.parameters.display_text = this.actionText
       this.save(this.document)
     }
   }
@@ -131,20 +133,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/variables.scss';
+@import '../../styles/variables.scss';
 
 .blip-container.calls-voice-request {
   .bubble {
-    text-align: left;
-    padding: 10px 20px;
+    text-align: start;
+    padding: 8px 16px;
     max-width: 368px !important;
   }
 
-  .action {
-    text-align: center;
+  .divider {
     border-top: 1px solid $color-content-ghost;
-    margin-top: 10px;
-    padding-top: 12px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 100%;
+  }
+
+  .action {
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+    margin-bottom: 8px;
 
     .title-action {
       margin-left: 8px;

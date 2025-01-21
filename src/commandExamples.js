@@ -1,5 +1,627 @@
 export const commandExamples = [
   {
+    buttonLabel: 'Reply with image',
+    command: {
+      id: 'fwd:fwd:17c31cd0-7909-459f-99fa-9ddfddf5a3de',
+      direction: 'sent',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'image/jpeg',
+            size: 1523,
+            uri: 'https://love.doghero.com.br/wp-content/uploads/2019/09/Golden.jpg.jpg',
+            previewUri: 'https://love.doghero.com.br/wp-content/uploads/2019/09/Golden.jpg.jpg',
+            previewType: 'image/jpeg',
+            title: 'JPEG_example_JPG_RIP_001.jpg',
+            text: '',
+            authorizationRealm: 'blip'
+          }
+        },
+        inReplyTo: {
+          id: '1f8ba154-8903-417a-801f-ea599d2a03af',
+          type: 'text/plain',
+          value: 'x',
+          direction: 'sent'
+        }
+      },
+      date: '14:31',
+      status: 'accepted',
+      metadata: {
+        '$elapsedTimeToStorage': '00:00:00.0520876',
+        '#messageEmitter': 'Human',
+        'traceparent': '00-e8619ba176a9028e9dde2aff7d1eff4d-736ebe1e5afe3ec3-01',
+        '#uniqueId': '70c02671-1736-4040-a6c3-0fc2ae80c45d',
+        '#date_processed': '1732728719817',
+        'date_created': '1732728719767',
+        '$originator': 'whatsappcloudapihmg@msging.net',
+        '$claims': 'Node=whatsappcloudapihmg@msging.net/msging-application-builder-hosting-enterprise-75d49875fd-6xwfz;Identity=whatsappcloudapihmg@msging.net;DomainRole=Member;AuthenticationScheme=Transport',
+        '$internalId': '70c02671-1736-4040-a6c3-0fc2ae80c45d',
+        '$originatorSessionRemoteNode': 'enterprise.builder.hosting@msging.net/!msging-server-f944fc449-x8bkz-qubep08n',
+        '#messageKind': 'Response'
+      },
+      createDate: '2024-11-27T17:31:59.848Z',
+      relativeDate: '14:31',
+      position: 'right',
+      photo: 'https://hmgmediastore.blip.ai/public-medias/Media_d1259696-1ff7-4956-a7cb-73b20186a9db'
+    }
+  },
+  {
+    buttonLabel: 'Reply with audio',
+    command: {
+      id: 'fwd:fwd:8b67d786-200e-4a3c-b5e2-8f8e2aaf6095',
+      direction: 'sent',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'audio/mpeg',
+            size: 46848,
+            uri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV84NDA5YWI2MC03MjJjLTQ3NTgtYjZlNS03MGYwNTA3NzhhMDI=',
+            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV84NDA5YWI2MC03MjJjLTQ3NTgtYjZlNS03MGYwNTA3NzhhMDI=',
+            previewType: 'audio/mpeg',
+            title: '1732729490611.mp3',
+            text: '',
+            authorizationRealm: 'blip'
+          }
+        },
+        inReplyTo: {
+          id: '59adb7e7-3feb-4135-9484-05292679cd34',
+          type: 'text/plain',
+          value: 'a',
+          direction: 'sent'
+        }
+      },
+      date: '14:44',
+      status: 'received',
+      metadata: {
+        '$elapsedTimeToStorage': '00:00:00.0157257',
+        '#messageEmitter': 'Human',
+        'traceparent': '00-f471faf1a49fc98b6fa044aaa7eab52e-953181bfa335cd60-01',
+        '#uniqueId': '2859e6c3-73a9-425a-b01c-4805d1855a58',
+        '#date_processed': '1732729490992',
+        'date_created': '1732729490945',
+        '$originator': 'whatsappcloudapihmg@msging.net',
+        '$claims': 'Node=whatsappcloudapihmg@msging.net/msging-application-builder-hosting-enterprise-75d49875fd-6xwfz;Identity=whatsappcloudapihmg@msging.net;DomainRole=Member;AuthenticationScheme=Transport',
+        '$internalId': '2859e6c3-73a9-425a-b01c-4805d1855a58',
+        '$originatorSessionRemoteNode': 'enterprise.builder.hosting@msging.net/!msging-server-f944fc449-x8bkz-qubep08n',
+        '#messageKind': 'Response'
+      },
+      createDate: '2024-11-27T17:44:50.997Z',
+      relativeDate: '14:44',
+      position: 'right',
+      photo: 'https://hmgmediastore.blip.ai/public-medias/Media_d1259696-1ff7-4956-a7cb-73b20186a9db'
+    }
+  },
+  {
+    buttonLabel: 'Reply Mensagem Ativa - Imagem',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'activecampaign:c3ae9a65-4283-4c3d-bd1f-e85f636ad728',
+          type: 'application/json',
+          value: {
+            type: 'template',
+            template: {
+              language: {
+                policy: 'deterministic',
+                code: 'es'
+              },
+              name: 'sample_movie_ticket_confirmation',
+              components: [
+                {
+                  type: 'header',
+                  parameters: [
+                    {
+                      image: {
+                        link: 'https://sample-videos.com/img/Sample-jpg-image-50kb.jpg'
+                      },
+                      type: 'image'
+                    }
+                  ]
+                },
+                {
+                  type: 'body',
+                  parameters: [
+                    {
+                      text: 'A',
+                      type: 'text'
+                    },
+                    {
+                      text: 'B',
+                      type: 'text'
+                    },
+                    {
+                      text: 'C',
+                      type: 'text'
+                    },
+                    {
+                      text: 'D',
+                      type: 'text'
+                    }
+                  ]
+                }
+              ]
+            },
+            templateContent: {
+              name: 'sample_movie_ticket_confirmation',
+              language: 'es',
+              components: [
+                {
+                  type: 'HEADER',
+                  format: 'IMAGE'
+                },
+                {
+                  type: 'BODY',
+                  text: 'Tu entrada para *{{1}}*\n*Hora* - {{2}}\n*Lugar* - {{3}}\n*Asientos* - {{4}}'
+                },
+                {
+                  type: 'FOOTER',
+                  text: 'Este mensaje proviene de un negocio no verificado.'
+                }
+              ]
+            }
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Mensagem Ativa',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'activecampaign:c3ae9a65-4283-4c3d-bd1f-e85f636ad728',
+          type: 'application/json',
+          value: {
+            type: 'template',
+            template: {
+              language: {
+                policy: 'deterministic',
+                code: 'pt_BR'
+              },
+              name: 'automation_test_text_simple_channels',
+              components: []
+            },
+            templateContent: {
+              name: 'automation_test_text_simple_channels',
+              language: 'pt_BR',
+              components: [
+                {
+                  type: 'BODY',
+                  text: 'Esta mensagem foi gerada por um teste.'
+                }
+              ]
+            }
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply with Location',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'application/vnd.lime.location+json',
+          value: {
+            latitude: -15.8419349,
+            longitude: -48.0303289
+          }
+        },
+        inReplyTo: {
+          id: 'wamid.HBgMNTUzMTkxOTQ5ODA2FQIAEhgWM0VCMDgyQjJCRTUwMUMyRTJFQjc1NAA=',
+          type: 'text/plain',
+          value: 'pode me mandar sua localização',
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Unsupported Content',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'wamid.HBgMNTU0Nzk3NjU4OTkwFQIAEhgUM0E5MThEMThGNTcwMDM0MzA1MzEA',
+          type: 'template',
+          value: {},
+          direction: 'received'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Location',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'wamid.HBgMNTU0Nzk3NjU4OTkwFQIAEhgUM0E5MThEMThGNTcwMDM0MzA1MzEA',
+          type: 'application/vnd.lime.location+json',
+          value: {
+            latitude: -26.34436416626,
+            longitude: -48.836044311523
+          },
+          direction: 'received'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Audio',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'audio/mp4',
+          value: {
+            type: 'audio/mpeg',
+            size: 49152,
+            uri: 'file://1252255886195048',
+            previewUri: 'https://files.inqscribe.com/samples/High_Data_IS_Intro.mp4',
+            previewType: 'audio/mpeg',
+            title: '1728997590936.mp3',
+            text: 'Lorem Ipsum is a placeholder text commonly used in graphic design, typography, and web development to demonstrate the layout and visual aspects of a document or website before the actual content is available. The text is typically a scrambled version of Latin phrases and words, making it nonsensical but visually similar to real text.',
+            authorizationRealm: 'blip'
+          }
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply link',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: 'https://dev.azure.com/curupira/Takepedia/_wiki/wikis/Takepedia.wiki/5053/Visualizar-e-contribuir-nos-projetos-no-Github-da-Take \n testandoo'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply text',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: ' Testanndo um teste'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'NOVO',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: 'Testando um link qualquer https://dev.azure.com/curupira/Takepedia/_wiki/wikis/Takepedia.wiki/5053/Visualizar-e-contribuir-nos-projetos-no-Github-da-Take'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply link - Without description',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'text/plain',
+          value: 'https://dev.azure.com/curupira/Takepedia/_wiki/wikis/Takepedia.wiki/5053/Visualizar-e-contribuir-nos-projetos-no-Github-da-Take'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Document - Without text',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'Testando'
+        },
+        inReplyTo: {
+          id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'application/pdf',
+            size: 679931,
+            uri: 'file://329178773590723',
+            previewUri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
+            previewType: 'application/pdf',
+            title: 'Reply-Message.pdf',
+            authorizationRealm: 'blip'
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Document (PDF)',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'Testando'
+        },
+        inReplyTo: {
+          id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'application/pdf',
+            size: 679931,
+            uri: 'file://329178773590723',
+            previewUri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
+            previewType: 'application/pdf',
+            title: 'Reply-Message.pdf',
+            text: 'Lorem Ipsum is a placeholder text commonly used in graphic design, typography, and web development to demonstrate the layout and visual aspects of a document or website before the actual content is available. The text is typically a scrambled version of Latin phrases and words, making it nonsensical but visually similar to real text.',
+            authorizationRealm: 'blip'
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Document (TXT)',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'Testando'
+        },
+        inReplyTo: {
+          id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'text/plain',
+            size: 5,
+            uri: 'file://329178773590723',
+            previewUri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
+            previewType: 'text/plain',
+            title: 'Reply-Message.txt',
+            text: '',
+            authorizationRealm: 'blip'
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Document (DOCX)',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'Testando'
+        },
+        inReplyTo: {
+          id: 'fwd:fwd:a8792715-d571-4228-98e3-7323f5a729fa',
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            size: 6446,
+            uri: 'file://329178773590723',
+            previewUri: 'https://blipmediastore.blob.core.windows.net/secure-medias/Media_53990e61-03e2-41e0-ad28-97a2100ee472933743904372393?sv=2019-07-07&st=2023-06-30T21%3A24%3A48Z&se=2023-06-30T21%3A54%3A48Z&sr=b&sp=r&sig=ZXh4OvaM7mGj2%2BrgfPl%2ByLrX4WwV03pvtm0%2BlAplLLI%3D&secure=true',
+            previewType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            title: 'Reply-Message.docx',
+            text: '',
+            authorizationRealm: 'blip'
+          },
+          direction: 'sent'
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Video',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'video/mp4',
+            size: 174999,
+            uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+            text: 'Lorem Ipsum is a placeholder text commonly used in graphic design, typography, and web development to demonstrate the layout and visual aspects of a document or website before the actual content is available. The text is typically a scrambled version of Latin phrases and words, making it nonsensical but visually similar to real text.'
+          }
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Video - Without text',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'application/vnd.lime.media-link+json',
+          value: {
+            type: 'video/mp4',
+            size: 174999,
+            uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+          }
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Image - Without text',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'image/png',
+          value: {
+            type: 'image/png',
+            size: 174999,
+            uri: 'https://love.doghero.com.br/wp-content/uploads/2019/09/Golden.jpg.jpg',
+            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV82NGZlZDllYy03NWI3LTRjZGYtOTVhMS1kZGIwM2VmNDMyOGU=',
+            previewType: 'image/png',
+            title: 'Chatblip_plataforma.png',
+            authorizationRealm: 'blip'
+          }
+        }
+      }
+    }
+  },
+  {
+    buttonLabel: 'Reply Image',
+    command: {
+      id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+      to: 'to@msging.net',
+      from: 'from@msging.net',
+      type: 'application/vnd.lime.reply+json',
+      content: {
+        replied: {
+          type: 'text/plain',
+          value: 'replied text'
+        },
+        inReplyTo: {
+          id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+          type: 'image/png',
+          value: {
+            type: 'image/png',
+            size: 174999,
+            uri: 'https://love.doghero.com.br/wp-content/uploads/2019/09/Golden.jpg.jpg',
+            previewUri: 'https://k8s-hmg-media.msging.net/media/download/MDpNZWRpYV82NGZlZDllYy03NWI3LTRjZGYtOTVhMS1kZGIwM2VmNDMyOGU=',
+            previewType: 'image/png',
+            title: 'Chatblip_plataforma.png',
+            authorizationRealm: 'blip',
+            text: 'Lorem Ipsum is a placeholder text commonly used in graphic design, typography, and web development to demonstrate the layout and visual aspects of a document or website before the actual content is available. The text is typically a scrambled version of Latin phrases and words, making it nonsensical but visually similar to real text.'
+          }
+        }
+      }
+    }
+  },
+  {
     buttonLabel: 'Texto',
     command: {
       id: '1',

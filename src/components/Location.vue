@@ -1,50 +1,67 @@
 <template>
   <div v-if="!isEditing" class="location" :class="isFailedMessage(status, position) + ' ' + getBlipContainer">
-    <div :class="simplified ? '' : 'bubble ' + position" :style=" simplified ? '' : 'width: ' + bubbleWidth">
-      <bds-button-icon v-if="deletable"
-        class="editIco trashIco icon-button-margin"
-        icon="trash"
-        variant="delete"
-        size="short"
-        v-on:click="trash(document)"
-      ></bds-button-icon>
-      <bds-button-icon v-if="editable"
-        class="editIco icon-button-margin"
-        icon="edit"
-        variant="primary"
-        size="short"
-        v-on:click="toggleEdit"
-      ></bds-button-icon>
-      <div v-if="simplified" class="header">
-        <bds-grid gap="4" align-items="center" justify-content="space-between">
-          <bds-grid margin="r-1" align-items="center" gap="1">
-            <bds-icon class="typo" size="small" name="localization" theme="outline"></bds-icon>
-            <bds-typo
-              tag="span"
-              margin="false"
-              class="location-simplified-text typo"
-              v-html="sanitize(document.text)">
-            </bds-typo>
+    <bds-grid justifyContent="space-between" gap="1" align-items="center" :direction="position === 'left' ? 'row' : 'row-reverse'">
+      <div :class="simplified ? '' : 'bubble ' + position" :style=" simplified ? '' : 'width: ' + bubbleWidth" style="width: 100%;">
+        <bds-button-icon v-if="deletable"
+          class="editIco trashIco icon-button-margin"
+          icon="trash"
+          variant="delete"
+          size="short"
+          v-on:click="trash(document)"
+        ></bds-button-icon>
+        <bds-button-icon v-if="editable"
+          class="editIco icon-button-margin"
+          icon="edit"
+          variant="primary"
+          size="short"
+          v-on:click="toggleEdit"
+        ></bds-button-icon>
+        <div v-if="simplified" class="header">
+          <bds-grid direction="row" justifyContent="space-between" gap="2" class="container-reply-item">
+            <bds-grid direction="row" gap="1" align-items="center">
+              <bds-grid direction="column" gap="1">
+                <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
+                <bds-grid direction="row" gap="1" >
+                  <bds-grid>
+                    <bds-icon theme="outline" name="localization" size="medium" class="typo" />
+                  </bds-grid>
+                  <bds-grid direction="column" >
+                    <bds-typo
+                      tag="span"
+                      margin="false"
+                      class="location-simplified-text typo"
+                      v-html="sanitize(document.text)">
+                    </bds-typo>
+                  </bds-grid>
+                </bds-grid>
+              </bds-grid>
+            </bds-grid>
+            
+            <bds-grid>
+              <div class="location-preview-container">
+                <div class="ratio ratio1-1 pointer" :style="styleObject" id="simplifiedLocation"></div>
+              </div>
+            </bds-grid>
           </bds-grid>
-          <bds-grid>
-            <div class="location-preview-container">
-              <div class="ratio ratio1-1 pointer" :style="styleObject" id="simplifiedLocation"></div>
-            </div>
-          </bds-grid>
-        </bds-grid>
-      </div>
-      <div v-if="!simplified" class="header">
-        <div
-          class="ratio ratio1-1"
-          :style="styleObject"
-          @click="(editable ? null : handleLocationLink())"
-          :class="editable ? '' : ' pointer'"
-        ></div>
-        <div class="title" v-if="document.text">
-          <span v-if="document.text" v-html="sanitize(document.text)"></span>
+        </div>
+        <div v-if="!simplified" class="header">
+          <div
+            class="ratio ratio1-1"
+            :style="styleObject"
+            @click="(editable ? null : handleLocationLink())"
+            :class="editable ? '' : ' pointer'"
+          ></div>
+          <div class="title" v-if="document.text">
+            <span v-if="document.text" v-html="sanitize(document.text)"></span>
+          </div>
         </div>
       </div>
-    </div>
+      <blip-card-reply
+        :document="fullDocument"
+        :reply-callback="replyCallback"
+        :reply-tooltip-text="replyTooltipText"
+      />
+    </bds-grid>
     <blip-card-date
       :status="status"
       :position="position"
@@ -124,25 +141,21 @@ export default {
       type: String,
       default: ''
     },
-    latitudeMsg: {
-      type: String,
-      default: 'Latitude'
-    },
-    longitudeMsg: {
-      type: String,
-      default: 'Longitude'
-    },
-    textMsg: {
-      type: String,
-      default: 'Text'
-    },
-    failedToSendMsg: {
-      type: String,
-      default: 'Falha ao enviar a mensagem'
-    },
     simplified: {
       type: Boolean,
       default: false
+    },
+    replyCallback: {
+      type: Function,
+      default: undefined
+    },
+    replyingToText: {
+      type: String,
+      default: null
+    },
+    translations: {
+      type: Object,
+      default: () => ({})
     }
   },
   data: function() {
@@ -152,7 +165,12 @@ export default {
       longitude: undefined,
       bubbleWidth: undefined,
       apiKey: undefined,
-      isFailedMessage
+      isFailedMessage,
+      replyTooltipText: '',
+      latitudeMsg: 'Latitude',
+      longitudeMsg: 'Longitude',
+      testMsg: 'Text',
+      failedToSendMsg: 'Falha ao enviar a mensagem'
     }
   },
   computed: {
@@ -214,6 +232,8 @@ export default {
       } else {
         this.bubbleWidth = width / 3 + 'px'
       }
+
+      this.translationMessagesInit()
     },
     init: function() {
       this.text = this.document.text
@@ -225,6 +245,13 @@ export default {
       if (this.$el) {
         this.mounted()
       }
+    },
+    translationMessagesInit() {
+      this.replyTooltipText = this.translations.replyTooltipText
+      this.latitudeMsg = this.translations.latitudeMsg
+      this.longitudeMsg = this.translations.longitudeMsg
+      this.testMsg = this.translations.testMsg
+      this.failedToSendMsg = this.translations.failedToSendMsg
     },
     locationSave: async function() {
       let result = await this.$validator.validateAll()
@@ -249,8 +276,10 @@ export default {
 
 .location {
   .header {
+    display: block;
     overflow: hidden;
     border-radius: inherit;
+    width: 100%
   }
 
   .blip-location-metadata {
@@ -297,9 +326,14 @@ export default {
 
 .location-preview-container {
   background-color: $color-surface-1;
-  width: 56px;
-  height: 56px;
+  width: 70px;
+  height: 70px;
   align-items: center;
+}
+
+.container-reply-item {
+  max-height: 110px;
+  justify-content: space-between; 
 }
 
 .location-simplified-text {
@@ -311,5 +345,9 @@ export default {
   text-align: left;
   -webkit-line-clamp: 1;
   max-width: 150px;
+}
+
+.container-reply-item {
+  justify-content: space-between;
 }
 </style>

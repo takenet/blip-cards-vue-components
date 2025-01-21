@@ -73,6 +73,8 @@
       :position="position"
       :date="date"
       :failed-to-send-msg="failedToSendMsg"
+      :is-external-message="isExternalMessage"
+      :external-message-text="externalMessageText"
     />
   </div>
 
