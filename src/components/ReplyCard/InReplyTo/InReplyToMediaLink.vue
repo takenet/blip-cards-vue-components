@@ -21,23 +21,6 @@
       :async-fetch-media="asyncFetchMedia"
       :simplified="true"      
     />
-    <blip-sticker
-      :supported-formats-msg="supportedFormatsMsg"
-      :document="inReplyTo"
-      :full-document="inReplyTo"
-      :date="date"
-      v-else-if="inReplyTo.type.indexOf('sticker') != -1"
-      :editable="editable"
-      :on-media-selected="onMediaSelected"
-      :on-save="save"
-      :on-deleted="onDeleted"
-      :on-metadata-edit="isMetadataReady"
-      :deletable="deletable"
-      :on-cancel="onCancel"
-      :editing="editing"
-      :async-fetch-media="asyncFetchMedia"
-      :simplified="true"
-    />
     <blip-audio
       :file-url-msg="fileUrlMsg"
       :document="inReplyTo"
@@ -76,6 +59,23 @@
       :async-fetch-media="asyncFetchMedia"
       :simplified="true"
     />
+    <blip-sticker
+      :supported-formats-msg="supportedFormatsMsg"
+      :document="inReplyTo"
+      :full-document="inReplyTo"
+      :date="date"
+      v-else-if="inReplyTo.type.indexOf('sticker') != -1"
+      :editable="editable"
+      :on-media-selected="onMediaSelected"
+      :on-save="save"
+      :on-deleted="onDeleted"
+      :on-metadata-edit="isMetadataReady"
+      :deletable="deletable"
+      :on-cancel="onCancel"
+      :editing="editing"
+      :async-fetch-media="asyncFetchMedia"
+      :simplified="true"
+    />
     <blip-file
       :title-msg="titleMsg"
       :document="inReplyTo"
@@ -101,6 +101,7 @@
 import BlipImage from '../../MediaLink/Image'
 import BlipAudio from '../../MediaLink/Audio'
 import BlipVideo from '../../MediaLink/Video'
+import BlipSticker from '../../MediaLink/Sticker'
 import BlipFile from '../../MediaLink/BlipFile'
 import { default as base } from '../../../mixins/baseComponent.js'
 
@@ -145,6 +146,7 @@ export default {
     BlipImage,
     BlipAudio,
     BlipVideo,
+    BlipSticker,
     BlipFile
   },
   computed: {
