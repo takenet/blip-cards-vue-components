@@ -6,7 +6,7 @@
         <bds-icon theme="outline" name="link" size="medium" class="typo"/>
         <bds-typo>{{  getText().link ?  getText().link : '' }}</bds-typo>
       </bds-grid>
-     
+
       <bds-typo
         v-if="getText().text"
         tag="p"

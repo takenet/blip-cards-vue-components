@@ -42,6 +42,7 @@ import WebLink from './components/WebLink'
 import InReplyToBase from './components/ReplyCard/InReplyTo/InReplyToBase'
 import InReplyToText from './components/ReplyCard/InReplyTo/InReplyToText'
 import InReplyToImage from './components/ReplyCard/InReplyTo/InReplyToImage.vue'
+import InReplyToSticker from './components/ReplyCard/InReplyTo/InReplyToSticker.vue'
 import InReplyToVideo from './components/ReplyCard/InReplyTo/InReplyToVideo.vue'
 import InReplyToDocument from './components/ReplyCard/InReplyTo/InReplyToDocument.vue'
 import InReplyToAudio from './components/ReplyCard/InReplyTo/InReplyToAudio.vue'
@@ -135,6 +136,7 @@ function install(Vue) {
   components.push(Vue.component(InReplyToBase.name, InReplyToBase))
   components.push(Vue.component(InReplyToText.name, InReplyToText))
   components.push(Vue.component(InReplyToImage.name, InReplyToImage))
+  components.push(Vue.component(InReplyToSticker.name, InReplyToSticker))
   components.push(Vue.component(InReplyToVideo.name, InReplyToVideo))
   components.push(Vue.component(InReplyToDocument.name, InReplyToDocument))
   components.push(Vue.component(InReplyToAudio.name, InReplyToAudio))
