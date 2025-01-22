@@ -124,15 +124,4 @@ export default {
   border-radius: 15px;
   white-space: normal;
 }
-
-.unsuported-text {
-  display: -webkit-box;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-box-orient: vertical;
-  margin: 0;
-  text-align: left;
-  -webkit-line-clamp: 1;
-  max-width: 150px;
-}
 </style>
