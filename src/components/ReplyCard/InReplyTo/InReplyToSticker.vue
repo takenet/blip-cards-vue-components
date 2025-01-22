@@ -1,9 +1,16 @@
 <template>
-  <bds-grid direction="row" justifyContent="space-between" gap="2" class="container-reply-item">
-    <bds-grid>
-      <img :class="replyValueHasText ? 'image-replied' : 'image-replied-simplified'" :src="uriImage" />
+  <div> 
+    <bds-grid direction="row" justifyContent="space-between" gap="2" padding="1" class="container-reply-item">
+      <bds-grid direction="row" gap="1" align-items="center">
+        <bds-grid direction="column" gap="1">
+          <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
+          <bds-grid direction="row" gap="1" >
+              <img class='sticker-replied' :src="uriImage" />
+          </bds-grid>
+        </bds-grid>
+      </bds-grid>
     </bds-grid>
-  </bds-grid>
+  </div>
 </template>
 
 <script>
@@ -22,7 +29,7 @@ export default {
     },
     replyingToText: {
       type: String,
-      default: null
+      default: 'Respondendo a joao da silva'
     },
     translations: {
       type: Object,
@@ -32,11 +39,6 @@ export default {
   data: () => ({
     uriImage: undefined
   }),
-  computed: {
-    replyValueHasText() {
-      return this.inReplyTo.value && this.inReplyTo.value.text
-    }
-  },
   mounted: async function() {
     const document = this.inReplyTo.value
 
@@ -55,12 +57,14 @@ export default {
 }
 </script>
 
-<style scoped>
-.image-replied { 
-  max-height: 110px;
-}
+<style lang="scss"  scoped>
+@import '../../../styles/variables.scss';
 
-.image-replied-simplified {
+.message-replied-container {
+    padding: 0.5rem;
+}
+.sticker-replied {
   max-height: 80px;
+  border-radius: $soft-round ;
 }
 </style>

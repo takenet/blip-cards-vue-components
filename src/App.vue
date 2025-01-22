@@ -292,7 +292,7 @@
           </button>
           
           <button class="button" @click="sendReplyStickerWithText">
-            ENVIAR Reply Sticker com texto
+            ENVIAR Reply texto com Sticker
           </button>
           
           
@@ -410,7 +410,8 @@ export default {
         document: doc,
         date: this.date,
         position: this.position,
-        status: this.msgStatus
+        status: this.msgStatus,
+        simplified: true
       })
     },
     sendText: function() {
@@ -1155,7 +1156,7 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'sticker/webp',
-              uri: 'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
+              uri: 'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
             },
             direction: 'sent'
           }
@@ -1203,7 +1204,7 @@ export default {
             value: {
               type: 'sticker/webp',
               uri:
-                'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
+                'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
             }
           },
           inReplyTo: {
