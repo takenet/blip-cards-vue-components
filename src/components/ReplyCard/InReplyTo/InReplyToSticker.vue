@@ -29,7 +29,7 @@ export default {
     },
     replyingToText: {
       type: String,
-      default: 'Respondendo a joao da silva'
+      default: null
     },
     translations: {
       type: Object,
