@@ -1,6 +1,6 @@
 <template>
-  <div> 
-    <bds-grid direction="row" justifyContent="space-between" gap="2" padding="1" class="container-reply-item">
+  <div class="sticker-replied-container"> 
+    <bds-grid direction="row" justifyContent="space-between" gap="2" class="container-reply-item">
       <bds-grid direction="row" gap="1" align-items="center">
         <bds-grid direction="column" gap="1">
           <bds-typo variant="fs-14" bold="bold" :margin="false" v-if="replyingToText" class="typo text-replying">{{replyingToText}}</bds-typo>
@@ -60,8 +60,8 @@ export default {
 <style lang="scss"  scoped>
 @import '../../../styles/variables.scss';
 
-.message-replied-container {
-    padding: 0.5rem;
+.sticker-replied-container {
+  padding: 0.5rem;
 }
 .sticker-replied {
   max-height: 80px;
