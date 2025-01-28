@@ -146,6 +146,11 @@ export default {
         ),
         content: linkify(sanitizedDocument, this.disableLink)
       }
+    },
+    showMoreMsg: function() {
+      return {
+        showMoreMsg: this.showMoreMsg
+      }
     }
   },
   data: () => ({
@@ -158,7 +163,7 @@ export default {
   }),
   mounted() {
     this.failedToSendMsg = this.translations.failedToSend
-    this.showMoreMsg = this.translations.showMore
+    this.showMoreMsg = this.translations.showMore || this.showMoreMsg
     this.replyTooltipText = this.translations.replyTooltipText
   },
   methods: {
