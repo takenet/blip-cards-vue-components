@@ -157,9 +157,9 @@ export default {
     replyTooltipText: 'Responder'
   }),
   mounted() {
-    this.failedToSendMsg = this.translations.failedToSend
+    this.failedToSendMsg = this.translations.failedToSend || this.failedToSendMsg
     this.showMoreMsg = this.translations.showMore || this.showMoreMsg
-    this.replyTooltipText = this.translations.replyTooltipText
+    this.replyTooltipText = this.translations.replyTooltipText || this.replyTooltipText
   },
   methods: {
     init: function() {

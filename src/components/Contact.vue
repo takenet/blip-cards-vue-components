@@ -137,7 +137,7 @@ export default {
     }
   },
   mounted() {
-    this.replyTooltipText = this.translations.replyTooltipText
+    this.replyTooltipText = this.translations.replyTooltipText || this.replyTooltipText
   },
   methods: {
     init: function() {
