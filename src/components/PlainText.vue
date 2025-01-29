@@ -146,11 +146,6 @@ export default {
         ),
         content: linkify(sanitizedDocument, this.disableLink)
       }
-    },
-    showMoreMsg: function() {
-      return {
-        showMoreMsg: this.showMoreMsg
-      }
     }
   },
   data: () => ({
