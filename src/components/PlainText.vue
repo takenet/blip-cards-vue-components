@@ -137,7 +137,6 @@ export default {
   computed: {
     previewDocument: function() {
       const sanitizedDocument = this.sanitize(this.document)
-
       return {
         hasPreview: sanitizedDocument.length > this.length,
         previewContent: linkify(
