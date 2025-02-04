@@ -1,7 +1,11 @@
-
-
 <template>
-  <blip-card :position="position" :date="date" :on-selected="onSelected" :document="{ type: document.context.type, content: document.context.value }" :editable="editable" />
+  <blip-card
+    :position="position"
+    :date="date"
+    :on-selected="onSelected"
+    :document="{ type: document.context.type, content: document.context.value }"
+    :editable="editable"
+  />
 </template>
 
 <script>
@@ -21,5 +25,4 @@ export default {
 
 <style lang="scss">
 @import '../styles/variables.scss';
-
 </style>
