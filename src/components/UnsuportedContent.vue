@@ -82,9 +82,9 @@ export default {
     }
   },
   mounted() {
-    this.unsupportedContentMsg = this.translations.unsupportedContent
-    this.failedToSendMsg = this.translations.failedToSend
-    this.replyTooltipText = this.translations.replyTooltipText
+    this.unsupportedContentMsg = this.translations.unsupportedContent || this.unsupportedContentMsg
+    this.failedToSendMsg = this.translations.failedToSend || this.failedToSendMsg
+    this.replyTooltipText = this.translations.replyTooltipText || this.replyTooltipText
   }
 }
 </script>
