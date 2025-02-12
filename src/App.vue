@@ -109,6 +109,7 @@
 
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
+        <button class="button" @click="sendDeletedContent">Mensagem deletada</button>
         <button class="button" @click="sendReplyMessage1">Alfredo Teste</button>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendTextEmail">
@@ -1106,6 +1107,14 @@ export default {
             }
           }
         }
+      })
+      this.send()
+    },
+    sendDeletedContent: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@instagram.gw.msging.net',
+        type: 'application/vnd.lime.deleted-content+json'
       })
       this.send()
     },
