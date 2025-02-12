@@ -46,6 +46,13 @@
 
   .message-replied-deleted-container {
     padding: $bubble-padding;
+    width: 240px;
+    height: 56px;
+    min-width: auto !important;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .message-replied-deleted {

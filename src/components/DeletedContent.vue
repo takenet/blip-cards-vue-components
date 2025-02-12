@@ -2,7 +2,7 @@
   <div v-if="!isEditing">
     <div
       v-if="previewDocument.content != null && previewDocument.content.length > 0"
-      class="blip-container deleted-content"
+      class="blip-container deleted-content-container"
       :class="isFailedMessage(status, position)"
     >
       <blip-card-member
@@ -14,7 +14,7 @@
       />
 
       <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
-        <div :class="'bubble ' + position + ' deleted'">
+        <div :class="'bubble ' + position + ' deleted-content'">
           <bds-button-icon v-if="deletable"
             class="editIco trashIco icon-button-margin icon-button-top"
             icon="trash"
@@ -185,7 +185,7 @@ export default {
 <style lang="scss">
 @import '../styles/variables.scss';
 
-.deleted-content .bubble {
+.deleted-content-container .bubble {
   padding: 16px 16px;
   word-wrap: break-word;
   min-width: auto !important;
@@ -197,10 +197,10 @@ export default {
   padding: 0 10px 10px 0;
 }
 
-.deleted {
-  background-color: $color-surface-3 !important; /* Cor de fundo */
-  font-style: italic; /* Texto em itálico */
-  border: 1px solid #a7a3a3 !important;
-  color: #636363 !important;
+.deleted-content {
+  font-style: italic;
+  background-color: $color-surface-3 !important;
+  border: $border-light-gray !important;
+  color: $color-dark-gray !important;
 }
 </style>
