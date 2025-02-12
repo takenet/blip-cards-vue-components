@@ -100,7 +100,7 @@ export default {
   props: {
     document: {
       type: String,
-      required: true
+      required: false
     },
     status: {
       type: String,
