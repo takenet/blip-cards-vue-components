@@ -109,8 +109,8 @@
 
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
-        <button class="button" @click="sendDeletedContent">Mensagem deletada</button>
         <button class="button" @click="sendReplyMessage1">Alfredo Teste</button>
+        <button class="button" @click="sendDeletedContent">Mensagem deletada</button>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendTextEmail">
           ENVIAR Texto contendo email
@@ -217,6 +217,9 @@
         </button>
         <div>
           <h1>Reply Examples:</h1>
+          <button class="button" @click="sendReplyDeletedMessage">
+            ENVIAR Reply Message Deleted
+          </button>
           <button class="button" @click="sendReplyMessage">
             ENVIAR Reply Message
           </button>
@@ -414,6 +417,14 @@ export default {
         status: this.msgStatus,
         simplified: true
       })
+    },
+    sendDeletedContent: function() {
+      this.json = JSON.stringify({
+        id: '1',
+        to: '128271320123982@instagram.gw.msging.net',
+        type: 'application/vnd.lime.deleted-content+json'
+      })
+      this.send()
     },
     sendText: function() {
       this.json = JSON.stringify({
@@ -1110,14 +1121,6 @@ export default {
       })
       this.send()
     },
-    sendDeletedContent: function() {
-      this.json = JSON.stringify({
-        id: '1',
-        to: '128271320123982@instagram.gw.msging.net',
-        type: 'application/vnd.lime.deleted-content+json'
-      })
-      this.send()
-    },
     sendReplyMessage1: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -1274,6 +1277,26 @@ export default {
             footer: {
               text: 'rodapé de testes'
             }
+          }
+        }
+      })
+      this.send()
+    },
+    sendReplyDeletedMessage: function() {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.lime.reply+json',
+        content: {
+          replied: {
+            type: 'text/plain',
+            value: 'replied text'
+          },
+          inReplyTo: {
+            id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+            type: 'application/vnd.lime.deleted-content+json',
+            value: { }
           }
         }
       })
