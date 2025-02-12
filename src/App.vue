@@ -2232,7 +2232,8 @@ export default {
       readonly: false,
       translations: {
         failedToSend: 'Falha ao enviar a mensagem.',
-        unsupportedContent: 'Conteúdo não suportado'
+        unsupportedContent: 'Conteúdo não suportado',
+        messageDeleted: 'Esta mensagem foi excluída.'
       },
       isExternalMessage: false,
       hasMemberData: false,

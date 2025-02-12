@@ -1,13 +1,12 @@
 <template>
-  <div v-if="!isEditing">
+  <div>
     <div
-      v-if="previewDocument.content != null && previewDocument.content.length > 0"
+      v-if="text != undefined && text.length > 0"
       class="blip-container deleted-content-container"
       :class="isFailedMessage(status, position)"
     >
       <blip-card-member
         v-if="memberInfo"
-        :document="document"
         :position="position"
         :member-info="memberInfo"
         :is-group="false"
@@ -15,21 +14,7 @@
 
       <bds-grid :direction="position === 'left' ? 'row' : 'row-reverse'" justifyContent="space-between" gap="1" align-items="center">
         <div :class="'bubble ' + position + ' deleted-content'">
-          <bds-button-icon v-if="deletable"
-            class="editIco trashIco icon-button-margin icon-button-top"
-            icon="trash"
-            variant="delete"
-            size="short"
-            v-on:click="trash(document)"
-          ></bds-button-icon>
-          <bds-button-icon v-if="editable"
-            class="editIco icon-button-margin icon-button-top"
-            icon="edit"
-            variant="primary"
-            size="short"
-            v-on:click="toggleEdit"
-          ></bds-button-icon> 
-          <div v-if="!previewDocument.hasPreview" v-html="previewDocument.content"></div>
+          <div v-if="text" v-html="text"></div>
         </div>
 
         <blip-card-reply
@@ -49,49 +34,10 @@
       />
     </div>
   </div>
-
-  <div class="blip-container" v-else>
-    <div :class="'bubble ' + position">
-      <form novalidate v-on:submit.prevent>
-        <bds-button-icon 
-          class="btn saveIco closeIco"
-          icon="close"
-          variant="ghost"
-          size="short"
-          v-on:click="cancel()"
-        ></bds-button-icon>
-        <bds-button-icon 
-          class="btn saveIco"
-          icon="check"
-          variant="primary"
-          size="short"
-          :disabled="errors.any()"
-          v-on:click="saveText()"
-        ></bds-button-icon>
-        <div class="form-group">
-          <textarea
-            @keydown.enter="saveText($event)"
-            name="text"
-            v-auto-expand
-            class="form-control"
-            v-validate="'required'"
-            :class="{'input-error': errors.has('text') }"
-            v-model="text"
-          ></textarea>
-          <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
-        </div>
-        <button
-          v-if="typeof onMetadataEdit === 'function'"
-          class="define-metadata blip-deleted-content-metadata"
-          @click="editMetadata(fullDocument)"
-        >{{ metadataButtonText }}</button>
-      </form>
-    </div>
-  </div>
 </template>
 
 <script>
-import { linkify, isFailedMessage } from '../utils/misc'
+import { isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 
 export default {
@@ -110,10 +56,6 @@ export default {
       type: Number,
       default: 532
     },
-    disableLink: {
-      type: Boolean,
-      default: false
-    },
     memberInfo: {
       type: String,
       default: ''
@@ -131,23 +73,8 @@ export default {
       default: () => ({})
     }
   },
-  computed: {
-    previewDocument: function() {
-      const sanitizedDocument = this.sanitize(this.deletedContentText)
-
-      return {
-        hasPreview: sanitizedDocument.length > this.length,
-        previewContent: linkify(
-          sanitizedDocument.substring(0, this.length - 3) + '...',
-          this.disableLink
-        ),
-        content: linkify(sanitizedDocument, this.disableLink)
-      }
-    }
-  },
   data: () => ({
     text: undefined,
-    showContent: undefined,
     isFailedMessage,
     failedToSendMsg: 'Falha ao enviar a mensagem.',
     showMoreMsg: 'Ver mais',
@@ -160,22 +87,7 @@ export default {
   },
   methods: {
     init: function() {
-      this.text = this.document
-      this.showContent = false
-    },
-    saveText: function($event) {
-      if (this.errors.any() || ($event && $event.shiftKey)) {
-        return
-      }
-
-      if ($event) {
-        $event.stopPropagation()
-        $event.preventDefault()
-        $event.returnValue = false
-      }
-
-      this.showContent = false
-      this.save(this.text)
+      this.text = this.deletedContentText
     }
   }
 }
@@ -200,7 +112,7 @@ export default {
 .deleted-content {
   font-style: italic;
   background-color: $color-surface-3 !important;
-  border: $border-light-gray !important;
-  color: $color-dark-gray !important;
+  border: $color-border-2 !important;
+  color: $color-content-disable !important;
 }
 </style>

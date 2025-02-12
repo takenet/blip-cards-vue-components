@@ -239,7 +239,7 @@ export default {
 
 .in-reply-to-message-deleted-container {
   border-radius: $border-radius-left;
-  border: $border-light-gray !important;
+  border: $color-border-2 !important;
   background-color: $color-surface-3 !important;
 }
 
