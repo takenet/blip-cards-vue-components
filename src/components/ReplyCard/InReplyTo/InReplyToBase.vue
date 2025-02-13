@@ -1,7 +1,6 @@
 <template>
-  <div 
+  <div class="in-reply-to-message-container"
   :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput, 'cursor-pointer': !!this.document,
-            'in-reply-to-message-deleted-container': isDeletedContentReply, 'in-reply-to-message-container': !isDeletedContentReply
      }"
     @click="goToMessageReplyed"
   >
@@ -236,12 +235,6 @@ export default {
     height: 2.5rem;
   }
 } 
-
-.in-reply-to-message-deleted-container {
-  border-radius: $border-radius-left;
-  border: $color-border-2 !important;
-  background-color: $color-surface-3 !important;
-}
 
 .container-reply-item {
   max-height: 110px;

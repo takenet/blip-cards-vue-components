@@ -45,17 +45,28 @@
   @import '../../../styles/variables.scss';
 
   .message-replied-deleted-container {
-    padding: $bubble-padding;
-    width: 240px;
-    height: 56px;
-    min-width: auto !important;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 0.5rem;
   }
 
   .message-replied-deleted {
-    color: #636363 !important;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    margin: 0;
+    text-align: left;
+
+    &.single {
+      -webkit-line-clamp: 3;
+    }
+
+    &.title {
+      -webkit-line-clamp: 1;
+    }
+
+    &.description {
+      -webkit-line-clamp: 2;
+    }
   }
+  
 </style>
