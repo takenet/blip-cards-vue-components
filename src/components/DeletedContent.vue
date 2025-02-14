@@ -112,7 +112,7 @@ export default {
 .deleted-content {
   font-style: italic;
   background-color: $color-surface-3 !important;
-  border: $color-border-2 !important;
+  border: 1px solid $color-border-1 !important;
   color: $color-content-disable !important;
 }
 </style>
