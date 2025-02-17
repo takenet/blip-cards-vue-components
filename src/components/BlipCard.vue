@@ -12,8 +12,25 @@
     ></div>
     <div :class="{ 'blip-container--with-photo': photo, [position]: true }">
       <div class="blip-card-container">
+        <deleted-content
+          v-if="document.type === 'application/vnd.lime.deleted-content+json'"
+          class="blip-card"
+          :status="status"
+          :length="length"
+          :position="position"
+          :full-document="editableDocument"
+          :member-info="memberInfo"
+          :date="date"
+          :on-metadata-edit="isMetadataReady"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :deleted-content-text = "translations.messageDeleted"
+          :reply-callback="replyCallback"
+          :translations="translations"
+        />
+
         <plain-text
-          v-if="document.metadata && document.metadata['#blip.payload.text']"
+          v-else-if="document.metadata && document.metadata['#blip.payload.text']"
           class="blip-card"
           :status="status"
           :length="length"

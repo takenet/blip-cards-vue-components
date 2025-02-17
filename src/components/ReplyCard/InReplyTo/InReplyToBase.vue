@@ -1,14 +1,20 @@
 <template>
-  <div 
-    class="in-reply-to-message-container" 
-    :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput, 'cursor-pointer': !!this.document }"
+  <div class="in-reply-to-message-container"
+  :class="{ 'in-reply-to-message-container-margin': !isReplyingOnInput, 'cursor-pointer': !!this.document,
+     }"
     @click="goToMessageReplyed"
   >
     <template>
-      <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>   
+      <span class="in-reply-to-message-bar" :class="{ 'own-message': isOwnMessage }"></span>
+      <in-reply-to-deleted-content
+        :in-reply-to="inReplyTo"
+        v-if="isDeletedContentReply"
+        :replying-to-text="replyingToText"
+        :deleted-content-text = "translations.messageDeleted"
+      />   
       <in-reply-to-text
         :in-reply-to="inReplyTo"
-        v-if="isTextPlain"
+        v-else-if="isTextPlain"
         :replying-to-text="replyingToText"
       />
 
@@ -140,6 +146,9 @@ export default {
     isInteractiveTypeListWithTextHeader() {
       return this.inReplyTo.value.interactive.type === 'list' &&
         this.inReplyTo.value.interactive.header.type === 'text'
+    },
+    isDeletedContentReply() {
+      return this.inReplyTo.type === 'application/vnd.lime.deleted-content+json'
     },
     isTextPlain() {
       return this.inReplyTo.type === 'text/plain'

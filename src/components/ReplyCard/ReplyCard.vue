@@ -17,6 +17,7 @@
             :scroll-to-message-by-id="scrollToMessageById"
             :on-audio-validate-uri="onAudioValidateUri"
             :async-fetch-media="asyncFetchMedia"
+            :deleted-content-text = "translations.messageDeleted"
           />
           <replied-base v-if="replied" 
             :replied="replied" 
