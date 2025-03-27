@@ -73,8 +73,6 @@
       :position="position"
       :date="date"
       :failed-to-send-msg="failedToSendMsg"
-      :is-external-message="isExternalMessage"
-      :external-message-text="externalMessageText"
     />
   </div>
 
@@ -750,7 +748,38 @@ export default {
           this.saveOption()
         }
       }
-    }
+    },
+
+    select: debounce(
+      function(item) {
+        if (this.readonly) return
+
+        if (!this.editable) {
+          this.hide = true
+        }
+
+        if (this.onSelected) {
+          if (item.value) {
+            this.onSelected(item.text, {
+              type: item.type,
+              content:
+                item.type.indexOf('json') !== -1
+                  ? JSON.parse(item.value)
+                  : item.value
+            })
+          } else {
+            this.onSelected(item.text, {
+              content: item.order
+              ? item.order.toString()
+              : item.text,
+              type: 'text/plain'
+            })
+          }
+        }
+      },
+      500,
+      { leading: true, trailing: false }
+    )
   }
 }
 </script>
