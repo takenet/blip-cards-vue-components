@@ -176,6 +176,7 @@
           <li v-for="(item, index) in options" v-bind:key="index">
             <span @click="editOption(item, index, $event)" v-html="sanitize(item.previewText)"></span>
             <span @click="deleteOption(index)" class="remove-option">
+              <span @click="select2(item)"></span>
               <bds-icon name="close"></bds-icon>
             </span>
           </li>
@@ -324,6 +325,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import { default as base } from '../mixins/baseComponent.js'
 import { MetadataService } from '../utils/metadataService.js'
 import mime from 'mime-types'
+import debounce2 from 'lodash/debounce'
 const optionSize = 34
 
 let getOptionContent = function(item) {
@@ -750,7 +752,7 @@ export default {
       }
     },
 
-    select: debounce(
+    select2: debounce2(
       function(item) {
         if (this.readonly) return
 
