@@ -1,15 +1,17 @@
 <template>
   <div>
-    <div :class="'blip-container collection' + isFailedMessage(status, position)" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
+    <div :class="'blip-container collection' + isFailedMessage(status, position)" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="document.itemType === 'application/vnd.lime.document-select+json'" && !hide>
       <div :class="'slideshow-container ' + position" :id="id">
         <div class="slideshow-list">
           <div class="slideshow-track">
-            <div v-for="(item, index) in items" v-bind:key="index" @dblclick="editCard(item)">
+            <div v-for="(item, index) in items" v-bind:key="index" @dblclick="editCard(item)" >
               <document-select v-if="index == 0" :on-cancel="cancel" :editing="editing" :length="length" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
                 :editable="editable" :on-save="collectionSave" :full-document="fullDocument" :on-metadata-edit="isMetadataReady" :style="styleObject" :on-deleted="deleteItem" />
               <document-select v-else :on-cancel="cancel" :editing="item.editing" :length="length" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
                 :editable="editable" :on-save="collectionSave" :full-document="fullDocument" :on-metadata-edit="isMetadataReady" :style="styleObject" :on-deleted="deleteItem" />
-            </div>
+                <span @click="selectOption(item)"></span>
+                <span class="disable-selection" v-html="sanitize(item.previewText)"></span>
+              </div>
             <div v-if="newDocumentSelect.editing">
               <document-select :on-cancel="cancel" :editing="newDocumentSelect.editing" :style="styleObject" :length="length" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink"
                 :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :full-document="fullDocument" :on-metadata-edit="isMetadataReady" :on-deleted="deleteItem" />
@@ -53,6 +55,7 @@
 import { guid, isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 import cloneDeep from 'lodash/cloneDeep'
+import debounce from 'lodash/debounce'
 
 let newCollection = {
   header: {
@@ -259,7 +262,38 @@ export default {
           `transform: ${data}; -webkit-transform: ${data};`
         )
       }
-    }
+    },
+
+    selectOption: debounce(
+      function(item) {
+        if (this.readonly) return
+
+        if (!this.editable) {
+          this.hide = true
+        }
+
+        if (this.onSelected) {
+          if (item.value) {
+            this.onSelected(item.text, {
+              type: item.type,
+              content:
+                item.type.indexOf('json') !== -1
+                  ? JSON.parse(item.value)
+                  : item.value
+            })
+          } else {
+            this.onSelected(item.text, {
+              content: item.order
+              ? item.order.toString()
+              : item.text,
+              type: 'text/plain'
+            })
+          }
+        }
+      },
+      500,
+      { leading: true, trailing: false }
+    )
   }
 }
 </script>
