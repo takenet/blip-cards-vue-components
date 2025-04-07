@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!isEditing && !hide"
+    v-if="!isEditing"
     class="blip-container document-select"
     :class="isFailedMessage(status, position)"
   >
@@ -56,13 +56,12 @@
 
       <div class="fixed-options" v-if="options">
         <ul>
-          <li
+          <li class="disable-selection"
             v-for="(item, index) in options"
             v-bind:key="index"
-            @click="(editable ? null :select(item))"
+            @click="(editable ? null : select(item))"
             :class="editable ? '' : ' pointer'"
           >
-            <span class="disable-selection" v-html="sanitize(item.previewText)"></span>
           </li>
         </ul>
       </div>
@@ -78,7 +77,7 @@
 
   <div v-else class="blip-container document-select">
     <form
-      v-if="!showOptionDialog"
+      v-if="!showOptionDialog && !hide"
       :class="'editing bubble ' + position"
       novalidate
       v-on:submit.prevent
@@ -171,13 +170,12 @@
         </div>
       </div>
 
-      <div class="fixed-options" v-if="options">
-        <ul>
-          <li v-for="(item, index) in options" v-bind:key="index">
+      <div class="fixed-options" v-if="options" >
+        <ul class="item-list">
+          <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection"> 
             <span @click="editOption(item, index, $event)" v-html="sanitize(item.previewText)"></span>
             <span @click="deleteOption(index)" class="remove-option">
-            <span @click="selectOption(item)"></span>
-              <bds-icon name="close"></bds-icon>
+            <bds-icon name="close"></bds-icon>
             </span>
           </li>
         </ul>
@@ -565,33 +563,33 @@ export default {
     toggleShowPayload: function() {
       this.showPayload = !this.showPayload
     },
-    select: function(item) {
-      if (item.isLink) {
-        if (
-          item.label.value.target === 'blank' ||
-          item.label.value.target === '' ||
-          item.label.value.target === undefined
-        ) {
-          let win = window.open(item.label.value.uri, '_blank')
-          win.focus()
-        } else if (this.onOpenLink) {
-          this.onOpenLink({
-            uri: item.label.value.uri,
-            target: item.label.value.target,
-            title: item.label.value.title || item.label.value.text,
-            image: item.label.value.previewUri
-          })
-        }
-        return
-      }
+    // select: function(item) {
+    //   if (item.isLink) {
+    //     if (
+    //       item.label.value.target === 'blank' ||
+    //       item.label.value.target === '' ||
+    //       item.label.value.target === undefined
+    //     ) {
+    //       let win = window.open(item.label.value.uri, '_blank')
+    //       win.focus()
+    //     } else if (this.onOpenLink) {
+    //       this.onOpenLink({
+    //         uri: item.label.value.uri,
+    //         target: item.label.value.target,
+    //         title: item.label.value.title || item.label.value.text,
+    //         image: item.label.value.previewUri
+    //       })
+    //     }
+    //     return
+    //   }
 
-      if (this.onSelected) {
-        this.onSelected(item.label.value, {
-          type: item.value.type || 'text/plain',
-          content: item.value.value || item.label.value
-        })
-      }
-    },
+    //   if (this.onSelected) {
+    //     this.onSelected(item.label.value, {
+    //       type: item.value.type || 'text/plain',
+    //       content: item.value.value || item.label.value
+    //     })
+    //   }
+    // },
     documentSelectSave: async function($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
@@ -751,9 +749,9 @@ export default {
         }
       }
     },
-
-    selectOption: debounce(
+    select: debounce(
       function(item) {
+        console.log('rodando local')
         if (this.readonly) return
 
         if (!this.editable) {
