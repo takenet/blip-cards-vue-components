@@ -806,6 +806,7 @@ export default {
     this.resolveUnsupportedRepliedType()
   },
   mounted() {
+    console.log('this.document: ', this.document)
     this.updatedPhotoMargin()
     this.resolveUnsupportedRepliedType()
   },
