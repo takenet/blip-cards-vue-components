@@ -56,12 +56,13 @@
 
       <div class="fixed-options" v-if="options">
         <ul>
-          <li class="disable-selection"
+          <li
             v-for="(item, index) in options"
             v-bind:key="index"
-            @click="(editable ? null : select(item))"
+            @click="(editable ? null :select(item))"
             :class="editable ? '' : ' pointer'"
           >
+            <span class="disable-selection" v-html="sanitize(item.previewText)"></span>
           </li>
         </ul>
       </div>
@@ -72,12 +73,14 @@
       :position="position"
       :date="date"
       :failed-to-send-msg="failedToSendMsg"
+      :is-external-message="isExternalMessage"
+      :external-message-text="externalMessageText"
     />
   </div>
 
   <div v-else class="blip-container document-select">
     <form
-      v-if="!showOptionDialog && !hide"
+      v-if="!showOptionDialog"
       :class="'editing bubble ' + position"
       novalidate
       v-on:submit.prevent
@@ -170,12 +173,12 @@
         </div>
       </div>
 
-      <div class="fixed-options" v-if="options" >
-        <ul class="item-list">
-          <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection"> 
+      <div class="fixed-options" v-if="options">
+        <ul>
+          <li v-for="(item, index) in options" v-bind:key="index">
             <span @click="editOption(item, index, $event)" v-html="sanitize(item.previewText)"></span>
             <span @click="deleteOption(index)" class="remove-option">
-            <bds-icon name="close"></bds-icon>
+              <bds-icon name="close"></bds-icon>
             </span>
           </li>
         </ul>
@@ -323,7 +326,6 @@ import cloneDeep from 'lodash/cloneDeep'
 import { default as base } from '../mixins/baseComponent.js'
 import { MetadataService } from '../utils/metadataService.js'
 import mime from 'mime-types'
-import debounce from 'lodash/debounce'
 const optionSize = 34
 
 let getOptionContent = function(item) {
@@ -563,33 +565,33 @@ export default {
     toggleShowPayload: function() {
       this.showPayload = !this.showPayload
     },
-    // select: function(item) {
-    //   if (item.isLink) {
-    //     if (
-    //       item.label.value.target === 'blank' ||
-    //       item.label.value.target === '' ||
-    //       item.label.value.target === undefined
-    //     ) {
-    //       let win = window.open(item.label.value.uri, '_blank')
-    //       win.focus()
-    //     } else if (this.onOpenLink) {
-    //       this.onOpenLink({
-    //         uri: item.label.value.uri,
-    //         target: item.label.value.target,
-    //         title: item.label.value.title || item.label.value.text,
-    //         image: item.label.value.previewUri
-    //       })
-    //     }
-    //     return
-    //   }
+    select: function(item) {
+      if (item.isLink) {
+        if (
+          item.label.value.target === 'blank' ||
+          item.label.value.target === '' ||
+          item.label.value.target === undefined
+        ) {
+          let win = window.open(item.label.value.uri, '_blank')
+          win.focus()
+        } else if (this.onOpenLink) {
+          this.onOpenLink({
+            uri: item.label.value.uri,
+            target: item.label.value.target,
+            title: item.label.value.title || item.label.value.text,
+            image: item.label.value.previewUri
+          })
+        }
+        return
+      }
 
-    //   if (this.onSelected) {
-    //     this.onSelected(item.label.value, {
-    //       type: item.value.type || 'text/plain',
-    //       content: item.value.value || item.label.value
-    //     })
-    //   }
-    // },
+      if (this.onSelected) {
+        this.onSelected(item.label.value, {
+          type: item.value.type || 'text/plain',
+          content: item.value.value || item.label.value
+        })
+      }
+    },
     documentSelectSave: async function($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
@@ -748,38 +750,7 @@ export default {
           this.saveOption()
         }
       }
-    },
-    select: debounce(
-      function(item) {
-        console.log('rodando local')
-        if (this.readonly) return
-
-        if (!this.editable) {
-          this.hide = true
-        }
-
-        if (this.onSelected) {
-          if (item.value) {
-            this.onSelected(item.text, {
-              type: item.type,
-              content:
-                item.type.indexOf('json') !== -1
-                  ? JSON.parse(item.value)
-                  : item.value
-            })
-          } else {
-            this.onSelected(item.text, {
-              content: item.order
-              ? item.order.toString()
-              : item.text,
-              type: 'text/plain'
-            })
-          }
-        }
-      },
-      500,
-      { leading: true, trailing: false }
-    )
+    }
   }
 }
 </script>
