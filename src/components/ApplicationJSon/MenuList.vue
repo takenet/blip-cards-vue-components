@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div class="blip-container menu-list" v-else-if="!addOption && !hide">
+  <div class="blip-container menu-list" v-else-if="!addOption">
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
       <button class="btn saveIco closeIco" @click="menuListEditCancel()" >
         <img :src="closeSvg" />
@@ -54,14 +54,12 @@
               <li v-if="section.title" class="section-title" @click="editOption(section, index, $event)">
                 <bds-typo variant="fs-16" bold="semi-bold" class="color-surface-1">{{ sanitize(section.title) }}</bds-typo>
               </li>
-              <li v-for="(row, indexRow) in section.rows" v-bind:key="indexRow" @click="editOption(row, indexSection, indexRow, $event)" >
+              <li v-for="(row, indexRow) in section.rows" v-bind:key="indexRow" @click="editOption(row, indexSection, indexRow, $event)">
                 <div>
                   <bds-typo variant="fs-16" bold="regular" class="typo">{{ sanitize(row.title) }}</bds-typo>
                   <bds-typo variant="fs-16" @click="deleteOption(indexSection, indexRow, $event)" class="remove-option typo">
                     <img :src="(position !== 'right')? closeBlueSvg : closeSvg">
                   </bds-typo>
-                  <span @click="selectOption(item)"></span>
-                  <span class="disable-selection" v-html="sanitize(item.previewText)"></span>
                 </div>
               </li>
               <bds-typo variant="fs-12" v-show="hasDeleteOptionError" class="remove-option-error">{{ notEnoughOptionsMsg }}</bds-typo>
@@ -105,7 +103,6 @@
 import { default as base } from '../../mixins/baseComponent.js'
 import { isFailedMessage } from '../../utils/misc'
 import Editable from '../Editable'
-import debounce from 'lodash/debounce'
 const optionSize = 34
 
 export default {
@@ -260,38 +257,7 @@ export default {
     menuListEditCancel: function() {
       this.hasDeleteOptionError = false
       this.cancel()
-    },
-
-    selectOption: debounce(
-      function(item) {
-        if (this.readonly) return
-
-        if (!this.editable) {
-          this.hide = true
-        }
-
-        if (this.onSelected) {
-          if (item.value) {
-            this.onSelected(item.text, {
-              type: item.type,
-              content:
-                item.type.indexOf('json') !== -1
-                  ? JSON.parse(item.value)
-                  : item.value
-            })
-          } else {
-            this.onSelected(item.text, {
-              content: item.order
-              ? item.order.toString()
-              : item.text,
-              type: 'text/plain'
-            })
-          }
-        }
-      },
-      500,
-      { leading: true, trailing: false }
-    )
+    }
   }
 }
 </script>
