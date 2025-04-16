@@ -475,7 +475,6 @@ export default {
     },
     select: debounce(
       function (item) {
-        console.log('select blipSelect: ', item)
         if (this.readonly) return
 
         if (!this.editable) {
