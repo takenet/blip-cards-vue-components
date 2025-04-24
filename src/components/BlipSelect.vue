@@ -21,8 +21,8 @@
           :is-external-message="isExternalMessage" :external-message-text="externalMessageText" />
       </div>
       <transition name="fade">
-        <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler"
-          v-touch:swipe.right="swipeRightHandler" v-if="!hide">
+        <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler"
+         v-if="!hide">
           <div class="slideshow-list">
             <div class="slideshow-track options">
               <ul class="item-list">
