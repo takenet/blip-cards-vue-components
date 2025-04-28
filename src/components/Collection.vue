@@ -1,16 +1,18 @@
 <template>
   <div>
     <div :class="'blip-container collection' + isFailedMessage(status, position)" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
-      <div :class="'slideshow-container ' + position" :id="id">
+      <transition name="fade">
+      <div :class="'slideshow-container '+ position" :id="id" v-touch:swipe.left="swipeLeftHandler"
+      v-touch:swipe.right="swipeRightHandler" >
         <div class="slideshow-list">
           <div class="slideshow-track">
-            <div v-for="(item, index) in items" v-bind:key="index" @dblclick="editCard(item)">
-              <document-select v-if="index == 0" :on-cancel="cancel" :editing="editing" :length="length" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
+            <div v-for="(item, index) in items" v-bind:key="index" @dblclick="editCard(item)" @click="select()" class="disable-select" :style="styleObject">
+              <document-select v-if="index == 0" :hide-options="hide" :on-cancel="cancel" :editing="editing" :length="length" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
                 :editable="editable" :on-save="collectionSave" :full-document="fullDocument" :on-metadata-edit="isMetadataReady" :style="styleObject" :on-deleted="deleteItem" />
-              <document-select v-else :on-cancel="cancel" :editing="item.editing" :length="length" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
+              <document-select v-else :hide-options="hide" :on-cancel="cancel" :editing="item.editing" :length="length" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink" :document="item" :deletable="deletable"
                 :editable="editable" :on-save="collectionSave" :full-document="fullDocument" :on-metadata-edit="isMetadataReady" :style="styleObject" :on-deleted="deleteItem" />
             </div>
-            <div v-if="newDocumentSelect.editing">
+            <div v-if="newDocumentSelect.editing" >
               <document-select :on-cancel="cancel" :editing="newDocumentSelect.editing" :style="styleObject" :length="length" class="slide-item" :position="position" :on-selected="onSelected" :on-open-link="onOpenLink"
                 :document="newDocumentSelect" :editable="editable" :on-save="addToCollection" :full-document="fullDocument" :on-metadata-edit="isMetadataReady" :on-deleted="deleteItem" />
             </div>
@@ -21,11 +23,11 @@
             </div>
           </div>
         </div>
-
+      
         <span class="prev" v-if="showPrev" @click="plusSlides(-1)">&#10094;</span>
         <span class="next" v-if="showNext" @click="plusSlides(1)">&#10095;</span>
       </div>
-
+    </transition>
       <blip-card-date
         :status="status"
         :position="position"
@@ -53,6 +55,7 @@
 import { guid, isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 import cloneDeep from 'lodash/cloneDeep'
+import debounce from 'lodash/debounce'
 
 let newCollection = {
   header: {
@@ -109,6 +112,7 @@ export default {
       items: undefined,
       styleObject: undefined,
       newDocumentSelect: undefined,
+      hideOptions: undefined,
       isFailedMessage
     }
   },
@@ -259,7 +263,18 @@ export default {
           `transform: ${data}; -webkit-transform: ${data};`
         )
       }
-    }
+    },
+    select: debounce(
+      function () {
+        if (this.readonly) return
+
+        if (!this.editable) {
+          this.hide = true
+        }
+      },
+      500,
+      { leading: true, trailing: false }
+    )
   }
 }
 </script>

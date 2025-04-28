@@ -53,8 +53,8 @@
           >{{ showMoreMsg }}</a>
         </div>
       </div>
-
-      <div class="fixed-options" v-if="options">
+      <transition name="fade">
+      <div class="fixed-options" v-if="options && !hideOptions">
         <ul>
           <li
             v-for="(item, index) in options"
@@ -66,6 +66,7 @@
           </li>
         </ul>
       </div>
+    </transition>
     </div>
 
     <blip-card-date
@@ -422,6 +423,10 @@ export default {
     postbackValueMsg: {
       type: String,
       default: 'Postback value'
+    },
+    hideOptions: {
+      type: Boolean,
+      default: false
     }
   },
   data: function() {
