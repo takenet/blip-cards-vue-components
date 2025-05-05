@@ -2,128 +2,106 @@
   <div v-if="!isEditing" @show="checkForEndOfSlider" class="blip-container select">
     <div v-if="document.scope === 'immediate'" :class="isFailedMessage(status, position)">
       <div :class="'bubble ' + position">
-        <bds-button-icon v-if="deletable"
-          class="editIco trashIco"
-          icon="trash"
-          variant="delete"
-          size="short"
-          v-on:click="trash(document)"
-        ></bds-button-icon>
-        <bds-button-icon v-if="editable"
-          class="editIco"
-          icon="edit"
-          variant="primary"
-          size="short"
-          v-on:click="toggleEdit"
-        ></bds-button-icon> 
+        <bds-button-icon v-if="deletable" class="editIco trashIco" icon="trash" variant="delete" size="short"
+          v-on:click="trash(document)"></bds-button-icon>
+        <bds-button-icon v-if="editable" class="editIco" icon="edit" variant="primary" size="short"
+          v-on:click="toggleEdit"></bds-button-icon>
         <div v-html="sanitize(computedText)" v-if="computedText"></div>
       </div>
 
       <div class="flex" :class="'notification ' + position" v-if="date">
         <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
-        <img v-else-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg"/>
-        <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg"/>
-        <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg"/>
-        <div
-          class="failure"
-          v-else-if="this.status === 'failed' && this.position === 'right'">
+        <img v-else-if="status === 'accepted' && this.position === 'right'" :src="checkSentSvg" />
+        <img v-else-if="status === 'received' && this.position === 'right'" :src="doubleCheckReceivedSvg" />
+        <img v-else-if="status === 'consumed' && this.position === 'right'" :src="doubleCheckReadSvg" />
+        <div class="failure" v-else-if="this.status === 'failed' && this.position === 'right'">
           {{ failedToSendMsg }}
         </div>
-        <blip-card-date
-          :status="status"
-          :position="position"
-          :date="date"
-          :failed-to-send-msg="failedToSendMsg"
-          :is-external-message="isExternalMessage"
-          :external-message-text="externalMessageText"
-        />
+        <blip-card-date :status="status" :position="position" :date="date" :failed-to-send-msg="failedToSendMsg"
+          :is-external-message="isExternalMessage" :external-message-text="externalMessageText" />
       </div>
       <transition name="fade">
-      <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="!hide">
-        <div class="slideshow-list">
-          <div class="slideshow-track options">
-            <ul class="item-list">
-              <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection" v-bind:class="{ readonly: readonly }">
-                <div v-html="sanitize(item.previewText)"></div>
-              </li>
-            </ul>
+        <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler"
+         v-if="!hide">
+          <div class="slideshow-list">
+            <div class="slideshow-track options">
+              <ul class="item-list">
+                <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection"
+                  v-bind:class="{ readonly: readonly }">
+                  <div v-html="sanitize(item.previewText)"></div>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
 
-        <a class="prev" v-if="showPrev" @dblclick="$event.stopPropagation()" @click="plusSlides(-1)">&#10094;</a>
-        <a class="next" v-if="showNext" @dblclick="$event.stopPropagation()" @click="plusSlides(1)">&#10095;</a>
-      </div>
+          <a class="prev" v-if="showPrev" @dblclick="$event.stopPropagation()" @click="plusSlides(-1)">&#10094;</a>
+          <a class="next" v-if="showNext" @dblclick="$event.stopPropagation()" @click="plusSlides(1)">&#10095;</a>
+        </div>
 
       </transition>
     </div>
 
     <div v-else :class="isFailedMessage(status, position)">
+
       <div :class="'bubble ' + position">
-        <bds-button-icon v-if="deletable"
-          class="editIco trashIco"
-          icon="trash"
-          variant="delete"
-          size="short"
+        <bds-button-icon v-if="deletable" class="editIco trashIco" icon="trash" variant="delete" size="short"
           v-on:click="trash(document)">
         </bds-button-icon>
-        <bds-button-icon v-if="editable"
-          class="editIco"
-          icon="edit"
-          variant="primary"
-          size="short"
+        <bds-button-icon v-if="editable" class="editIco" icon="edit" variant="primary" size="short"
           v-on:click="toggleEdit">
-        </bds-button-icon> 
+        </bds-button-icon>
+
         <div class="text-left" v-html="sanitize(computedText)"></div>
-        <div class="fixed-options disable-selection">
-          <ul>
-            <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)">
-              <div v-html="sanitize(item.text)"></div>
-            </li>
-          </ul>
-        </div>
+        <transition name="fade">
+          <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler"
+            v-touch:swipe.right="swipeRightHandler" v-if="!hide">
+            <div class="fixed-options">
+              <ul class="item-list">
+                <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection">
+                  <div v-html="sanitize(item.previewText)"></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
   </div>
 
   <div class="blip-container select" v-else-if="!addOption">
     <form :class="'bubble ' + position" novalidate v-on:submit.prevent>
-      <bds-button-icon
-        class="btn saveIco closeIco icon-button-margin"
-        icon="close"
-        variant="ghost"
-        size="short"
-        v-on:click="selectCancel()"
-      ></bds-button-icon>
-      <bds-button-icon 
-        class="btn saveIco icon-button-margin"
-        icon="check"
-        variant="primary"
-        size="short"
-        :disabled="errors.any()"
-        v-on:click="selectSave(text)"
-      ></bds-button-icon>
+      <bds-button-icon class="btn saveIco closeIco icon-button-margin" icon="close" variant="ghost" size="short"
+        v-on:click="selectCancel()"></bds-button-icon>
+      <bds-button-icon class="btn saveIco icon-button-margin" icon="check" variant="primary" size="short"
+        :disabled="errors.any()" v-on:click="selectSave(text)"></bds-button-icon>
       <div class="form-group">
-        <textarea @keydown.enter="selectSave(text, $event)" type="text" name="text" :class="{'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand v-model="text" />
+        <textarea @keydown.enter="selectSave(text, $event)" type="text" name="text"
+          :class="{ 'input-error': errors.has('text') }" v-validate="'required'" class="form-control" v-auto-expand
+          v-model="text" />
         <span v-show="errors.has('text')" class="help input-error">{{ errors.first('text') }}</span>
       </div>
 
-      <div class="text-center" :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate'}">
+      <div class="text-center"
+        :class="{ 'fixed-options': document.scope !== 'immediate', 'options': document.scope === 'immediate' }">
         <ul>
           <li v-for="(item, index) in options" v-bind:key="index" @click="editOption(item, index, $event)">
             <span v-html="sanitize(item.text)"></span>
             <span @click="deleteOption(index, $event)" class="remove-option"><bds-icon name="close"></bds-icon></span>
           </li>
-          <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'" @click="editOption({}, -1, $event)">
+          <li class="btn-dashed primary-color" v-if="document.scope === 'immediate'"
+            @click="editOption({}, -1, $event)">
             <span>{{ addOptionMsg }}</span>
           </li>
         </ul>
         <span v-show="hasDeleteOptionError" class="remove-option-error">{{ notEnoughOptionsMsg }}</span>
-        <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)" class="btn-dashed primary-color btn" style="margin-top: 24px; width: 100%;">
+        <div v-if="document.scope !== 'immediate'" @click="editOption({}, -1, $event)"
+          class="btn-dashed primary-color btn" style="margin-top: 24px; width: 100%;">
           <span>{{ addButtonMsg }}</span>
         </div>
       </div>
 
-      <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-select-metadata" @click="editMetadata(fullDocument)">
+      <button v-if="typeof onMetadataEdit === 'function'" class="define-metadata blip-select-metadata"
+        @click="editMetadata(fullDocument)">
         {{ metadataButtonText }}
       </button>
     </form>
@@ -132,26 +110,33 @@
   <div class="blip-container" v-else>
     <form novalidate v-on:submit.prevent :class="'bubble ' + position">
       <div class="tabs">
-        <span :class="{ 'active': headerTab === 'plainText'}" @click="setTab('plainText')">{{ textMsg }}</span>
+        <span :class="{ 'active': headerTab === 'plainText' }" @click="setTab('plainText')">{{ textMsg }}</span>
       </div>
 
       <div v-if="headerTab === 'plainText'">
         <div class="form-group">
-          <input type="text" name="optionText" v-validate="'required'" class="form-control" v-model="selectedOption.text" :placeholder="textMsg" />
+          <input type="text" name="optionText" v-validate="'required'" class="form-control"
+            v-model="selectedOption.text" :placeholder="textMsg" />
           <span v-show="errors.has('optionText')" class="help input-error">{{ errors.first('optionText') }}</span>
         </div>
 
-        <input id="showPayload" type="checkbox"  v-model="showPayload"><label for="showPayload">{{ setPayloadMsg }}</label>
+        <input id="showPayload" type="checkbox" v-model="showPayload"><label for="showPayload">{{ setPayloadMsg
+        }}</label>
         <div class="line"></div>
 
         <div v-show="showPayload">
           <div class="form-group">
-            <input type="text" name="type" v-validate="showPayload ? 'required|mime' : ''"  class="form-control" v-model="selectedOption.type" :placeholder="postbackMimetypeMsg" />
+            <input type="text" name="type" v-validate="showPayload ? 'required|mime' : ''" class="form-control"
+              v-model="selectedOption.type" :placeholder="postbackMimetypeMsg" />
             <span v-show="errors.has('type')" class="help input-error">{{ errors.first('type') }}</span>
           </div>
           <div class="form-group">
-            <textarea @keydown.enter="saveOption($event)" v-if="selectedOption.type && selectedOption.type.includes('json')" name="value" v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value" :placeholder="postbackValueMsg" />
-            <textarea @keydown.enter="saveOption($event)" v-else name="value" v-validate="showPayload ? 'required' : ''" class="form-control" v-model="selectedOption.value" :placeholder="postbackValueMsg" />
+            <textarea @keydown.enter="saveOption($event)"
+              v-if="selectedOption.type && selectedOption.type.includes('json')" name="value"
+              v-validate="showPayload ? 'required|json' : ''" class="form-control" v-model="selectedOption.value"
+              :placeholder="postbackValueMsg" />
+            <textarea @keydown.enter="saveOption($event)" v-else name="value" v-validate="showPayload ? 'required' : ''"
+              class="form-control" v-model="selectedOption.value" :placeholder="postbackValueMsg" />
             <span v-show="errors.has('value')" class="help input-error">{{ errors.first('value') }}</span>
           </div>
         </div>
@@ -162,7 +147,8 @@
           <button type="button" @click="cancelOption()" class="btn btn-white primary-color">{{ cancelMsg }}</button>
         </div>
         <div class="flex-item">
-          <button @click="saveOption()" class="btn btn-white primary-color" :class="{'is-disabled': errors.any() }">{{ applyMsg }}</button>
+          <button @click="saveOption()" class="btn btn-white primary-color" :class="{ 'is-disabled': errors.any() }">{{
+            applyMsg }}</button>
         </div>
       </div>
     </form>
@@ -235,7 +221,7 @@ export default {
       default: false
     }
   },
-  data: function() {
+  data: function () {
     return {
       addOption: undefined,
       showPayload: undefined,
@@ -251,37 +237,37 @@ export default {
       isFailedMessage
     }
   },
-  updated: function() {
-    this.$nextTick(function() {
+  updated: function () {
+    this.$nextTick(function () {
       this.checkForEndOfSlider()
     })
   },
-  mounted: function() {
-    this.$nextTick(function() {
+  mounted: function () {
+    this.$nextTick(function () {
       this.checkForEndOfSlider()
     })
   },
   computed: {
-    computedText: function() {
+    computedText: function () {
       return linkify(this.document.text)
     },
-    showPrev: function() {
+    showPrev: function () {
       return this.slideIndex !== 1
     },
-    showNext: function() {
+    showNext: function () {
       return !this.endOfSlider
     }
   },
   watch: {
-    hideOptions: function() {
+    hideOptions: function () {
       this.hide = this.hideOptions
     },
-    document: function() {
+    document: function () {
       this.init()
     }
   },
   methods: {
-    init: function() {
+    init: function () {
       this.id = guid()
       this.slideIndex = 1
       this.endOfSlider = false
@@ -291,7 +277,7 @@ export default {
       this.selectedOption = { value: {} }
       this.hide = this.hideOptions
       this.text = this.document.text
-      this.options = this.document.options.map(function(x) {
+      this.options = this.document.options.map(function (x) {
         let value
         if (x.value) {
           if (x.type && x.type.includes('json')) {
@@ -315,21 +301,21 @@ export default {
         return opts
       })
     },
-    plusSlides: function(n) {
+    plusSlides: function (n) {
       this.showSlides((this.slideIndex += n))
       this.checkForEndOfSlider()
     },
-    swipeLeftHandler: function() {
+    swipeLeftHandler: function () {
       if (this.showNext) {
         this.plusSlides(1)
       }
     },
-    swipeRightHandler: function() {
+    swipeRightHandler: function () {
       if (this.showPrev) {
         this.plusSlides(-1)
       }
     },
-    checkForEndOfSlider: function() {
+    checkForEndOfSlider: function () {
       var element = this.$el
       let slider = element && element.querySelector('.slideshow-list')
       let itemList = element && element.querySelector('.item-list')
@@ -352,7 +338,7 @@ export default {
         sliderWidth + 0.5 * sliderWidth * (this.slideIndex - 1) - 20 >
         itemListWidth
     },
-    showSlides: function(n) {
+    showSlides: function (n) {
       var element = this.$el
       if (!element) {
         return
@@ -379,10 +365,10 @@ export default {
         )
       }
     },
-    setTab: function(name) {
+    setTab: function (name) {
       this.headerTab = name
     },
-    deleteOption: function(index, $event) {
+    deleteOption: function (index, $event) {
       if ($event) {
         $event.stopPropagation()
       }
@@ -392,13 +378,13 @@ export default {
       }
       this.options.splice(index, 1)
     },
-    cancelOption: function(item) {
+    cancelOption: function (item) {
       this.errors.clear()
       this.$validator.reset()
       this.selectedOption = {}
       this.addOption = false
     },
-    saveOption: function($event) {
+    saveOption: function ($event) {
       this.$validator.validateAll()
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
@@ -429,7 +415,7 @@ export default {
       this.$validator.reset()
       this.addOption = false
     },
-    editOption: function(item, index, $event) {
+    editOption: function (item, index, $event) {
       this.hasDeleteOptionError = false
       this.addOption = true
 
@@ -443,7 +429,7 @@ export default {
 
       this.selectedOption.index = index
     },
-    selectSave: function(text, $event) {
+    selectSave: function (text, $event) {
       this.hasDeleteOptionError = false
       if (this.errors.any() || ($event && $event.shiftKey)) {
         return
@@ -463,7 +449,7 @@ export default {
         this.save({
           ...this.document,
           text: this.text,
-          options: this.options.map(function(x) {
+          options: this.options.map(function (x) {
             let value
             if (x.value) {
               if (x.type.includes('json')) {
@@ -483,12 +469,12 @@ export default {
         })
       })
     },
-    selectCancel: function() {
+    selectCancel: function () {
       this.hasDeleteOptionError = false
       this.cancel()
     },
     select: debounce(
-      function(item) {
+      function (item) {
         if (this.readonly) return
 
         if (!this.editable) {
@@ -507,8 +493,8 @@ export default {
           } else {
             this.onSelected(item.text, {
               content: item.order
-              ? item.order.toString()
-              : item.text,
+                ? item.order.toString()
+                : item.text,
               type: 'text/plain'
             })
           }
@@ -541,6 +527,7 @@ export default {
   a {
     text-decoration: none;
   }
+
   .slideshow-container {
     margin: auto;
     clear: both;
@@ -568,6 +555,7 @@ export default {
       height: calc(100% - 35px);
     }
   }
+
   .prev,
   .next {
     cursor: pointer;
@@ -593,6 +581,7 @@ export default {
   .next {
     right: 0px;
     border-radius: 3px 0 0 3px;
+
     @media screen and (max-width: 480px) {
       right: 0;
     }
@@ -642,7 +631,8 @@ export default {
       height: 14px;
     }
   }
-  &.readonly{
+
+  &.readonly {
     cursor: default
   }
 }
