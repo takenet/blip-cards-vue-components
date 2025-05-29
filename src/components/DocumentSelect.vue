@@ -53,20 +53,18 @@
           >{{ showMoreMsg }}</a>
         </div>
       </div>
-      <transition name="fade">
-      <div class="fixed-options" v-if="options && !hideOptions">
+      <div class="fixed-options" v-if="options">
         <ul>
           <li
             v-for="(item, index) in options"
             v-bind:key="index"
-            @click="(editable ? null :select(item))"
-            :class="editable ? '' : ' pointer'"
+            @click="(disableOptions || selectedIndex != undefined || editable ? null : select(item, index))"
+            :class="`${disableOptions || (selectedIndex != undefined && selectedIndex != index) ? ' disabled-options' : ''} ${disableOptions || selectedIndex != undefined ? ' pointer-default' : ''} ${editable ? '' : ' pointer'}`"
           >
             <span class="disable-selection" v-html="sanitize(item.previewText)"></span>
           </li>
         </ul>
       </div>
-    </transition>
     </div>
 
     <blip-card-date
@@ -424,7 +422,7 @@ export default {
       type: String,
       default: 'Postback value'
     },
-    hideOptions: {
+    disableOptions: {
       type: Boolean,
       default: false
     }
@@ -442,6 +440,7 @@ export default {
       selectedOption: undefined,
       options: undefined,
       MetadataService: new MetadataService(),
+      selectedIndex: undefined,
       isFailedMessage
     }
   },
@@ -570,7 +569,9 @@ export default {
     toggleShowPayload: function() {
       this.showPayload = !this.showPayload
     },
-    select: function(item) {
+    select: function(item, index) {
+      this.selectedIndex = index
+
       if (item.isLink) {
         if (
           item.label.value.target === 'blank' ||
@@ -762,6 +763,14 @@ export default {
 
 <style lang="scss">
 @import '../styles/variables.scss';
+
+.pointer-default {
+  cursor: default !important;
+}
+
+.disabled-options {
+  opacity: 0.33;
+}
 
 .document-select {
   .bubble {
