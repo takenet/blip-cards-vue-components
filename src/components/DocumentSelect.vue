@@ -58,8 +58,8 @@
           <li
             v-for="(item, index) in options"
             v-bind:key="index"
-            @click="(disableOptions || selectedIndex != undefined || editable ? null : select(item, index))"
-            :class="`${disableOptions || (selectedIndex != undefined && selectedIndex != index) ? ' disabled-options' : ''} ${disableOptions || selectedIndex != undefined ? ' pointer-default' : ''} ${editable ? '' : ' pointer'}`"
+            @click="disableOptions || editable ? null : select(item, index)"
+            :class="`${disableOptions ? ' disabled-options pointer-default' : ''} ${selectedIndex != undefined && selectedIndex == index ? ' clicked-option' : ''} ${editable ? '' : ' pointer'}`"
           >
             <span class="disable-selection" v-html="sanitize(item.previewText)"></span>
           </li>
@@ -770,6 +770,10 @@ export default {
 
 .disabled-options {
   opacity: 0.33;
+}
+
+.clicked-option {
+  opacity: 1 !important;
 }
 
 .document-select {

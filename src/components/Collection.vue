@@ -9,18 +9,17 @@
               v-for="(item, index) in items" 
               v-bind:key="index" 
               @dblclick="editCard(item)" 
-              @click="disableOptions ? null : select(index)" 
               class="disable-select" 
               :style="styleObject">
               <document-select 
                 v-if="index == 0" 
-                :disable-options="selectedIndex != undefined && selectedIndex != index" 
+                :disable-options="disableOptions" 
                 :on-cancel="cancel" 
                 :editing="editing" 
                 :length="length" 
                 class="slide-item" 
                 :position="position" 
-                :on-selected="onSelected" 
+                :on-selected="select" 
                 :on-open-link="onOpenLink" 
                 :document="item" 
                 :deletable="deletable"
@@ -32,13 +31,13 @@
                 :on-deleted="deleteItem" />
               <document-select 
                 v-else 
-                :disable-options="selectedIndex != undefined && selectedIndex != index" 
+                :disable-options="disableOptions" 
                 :on-cancel="cancel" 
                 :editing="item.editing" 
                 :length="length" 
                 class="slide-item" 
                 :position="position" 
-                :on-selected="onSelected" 
+                :on-selected="select" 
                 :on-open-link="onOpenLink" 
                 :document="item" 
                 :deletable="deletable"
@@ -149,7 +148,6 @@ export default {
       styleObject: undefined,
       newDocumentSelect: undefined,
       disableOptions: undefined,
-      selectedIndex: undefined,
       isFailedMessage
     }
   },
@@ -302,12 +300,15 @@ export default {
       }
     },
     select: debounce(
-      function (index) {
+      function (value, object) {
         if (this.readonly) return
 
         if (!this.editable) {
           this.disableOptions = true
-          this.selectedIndex = index
+        }
+
+        if (this.onSelected) {
+          this.onSelected(value, object)
         }
       },
       500,
