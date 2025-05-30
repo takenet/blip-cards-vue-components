@@ -279,7 +279,7 @@ export default {
       this.showPayload = false
       this.headerTab = 'plainText'
       this.selectedOption = { value: {} }
-      this.hide = this.hideOptions
+      this.disableOptions = this.hideOptions
       this.text = this.document.text
       this.options = this.document.options.map(function (x) {
         let value
@@ -482,7 +482,7 @@ export default {
         if (this.readonly) return
 
         if (!this.editable) {
-          this.hide = true
+          this.disableOptions = true
           this.selectedIndex = index
         }
 
