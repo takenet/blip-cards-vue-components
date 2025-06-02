@@ -20,14 +20,16 @@
         <blip-card-date :status="status" :position="position" :date="date" :failed-to-send-msg="failedToSendMsg"
           :is-external-message="isExternalMessage" :external-message-text="externalMessageText" />
       </div>
-      <transition name="fade">
-        <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler"
-         v-if="!hide">
+        <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler">
           <div class="slideshow-list">
             <div class="slideshow-track options">
               <ul class="item-list">
-                <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection"
-                  v-bind:class="{ readonly: readonly }">
+                <li 
+                  v-for="(item, index) in options" 
+                  v-bind:key="index" 
+                  @click="disableOptions ? null : select(item, index)" 
+                  class="disable-selection" 
+                  :class="`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`">
                   <div v-html="sanitize(item.previewText)"></div>
                 </li>
               </ul>
@@ -37,8 +39,6 @@
           <a class="prev" v-if="showPrev" @dblclick="$event.stopPropagation()" @click="plusSlides(-1)">&#10094;</a>
           <a class="next" v-if="showNext" @dblclick="$event.stopPropagation()" @click="plusSlides(1)">&#10095;</a>
         </div>
-
-      </transition>
     </div>
 
     <div v-else :class="isFailedMessage(status, position)">
@@ -52,18 +52,21 @@
         </bds-button-icon>
 
         <div class="text-left" v-html="sanitize(computedText)"></div>
-        <transition name="fade">
           <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler"
-            v-touch:swipe.right="swipeRightHandler" v-if="!hide">
+            v-touch:swipe.right="swipeRightHandler">
             <div class="fixed-options">
               <ul class="item-list">
-                <li v-for="(item, index) in options" v-bind:key="index" @click="select(item)" class="disable-selection">
+                <li 
+                  v-for="(item, index) in options" 
+                  v-bind:key="index" 
+                  @click="disableOptions ? null : select(item, index)" 
+                  class="disable-selection" 
+                  :class="`${disableOptions && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`">
                   <div v-html="sanitize(item.previewText)"></div>
                 </li>
               </ul>
             </div>
           </div>
-        </transition>
       </div>
     </div>
   </div>
@@ -227,7 +230,8 @@ export default {
       showPayload: undefined,
       headerTab: undefined,
       selectedOption: undefined,
-      hide: undefined,
+      disableOptions: undefined,
+      selectedIndex: undefined,
       text: undefined,
       options: undefined,
       id: undefined,
@@ -260,7 +264,7 @@ export default {
   },
   watch: {
     hideOptions: function () {
-      this.hide = this.hideOptions
+      this.disableOptions = this.hideOptions
     },
     document: function () {
       this.init()
@@ -275,7 +279,7 @@ export default {
       this.showPayload = false
       this.headerTab = 'plainText'
       this.selectedOption = { value: {} }
-      this.hide = this.hideOptions
+      this.disableOptions = this.hideOptions
       this.text = this.document.text
       this.options = this.document.options.map(function (x) {
         let value
@@ -474,11 +478,12 @@ export default {
       this.cancel()
     },
     select: debounce(
-      function (item) {
+      function (item, index) {
         if (this.readonly) return
 
         if (!this.editable) {
-          this.hide = true
+          this.disableOptions = true
+          this.selectedIndex = index
         }
 
         if (this.onSelected) {
@@ -509,6 +514,14 @@ export default {
 
 <style lang="scss">
 @import '../styles/variables.scss';
+
+.pointer-default {
+  cursor: default !important;
+}
+
+.unselected-option {
+  opacity: 0.33;
+}
 
 .select .bubble {
   padding: $bubble-padding;
