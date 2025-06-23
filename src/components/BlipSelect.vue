@@ -54,15 +54,14 @@
         <div class="text-left" v-html="sanitize(computedText)"></div>
           <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler"
             v-touch:swipe.right="swipeRightHandler">
-            <div class="fixed-options">
+            <div class="fixed-options disable-selection">
               <ul class="item-list">
                 <li 
                   v-for="(item, index) in options" 
                   v-bind:key="index" 
-                  @click="disableOptions ? null : select(item, index)" 
-                  class="disable-selection" 
+                  @click="disableOptions ? null : select(item, index)"
                   :class="`${disableOptions && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`">
-                  <div v-html="sanitize(item.previewText)"></div>
+                  <div v-html="sanitize(item.text)"></div>
                 </li>
               </ul>
             </div>
