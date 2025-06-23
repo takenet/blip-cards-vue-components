@@ -164,7 +164,7 @@ import debounce from 'lodash/debounce'
 const optionSize = 34
 
 export default {
-  name: 'blip-select',
+  name: 'blip-select', 
   mixins: [base],
   props: {
     hideOptions: {
