@@ -59,8 +59,8 @@
                 <li 
                   v-for="(item, index) in options" 
                   v-bind:key="index" 
-                  @click="disableOptions ? null : select(item, index)"
-                  :class="`${disableOptions && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`">
+                  @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
+                  :class="`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`">
                   <div v-html="sanitize(item.text)"></div>
                 </li>
               </ul>
