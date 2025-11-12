@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <div class="float" style="width: 200px">
       <div>
         <h1>Width:</h1>
@@ -110,7 +110,9 @@
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
         <button class="button" @click="sendReplyMessage1">Alfredo Teste</button>
-        <button class="button" @click="sendDeletedContent">Mensagem deletada</button>
+        <button class="button" @click="sendDeletedContent">
+          Mensagem deletada
+        </button>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendTextEmail">
           ENVIAR Texto contendo email
@@ -212,6 +214,9 @@
         <button class="button" @click="sendCopyAndPaste">
           ENVIAR copia e cola
         </button>
+        <button class="button" @click="sendOrderDetails">
+          ENVIAR componente order
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -260,19 +265,22 @@
           <button class="button" @click="sendReplyTextMessageWithFailed">
             ENVIAR Reply Message de Falha
           </button>
-          
+
           <button class="button" @click="sendReplyImageMessageWithImage">
             ENVIAR Reply Message de Imagem com Imagem
           </button>
           <button class="button" @click="sendReplyLocationMessageWithText">
             ENVIAR Reply Message de Localização com Texto
           </button>
-          <button class="button" @click="sendReplyUnsuportedContentMessageWithText">
+          <button
+            class="button"
+            @click="sendReplyUnsuportedContentMessageWithText"
+          >
             ENVIAR Reply Message de 'Conteudo não suportado' com Texto
           </button>
           <button class="button" @click="sendReplyFailedMessageWithText">
             ENVIAR Reply Message de Falha com Texto
-          </button>          
+          </button>
           <button class="button" @click="sendReplyWebLinkMessageWithText">
             ENVIAR Reply Message de 'Web Link' com Texto
           </button>
@@ -294,13 +302,11 @@
           <button class="button" @click="sendReplyStickerWithSticker">
             ENVIAR Reply Sticker com Sticker
           </button>
-          
+
           <button class="button" @click="sendReplyStickerWithText">
             ENVIAR Reply texto com Sticker
           </button>
-          
-          
-        </div>  
+        </div>
       </div>
 
       <div v-else>
@@ -1168,7 +1174,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'sticker/webp',
-              uri: 'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
+              uri:
+                'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
             },
             direction: 'sent'
           }
@@ -1196,7 +1203,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'sticker/webp',
-              uri: 'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
+              uri:
+                'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
             },
             direction: 'sent'
           }
@@ -1282,6 +1290,171 @@ export default {
       })
       this.send()
     },
+
+    sendOrderDetails: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'application/json',
+        content: {
+          type: 'interactive',
+          interactive: {
+            type: 'order_details',
+            header: {
+              type: 'document',
+              document: {
+                link: 'https://example.com/comprovante.pdf',
+                filename: 'Comprovante.pdf'
+              }
+            },
+            body: {
+              text:
+                'Finalize seu pedido!\nRealize o pagamento via Pix copia e cola usando o app do seu banco.'
+            },
+            footer: {
+              text: 'Blip Payments'
+            },
+            action: {
+              name: 'review_and_pay',
+              parameters: {
+                reference_id: '241942',
+                type: 'digital-goods',
+                payment_type: 'br',
+                currency: 'BRL',
+                total_amount: {
+                  value: '1500',
+                  offset: 100
+                },
+                order: {
+                  status: 'pending',
+                  items: [
+                    {
+                      retailer_id: '001',
+                      name: 'Product A',
+                      amount: {
+                        value: 500,
+                        offset: 100
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '002',
+                      name: 'Product B',
+                      amount: {
+                        value: 750,
+                        offset: 150
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '003',
+                      name: 'Product C',
+                      amount: {
+                        value: 1200,
+                        offset: 200
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '004',
+                      name: 'Product D',
+                      amount: {
+                        value: 900,
+                        offset: 180
+                      },
+                      quantity: 3
+                    },
+                    {
+                      retailer_id: '005',
+                      name: 'Product E',
+                      amount: {
+                        value: 650,
+                        offset: 130
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '006',
+                      name: 'Product F',
+                      amount: {
+                        value: 1100,
+                        offset: 220
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '007',
+                      name: 'Product G',
+                      amount: {
+                        value: 300,
+                        offset: 60
+                      },
+                      quantity: 5
+                    },
+                    {
+                      retailer_id: '008',
+                      name: 'Product H',
+                      amount: {
+                        value: 2500,
+                        offset: 500
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '009',
+                      name: 'Product I',
+                      amount: {
+                        value: 800,
+                        offset: 160
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '010',
+                      name: 'Product J',
+                      amount: {
+                        value: 1500,
+                        offset: 300
+                      },
+                      quantity: 1
+                    }
+                  ],
+                  subtotal: {
+                    value: '1500',
+                    offset: 100
+                  }
+                },
+                payment_settings: [
+                  {
+                    type: 'pix_dynamic_code',
+                    pix_dynamic_code: {
+                      code:
+                        '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921Gabriel Felix Petrone6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                      merchant_name: 'Gabriel Petrone',
+                      key: '09351510603',
+                      key_type: 'CPF'
+                    }
+                  },
+                  {
+                    type: 'payment_link',
+                    payment_link: {
+                      url: 'https://pagamento.blip.ai/checkout/662311'
+                    }
+                  },
+                  {
+                    type: 'boleto',
+                    boleto: {
+                      digitable_line: '00190500954014481606906809350314337370000000100'
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      })
+      this.send()
+    },
     sendReplyDeletedMessage: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -1296,7 +1469,7 @@ export default {
           inReplyTo: {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
             type: 'application/vnd.lime.deleted-content+json',
-            value: { }
+            value: {}
           }
         }
       })
@@ -1338,7 +1511,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'image/jpeg',
-              title: 'texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo',
+              title:
+                'texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo',
               uri:
                 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
             },
@@ -1609,7 +1783,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'audio/mp3',
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+              uri:
+                'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
             }
           },
           inReplyTo: {
