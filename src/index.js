@@ -86,6 +86,7 @@ import PhoneNumberButton from './components/TemplateContent/Buttons/PhoneNumberB
 import WebsiteButton from './components/TemplateContent/Buttons/WebsiteButton'
 import MediaContent from './components/TemplateContent/MediaContent/MediaContent'
 import TemplateContent from './components/TemplateContent/TemplateContent'
+import TemplateOrder from './components/TemplateContent/TemplateOrder'
 
 function install(Vue) {
   let components = []
@@ -155,6 +156,7 @@ function install(Vue) {
 
   // TemplateContent components
   components.push(Vue.component(TemplateContent.name, TemplateContent))
+  components.push(Vue.component(TemplateOrder.name, TemplateOrder))
   components.push(Vue.component(WebsiteButton.name, WebsiteButton))
   components.push(Vue.component(PhoneNumberButton.name, PhoneNumberButton))
   components.push(Vue.component(MediaContent.name, MediaContent))
@@ -206,6 +208,7 @@ export default {
   Location,
   RequestLocation,
   TemplateContent,
+  TemplateOrder,
   UnsuportedContent,
   BlipExternal,
   install
