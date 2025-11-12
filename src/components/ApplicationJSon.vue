@@ -81,6 +81,15 @@
       :editing="editing"
     />
 
+    <component-order
+      v-else-if="document.type === 'interactive' && document.interactive.type === 'order_details'"
+      class="blip-card"
+      :document="document"
+      :position="position"
+      :status="status"
+      :readonly="true"
+    />
+
     <blip-calls-voice-request
       v-else-if="document.type === 'interactive' && document.interactive.type === 'voice_call'"
       class="blip-card"
@@ -136,6 +145,7 @@ import { isFailedMessage } from '../utils/misc'
 import MenuListPrompt from './ApplicationJSon/MenuListPrompt.vue'
 import CallToAction from './ApplicationJSon/CallToAction.vue'
 import JsonText from './ApplicationJSon/JsonText.vue'
+import ComponentOrder from './ApplicationJSon/ComponentOrder.vue'
 
 export default {
   name: 'application-json',
@@ -178,7 +188,8 @@ export default {
     MenuList,
     MenuListPrompt,
     CallToAction,
-    JsonText
+    JsonText,
+    ComponentOrder
   },
   methods: {
     emitUpdate() {
