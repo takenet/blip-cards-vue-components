@@ -217,6 +217,9 @@
         <button class="button" @click="sendOrderDetails">
           ENVIAR componente order
         </button>
+        <button class="button" @click="sendTemplateOrder">
+          ENVIAR Template order
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -1450,6 +1453,145 @@ export default {
                 ]
               }
             }
+          }
+        }
+      })
+      this.send()
+    },
+    sendTemplateOrder: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'template',
+        content: {
+          type: 'template',
+          template: {
+            language: {
+              policy: 'deterministic',
+              code: 'pt_BR'
+            },
+            name: 'solutions_template_order_pdf_conta',
+            components: [
+              {
+                type: 'header',
+                parameters: [
+                  {
+                    document: {
+                      filename: 'dummy',
+                      link: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+                    },
+                    type: 'document'
+                  }
+                ]
+              },
+              {
+                type: 'body',
+                parameters: [
+                  {
+                    text: 'Wallace',
+                    type: 'text'
+                  },
+                  {
+                    text: '123456',
+                    type: 'text'
+                  },
+                  {
+                    text: '06/08',
+                    type: 'text'
+                  }
+                ]
+              },
+              {
+                sub_type: 'order_details',
+                index: '0',
+                type: 'button',
+                parameters: [
+                  {
+                    action: {
+                      order_details: {
+                        reference_id: '1234567',
+                        type: 'digital-goods',
+                        payment_type: 'br',
+                        payment_settings: [
+                          {
+                            type: 'pix_dynamic_code',
+                            pix_dynamic_code: {
+                              code: '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921Gabriel Felix Petrone6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                              merchant_name: 'Gabriel Petrone',
+                              key: 'gabriel.petrone@blip.ai',
+                              key_type: 'EMAIL'
+                            }
+                          }
+                        ],
+                        currency: 'BRL',
+                        total_amount: {
+                          value: 200,
+                          offset: 100
+                        },
+                        order: {
+                          status: 'pending',
+                          tax: {
+                            value: 0,
+                            offset: 100
+                          },
+                          items: [
+                            {
+                              retailer_id: '1234567',
+                              name: 'Presente Misterioso',
+                              amount: {
+                                value: 200,
+                                offset: 100
+                              },
+                              quantity: 1
+                            }
+                          ],
+                          subtotal: {
+                            value: 200,
+                            offset: 100
+                          }
+                        }
+                      }
+                    },
+                    type: 'action'
+                  }
+                ]
+              }
+            ]
+          },
+          templateContent: {
+            name: 'solutions_template_order_pdf_conta',
+            language: 'pt_BR',
+            components: [
+              {
+                type: 'HEADER',
+                format: 'DOCUMENT',
+                example: {
+                  headerHandle: [
+                    'https://scontent.whatsapp.net/v/t61.29466-34/513999863_1457412155675677_5375333688770231584_n.pdf?ccb=1-7&_nc_sid=8b1bef&_nc_ohc=L_To_BqM_bUQ7kNvwHNAGUW&_nc_oc=Adllcm8msngFAftelI04H-inksdIGLgnbCc9Ej9Y7vDqoEYgEHY6n6WiPQafk5cCmrM&_nc_zt=3&_nc_ht=scontent.whatsapp.net&edm=AH51TzQEAAAA&_nc_gid=AbvY-V1xSimoqKVypHJ1Zg&_nc_tpa=Q5bMBQEC7RM8QG4U8711alQFWxo-8ouDbUG99anRtn3GeaHyZryNcCmxitaXL9ai0LSFJz9VqOTQj8CY&oh=01_Q5Aa3AEhXBa8F14Jq5yB7Y6RXEV0BCxRU0629SmSaVRHXtZifQ&oe=693C2CAB'
+                  ]
+                }
+              },
+              {
+                type: 'BODY',
+                text: 'Olá {{1}},\nSua fatura {{2}} vence em {{3}}.\n\nPague agora mesmo e mantenha suas contas em dia.',
+                example: {
+                  bodyText: [['Gabriel', '1234', '01/08']]
+                }
+              },
+              {
+                type: 'FOOTER',
+                text: 'Pague somente se reconhecer a cobrança.'
+              },
+              {
+                type: 'BUTTONS',
+                buttons: [
+                  {
+                    type: 'ORDER_DETAILS',
+                    text: 'Copy Pix code'
+                  }
+                ]
+              }
+            ]
           }
         }
       })
