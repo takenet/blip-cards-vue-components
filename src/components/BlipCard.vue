@@ -426,8 +426,17 @@
           :date="date"
         />
 
+        <template-order
+          v-else-if="document.content.type === 'template-content' && isTemplateWithOrderDetails"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :readonly="true"
+        />
+
         <template-content
-          v-else-if="document.content.type === 'template-content'"
+          v-else-if="document.content.type === 'template-content'  && !isTemplateWithOrderDetails"
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :message-template-title="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
@@ -446,15 +455,6 @@
           :on-cancel="cancel"
           :disable-link="disableLink"
           :reply-callback="replyCallback"
-        />
-
-        <template-order
-          v-else-if="document.content.type === 'template' && isTemplateWithOrderDetails"
-          class="blip-card"
-          :status="status"
-          :position="position"
-          :document="editableDocument.content"
-          :readonly="true"
         />
 
         <unsuported-content
@@ -901,7 +901,7 @@ export default {
       return getMemberInfo(this.document)
     },
     isTemplateWithOrderDetails() {
-      if (!this.document || !this.document.content || this.document.content.type !== 'template') return false
+      if (!this.document || !this.document.content || this.document.content.type !== 'template-content') return false
 
       const components = (this.document.content.template && this.document.content.template.components) || []
       return components.some(comp =>

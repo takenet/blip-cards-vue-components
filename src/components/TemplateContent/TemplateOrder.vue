@@ -23,7 +23,7 @@
         <bds-grid v-if="hasDocumentHeader" direction="column" padding="x-2">
           <bds-paper
             elevation="static"
-            class="mt-card__payment-block__paper-document"
+            class="payment-template-order__paper-document"
           >
             <bds-grid
               padding="1"
@@ -203,6 +203,7 @@
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
 import { isFailedMessage } from '../../utils/misc'
+import { TemplateOrderType, TemplateOrderPaymentType, TemplateOrderIcon } from '../../enums/templateOrder.enum.js'
 
 export default {
   name: 'template-order',
@@ -230,83 +231,113 @@ export default {
     }
   },
   computed: {
-    // Template structure path helpers
     templateComponents() {
       return (
-        this.document &&
-        this.document.template &&
-        this.document.template.components
-      ) || []
+        (this.document &&
+          this.document.template &&
+          this.document.template.components) ||
+        []
+      )
     },
     templateContentComponents() {
       return (
-        this.document &&
-        this.document.templateContent &&
-        this.document.templateContent.components
-      ) || []
+        (this.document &&
+          this.document.templateContent &&
+          this.document.templateContent.components) ||
+        []
+      )
     },
     headerComponent() {
-      return this.templateComponents.find(comp => comp.type === 'header')
+      return this.templateComponents.find((comp) => comp.type === TemplateOrderType.HEADER)
     },
     headerContentComponent() {
-      return this.templateContentComponents.find(comp => comp.type === 'HEADER')
+      return this.templateContentComponents.find(
+        (comp) => comp.type === TemplateOrderType.HEADER_UPPER
+      )
     },
     bodyComponent() {
-      return this.templateComponents.find(comp => comp.type === 'body')
+      return this.templateComponents.find((comp) => comp.type === TemplateOrderType.BODY)
     },
     bodyContentComponent() {
-      return this.templateContentComponents.find(comp => comp.type === 'BODY')
+      return this.templateContentComponents.find((comp) => comp.type === TemplateOrderType.BODY_UPPER)
     },
     footerComponent() {
-      return this.templateComponents.find(comp => comp.type === 'footer')
+      return this.templateComponents.find((comp) => comp.type === TemplateOrderType.FOOTER)
     },
     footerContentComponent() {
-      return this.templateContentComponents.find(comp => comp.type === 'FOOTER')
+      return this.templateContentComponents.find(
+        (comp) => comp.type === TemplateOrderType.FOOTER_UPPER
+      )
     },
     buttonComponent() {
-      return this.templateComponents.find(comp => comp.type === 'button' && comp.sub_type === 'order_details')
+      return this.templateComponents.find(
+        (comp) => comp.type === TemplateOrderType.BUTTON && comp.sub_type === TemplateOrderType.ORDER_DETAILS
+      )
     },
 
-    // Header checks
     hasTextHeader() {
-      return this.headerComponent && this.headerComponent.format === 'text'
+      return this.headerComponent && this.headerComponent.format === TemplateOrderType.TEXT
     },
     hasImageHeader() {
-      return this.headerComponent && this.headerComponent.format === 'image'
+      return (
+        this.headerComponent &&
+        this.headerComponent.parameters &&
+        this.headerComponent.parameters[0] &&
+        this.headerComponent.parameters[0].type === TemplateOrderType.IMAGE &&
+        this.headerComponent.parameters[0].image &&
+        this.headerComponent.parameters[0].image.link
+      )
     },
     hasDocumentHeader() {
       return (
         this.headerComponent &&
         this.headerComponent.parameters &&
         this.headerComponent.parameters[0] &&
-        this.headerComponent.parameters[0].type === 'document'
+        this.headerComponent.parameters[0].type === TemplateOrderType.DOCUMENT
       )
     },
     headerImageUrl() {
-      if (this.hasImageHeader && this.headerComponent.parameters && this.headerComponent.parameters[0]) {
-        return (this.headerComponent.parameters[0].image && this.headerComponent.parameters[0].image.link) || 'https://via.placeholder.com/40'
+      if (
+        this.hasImageHeader &&
+        this.headerComponent.parameters &&
+        this.headerComponent.parameters[0]
+      ) {
+        return (
+          (this.headerComponent.parameters[0].image &&
+            this.headerComponent.parameters[0].image.link) ||
+          'https://via.placeholder.com/40'
+        )
       }
       return 'https://via.placeholder.com/40'
     },
     documentName() {
-      if (this.hasDocumentHeader && this.headerComponent.parameters && this.headerComponent.parameters[0]) {
-        return (this.headerComponent.parameters[0].document && this.headerComponent.parameters[0].document.filename) || 'Documento'
+      if (
+        this.hasDocumentHeader &&
+        this.headerComponent.parameters &&
+        this.headerComponent.parameters[0]
+      ) {
+        return (
+          (this.headerComponent.parameters[0].document &&
+            this.headerComponent.parameters[0].document.filename) ||
+          'Documento'
+        )
       }
       return 'Documento'
     },
 
-    // Order details from button parameters
     orderDetails() {
       return (
-        this.buttonComponent &&
-        this.buttonComponent.parameters &&
-        this.buttonComponent.parameters[0] &&
-        this.buttonComponent.parameters[0].action &&
-        this.buttonComponent.parameters[0].action.order_details
-      ) || {}
+        (this.buttonComponent &&
+          this.buttonComponent.parameters &&
+          this.buttonComponent.parameters[0] &&
+          this.buttonComponent.parameters[0].action &&
+          this.buttonComponent.parameters[0].action.order_details) ||
+        {}
+      )
     },
     orderItems() {
-      const items = (this.orderDetails.order && this.orderDetails.order.items) || []
+      const items =
+        (this.orderDetails.order && this.orderDetails.order.items) || []
       return items.length > 0 ? items : [{ name: 'Item exemplo', quantity: 1 }]
     },
     itemsDisplay() {
@@ -347,19 +378,19 @@ export default {
 
       settings.forEach((setting) => {
         switch (setting.type) {
-          case 'pix_dynamic_code':
-            icons.push('pix')
+          case TemplateOrderPaymentType.PIX_DYNAMIC_CODE:
+            icons.push(TemplateOrderIcon.PIX)
             break
-          case 'boleto':
-            icons.push('barcode')
+          case TemplateOrderPaymentType.BOLETO:
+            icons.push(TemplateOrderIcon.BARCODE)
             break
-          case 'payment_link':
-            icons.push('payment-card')
+          case TemplateOrderPaymentType.PAYMENT_LINK:
+            icons.push(TemplateOrderIcon.PAYMENT_CARD)
             break
         }
       })
 
-      return icons.length > 0 ? icons : ['pix', 'barcode', 'payment-card']
+      return icons.length > 0 ? icons : [TemplateOrderIcon.PIX, TemplateOrderIcon.BARCODE, TemplateOrderIcon.PAYMENT_CARD]
     },
     paymentMethodsLabel() {
       return 'Pagar com'
@@ -370,27 +401,27 @@ export default {
 
       settings.forEach((setting) => {
         switch (setting.type) {
-          case 'pix_dynamic_code':
+          case TemplateOrderPaymentType.PIX_DYNAMIC_CODE:
             buttons.push({
-              type: 'pix_dynamic_code',
+              type: TemplateOrderPaymentType.PIX_DYNAMIC_CODE,
               text: 'Copiar Chave Pix',
-              icon: 'copy',
+              icon: TemplateOrderIcon.COPY,
               data: setting.pix_dynamic_code.code
             })
             break
-          case 'boleto':
+          case TemplateOrderPaymentType.BOLETO:
             buttons.push({
-              type: 'boleto',
+              type: TemplateOrderPaymentType.BOLETO,
               text: 'Copiar Código do Boleto',
-              icon: 'copy',
+              icon: TemplateOrderIcon.COPY,
               data: setting.boleto.barcode
             })
             break
-          case 'payment_link':
+          case TemplateOrderPaymentType.PAYMENT_LINK:
             buttons.push({
-              type: 'payment_link',
+              type: TemplateOrderPaymentType.PAYMENT_LINK,
               text: 'Abrir Link de Pagamento',
-              icon: 'external-file',
+              icon: TemplateOrderIcon.EXTERNAL_FILE,
               data: setting.payment_link.url
             })
             break
@@ -402,57 +433,53 @@ export default {
   },
   methods: {
     init: function() {
-      console.log('=== DEBUG TemplateOrder ===')
-      console.log('document:', this.document)
-      console.log('bodyContentComponent:', this.bodyContentComponent)
-      console.log('bodyComponent:', this.bodyComponent)
-
-      // Process header text with template parameters from templateContent
       if (this.hasTextHeader && this.headerContentComponent) {
         let text = this.headerContentComponent.text || ''
 
-        // Replace template placeholders with actual parameter values from template
         if (this.headerComponent && this.headerComponent.parameters) {
           this.headerComponent.parameters.forEach((param, index) => {
             const placeholder = `{{${index + 1}}}`
             if (param.type === 'text') {
-              // Escape special regex characters in placeholder
               const escapedPlaceholder = placeholder.replace(/[{}]/g, '\\$&')
-              text = text.replace(new RegExp(escapedPlaceholder, 'g'), param.text || '')
+              text = text.replace(
+                new RegExp(escapedPlaceholder, 'g'),
+                param.text || ''
+              )
             }
           })
         }
 
-        this.headerText = text
+        this.headerText = this.processText(text)
       }
 
-      // Process body text with template parameters from templateContent
       if (this.bodyContentComponent) {
         let text = this.bodyContentComponent.text || ''
-        console.log('Original body text:', text)
 
-        // Replace template placeholders with actual parameter values from template
         if (this.bodyComponent && this.bodyComponent.parameters) {
-          console.log('Body parameters:', this.bodyComponent.parameters)
           this.bodyComponent.parameters.forEach((param, index) => {
             const placeholder = `{{${index + 1}}}`
-            console.log(`Replacing ${placeholder} with`, param.text)
             if (param.type === 'text') {
-              // Escape special regex characters in placeholder
               const escapedPlaceholder = placeholder.replace(/[{}]/g, '\\$&')
-              text = text.replace(new RegExp(escapedPlaceholder, 'g'), param.text || '')
+              text = text.replace(
+                new RegExp(escapedPlaceholder, 'g'),
+                param.text || ''
+              )
             }
           })
         }
 
-        console.log('Final body text:', text)
-        this.bodyText = text
+        this.bodyText = this.processText(text)
       }
 
-      // Process footer text from templateContent
       if (this.footerContentComponent) {
-        this.footerText = this.footerContentComponent.text || ''
+        this.footerText = this.processText(
+          this.footerContentComponent.text || ''
+        )
       }
+    },
+    processText: function(text) {
+      if (!text) return ''
+      return text.replace(/\\\\n/g, '\n').replace(/\\n/g, '\n')
     },
     formatQuantity(quantity) {
       return `Quantidade: ${quantity}`
@@ -476,17 +503,9 @@ export default {
     },
     copyToClipboard(text, buttonText) {
       if (navigator.clipboard && window.isSecureContext) {
-        // Usar a API moderna do clipboard
         navigator.clipboard
           .writeText(text)
-          .then(() => {
-            this.showCopySuccess(buttonText)
-          })
-          .catch(() => {
-            this.fallbackCopyToClipboard(text, buttonText)
-          })
       } else {
-        // Fallback para navegadores mais antigos
         this.fallbackCopyToClipboard(text, buttonText)
       }
     },
@@ -500,17 +519,11 @@ export default {
 
       try {
         document.execCommand('copy')
-        this.showCopySuccess(buttonText)
       } catch (err) {
         console.error('Erro ao copiar:', err)
       }
 
       document.body.removeChild(textArea)
-    },
-    showCopySuccess(buttonText) {
-      // Aqui você pode adicionar uma notificação de sucesso
-      console.log(`${buttonText} copiado com sucesso!`)
-      // Exemplo: mostrar toast, alterar temporariamente o texto do botão, etc.
     },
     orderSave: function($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) {
@@ -520,8 +533,6 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (!result) return
 
-        // For template, we would need to update the template structure
-        // This is more complex than the interactive format
         if (this.bodyComponent) {
           this.save({
             ...this.bodyComponent,
@@ -570,13 +581,16 @@ export default {
     padding: $bubble-padding;
     padding-left: 0px;
     padding-right: 0px;
-    min-width: 206px;
+    min-width: 210px;
     text-align: left;
-    max-width: 340px;
+    width: 290px;
+    max-width: 90%;
   }
 }
 
-.mt-card__payment-block__paper-document {
+.payment-template-order__paper-document {
+  margin-bottom: -10px !important;
+  border-radius: 6px;
   .icon-pdf {
     color: #d32f2f;
   }
