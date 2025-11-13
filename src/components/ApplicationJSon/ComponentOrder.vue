@@ -256,7 +256,7 @@ export default {
           this.document.interactive.header &&
           this.document.interactive.header.image &&
           this.document.interactive.header.image.link) ||
-        'https://placehold.co/50'
+        'https://placehold.co/40'
       )
     },
     documentName() {
