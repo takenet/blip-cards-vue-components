@@ -23,7 +23,7 @@
         <bds-grid v-if="hasDocumentHeader" direction="column" padding="x-2">
           <bds-paper
             elevation="static"
-            class="mt-card__payment-block__paper-document"
+            class="payment-component-order__paper-document"
           >
             <bds-grid
               padding="1"
@@ -56,7 +56,6 @@
               <bds-typo variant="fs-10">{{ orderTitle }}</bds-typo>
               <div class="divider" />
 
-              <!-- Items -->
               <bds-grid
                 v-if="itemsDisplay.single"
                 justify-content="flex-start"
@@ -107,7 +106,6 @@
 
               <div class="divider" />
 
-              <!-- Payment Methods -->
               <bds-grid justify-content="space-between" align-items="center">
                 <bds-typo variant="fs-12" bold="bold">{{
                   paymentMethodsLabel
@@ -126,7 +124,6 @@
 
               <div class="divider" />
 
-              <!-- Total -->
               <bds-grid justify-content="space-between" align-items="center">
                 <bds-typo variant="fs-12">Total</bds-typo>
                 <bds-typo variant="fs-12" bold="bold">{{
@@ -136,7 +133,6 @@
             </bds-grid>
           </bds-paper>
         </bds-grid>
-        <!-- Text Content -->
         <bds-grid direction="column" gap="1" padding="x-2">
           <!-- Header Text -->
           <bds-grid
@@ -147,14 +143,12 @@
             <bds-typo variant="fs-14" bold="bold">{{ headerText }}</bds-typo>
           </bds-grid>
 
-          <!-- Body Text -->
           <bds-grid justify-content="space-between" align-items="center">
             <bds-typo variant="fs-14" style="white-space: pre-line;">{{
               bodyText
             }}</bds-typo>
           </bds-grid>
 
-          <!-- Footer Text -->
           <bds-grid
             v-if="footerText"
             justify-content="space-between"
@@ -167,7 +161,7 @@
         </bds-grid>
 
         <div class="divider" />
-        <!-- Payment Action Buttons -->
+
         <bds-grid padding="x-2" gap="1" direction="column">
           <bds-grid
             v-for="button in paymentButtons"
@@ -203,6 +197,7 @@
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
 import { isFailedMessage } from '../../utils/misc'
+import { ComponentOrderType, ComponentOrderPaymentType, ComponentOrderIcon } from '../../enums/componentOrder.enum.js'
 
 export default {
   name: 'component-order',
@@ -235,7 +230,7 @@ export default {
         this.document &&
         this.document.interactive &&
         this.document.interactive.header &&
-        this.document.interactive.header.type === 'text'
+        this.document.interactive.header.type === ComponentOrderType.TEXT
       )
     },
     hasImageHeader() {
@@ -243,7 +238,7 @@ export default {
         this.document &&
         this.document.interactive &&
         this.document.interactive.header &&
-        this.document.interactive.header.type === 'image'
+        this.document.interactive.header.type === ComponentOrderType.IMAGE
       )
     },
     hasDocumentHeader() {
@@ -251,7 +246,7 @@ export default {
         this.document &&
         this.document.interactive &&
         this.document.interactive.header &&
-        this.document.interactive.header.type === 'document'
+        this.document.interactive.header.type === ComponentOrderType.DOCUMENT
       )
     },
     headerImageUrl() {
@@ -261,7 +256,7 @@ export default {
           this.document.interactive.header &&
           this.document.interactive.header.image &&
           this.document.interactive.header.image.link) ||
-        'https://via.placeholder.com/40'
+        'https://placehold.co/50'
       )
     },
     documentName() {
@@ -340,19 +335,19 @@ export default {
 
       settings.forEach((setting) => {
         switch (setting.type) {
-          case 'pix_dynamic_code':
-            icons.push('pix')
+          case ComponentOrderPaymentType.PIX_DYNAMIC_CODE:
+            icons.push(ComponentOrderIcon.PIX)
             break
-          case 'boleto':
-            icons.push('barcode')
+          case ComponentOrderPaymentType.BOLETO:
+            icons.push(ComponentOrderIcon.BARCODE)
             break
-          case 'payment_link':
-            icons.push('payment-card')
+          case ComponentOrderPaymentType.PAYMENT_LINK:
+            icons.push(ComponentOrderIcon.PAYMENT_CARD)
             break
         }
       })
 
-      return icons.length > 0 ? icons : ['pix', 'barcode', 'payment-card']
+      return icons.length > 0 ? icons : [ComponentOrderIcon.PIX, ComponentOrderIcon.BARCODE, ComponentOrderIcon.PAYMENT_CARD]
     },
     paymentMethodsLabel() {
       return 'Pagar com'
@@ -370,27 +365,27 @@ export default {
 
       settings.forEach((setting) => {
         switch (setting.type) {
-          case 'pix_dynamic_code':
+          case ComponentOrderPaymentType.PIX_DYNAMIC_CODE:
             buttons.push({
-              type: 'pix_dynamic_code',
+              type: ComponentOrderPaymentType.PIX_DYNAMIC_CODE,
               text: 'Copiar Chave Pix',
-              icon: 'copy',
+              icon: ComponentOrderIcon.COPY,
               data: setting.pix_dynamic_code.code
             })
             break
-          case 'boleto':
+          case ComponentOrderPaymentType.BOLETO:
             buttons.push({
-              type: 'boleto',
+              type: ComponentOrderPaymentType.BOLETO,
               text: 'Copiar Código do Boleto',
-              icon: 'copy',
+              icon: ComponentOrderIcon.COPY,
               data: setting.boleto.barcode
             })
             break
-          case 'payment_link':
+          case ComponentOrderPaymentType.PAYMENT_LINK:
             buttons.push({
-              type: 'payment_link',
+              type: ComponentOrderPaymentType.PAYMENT_LINK,
               text: 'Abrir Link de Pagamento',
-              icon: 'external-file',
+              icon: ComponentOrderIcon.EXTERNAL_FILE,
               data: setting.payment_link.url
             })
             break
@@ -414,25 +409,32 @@ export default {
     }
   },
   methods: {
+    processText: function(text) {
+      if (!text) return ''
+      return text.replace(/\\\\n/g, '\n').replace(/\\n/g, '\n')
+    },
     init: function() {
-      this.headerText =
+      const rawHeaderText =
         (this.document &&
           this.document.interactive &&
           this.document.interactive.header &&
           this.document.interactive.header.text) ||
         ''
-      this.bodyText =
+      const rawBodyText =
         (this.document &&
           this.document.interactive &&
           this.document.interactive.body &&
           this.document.interactive.body.text) ||
         ''
-      this.footerText =
+      const rawFooterText =
         (this.document &&
           this.document.interactive &&
           this.document.interactive.footer &&
           this.document.interactive.footer.text) ||
         ''
+      this.headerText = this.processText(rawHeaderText)
+      this.bodyText = this.processText(rawBodyText)
+      this.footerText = this.processText(rawFooterText)
     },
     formatQuantity(quantity) {
       return `Quantidade: ${quantity}`
@@ -456,17 +458,9 @@ export default {
     },
     copyToClipboard(text, buttonText) {
       if (navigator.clipboard && window.isSecureContext) {
-        // Usar a API moderna do clipboard
         navigator.clipboard
           .writeText(text)
-          .then(() => {
-            this.showCopySuccess(buttonText)
-          })
-          .catch(() => {
-            this.fallbackCopyToClipboard(text, buttonText)
-          })
       } else {
-        // Fallback para navegadores mais antigos
         this.fallbackCopyToClipboard(text, buttonText)
       }
     },
@@ -480,17 +474,11 @@ export default {
 
       try {
         document.execCommand('copy')
-        this.showCopySuccess(buttonText)
       } catch (err) {
         console.error('Erro ao copiar:', err)
       }
 
       document.body.removeChild(textArea)
-    },
-    showCopySuccess(buttonText) {
-      // Aqui você pode adicionar uma notificação de sucesso
-      console.log(`${buttonText} copiado com sucesso!`)
-      // Exemplo: mostrar toast, alterar temporariamente o texto do botão, etc.
     },
     orderSave: function($event) {
       if (this.errors.any() || ($event && $event.shiftKey)) {
@@ -553,13 +541,16 @@ export default {
     padding: $bubble-padding;
     padding-left: 0px;
     padding-right: 0px;
-    min-width: 206px;
+    min-width: 210px;
     text-align: left;
-    max-width: 340px;
+    width: 290px;
+    max-width: 90%;
   }
 }
 
-.mt-card__payment-block__paper-document {
+.payment-component-order__paper-document {
+  margin-bottom: -10px !important;
+  border-radius: 6px;
   .icon-pdf {
     color: #d32f2f;
   }
