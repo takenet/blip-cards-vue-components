@@ -426,8 +426,17 @@
           :date="date"
         />
 
+        <template-order
+          v-else-if="document.content.type === 'template-content' && isTemplateWithOrderDetails"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :readonly="true"
+        />
+
         <template-content
-          v-else-if="document.content.type === 'template-content'"
+          v-else-if="document.content.type === 'template-content'  && !isTemplateWithOrderDetails"
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :message-template-title="translations.messageTemplate ? translations.messageTemplate + document.content.template.name : translations.unsupportedContent"
@@ -714,6 +723,7 @@ import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 import { checkIsExternalMessage } from '../utils/externalMessages.js'
 import { getMemberInfo } from '../utils/memberUtils.js'
+import TemplateOrder from './TemplateContent/TemplateOrder.vue'
 
 const supportedRepliedTypes = [
   MessageTypesConstants.TEXT_MESSAGE,
@@ -889,7 +899,19 @@ export default {
     },
     memberInfo() {
       return getMemberInfo(this.document)
+    },
+    isTemplateWithOrderDetails() {
+      if (!this.document || !this.document.content || this.document.content.type !== 'template-content') return false
+
+      const components = (this.document.content.template && this.document.content.template.components) || []
+      return components.some(comp =>
+        comp.type === 'button' &&
+        comp.sub_type === 'order_details'
+      )
     }
+  },
+  components: {
+    TemplateOrder
   }
 }
 </script>
