@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <div class="float" style="width: 200px">
       <div>
         <h1>Width:</h1>
@@ -110,7 +110,9 @@
       <div v-if="isSample === 'true'">
         <h1>Examples:</h1>
         <button class="button" @click="sendReplyMessage1">Alfredo Teste</button>
-        <button class="button" @click="sendDeletedContent">Mensagem deletada</button>
+        <button class="button" @click="sendDeletedContent">
+          Mensagem deletada
+        </button>
         <button class="button" @click="sendText">ENVIAR Texto</button>
         <button class="button" @click="sendTextEmail">
           ENVIAR Texto contendo email
@@ -215,6 +217,24 @@
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
+        <button class="button" @click="sendOrderDetailsText">
+          ENVIAR componente order TEXTO
+        </button>
+        <button class="button" @click="sendOrderDetailsImage">
+          ENVIAR componente order IMAGEM
+        </button>
+        <button class="button" @click="sendOrderDetailsDocument">
+          ENVIAR componente order DOCUMENTO
+        </button>
+        <button class="button" @click="sendTemplateOrderText">
+          ENVIAR Template order Texto
+        </button>
+        <button class="button" @click="sendTemplateOrderDocument">
+          ENVIAR Template order Documento
+        </button>
+        <button class="button" @click="sendTemplateOrderImage">
+          ENVIAR Template order Imagem
+        </button>
         <div>
           <h1>Reply Examples:</h1>
           <button class="button" @click="sendReplyDeletedMessage">
@@ -260,19 +280,22 @@
           <button class="button" @click="sendReplyTextMessageWithFailed">
             ENVIAR Reply Message de Falha
           </button>
-          
+
           <button class="button" @click="sendReplyImageMessageWithImage">
             ENVIAR Reply Message de Imagem com Imagem
           </button>
           <button class="button" @click="sendReplyLocationMessageWithText">
             ENVIAR Reply Message de Localização com Texto
           </button>
-          <button class="button" @click="sendReplyUnsuportedContentMessageWithText">
+          <button
+            class="button"
+            @click="sendReplyUnsuportedContentMessageWithText"
+          >
             ENVIAR Reply Message de 'Conteudo não suportado' com Texto
           </button>
           <button class="button" @click="sendReplyFailedMessageWithText">
             ENVIAR Reply Message de Falha com Texto
-          </button>          
+          </button>
           <button class="button" @click="sendReplyWebLinkMessageWithText">
             ENVIAR Reply Message de 'Web Link' com Texto
           </button>
@@ -294,13 +317,10 @@
           <button class="button" @click="sendReplyStickerWithSticker">
             ENVIAR Reply Sticker com Sticker
           </button>
-          
           <button class="button" @click="sendReplyStickerWithText">
             ENVIAR Reply texto com Sticker
-          </button>
-          
-          
-        </div>  
+          </button>       
+        </div>
       </div>
 
       <div v-else>
@@ -1168,7 +1188,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'sticker/webp',
-              uri: 'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
+              uri:
+                'https://res.cloudinary.com/demo/image/upload/fl_awebp,q_40/bored_animation.webp'
             },
             direction: 'sent'
           }
@@ -1196,7 +1217,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'sticker/webp',
-              uri: 'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
+              uri:
+                'https://blog.jiayu.co/2019/07/telegram-animated-stickers/sticker.webp'
             },
             direction: 'sent'
           }
@@ -1296,7 +1318,7 @@ export default {
           inReplyTo: {
             id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
             type: 'application/vnd.lime.deleted-content+json',
-            value: { }
+            value: {}
           }
         }
       })
@@ -1338,7 +1360,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'image/jpeg',
-              title: 'texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo',
+              title:
+                'texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo texto de exemplo',
               uri:
                 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg'
             },
@@ -1609,7 +1632,8 @@ export default {
             type: 'application/vnd.lime.media-link+json',
             value: {
               type: 'audio/mp3',
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+              uri:
+                'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
             }
           },
           inReplyTo: {
@@ -2178,6 +2202,826 @@ export default {
           },
           emoji: {
             values: [55357, 56397, 55356, 57341]
+          }
+        }
+      })
+      this.send()
+    },
+    sendOrderDetailsDocument: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'application/json',
+        content: {
+          type: 'interactive',
+          interactive: {
+            type: 'order_details',
+            header: {
+              type: 'document',
+              document: {
+                link: 'https://example.com/comprovante.pdf',
+                filename: 'Comprovante.pdf'
+              }
+            },
+            body: {
+              text:
+                'Finalize seu pedido!\nRealize o pagamento via Pix copia e cola usando o app do seu banco.'
+            },
+            footer: {
+              text: 'Blip Payments'
+            },
+            action: {
+              name: 'review_and_pay',
+              parameters: {
+                reference_id: '241942',
+                type: 'digital-goods',
+                payment_type: 'br',
+                currency: 'BRL',
+                total_amount: {
+                  value: '1500',
+                  offset: 100
+                },
+                order: {
+                  status: 'pending',
+                  items: [
+                    {
+                      retailer_id: '001',
+                      name: 'Product A',
+                      amount: {
+                        value: 500,
+                        offset: 100
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '002',
+                      name: 'Product B',
+                      amount: {
+                        value: 750,
+                        offset: 150
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '003',
+                      name: 'Product C',
+                      amount: {
+                        value: 1200,
+                        offset: 200
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '004',
+                      name: 'Product D',
+                      amount: {
+                        value: 900,
+                        offset: 180
+                      },
+                      quantity: 3
+                    },
+                    {
+                      retailer_id: '005',
+                      name: 'Product E',
+                      amount: {
+                        value: 650,
+                        offset: 130
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '006',
+                      name: 'Product F',
+                      amount: {
+                        value: 1100,
+                        offset: 220
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '007',
+                      name: 'Product G',
+                      amount: {
+                        value: 300,
+                        offset: 60
+                      },
+                      quantity: 5
+                    },
+                    {
+                      retailer_id: '008',
+                      name: 'Product H',
+                      amount: {
+                        value: 2500,
+                        offset: 500
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '009',
+                      name: 'Product I',
+                      amount: {
+                        value: 800,
+                        offset: 160
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '010',
+                      name: 'Product J',
+                      amount: {
+                        value: 1500,
+                        offset: 300
+                      },
+                      quantity: 1
+                    }
+                  ],
+                  subtotal: {
+                    value: '1500',
+                    offset: 100
+                  }
+                },
+                payment_settings: [
+                  {
+                    type: 'pix_dynamic_code',
+                    pix_dynamic_code: {
+                      code:
+                        '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                      merchant_name: 'User Teste',
+                      key: '12345678909',
+                      key_type: 'CPF'
+                    }
+                  },
+                  {
+                    type: 'payment_link',
+                    payment_link: {
+                      url: 'https://pagamento.blip.ai/checkout/662311'
+                    }
+                  },
+                  {
+                    type: 'boleto',
+                    boleto: {
+                      digitable_line:
+                        '00190500954014481606906809350314337370000000100'
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendOrderDetailsImage: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'application/json',
+        content: {
+          type: 'interactive',
+          interactive: {
+            type: 'order_details',
+            header: {
+              type: 'image',
+              image: {
+                link:
+                  'https://hmgmediastore.blob.core.windows.net/permanent/Media_4_63bd457e-e09f-4b1f-a26d-e4e614edc5fd'
+              }
+            },
+            body: {
+              text:
+                'Finalize seu pedido!\nRealize o pagamento via Pix copia e cola usando o app do seu banco.'
+            },
+            footer: {
+              text: 'Blip Payments'
+            },
+            action: {
+              name: 'review_and_pay',
+              parameters: {
+                reference_id: '241942',
+                type: 'digital-goods',
+                payment_type: 'br',
+                currency: 'BRL',
+                total_amount: {
+                  value: '1500',
+                  offset: 100
+                },
+                order: {
+                  status: 'pending',
+                  items: [
+                    {
+                      retailer_id: '001',
+                      name: 'Product A',
+                      amount: {
+                        value: 500,
+                        offset: 100
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '002',
+                      name: 'Product B',
+                      amount: {
+                        value: 750,
+                        offset: 150
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '003',
+                      name: 'Product C',
+                      amount: {
+                        value: 1200,
+                        offset: 200
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '004',
+                      name: 'Product D',
+                      amount: {
+                        value: 900,
+                        offset: 180
+                      },
+                      quantity: 3
+                    },
+                    {
+                      retailer_id: '005',
+                      name: 'Product E',
+                      amount: {
+                        value: 650,
+                        offset: 130
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '006',
+                      name: 'Product F',
+                      amount: {
+                        value: 1100,
+                        offset: 220
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '007',
+                      name: 'Product G',
+                      amount: {
+                        value: 300,
+                        offset: 60
+                      },
+                      quantity: 5
+                    },
+                    {
+                      retailer_id: '008',
+                      name: 'Product H',
+                      amount: {
+                        value: 2500,
+                        offset: 500
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '009',
+                      name: 'Product I',
+                      amount: {
+                        value: 800,
+                        offset: 160
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '010',
+                      name: 'Product J',
+                      amount: {
+                        value: 1500,
+                        offset: 300
+                      },
+                      quantity: 1
+                    }
+                  ],
+                  subtotal: {
+                    value: '1500',
+                    offset: 100
+                  }
+                },
+                payment_settings: [
+                  {
+                    type: 'pix_dynamic_code',
+                    pix_dynamic_code: {
+                      code:
+                        '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                      merchant_name: 'User Teste',
+                      key: '12345678909',
+                      key_type: 'CPF'
+                    }
+                  },
+                  {
+                    type: 'payment_link',
+                    payment_link: {
+                      url: 'https://pagamento.blip.ai/checkout/662311'
+                    }
+                  },
+                  {
+                    type: 'boleto',
+                    boleto: {
+                      digitable_line:
+                        '00190500954014481606906809350314337370000000100'
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendOrderDetailsText: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'application/json',
+        content: {
+          type: 'interactive',
+          interactive: {
+            type: 'order_details',
+            header: {
+              type: 'text',
+              text: 'Olá XXX'
+            },
+            body: {
+              text:
+                'Finalize seu pedido!\nRealize o pagamento via Pix copia e cola usando o app do seu banco.'
+            },
+            footer: {
+              text: 'Blip Payments'
+            },
+            action: {
+              name: 'review_and_pay',
+              parameters: {
+                reference_id: '241942',
+                type: 'digital-goods',
+                payment_type: 'br',
+                currency: 'BRL',
+                total_amount: {
+                  value: '1500',
+                  offset: 100
+                },
+                order: {
+                  status: 'pending',
+                  items: [
+                    {
+                      retailer_id: '001',
+                      name: 'Product A',
+                      amount: {
+                        value: 500,
+                        offset: 100
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '002',
+                      name: 'Product B',
+                      amount: {
+                        value: 750,
+                        offset: 150
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '003',
+                      name: 'Product C',
+                      amount: {
+                        value: 1200,
+                        offset: 200
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '004',
+                      name: 'Product D',
+                      amount: {
+                        value: 900,
+                        offset: 180
+                      },
+                      quantity: 3
+                    },
+                    {
+                      retailer_id: '005',
+                      name: 'Product E',
+                      amount: {
+                        value: 650,
+                        offset: 130
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '006',
+                      name: 'Product F',
+                      amount: {
+                        value: 1100,
+                        offset: 220
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '007',
+                      name: 'Product G',
+                      amount: {
+                        value: 300,
+                        offset: 60
+                      },
+                      quantity: 5
+                    },
+                    {
+                      retailer_id: '008',
+                      name: 'Product H',
+                      amount: {
+                        value: 2500,
+                        offset: 500
+                      },
+                      quantity: 1
+                    },
+                    {
+                      retailer_id: '009',
+                      name: 'Product I',
+                      amount: {
+                        value: 800,
+                        offset: 160
+                      },
+                      quantity: 2
+                    },
+                    {
+                      retailer_id: '010',
+                      name: 'Product J',
+                      amount: {
+                        value: 1500,
+                        offset: 300
+                      },
+                      quantity: 1
+                    }
+                  ],
+                  subtotal: {
+                    value: '1500',
+                    offset: 100
+                  }
+                },
+                payment_settings: [
+                  {
+                    type: 'pix_dynamic_code',
+                    pix_dynamic_code: {
+                      code:
+                        '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                      merchant_name: 'User Teste',
+                      key: '12345678909',
+                      key_type: 'CPF'
+                    }
+                  },
+                  {
+                    type: 'payment_link',
+                    payment_link: {
+                      url: 'https://pagamento.blip.ai/checkout/662311'
+                    }
+                  },
+                  {
+                    type: 'boleto',
+                    boleto: {
+                      digitable_line:
+                        '00190500954014481606906809350314337370000000100'
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendTemplateOrderText: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'template',
+        content: {
+          type: 'template-content',
+          template: {
+            language: {
+              policy: 'deterministic',
+              code: 'pt_BR'
+            },
+            name: 'teste_payments_1',
+            components: [
+              {
+                sub_type: 'order_details',
+                index: '0',
+                type: 'button',
+                parameters: [
+                  {
+                    action: {
+                      order_details: {
+                        reference_id: '1234567',
+                        type: 'digital-goods',
+                        payment_type: 'br',
+                        payment_settings: [
+                          {
+                            type: 'pix_dynamic_code',
+                            pix_dynamic_code: {
+                              code:
+                                '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                              merchant_name: 'User Teste',
+                              key: 'gabriel.petrone@blip.ai',
+                              key_type: 'EMAIL'
+                            }
+                          }
+                        ],
+                        currency: 'BRL',
+                        total_amount: {
+                          value: 200,
+                          offset: 100
+                        },
+                        order: {
+                          status: 'pending',
+                          tax: {
+                            value: 0,
+                            offset: 100
+                          },
+                          items: [
+                            {
+                              retailer_id: '1234567',
+                              name: 'Presente Misterioso',
+                              amount: {
+                                value: 200,
+                                offset: 100
+                              },
+                              quantity: 1
+                            }
+                          ],
+                          subtotal: {
+                            value: 200,
+                            offset: 100
+                          }
+                        }
+                      }
+                    },
+                    type: 'action'
+                  }
+                ]
+              }
+            ]
+          },
+          templateContent: {
+            name: 'teste_payments_1',
+            language: 'pt_BR',
+            components: [
+              {
+                type: 'BODY',
+                text: 'Olá.\\nSegue para pagamento.'
+              },
+              {
+                type: 'BUTTONS',
+                buttons: [
+                  {
+                    type: 'ORDER_DETAILS',
+                    text: 'Copy Pix code'
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      })
+      this.send()
+    },
+    sendTemplateOrderDocument: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'template',
+        content: {
+          type: 'template-content',
+          template: {
+            language: {
+              policy: 'deterministic',
+              code: 'pt_BR'
+            },
+            name: 'teste_payments_1',
+            components: [
+              {
+                type: 'header',
+                parameters: [
+                  {
+                    document: {
+                      filename: 'dummy',
+                      link:
+                        'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+                    },
+                    type: 'document'
+                  }
+                ]
+              },
+              {
+                sub_type: 'order_details',
+                index: '0',
+                type: 'button',
+                parameters: [
+                  {
+                    action: {
+                      order_details: {
+                        reference_id: '1234567',
+                        type: 'digital-goods',
+                        payment_type: 'br',
+                        payment_settings: [
+                          {
+                            type: 'pix_dynamic_code',
+                            pix_dynamic_code: {
+                              code:
+                                '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                              merchant_name: 'User Teste',
+                              key: 'gabriel.petrone@blip.ai',
+                              key_type: 'EMAIL'
+                            }
+                          }
+                        ],
+                        currency: 'BRL',
+                        total_amount: {
+                          value: 200,
+                          offset: 100
+                        },
+                        order: {
+                          status: 'pending',
+                          tax: {
+                            value: 0,
+                            offset: 100
+                          },
+                          items: [
+                            {
+                              retailer_id: '1234567',
+                              name: 'Presente Misterioso',
+                              amount: {
+                                value: 200,
+                                offset: 100
+                              },
+                              quantity: 1
+                            }
+                          ],
+                          subtotal: {
+                            value: 200,
+                            offset: 100
+                          }
+                        }
+                      }
+                    },
+                    type: 'action'
+                  }
+                ]
+              }
+            ]
+          },
+          templateContent: {
+            name: 'teste_payments_1',
+            language: 'pt_BR',
+            components: [
+              {
+                type: 'HEADER',
+                format: 'DOCUMENT',
+                example: {
+                  headerHandle: [
+                    'https://scontent.whatsapp.net/v/t61.29466-34/521274600_1869416363990860_4813441808641739597_n.pdf?ccb=1-7&_nc_sid=8b1bef&_nc_ohc=kaksJtUbzi4Q7kNvwFw_zUr&_nc_oc=Adn2h-Jk3rnqcup4orFp2edi06A0NqP9uAAtbs0d4Z_kQCizPy5p-2ewNG6m9l6gMHk&_nc_zt=3&_nc_ht=scontent.whatsapp.net&edm=AH51TzQEAAAA&_nc_gid=wqTRTF902E_ymJUSdLV9SA&oh=01_Q5Aa2QGc3jvj7DYE-q1HumUpl1rl2vY0g-yGhZ02Fu_yO02ksQ&oe=68DFDDE9'
+                  ]
+                }
+              },
+              {
+                type: 'BODY',
+                text: 'Olá.\\nSegue para pagamento.'
+              },
+              {
+                type: 'BUTTONS',
+                buttons: [
+                  {
+                    type: 'ORDER_DETAILS',
+                    text: 'Copy Pix code'
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      })
+      this.send()
+    },
+    sendTemplateOrderImage: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e7',
+        direction: 'sent',
+        type: 'template',
+        content: {
+          type: 'template-content',
+          template: {
+            name: 'teste_payments_1',
+            language: {
+              policy: 'deterministic',
+              code: 'pt_BR'
+            },
+            components: [
+              {
+                type: 'header',
+                parameters: [
+                  {
+                    type: 'image',
+                    image: {
+                      link:
+                        'https://s3-sa-east-1.amazonaws.com/msging.net/iris/Media_ee3797dd-c943-4fd8-bddb-c3cf89d5fbfd'
+                    }
+                  }
+                ]
+              },
+              {
+                type: 'button',
+                sub_type: 'order_details',
+                index: '0',
+                parameters: [
+                  {
+                    type: 'action',
+                    action: {
+                      order_details: {
+                        reference_id: '1234567',
+                        type: 'digital-goods',
+                        payment_type: 'br',
+                        payment_settings: [
+                          {
+                            type: 'pix_dynamic_code',
+                            pix_dynamic_code: {
+                              code:
+                                '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                              merchant_name: 'User Teste',
+                              key: 'gabriel.petrone@blip.ai',
+                              key_type: 'EMAIL'
+                            }
+                          }
+                        ],
+                        currency: 'BRL',
+                        total_amount: {
+                          value: 200,
+                          offset: 100
+                        },
+                        order: {
+                          status: 'pending',
+                          tax: {
+                            value: 0,
+                            offset: 100
+                          },
+                          items: [
+                            {
+                              retailer_id: '1234567',
+                              name: 'Presente Misterioso',
+                              amount: {
+                                value: 200,
+                                offset: 100
+                              },
+                              quantity: 1
+                            }
+                          ],
+                          subtotal: {
+                            value: 200,
+                            offset: 100
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          templateContent: {
+            name: 'teste_payments_1',
+            language: 'pt_BR',
+            components: [
+              {
+                type: 'HEADER',
+                format: 'IMAGE',
+                example: {
+                  headerHandle: [
+                    'https://s3-sa-east-1.amazonaws.com/msging.net/iris/Media_ee3797dd-c943-4fd8-bddb-c3cf89d5fbfd'
+                  ]
+                }
+              },
+              {
+                type: 'BODY',
+                text: 'Olá.\\nSegue para pagamento.'
+              },
+              {
+                type: 'BUTTONS',
+                buttons: [
+                  {
+                    type: 'ORDER_DETAILS',
+                    text: 'Copy Pix code'
+                  }
+                ]
+              }
+            ]
           }
         }
       })

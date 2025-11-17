@@ -378,7 +378,7 @@ export default {
               type: ComponentOrderPaymentType.BOLETO,
               text: 'Copiar Código do Boleto',
               icon: ComponentOrderIcon.COPY,
-              data: setting.boleto.barcode
+              data: setting.boleto.digitable_line
             })
             break
           case ComponentOrderPaymentType.PAYMENT_LINK:

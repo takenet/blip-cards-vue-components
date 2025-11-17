@@ -414,7 +414,7 @@ export default {
               type: TemplateOrderPaymentType.BOLETO,
               text: 'Copiar Código do Boleto',
               icon: TemplateOrderIcon.COPY,
-              data: setting.boleto.barcode
+              data: setting.boleto.digitable_line
             })
             break
           case TemplateOrderPaymentType.PAYMENT_LINK:
