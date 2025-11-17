@@ -2345,7 +2345,7 @@ export default {
                     type: 'pix_dynamic_code',
                     pix_dynamic_code: {
                       code:
-                        '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921Gabriel Felix Petrone6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                        '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
                       merchant_name: 'User Teste',
                       key: '12345678909',
                       key_type: 'CPF'
@@ -2510,7 +2510,7 @@ export default {
                     type: 'pix_dynamic_code',
                     pix_dynamic_code: {
                       code:
-                        '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921Gabriel Felix Petrone6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                        '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
                       merchant_name: 'User Teste',
                       key: '12345678909',
                       key_type: 'CPF'
@@ -2729,7 +2729,7 @@ export default {
                             type: 'pix_dynamic_code',
                             pix_dynamic_code: {
                               code:
-                                '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921Gabriel Felix Petrone6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                                '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
                               merchant_name: 'User Teste',
                               key: 'gabriel.petrone@blip.ai',
                               key_type: 'EMAIL'
@@ -2837,7 +2837,7 @@ export default {
                             type: 'pix_dynamic_code',
                             pix_dynamic_code: {
                               code:
-                                '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921Gabriel Felix Petrone6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                                '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
                               merchant_name: 'User Teste',
                               key: 'gabriel.petrone@blip.ai',
                               key_type: 'EMAIL'
@@ -2954,7 +2954,7 @@ export default {
                             type: 'pix_dynamic_code',
                             pix_dynamic_code: {
                               code:
-                                '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921Gabriel Felix Petrone6009SAO PAULO62140510sF9EEKoAp56304AB67',
+                                '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67',
                               merchant_name: 'User Teste',
                               key: 'gabriel.petrone@blip.ai',
                               key_type: 'EMAIL'
