@@ -24,6 +24,8 @@
           <bds-paper
             elevation="static"
             class="payment-template-order__paper-document"
+            @click="handleDocumentDownload"
+            style="cursor: pointer;"
           >
             <bds-grid
               padding="1"
@@ -316,13 +318,26 @@ export default {
         this.headerComponent.parameters &&
         this.headerComponent.parameters[0]
       ) {
+        const filename =
+          this.headerComponent.parameters[0].document &&
+          this.headerComponent.parameters[0].document.filename
+        return filename || 'documento.pdf'
+      }
+      return 'documento.pdf'
+    },
+    documentLink() {
+      if (
+        this.hasDocumentHeader &&
+        this.headerComponent.parameters &&
+        this.headerComponent.parameters[0]
+      ) {
         return (
           (this.headerComponent.parameters[0].document &&
-            this.headerComponent.parameters[0].document.filename) ||
-          'Documento'
+            this.headerComponent.parameters[0].document.link) ||
+          ''
         )
       }
-      return 'Documento'
+      return ''
     },
 
     orderDetails() {
@@ -499,6 +514,11 @@ export default {
         case 'payment_link':
           window.open(button.data, '_blank', 'noopener,noreferrer')
           break
+      }
+    },
+    handleDocumentDownload() {
+      if (this.documentLink) {
+        window.open(this.documentLink, '_blank', 'noopener,noreferrer')
       }
     },
     copyToClipboard(text, buttonText) {
