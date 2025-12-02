@@ -144,12 +144,12 @@
             justify-content="space-between"
             align-items="center"
           >
-            <bds-typo variant="fs-14" bold="bold">{{ headerText }}</bds-typo>
+            <bds-typo class="typo" variant="fs-14" bold="bold">{{ headerText }}</bds-typo>
           </bds-grid>
 
           <!-- Body Text -->
           <bds-grid justify-content="space-between" align-items="center">
-            <bds-typo variant="fs-14" style="white-space: pre-line;">{{
+            <bds-typo class="typo" variant="fs-14" style="white-space: pre-line;">{{
               bodyText
             }}</bds-typo>
           </bds-grid>
@@ -160,7 +160,7 @@
             justify-content="space-between"
             align-items="center"
           >
-            <bds-typo variant="fs-12" class="color-footer-disable">{{
+            <bds-typo variant="fs-12" class="typo">{{
               footerText
             }}</bds-typo>
           </bds-grid>
