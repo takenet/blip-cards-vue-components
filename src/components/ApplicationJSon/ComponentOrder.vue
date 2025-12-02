@@ -24,6 +24,8 @@
           <bds-paper
             elevation="static"
             class="payment-component-order__paper-document"
+            @click="handleDocumentDownload"
+            style="cursor: pointer;"
           >
             <bds-grid
               padding="1"
@@ -140,11 +142,11 @@
             justify-content="space-between"
             align-items="center"
           >
-            <bds-typo variant="fs-14" bold="bold">{{ headerText }}</bds-typo>
+            <bds-typo class="typo" variant="fs-14" bold="bold">{{ headerText }}</bds-typo>
           </bds-grid>
 
           <bds-grid justify-content="space-between" align-items="center">
-            <bds-typo variant="fs-14" style="white-space: pre-line;">{{
+            <bds-typo class="typo" variant="fs-14" style="white-space: pre-line;">{{
               bodyText
             }}</bds-typo>
           </bds-grid>
@@ -154,7 +156,7 @@
             justify-content="space-between"
             align-items="center"
           >
-            <bds-typo variant="fs-12" class="color-footer-disable">{{
+            <bds-typo class="typo" variant="fs-12">{{
               footerText
             }}</bds-typo>
           </bds-grid>
@@ -260,13 +262,22 @@ export default {
       )
     },
     documentName() {
+      const filename =
+        this.document &&
+        this.document.interactive &&
+        this.document.interactive.header &&
+        this.document.interactive.header.document &&
+        this.document.interactive.header.document.filename
+      return filename || 'documento.pdf'
+    },
+    documentLink() {
       return (
         (this.document &&
           this.document.interactive &&
           this.document.interactive.header &&
           this.document.interactive.header.document &&
-          this.document.interactive.header.document.filename) ||
-        'Documento'
+          this.document.interactive.header.document.link) ||
+        ''
       )
     },
     orderItems() {
@@ -454,6 +465,11 @@ export default {
         case 'payment_link':
           window.open(button.data, '_blank', 'noopener,noreferrer')
           break
+      }
+    },
+    handleDocumentDownload() {
+      if (this.documentLink) {
+        window.open(this.documentLink, '_blank', 'noopener,noreferrer')
       }
     },
     copyToClipboard(text, buttonText) {

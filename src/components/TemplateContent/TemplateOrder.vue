@@ -24,6 +24,8 @@
           <bds-paper
             elevation="static"
             class="payment-template-order__paper-document"
+            @click="handleDocumentDownload"
+            style="cursor: pointer;"
           >
             <bds-grid
               padding="1"
@@ -144,12 +146,12 @@
             justify-content="space-between"
             align-items="center"
           >
-            <bds-typo variant="fs-14" bold="bold">{{ headerText }}</bds-typo>
+            <bds-typo class="typo" variant="fs-14" bold="bold">{{ headerText }}</bds-typo>
           </bds-grid>
 
           <!-- Body Text -->
           <bds-grid justify-content="space-between" align-items="center">
-            <bds-typo variant="fs-14" style="white-space: pre-line;">{{
+            <bds-typo class="typo" variant="fs-14" style="white-space: pre-line;">{{
               bodyText
             }}</bds-typo>
           </bds-grid>
@@ -160,7 +162,7 @@
             justify-content="space-between"
             align-items="center"
           >
-            <bds-typo variant="fs-12" class="color-footer-disable">{{
+            <bds-typo variant="fs-12" class="typo">{{
               footerText
             }}</bds-typo>
           </bds-grid>
@@ -316,13 +318,26 @@ export default {
         this.headerComponent.parameters &&
         this.headerComponent.parameters[0]
       ) {
+        const filename =
+          this.headerComponent.parameters[0].document &&
+          this.headerComponent.parameters[0].document.filename
+        return filename || 'documento.pdf'
+      }
+      return 'documento.pdf'
+    },
+    documentLink() {
+      if (
+        this.hasDocumentHeader &&
+        this.headerComponent.parameters &&
+        this.headerComponent.parameters[0]
+      ) {
         return (
           (this.headerComponent.parameters[0].document &&
-            this.headerComponent.parameters[0].document.filename) ||
-          'Documento'
+            this.headerComponent.parameters[0].document.link) ||
+          ''
         )
       }
-      return 'Documento'
+      return ''
     },
 
     orderDetails() {
@@ -499,6 +514,11 @@ export default {
         case 'payment_link':
           window.open(button.data, '_blank', 'noopener,noreferrer')
           break
+      }
+    },
+    handleDocumentDownload() {
+      if (this.documentLink) {
+        window.open(this.documentLink, '_blank', 'noopener,noreferrer')
       }
     },
     copyToClipboard(text, buttonText) {
