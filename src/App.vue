@@ -139,7 +139,7 @@
         <button class="button" @click="sendChatState">ENVIAR Chatstate</button>
         <button class="button" @click="sendTicket">ENVIAR Ticket</button>
         <button class="button" @click="sendActionStart">
-          ENVIAR Inicio do fluxo do action
+          ENVIAR Início do fluxo do action
         </button>
         <button class="button" @click="sendActionEnd">
           ENVIAR Fim do fluxo do action
