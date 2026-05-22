@@ -807,7 +807,7 @@ export default {
           customerIdentity: 'customer@msging.net',
           ownerIdentity: 'owner@msging.net',
           startDate: '2026-05-20T13:39:51.120Z',
-          subflowTitle: 'Empréstimo Pessoal'
+          subflowTitle: 'Solicitação Empréstimo'
         }
       })
       this.send()
@@ -826,7 +826,7 @@ export default {
           ownerIdentity: 'owner@msging.net',
           startDate: '2026-05-20T13:39:51.120Z',
           endDate: '2026-05-20T13:45:12.120Z',
-          subflowTitle: 'Empréstimo Pessoal'
+          subflowTitle: 'Solicitação Empréstimo'
         }
       })
       this.send()
