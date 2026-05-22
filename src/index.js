@@ -36,6 +36,7 @@ import RequestLocation from './components/RequestLocation'
 import Survey from './components/Survey'
 import ThreadSummary from './components/ThreadSummary.vue'
 import Ticket from './components/Ticket'
+import Action from './components/Action'
 import UnsuportedContent from './components/UnsuportedContent'
 import WebLink from './components/WebLink'
 
@@ -126,6 +127,7 @@ function install(Vue) {
   components.push(Vue.component(MenuList.name, MenuList))
   components.push(Vue.component(ThreadSummary.name, ThreadSummary))
   components.push(Vue.component(CopyAndPaste.name, CopyAndPaste))
+  components.push(Vue.component(Action.name, Action))
 
   // Reply components
   components.push(Vue.component(ReplyCard.name, ReplyCard))
@@ -211,5 +213,6 @@ export default {
   TemplateOrder,
   UnsuportedContent,
   BlipExternal,
+  Action,
   install
 }

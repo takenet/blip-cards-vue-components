@@ -377,6 +377,21 @@
           :on-cancel="cancel"
         />
 
+        <action-flow
+          v-else-if="document.type === 'application/vnd.iris.desk.flow-session+json'"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :date="date"
+          :on-save="saveCard"
+          :editable="editable"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :editing="isCardEditing"
+          :on-cancel="cancel"
+        />
+
         <blip-calls
           v-else-if="document.type === 'application/vnd.iris.calls.media+json'"
           class="blip-card"
