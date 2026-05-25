@@ -36,7 +36,7 @@ import RequestLocation from './components/RequestLocation'
 import Survey from './components/Survey'
 import ThreadSummary from './components/ThreadSummary.vue'
 import Ticket from './components/Ticket'
-import Action from './components/Action'
+import Action from './components/ActionFlow'
 import UnsuportedContent from './components/UnsuportedContent'
 import WebLink from './components/WebLink'
 
