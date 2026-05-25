@@ -950,6 +950,43 @@ export const commandExamples = [
     }
   },
   {
+    buttonLabel: 'Início do fluxo do action',
+    command: {
+      id: '1',
+      to: '104222@telegram.gw.msging.net',
+      type: 'application/vnd.iris.desk.flow-session+json',
+      content: {
+        sessionId: 'e7fc20dd-0568-4d4a-8fa6-228f4d8e3d89',
+        id: '7d6c2582-0e1b-4dc7-bf55-70ea80696d7e',
+        ticketId: '8b337066-b6e9-43a4-b951-3f961e48c127',
+        agentIdentity: 'agent@msging.net',
+        customerIdentity: 'customer@msging.net',
+        ownerIdentity: 'owner@msging.net',
+        startDate: '2026-05-20T13:39:51.120Z',
+        subflowTitle: 'Solicitação Empréstimo'
+      }
+    }
+  },
+  {
+    buttonLabel: 'Fim do fluxo do action',
+    command: {
+      id: '1',
+      to: '104222@telegram.gw.msging.net',
+      type: 'application/vnd.iris.desk.flow-session+json',
+      content: {
+        sessionId: 'e7fc20dd-0568-4d4a-8fa6-228f4d8e3d89',
+        id: '7d6c2582-0e1b-4dc7-bf55-70ea80696d7e',
+        ticketId: '8b337066-b6e9-43a4-b951-3f961e48c127',
+        agentIdentity: 'agent@msging.net',
+        customerIdentity: 'customer@msging.net',
+        ownerIdentity: 'owner@msging.net',
+        startDate: '2026-05-20T13:39:51.120Z',
+        endDate: '2026-05-20T13:45:12.120Z',
+        subflowTitle: 'Solicitação Empréstimo'
+      }
+    }
+  },
+  {
     buttonLabel: 'Unsupported Content',
     command: {
       id: '1',
