@@ -29,7 +29,7 @@
                   v-bind:key="index" 
                   @click="disableOptions ? null : select(item, index)" 
                   class="disable-selection" 
-                  :class="`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`">
+                  :class="[`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`, { 'has-option-image': item.imageUri }]">
                   <img v-if="item.imageUri" :src="item.imageUri" alt="option icon" class="option-image">
                   <div v-html="sanitize(item.previewText)"></div>
                 </li>
@@ -67,7 +67,7 @@
                   v-for="(item, index) in filteredOptions" 
                   v-bind:key="index" 
                   @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
-                  :class="`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`">
+                  :class="[`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`, { 'has-option-image': item.imageUri }]">
                   <img v-if="item.imageUri" :src="item.imageUri" alt="option icon" class="option-image">
                   <div v-html="sanitize(item.text)"></div>
                 </li>
@@ -694,7 +694,7 @@ export default {
   padding-bottom: 0px;
 }
 
-.select .fixed-options li {
+.select .fixed-options li.has-option-image {
   display: flex;
   align-items: center;
 }
