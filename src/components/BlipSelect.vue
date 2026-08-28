@@ -30,6 +30,7 @@
                   @click="disableOptions ? null : select(item, index)" 
                   class="disable-selection" 
                   :class="`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`">
+                  <img v-if="item.imageUri" :src="item.imageUri" alt="option icon" class="option-image">
                   <div v-html="sanitize(item.previewText)"></div>
                 </li>
               </ul>
@@ -61,6 +62,7 @@
                   v-bind:key="index" 
                   @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
                   :class="`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`">
+                  <img v-if="item.imageUri" :src="item.imageUri" alt="option icon" class="option-image">
                   <div v-html="sanitize(item.text)"></div>
                 </li>
               </ul>
@@ -618,6 +620,15 @@ export default {
   .blip-select-metadata {
     padding: 10px 0 0 0;
   }
+
+  .option-image {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 2px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
 }
 
 .select .options li {
@@ -654,6 +665,11 @@ export default {
 
 .select .fixed-options li:last-child {
   padding-bottom: 0px;
+}
+
+.select .fixed-options li {
+  display: flex;
+  align-items: center;
 }
 
 .remove-option-error {
