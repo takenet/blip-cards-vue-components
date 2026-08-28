@@ -56,9 +56,15 @@
           <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler"
             v-touch:swipe.right="swipeRightHandler">
             <div class="fixed-options disable-selection">
+              <input
+                v-if="filterable"
+                type="text"
+                class="blip-select-filter-input"
+                v-model="filterQuery"
+                :placeholder="filterPlaceholderMsg">
               <ul class="item-list">
                 <li 
-                  v-for="(item, index) in options" 
+                  v-for="(item, index) in filteredOptions" 
                   v-bind:key="index" 
                   @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
                   :class="`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`">
@@ -176,6 +182,14 @@ export default {
       type: Number,
       default: 34
     },
+    filterable: {
+      type: Boolean,
+      default: false
+    },
+    filterPlaceholderMsg: {
+      type: String,
+      default: 'Search'
+    },
     status: {
       type: String,
       default: ''
@@ -242,6 +256,7 @@ export default {
       slideIndex: undefined,
       endOfSlider: undefined,
       hasDeleteOptionError: false,
+      filterQuery: undefined,
       isFailedMessage
     }
   },
@@ -264,6 +279,17 @@ export default {
     },
     showNext: function () {
       return !this.endOfSlider
+    },
+    filteredOptions: function () {
+      if (!this.filterable || !this.filterQuery) {
+        return this.options
+      }
+      const query = this.filterQuery.toLowerCase()
+      return this.options.filter(function (item) {
+        const text = (item.text || '').toLowerCase()
+        const previewText = (item.previewText || '').toLowerCase()
+        return text.indexOf(query) !== -1 || previewText.indexOf(query) !== -1
+      })
     }
   },
   watch: {
@@ -285,6 +311,7 @@ export default {
       this.selectedOption = { value: {} }
       this.disableOptions = this.hideOptions
       this.text = this.document.text
+      this.filterQuery = ''
       this.options = this.document.options.map(function (x) {
         let value
         if (x.value) {
@@ -670,6 +697,17 @@ export default {
 .select .fixed-options li {
   display: flex;
   align-items: center;
+}
+
+.blip-select-filter-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  border: 1px solid $color-content-ghost;
+  border-radius: 8px;
+  font-size: 14px;
+  color: $color-content-default;
 }
 
 .remove-option-error {
