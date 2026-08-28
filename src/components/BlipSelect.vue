@@ -312,7 +312,7 @@ export default {
       this.disableOptions = this.hideOptions
       this.text = this.document.text
       this.filterQuery = ''
-      this.options = this.document.options.map(function (x) {
+      this.options = this.document.options.map((x) => {
         let value
         if (x.value) {
           if (x.type && x.type.includes('json')) {
