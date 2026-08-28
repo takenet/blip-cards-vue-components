@@ -161,7 +161,6 @@
 import { default as base } from '../mixins/baseComponent.js'
 import { linkify, guid, isFailedMessage } from '../utils/misc'
 import debounce from 'lodash/debounce'
-const optionSize = 34
 
 export default {
   name: 'blip-select',
@@ -170,6 +169,10 @@ export default {
     hideOptions: {
       type: Boolean,
       default: false
+    },
+    optionPreviewSize: {
+      type: Number,
+      default: 34
     },
     status: {
       type: String,
@@ -295,8 +298,8 @@ export default {
         let opts = {
           ...x,
           previewText:
-            x.text.length > optionSize
-              ? x.text.substring(0, optionSize) + '...'
+            x.text.length > this.optionPreviewSize
+              ? x.text.substring(0, this.optionPreviewSize) + '...'
               : x.text,
           value
         }
@@ -401,8 +404,8 @@ export default {
 
       this.addOption = false
       this.selectedOption.previewText =
-        this.selectedOption.text.length > optionSize
-          ? this.selectedOption.text.substring(0, optionSize) + '...'
+        this.selectedOption.text.length > this.optionPreviewSize
+          ? this.selectedOption.text.substring(0, this.optionPreviewSize) + '...'
           : this.selectedOption.text
       if (!this.showPayload) {
         this.selectedOption.value = this.selectedOption.type = null
