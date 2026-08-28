@@ -61,6 +61,7 @@
                 type="text"
                 class="blip-select-filter-input"
                 v-model="filterQuery"
+                :disabled="disableOptions && selectedIndex !== undefined"
                 :placeholder="filterPlaceholderMsg">
               <ul class="item-list">
                 <li 
