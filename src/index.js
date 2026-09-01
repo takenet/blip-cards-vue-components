@@ -29,6 +29,7 @@ import InteractiveButton from './components/InteractiveButton'
 import LimeInput from './components/LimeInput'
 import Location from './components/Location'
 import MediaLink from './components/MediaLink'
+import NativeForm from './components/NativeForm'
 import PlainText from './components/PlainText'
 import DeletedContent from './components/DeletedContent'
 import Redirect from './components/Redirect'
@@ -114,6 +115,7 @@ function install(Vue) {
   components.push(Vue.component(WebLink.name, WebLink))
   components.push(Vue.component(Location.name, Location))
   components.push(Vue.component(RequestLocation.name, RequestLocation))
+  components.push(Vue.component(NativeForm.name, NativeForm))
   components.push(Vue.component(LimeInput.name, LimeInput))
   components.push(Vue.component(UnsuportedContent.name, UnsuportedContent))
   components.push(Vue.component(ChatState.name, ChatState))
@@ -209,6 +211,7 @@ export default {
   WebLink,
   Location,
   RequestLocation,
+  NativeForm,
   TemplateContent,
   TemplateOrder,
   UnsuportedContent,
