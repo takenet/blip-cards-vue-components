@@ -150,6 +150,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :option-preview-size="document.content.optionPreviewSize"
         />
 
         <collection
@@ -208,6 +209,8 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :readonly="readonly"
+          :option-preview-size="document.content.optionPreviewSize"
+          :filterable="document.content.filterable"
         />
 
         <web-link

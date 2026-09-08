@@ -22,6 +22,7 @@
 - [test/unit/specs/](../../test/unit/specs) contém apenas `Hello.spec.js`, um spec de exemplo/boilerplate do template original do `vue-cli`. **Não existe cobertura de teste real para os componentes de card** (`BlipCard`, `BlipSelect`, `MediaLink`, etc.).
 - Runner de browser é `PhantomJS`, projeto descontinuado — rodar a suíte hoje pode exigir ajuste de dependências/ambiente.
 - Conclusão prática: mudanças em componentes de card não têm rede de segurança automatizada; validar manualmente (via `npm run dev` ou consumindo o build local a partir de `blip-chat`) é a forma real de verificação hoje.
+- **Técnica validada (2026-09-08)**: consumir este pacote a partir de `blip-chat` via symlink em `node_modules/blip-cards`, e injetar mensagens de teste diretamente no array `messages` de `ThreadMessages` (em vez de precisar de um fluxo de bot real) para forçar a renderização de um `document.type`/`content` específico. Foi assim que dois bugs reais de consumo (crash em `NativeForm.vue`, props não repassadas em `BlipCard.vue`) foram descobertos nesta sessão — bugs que testes isolados/manuais anteriores, sem passar pelo roteamento real de `BlipCard.vue` num host, não haviam pego. Ver [decisions.md](./decisions.md) e [roadmap.md](./roadmap.md).
 
 ## Build de produção — detalhes
 

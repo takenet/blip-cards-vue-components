@@ -11,6 +11,8 @@
 5. Configura `vee-validate` (validators customizados `json`/`mime`, locale `en`/`pt_BR` detectado por `navigator.language`).
 6. Registra `vue2-touch-events`.
 
+> **Risco arquitetural conhecido (`vee-validate@2.2.15`, confirmado 2026-09-08)**: por ser registrado globalmente via `Vue.use(VeeValidate, {...})`, o `beforeCreate` interno do VeeValidate injeta incondicionalmente as computed properties `fields` e `errors` em **todo** componente Vue da árvore do host — sobrescrevendo qualquer `computed.fields`/`computed.errors` que um componente já declare com o mesmo nome, a menos que o componente declare `$__veeInject: false` no options object (mecanismo usado internamente por `ValidationProvider`, não documentado publicamente na API pública da lib). Isso já causou um crash real em produção (`NativeForm.vue`, ver [decisions.md](./decisions.md)). **Regra permanente**: nenhum componente deste repositório deve declarar uma computed chamada `fields` ou `errors` sem `$__veeInject: false`.
+
 Consumidores chamam isso como `blipCards.install(Vue)` ou `Vue.use(blipCards)` (README).
 
 ## Roteamento de card: `BlipCard.vue`
@@ -66,7 +68,11 @@ fallback genérico `lime-input` (ordem de `v-else-if` importa, ver acima).
 Não requer nenhum schema/validação no backend do Bot Builder
 (`builder-application`): o conteúdo de `SendMessage` é armazenado como JSON
 opaco sem validação server-side — ver [decisions.md](./decisions.md) para
-detalhes e para o schema completo do payload.
+detalhes e para o schema completo do payload. A computed com a lista de
+campos do formulário chama-se **`formFields`** (não `fields`) e o componente
+declara `$__veeInject: false` no options object — nome `fields` colide com
+a injeção global do VeeValidate descrita acima e já causou um crash real em
+produção (corrigido 2026-09-08, ver [decisions.md](./decisions.md)).
 
 ### `BlipSelect.vue` / `DocumentSelect.vue` — props opcionais adicionadas (discovery Energisa)
 
@@ -77,7 +83,12 @@ extensão opcionais, todos com comportamento anterior preservado por default
 (ver [decisions.md](./decisions.md) para motivação e commits):
 
 - **`optionPreviewSize`** (Number, default `34`): tamanho máximo do preview
-  truncado de cada opção.
+  truncado de cada opção. **Só se aplica ao modo carrossel**
+  (`document.scope === 'immediate'`, via `item.previewText`) — no modo lista
+  (`scope !== 'immediate'`) o template usa `item.text` diretamente, sem
+  truncamento, por design (mais espaço horizontal disponível em lista
+  vertical). Não é um bug a corrigir se um consumidor esperar truncamento em
+  modo lista.
 - **`item.imageUri`** (campo opcional dentro de cada item de
   `document.options`, não uma prop do componente): quando presente, renderiza
   um ícone/imagem antes do texto da opção. O CSS de layout correspondente é
@@ -86,6 +97,18 @@ extensão opcionais, todos com comportamento anterior preservado por default
   habilita um campo de busca client-side sobre as opções, restrito ao modo
   lista (`document.scope !== 'immediate'`); não existe no carrossel
   `immediate`.
+
+> **Ponto de atenção (corrigido 2026-09-08)**: essas duas props só têm
+> efeito se `BlipCard.vue` de fato as repassar nos blocos `<blip-select>`/
+> `<document-select>` do seu template (`:option-preview-size="document.content.optionPreviewSize"`,
+> `:filterable="document.content.filterable"` — este último só em
+> `<blip-select>`, `DocumentSelect.vue` não declara `filterable`). Já houve
+> uma regressão real em que `BlipCard.vue` declarava esses bindings
+> incompletos/ausentes, fazendo com que a configuração fosse sempre
+> ignorada no caminho de consumo real (ver [decisions.md](./decisions.md)).
+> Ao adicionar props novas em `BlipSelect.vue`/`DocumentSelect.vue`,
+> confirmar sempre que `BlipCard.vue` também as propaga — a prop existir no
+> componente filho não é suficiente.
 
 ## Agrupamento: `BlipGroupCard.vue`
 
