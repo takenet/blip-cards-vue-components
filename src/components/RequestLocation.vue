@@ -28,7 +28,7 @@
               <span>{{ previewDocument.content }}</span>
             </div>
           </transition>
-          <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
+          <a style="display: block;" v-if="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
         </div>
       </div>
       <blip-card-reply

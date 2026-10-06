@@ -35,7 +35,7 @@
             <transition name="slide-fade">
               <div v-show="showContent" v-html="previewDocument.content"></div>
             </transition>
-            <a style="display: block;" v-show="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
+            <a style="display: block;" v-if="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
           </div>
         </div>
 
@@ -136,7 +136,7 @@ export default {
   },
   computed: {
     previewDocument: function() {
-      const sanitizedDocument = this.sanitize(this.document)
+      const sanitizedDocument = this.sanitize(this.document, { disallowedTagsMode: 'escape' })
 
       return {
         hasPreview: sanitizedDocument.length > this.length,
