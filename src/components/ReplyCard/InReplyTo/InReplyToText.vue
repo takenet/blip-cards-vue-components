@@ -15,7 +15,8 @@
         margin="false"
         class="message-replied-text typo"
         :class="{ 'single': !hasDescription, 'title': hasDescription }"
-      >{{ getText().text }}</bds-typo>
+        v-html="sanitize(getText().text, { disallowedTagsMode: 'escape' })"
+      />
 
       <bds-typo
         v-if="hasDescription"
