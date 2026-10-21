@@ -437,7 +437,7 @@ export default {
               type: TemplateOrderPaymentType.PAYMENT_LINK,
               text: 'Abrir Link de Pagamento',
               icon: TemplateOrderIcon.EXTERNAL_FILE,
-              data: setting.payment_link.url
+              data: setting.payment_link.uri || setting.payment_link.url
             })
             break
         }
@@ -512,7 +512,9 @@ export default {
           this.copyToClipboard(button.data, button.text)
           break
         case 'payment_link':
-          window.open(button.data, '_blank', 'noopener,noreferrer')
+          if (button.data) {
+            window.open(button.data, '_blank', 'noopener,noreferrer')
+          }
           break
       }
     },

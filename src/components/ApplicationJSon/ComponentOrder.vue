@@ -20,7 +20,7 @@
         ></bds-button-icon>
 
         <!-- Header Section -->
-        <bds-grid v-if="hasDocumentHeader" direction="column" padding="x-2">
+        <bds-grid v-if="!isSimplified && hasDocumentHeader" direction="column" padding="x-2">
           <bds-paper
             elevation="static"
             class="payment-component-order__paper-document"
@@ -55,11 +55,20 @@
             class="mt-card__payment-block__paper-content"
           >
             <bds-grid padding="2" direction="column">
-              <bds-typo variant="fs-10">{{ orderTitle }}</bds-typo>
-              <div class="divider" />
+              <template v-if="!isSimplified">
+                <bds-typo variant="fs-10">{{ orderTitle }}</bds-typo>
+                <div class="divider" />
+              </template>
+
+              <bds-grid v-if="isSimplified" direction="column" gap="1">
+                <bds-typo variant="fs-10" class="content-color-ghost">Total</bds-typo>
+                <bds-typo variant="fs-24" bold="bold">{{
+                  formattedTotal
+                }}</bds-typo>
+              </bds-grid>
 
               <bds-grid
-                v-if="itemsDisplay.single"
+                v-else-if="itemsDisplay.single"
                 justify-content="flex-start"
                 align-items="center"
                 direction="row"
@@ -124,9 +133,13 @@
                 </div>
               </bds-grid>
 
-              <div class="divider" />
+              <div v-if="!isSimplified" class="divider" />
 
-              <bds-grid justify-content="space-between" align-items="center">
+              <bds-grid
+                v-if="!isSimplified"
+                justify-content="space-between"
+                align-items="center"
+              >
                 <bds-typo variant="fs-12">Total</bds-typo>
                 <bds-typo variant="fs-12" bold="bold">{{
                   formattedTotal
@@ -138,7 +151,7 @@
         <bds-grid direction="column" gap="1" padding="x-2">
           <!-- Header Text -->
           <bds-grid
-            v-if="hasTextHeader"
+            v-if="!isSimplified && hasTextHeader"
             justify-content="space-between"
             align-items="center"
           >
@@ -227,6 +240,15 @@ export default {
     }
   },
   computed: {
+    // Sem o objeto `order` a Meta trata como mensagem simplificada (sem itens e sem header)
+    isSimplified() {
+      const params =
+        this.document &&
+        this.document.interactive &&
+        this.document.interactive.action &&
+        this.document.interactive.action.parameters
+      return !(params && params.order)
+    },
     hasTextHeader() {
       return (
         this.document &&
@@ -397,7 +419,7 @@ export default {
               type: ComponentOrderPaymentType.PAYMENT_LINK,
               text: 'Abrir Link de Pagamento',
               icon: ComponentOrderIcon.EXTERNAL_FILE,
-              data: setting.payment_link.url
+              data: setting.payment_link.uri || setting.payment_link.url
             })
             break
         }
@@ -463,7 +485,9 @@ export default {
           this.copyToClipboard(button.data, button.text)
           break
         case 'payment_link':
-          window.open(button.data, '_blank', 'noopener,noreferrer')
+          if (button.data) {
+            window.open(button.data, '_blank', 'noopener,noreferrer')
+          }
           break
       }
     },
