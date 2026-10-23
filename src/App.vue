@@ -232,6 +232,9 @@
         <button class="button" @click="sendOrderDetailsDocument">
           ENVIAR componente order DOCUMENTO
         </button>
+        <button class="button" @click="sendOrderDetailsSimplified">
+          ENVIAR componente order RESUMIDO
+        </button>
         <button class="button" @click="sendTemplateOrderText">
           ENVIAR Template order Texto
         </button>
@@ -2725,6 +2728,62 @@ export default {
                     type: 'payment_link',
                     payment_link: {
                       url: 'https://pagamento.blip.ai/checkout/662311'
+                    }
+                  },
+                  {
+                    type: 'boleto',
+                    boleto: {
+                      digitable_line:
+                        '00190500954014481606906809350314337370000000100'
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      })
+      this.send()
+    },
+    sendOrderDetailsSimplified: function() {
+      this.json = JSON.stringify({
+        id: '16b0d902-7487-4c5c-b49c-8103558621e8',
+        direction: 'sent',
+        type: 'application/json',
+        content: {
+          type: 'interactive',
+          interactive: {
+            type: 'order_details',
+            body: {
+              text:
+                'Finalize seu pagamento!\nPague via Pix copia e cola usando o app do seu banco.'
+            },
+            footer: {
+              text: 'Blip Payments'
+            },
+            action: {
+              name: 'review_and_pay',
+              parameters: {
+                reference_id: '241943',
+                type: 'digital-goods',
+                payment_type: 'br',
+                currency: 'BRL',
+                total_amount: {
+                  value: 50000,
+                  offset: 100
+                },
+                payment_settings: [
+                  {
+                    type: 'pix_dynamic_code',
+                    pix_dynamic_code: {
+                      code:
+                        '00020126580014BR.GOV.BCB.PIX0136dda1eb4e-744f-4453-8074-a0ab5ffed3d85204000053039865802BR5921User Teste6009SAO PAULO62140510sF9EEKoAp56304AB67'
+                    }
+                  },
+                  {
+                    type: 'payment_link',
+                    payment_link: {
+                      uri: 'https://pagamento.blip.ai/checkout/662312'
                     }
                   },
                   {
