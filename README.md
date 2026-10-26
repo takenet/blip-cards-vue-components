@@ -135,3 +135,4 @@ e.g.: 2.11.x
 
 
 8 - After generate your version, before merge into the master, undo the modification on the **package.json** file, because the semantic release branch configuration can not be send to the master branch.
+
