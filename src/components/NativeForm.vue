@@ -15,7 +15,7 @@
         </div>
 
         <form v-if="!submitted" novalidate ref="form" v-on:submit.prevent="submit" class="native-form-fields">
-          <div class="form-group" v-for="field in fields" :key="field.id">
+          <div class="form-group" v-for="field in formFields" :key="field.id">
             <label :for="fieldInputId(field.id)" v-html="sanitize(field.label)"></label>
 
             <select v-if="field.type === 'select'"
@@ -43,7 +43,7 @@
         </form>
 
         <div v-else class="native-form-summary">
-          <span v-for="field in fields" :key="field.id" class="native-form-summary-item">
+          <span v-for="field in formFields" :key="field.id" class="native-form-summary-item">
             {{ field.label }}: {{ formattedFieldValue(field) }}
           </span>
         </div>
@@ -80,6 +80,7 @@ import { default as base } from '../mixins/baseComponent.js'
 
 export default {
   name: 'native-form',
+  $__veeInject: false,
   mixins: [base],
   props: {
     hideOptions: {
@@ -111,7 +112,7 @@ export default {
     }
   },
   computed: {
-    fields: function() {
+    formFields: function() {
       return (this.document.validation && this.document.validation.fields) || []
     },
     submitLabelText: function() {
@@ -128,7 +129,7 @@ export default {
   },
   methods: {
     init: function() {
-      this.formValues = this.fields.reduce((values, field) => {
+      this.formValues = this.formFields.reduce((values, field) => {
         values[field.id] = ''
         return values
       }, {})
@@ -163,7 +164,7 @@ export default {
       this.submitted = true
 
       if (this.onSelected) {
-        const summary = this.fields
+        const summary = this.formFields
           .map((field) => `${field.label}: ${this.formattedFieldValue(field)}`)
           .join(', ')
 
