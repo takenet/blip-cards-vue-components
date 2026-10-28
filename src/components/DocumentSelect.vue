@@ -328,13 +328,14 @@ import mime from 'mime-types'
 const optionSize = 34
 
 let getOptionContent = function(item, maxLength = optionSize) {
+  const limit = Number.isInteger(maxLength) && maxLength > 0 ? maxLength : optionSize
   let text =
     item.label.value.text ||
     item.label.value.title ||
     item.label.value.uri ||
     item.label.value
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + '...'
+  if (text.length > limit) {
+    return text.substring(0, limit) + '...'
   } else {
     return text
   }

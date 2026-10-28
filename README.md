@@ -51,8 +51,8 @@ Besides the standard Lime fields, the select content accepts these optional fiel
 
 | Field | Description | Type |
 |----------|:-------------:|------:|
-| content.optionPreviewSize | Maximum number of characters shown for each option before it is truncated with `...`. Applies to quick replies (`scope: "immediate"`) and to `application/vnd.lime.document-select+json` options; list menus always show the full text. Default: 34 | Number |
-| content.options[].imageUri | URL of a small image (20x20px) rendered before the option text, in both quick reply and list menus. Options without it render as before | String |
+| content.optionPreviewSize | Maximum number of characters shown for each option before it is truncated with `...`. Applies to quick replies (`scope: "immediate"`) and to `application/vnd.lime.document-select+json` options; list menus always show the full text. Missing or invalid values (null, 0, negative, non-integer) fall back to the default. Default: 34 | Number |
+| content.options[].imageUri | URL of a small image (20x20px) rendered before the option text, in both quick reply and list menus. Options without it, or whose image fails to load, render as text only | String |
 
 ```json
 {

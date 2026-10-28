@@ -257,6 +257,11 @@ export default {
     })
   },
   computed: {
+    effectivePreviewSize: function () {
+      return Number.isInteger(this.optionPreviewSize) && this.optionPreviewSize > 0
+        ? this.optionPreviewSize
+        : 34
+    },
     computedText: function () {
       return linkify(this.document.text)
     },
@@ -302,8 +307,8 @@ export default {
         let opts = {
           ...x,
           previewText:
-            x.text.length > this.optionPreviewSize
-              ? x.text.substring(0, this.optionPreviewSize) + '...'
+            x.text.length > this.effectivePreviewSize
+              ? x.text.substring(0, this.effectivePreviewSize) + '...'
               : x.text,
           value
         }
@@ -414,8 +419,8 @@ export default {
 
       this.addOption = false
       this.selectedOption.previewText =
-        this.selectedOption.text.length > this.optionPreviewSize
-          ? this.selectedOption.text.substring(0, this.optionPreviewSize) + '...'
+        this.selectedOption.text.length > this.effectivePreviewSize
+          ? this.selectedOption.text.substring(0, this.effectivePreviewSize) + '...'
           : this.selectedOption.text
       if (!this.showPayload) {
         this.selectedOption.value = this.selectedOption.type = null
