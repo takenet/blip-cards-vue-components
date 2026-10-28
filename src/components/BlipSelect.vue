@@ -29,8 +29,8 @@
                   v-bind:key="index" 
                   @click="disableOptions ? null : select(item, index)" 
                   class="disable-selection" 
-                  :class="[`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`, { 'has-option-image': item.imageUri }]">
-                  <img v-if="item.imageUri" :src="item.imageUri" alt="option icon" class="option-image">
+                  :class="[`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionImage(item, index) }]">
+                  <img v-if="hasOptionImage(item, index)" :src="item.imageUri" alt="" class="option-image" @error="hideOptionImage(index)">
                   <div v-html="sanitize(item.previewText)"></div>
                 </li>
               </ul>
@@ -61,8 +61,8 @@
                   v-for="(item, index) in options" 
                   v-bind:key="index" 
                   @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
-                  :class="[`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`, { 'has-option-image': item.imageUri }]">
-                  <img v-if="item.imageUri" :src="item.imageUri" alt="option icon" class="option-image">
+                  :class="[`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionImage(item, index) }]">
+                  <img v-if="hasOptionImage(item, index)" :src="item.imageUri" alt="" class="option-image" @error="hideOptionImage(index)">
                   <div v-html="sanitize(item.text)"></div>
                 </li>
               </ul>
@@ -238,6 +238,7 @@ export default {
       selectedIndex: undefined,
       text: undefined,
       options: undefined,
+      failedOptionImages: {},
       id: undefined,
       slideIndex: undefined,
       endOfSlider: undefined,
@@ -285,6 +286,7 @@ export default {
       this.selectedOption = { value: {} }
       this.disableOptions = this.hideOptions
       this.text = this.document.text
+      this.failedOptionImages = {}
       this.options = this.document.options.map((x) => {
         let value
         if (x.value) {
@@ -308,6 +310,12 @@ export default {
 
         return opts
       })
+    },
+    hasOptionImage: function (item, index) {
+      return !!item.imageUri && !this.failedOptionImages[index]
+    },
+    hideOptionImage: function (index) {
+      this.$set(this.failedOptionImages, index, true)
     },
     plusSlides: function (n) {
       this.showSlides((this.slideIndex += n))
@@ -635,6 +643,7 @@ export default {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  vertical-align: middle;
   height: 40px;
   background-color: $color-system;
   border: 1px solid $color-content-ghost;
