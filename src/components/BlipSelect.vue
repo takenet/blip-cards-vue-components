@@ -29,7 +29,7 @@
                   v-bind:key="index" 
                   @click="disableOptions ? null : select(item, index)" 
                   class="disable-selection" 
-                  :class="`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`">
+                  :class="[`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`, { 'has-option-image': item.imageUri }]">
                   <img v-if="item.imageUri" :src="item.imageUri" alt="option icon" class="option-image">
                   <div v-html="sanitize(item.previewText)"></div>
                 </li>
@@ -61,7 +61,7 @@
                   v-for="(item, index) in options" 
                   v-bind:key="index" 
                   @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
-                  :class="`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`">
+                  :class="[`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`, { 'has-option-image': item.imageUri }]">
                   <img v-if="item.imageUri" :src="item.imageUri" alt="option icon" class="option-image">
                   <div v-html="sanitize(item.text)"></div>
                 </li>
@@ -285,7 +285,7 @@ export default {
       this.selectedOption = { value: {} }
       this.disableOptions = this.hideOptions
       this.text = this.document.text
-      this.options = this.document.options.map(function (x) {
+      this.options = this.document.options.map((x) => {
         let value
         if (x.value) {
           if (x.type && x.type.includes('json')) {
@@ -667,9 +667,14 @@ export default {
   padding-bottom: 0px;
 }
 
-.select .fixed-options li {
+.select .fixed-options li.has-option-image {
   display: flex;
   align-items: center;
+
+  > div {
+    flex: 1;
+    text-align: left;
+  }
 }
 
 .remove-option-error {
