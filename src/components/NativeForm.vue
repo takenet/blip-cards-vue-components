@@ -15,31 +15,33 @@
         </div>
 
         <form v-if="!submitted" novalidate ref="form" v-on:submit.prevent="submit" class="native-form-fields">
-          <div class="form-group" v-for="field in formFields" :key="field.id">
-            <label :for="fieldInputId(field.id)" v-html="sanitize(field.label)"></label>
+          <fieldset :disabled="hideOptions" class="native-form-fieldset">
+            <div class="form-group" v-for="field in formFields" :key="field.id">
+              <label :for="fieldInputId(field.id)" v-html="sanitize(field.label)"></label>
 
-            <select v-if="field.type === 'select'"
-              :id="fieldInputId(field.id)"
-              :required="field.required"
-              v-model="formValues[field.id]"
-              class="form-control"
-            >
-              <option value="" disabled>{{ field.label }}</option>
-              <option v-for="option in field.options" :key="option.value" :value="option.value">
-                {{ option.label }}
-              </option>
-            </select>
+              <select v-if="field.type === 'select'"
+                :id="fieldInputId(field.id)"
+                :required="field.required"
+                v-model="formValues[field.id]"
+                class="form-control"
+              >
+                <option value="" disabled>{{ field.label }}</option>
+                <option v-for="option in field.options" :key="option.value" :value="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
 
-            <input v-else
-              :id="fieldInputId(field.id)"
-              :type="inputType(field.type)"
-              :required="field.required"
-              v-model="formValues[field.id]"
-              class="form-control"
-            >
-          </div>
+              <input v-else
+                :id="fieldInputId(field.id)"
+                :type="inputType(field.type)"
+                :required="field.required"
+                v-model="formValues[field.id]"
+                class="form-control"
+              >
+            </div>
 
-          <button type="submit" class="native-form-submit">{{ submitLabelText }}</button>
+            <button type="submit" class="native-form-submit">{{ submitLabelText }}</button>
+          </fieldset>
         </form>
 
         <div v-else class="native-form-summary">
@@ -142,17 +144,26 @@ export default {
       return `native-form-${this.instanceId}-${fieldId}`
     },
     formattedFieldValue: function(field) {
+      const value = this.formValues[field.id]
+
+      if (field.type === 'date') {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || '')
+        return match
+          ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])).toLocaleDateString()
+          : value
+      }
+
       if (field.type !== 'select') {
-        return this.formValues[field.id]
+        return value
       }
 
       const selectedOption = (field.options || []).find(
-        (option) => option.value === this.formValues[field.id]
+        (option) => option.value === value
       )
-      return selectedOption ? selectedOption.label : this.formValues[field.id]
+      return selectedOption ? selectedOption.label : value
     },
     submit: function() {
-      if (this.submitted || !this.$refs.form) {
+      if (this.submitted || this.hideOptions || !this.$refs.form) {
         return
       }
 
@@ -188,6 +199,21 @@ export default {
   }
 
   .native-form-fields {
+    .native-form-fieldset {
+      border: none;
+      margin: 0;
+      padding: 0;
+      min-width: 0;
+    }
+
+    .native-form-fieldset:disabled {
+      opacity: 0.6;
+
+      .native-form-submit {
+        cursor: not-allowed;
+      }
+    }
+
     .form-group {
       margin-bottom: 10px;
 
