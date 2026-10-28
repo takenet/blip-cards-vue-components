@@ -88,10 +88,11 @@ A structured form (several fields answered in a single interaction) is rendered 
 }
 ```
 
-- Supported field types: `text`, `number`, `date` and `select` (`options` is used only by `select`). `submitLabel` is optional.
+- Supported field types: `text`, `number`, `date` and `select` (`options` is used only by `select`). Unknown types are rendered as `text`. `submitLabel` is optional (defaults to `Enviar`). Labels are rendered as plain text.
+- Fields without an `id`, and `select` fields without `options`, are ignored. Field `id`s must be unique.
 - Required fields are validated by the browser before sending; once sent, the card shows a read-only summary.
-- `on-selected` is called with a `"label: value"` summary text (dates formatted with the browser locale) and `{ type: 'application/json', content: { [field.id]: value } }` (dates as `YYYY-MM-DD`).
-- When `hide-options` is true (the form is no longer the latest bot message), the fields and the submit button are disabled.
+- `on-selected` is called with a `"label: value"` summary text (dates formatted with the browser locale) and `{ type: 'application/json', content: { [field.id]: value } }`. Values are always strings (dates as `YYYY-MM-DD`, `select` as the option `value`); empty optional fields are sent as `""`.
+- When `hide-options` is true, the fields and the submit button are disabled. Hosts such as blip-chat set it on every card that is not the latest message of the conversation.
 
 ## Contributions
 

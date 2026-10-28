@@ -17,7 +17,7 @@
         <form v-if="!submitted" novalidate ref="form" v-on:submit.prevent="submit" class="native-form-fields">
           <fieldset :disabled="hideOptions" class="native-form-fieldset">
             <div class="form-group" v-for="field in formFields" :key="field.id">
-              <label :for="fieldInputId(field.id)" v-html="sanitize(field.label)"></label>
+              <label :for="fieldInputId(field.id)">{{ field.label }}</label>
 
               <select v-if="field.type === 'select'"
                 :id="fieldInputId(field.id)"
@@ -115,7 +115,10 @@ export default {
   },
   computed: {
     formFields: function() {
-      return (this.document.validation && this.document.validation.fields) || []
+      const fields = (this.document.validation && this.document.validation.fields) || []
+      // Skips authoring mistakes that would otherwise block the submission or mix values up
+      return fields.filter((field) => field && field.id &&
+        (field.type !== 'select' || (Array.isArray(field.options) && field.options.length > 0)))
     },
     submitLabelText: function() {
       return (this.document.validation && this.document.validation.submitLabel) || this.submitLabelMsg
