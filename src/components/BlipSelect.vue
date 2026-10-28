@@ -63,8 +63,8 @@
           <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler"
             v-touch:swipe.right="swipeRightHandler">
             <div class="fixed-options disable-selection">
-              <ul class="item-list">
-                <template v-for="(item, index) in options">
+              <ul class="item-list" :class="{ 'is-collapsed': hiddenOptionsCount > 0 }">
+                <template v-for="(item, index) in displayedOptions">
                   <li v-if="startsSection(index)" v-bind:key="'section-' + index" class="option-section">{{ item.section }}</li>
                   <li 
                     v-bind:key="index" 
@@ -82,6 +82,11 @@
                   </li>
                 </template>
               </ul>
+              <button
+                v-if="hiddenOptionsCount > 0"
+                type="button"
+                class="option-show-more"
+                @click.stop="showAllOptions = true">{{ showMoreMsg }} ({{ hiddenOptionsCount }})</button>
             </div>
           </div>
       </div>
@@ -242,6 +247,10 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    showMoreMsg: {
+      type: String,
+      default: 'Show more'
     }
   },
   data: function () {
@@ -255,6 +264,7 @@ export default {
       text: undefined,
       options: undefined,
       failedOptionImages: {},
+      showAllOptions: false,
       id: undefined,
       slideIndex: undefined,
       endOfSlider: undefined,
@@ -286,6 +296,23 @@ export default {
     },
     showNext: function () {
       return !this.endOfSlider
+    },
+    visibleOptionsLimit: function () {
+      const limit = this.document.visibleOptions
+      return Number.isInteger(limit) && limit > 0 ? limit : null
+    },
+    displayedOptions: function () {
+      const options = this.options || []
+      if (this.showAllOptions || !this.visibleOptionsLimit) {
+        return options
+      }
+      return options.slice(0, this.visibleOptionsLimit)
+    },
+    hiddenOptionsCount: function () {
+      if (this.disableOptions && this.selectedIndex !== undefined) {
+        return 0
+      }
+      return (this.options || []).length - this.displayedOptions.length
     }
   },
   watch: {
@@ -308,6 +335,7 @@ export default {
       this.disableOptions = this.hideOptions
       this.text = this.document.text
       this.failedOptionImages = {}
+      this.showAllOptions = false
       this.options = this.document.options.map((x) => {
         let value
         if (x.value) {
@@ -747,7 +775,7 @@ export default {
 
 .select .fixed-options li.option-section {
   display: block;
-  padding: 12px 0 4px;
+  padding: 12px 10px 4px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.8px;
@@ -767,7 +795,6 @@ export default {
   .option-content {
     flex: 1;
     width: auto;
-    max-width: 260px;
     text-align: left;
   }
 
@@ -782,6 +809,26 @@ export default {
     width: auto;
     text-align: left;
   }
+}
+
+.select .fixed-options .item-list.is-collapsed li:last-child {
+  padding-bottom: 10px;
+}
+
+.select .fixed-options .option-show-more {
+  display: block;
+  width: calc(100% + 32px);
+  margin: 0 -16px;
+  padding: 12px 10px 0;
+  border: 0;
+  border-top: 0.5px solid $color-content-ghost;
+  background: transparent;
+  color: $color-primary;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
 }
 
 .select .options li.has-rich-option {

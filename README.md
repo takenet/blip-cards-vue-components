@@ -56,6 +56,7 @@ Besides the standard Lime fields, the select content accepts these optional fiel
 | content.options[].description | Subtitle shown below the option text (plain text, never HTML). Quick replies grow into a small card and lists show a second line | String |
 | content.options[].badge | Short label (e.g. "New", "24h") shown as a pill next to the option text. Plain text, never HTML | String |
 | content.options[].section | Section name for list menus. A header is shown when the value changes between consecutive options, so options of the same section must be sent together. Ignored in quick replies | String |
+| content.visibleOptions | List menus only. Number of options shown before the list is collapsed behind a "Show more (N)" button (label taken from `translations.showMore`). Expanding shows all options. Missing or invalid values (null, 0, negative, non-integer) or values greater than or equal to the number of options show the full list. Ignored in quick replies | Number |
 
 ```json
 {
@@ -67,6 +68,23 @@ Besides the standard Lime fields, the select content accepts these optional fiel
     "options": [
       { "text": "Segunda via da conta", "description": "Fatura de julho", "badge": "Rapido", "imageUri": "https://example.com/bill.png" },
       { "text": "Falta de energia", "description": "Registrar ocorrencia", "badge": "24h", "imageUri": "https://example.com/power.png" }
+    ]
+  }
+}
+```
+
+List menu with sections, collapsed after 2 options:
+
+```json
+{
+  "type": "application/vnd.lime.select+json",
+  "content": {
+    "text": "Escolha o servico desejado:",
+    "visibleOptions": 2,
+    "options": [
+      { "order": 1, "section": "Mais usados", "text": "Segunda via", "description": "Fatura de julho", "badge": "Rapido" },
+      { "order": 2, "section": "Mais usados", "text": "Falta de energia", "badge": "24h" },
+      { "order": 3, "section": "Outros", "text": "Falar com atendente" }
     ]
   }
 }

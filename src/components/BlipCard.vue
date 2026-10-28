@@ -210,6 +210,7 @@
           :on-cancel="cancel"
           :readonly="readonly"
           :option-preview-size="document.content.optionPreviewSize"
+          :show-more-msg="translations.showMore"
         />
 
         <web-link
