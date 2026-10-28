@@ -65,7 +65,36 @@ Is possible to group your cards using any rule you want. For that use the <blip-
 | hide-options | Used only only in the quick reply. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
 
+## Native Form Card
+A structured form (several fields answered in a single interaction) is rendered when the bot sends an `application/vnd.lime.input+json` message whose `validation.type` is `application/vnd.lime.form+json`. No backend change is needed: the content is authored in the bot flow.
+
+```json
+{
+  "type": "application/vnd.lime.input+json",
+  "content": {
+    "label": { "type": "text/plain", "value": "Please fill in the fields below:" },
+    "validation": {
+      "rule": "type",
+      "type": "application/vnd.lime.form+json",
+      "submitLabel": "Send",
+      "fields": [
+        { "id": "name", "label": "Full name", "type": "text", "required": true },
+        { "id": "account", "label": "Account number", "type": "number", "required": true },
+        { "id": "birthDate", "label": "Birth date", "type": "date", "required": false },
+        { "id": "reason", "label": "Reason", "type": "select", "required": true, "options": [{ "value": "bill", "label": "Bill copy" }] }
+      ]
+    }
+  }
+}
+```
+
+- Supported field types: `text`, `number`, `date` and `select` (`options` is used only by `select`). `submitLabel` is optional.
+- Required fields are validated by the browser before sending; once sent, the card shows a read-only summary.
+- `on-selected` is called with a `"label: value"` summary text (dates formatted with the browser locale) and `{ type: 'application/json', content: { [field.id]: value } }` (dates as `YYYY-MM-DD`).
+- When `hide-options` is true (the form is no longer the latest bot message), the fields and the submit button are disabled.
+
 ## Contributions
+
 Any contribution to the code via pull request would be nice and any idea and/or suggestion are very welcome.
 
 However, please do not feel bad if your pull requests or contributions do not get merged or implemented into `blip-cards`.
