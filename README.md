@@ -45,6 +45,30 @@ Then, reference the cards via <blip-card> tag as following
 | hide-options | Used only only in the quick reply. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
 
+### Select menu options (`application/vnd.lime.select+json`)
+
+Besides the standard Lime fields, the select content accepts these optional fields:
+
+| Field | Description | Type |
+|----------|:-------------:|------:|
+| content.optionPreviewSize | Maximum number of characters shown for each option before it is truncated with `...`. Applies to quick replies (`scope: "immediate"`) and to `application/vnd.lime.document-select+json` options; list menus always show the full text. Default: 34 | Number |
+| content.options[].imageUri | URL of a small image (20x20px) rendered before the option text, in both quick reply and list menus. Options without it render as before | String |
+
+```json
+{
+  "type": "application/vnd.lime.select+json",
+  "content": {
+    "text": "Como podemos ajudar?",
+    "scope": "immediate",
+    "optionPreviewSize": 60,
+    "options": [
+      { "text": "Segunda via da conta", "imageUri": "https://example.com/bill.png" },
+      { "text": "Falta de energia", "imageUri": "https://example.com/power.png" }
+    ]
+  }
+}
+```
+
 ## Group Card
 Is possible to group your cards using any rule you want. For that use the <blip-group-card> tag as following
 
