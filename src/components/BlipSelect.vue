@@ -29,9 +29,16 @@
                   v-bind:key="index" 
                   @click="disableOptions ? null : select(item, index)" 
                   class="disable-selection" 
-                  :class="[`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionImage(item, index) }]">
+                  :class="[`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionImage(item, index), 'has-rich-option': isRichOption(item) }]">
                   <img v-if="hasOptionImage(item, index)" :src="item.imageUri" alt="" class="option-image" @error="hideOptionImage(index)">
-                  <div v-html="sanitize(item.previewText)"></div>
+                  <div v-if="isRichOption(item)" class="option-content">
+                    <div class="option-title-row">
+                      <div class="option-title" v-html="sanitize(item.previewText)"></div>
+                      <span v-if="item.badge" class="option-badge">{{ item.badge }}</span>
+                    </div>
+                    <div v-if="item.description" class="option-description">{{ item.description }}</div>
+                  </div>
+                  <div v-else v-html="sanitize(item.previewText)"></div>
                 </li>
               </ul>
             </div>
@@ -57,14 +64,23 @@
             v-touch:swipe.right="swipeRightHandler">
             <div class="fixed-options disable-selection">
               <ul class="item-list">
-                <li 
-                  v-for="(item, index) in options" 
-                  v-bind:key="index" 
-                  @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
-                  :class="[`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionImage(item, index) }]">
-                  <img v-if="hasOptionImage(item, index)" :src="item.imageUri" alt="" class="option-image" @error="hideOptionImage(index)">
-                  <div v-html="sanitize(item.text)"></div>
-                </li>
+                <template v-for="(item, index) in options">
+                  <li v-if="startsSection(index)" v-bind:key="'section-' + index" class="option-section">{{ item.section }}</li>
+                  <li 
+                    v-bind:key="index" 
+                    @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
+                    :class="[`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionImage(item, index), 'has-rich-option': isRichOption(item) }]">
+                    <img v-if="hasOptionImage(item, index)" :src="item.imageUri" alt="" class="option-image" @error="hideOptionImage(index)">
+                    <div v-if="isRichOption(item)" class="option-content">
+                      <div class="option-title-row">
+                        <div class="option-title" v-html="sanitize(item.text)"></div>
+                        <span v-if="item.badge" class="option-badge">{{ item.badge }}</span>
+                      </div>
+                      <div v-if="item.description" class="option-description">{{ item.description }}</div>
+                    </div>
+                    <div v-else v-html="sanitize(item.text)"></div>
+                  </li>
+                </template>
               </ul>
             </div>
           </div>
@@ -315,6 +331,13 @@ export default {
 
         return opts
       })
+    },
+    isRichOption: function (item) {
+      return !!(item.description || item.badge)
+    },
+    startsSection: function (index) {
+      const section = this.options[index].section
+      return !!section && (index === 0 || this.options[index - 1].section !== section)
     },
     hasOptionImage: function (item, index) {
       return !!item.imageUri && !this.failedOptionImages[index]
@@ -679,6 +702,97 @@ export default {
 
 .select .fixed-options li:last-child {
   padding-bottom: 0px;
+}
+
+.select .option-content {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.select .option-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.select .option-title {
+  font-weight: 600;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.select .option-description {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.3;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+
+.select .option-badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: $color-primary;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.select .fixed-options li.option-section {
+  display: block;
+  padding: 12px 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-align: left;
+  opacity: 0.6;
+  cursor: default;
+  border-bottom: 0;
+}
+
+.select .fixed-options li.has-rich-option {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  .option-content {
+    flex: 1;
+    width: auto;
+    max-width: 260px;
+    text-align: left;
+  }
+
+  .option-title-row,
+  .option-description {
+    width: 100%;
+    text-align: left;
+  }
+
+  .option-title,
+  .option-badge {
+    width: auto;
+    text-align: left;
+  }
+}
+
+.select .options li.has-rich-option {
+  height: auto;
+  min-height: 56px;
+  max-width: 260px;
+  border-radius: 14px;
+  padding: 8px 14px;
+  white-space: normal;
+
+  .option-title-row { flex-wrap: nowrap; }
 }
 
 .select .fixed-options li.has-option-image {

@@ -53,6 +53,9 @@ Besides the standard Lime fields, the select content accepts these optional fiel
 |----------|:-------------:|------:|
 | content.optionPreviewSize | Maximum number of characters shown for each option before it is truncated with `...`. Applies to quick replies (`scope: "immediate"`) and to `application/vnd.lime.document-select+json` options; list menus always show the full text. Missing or invalid values (null, 0, negative, non-integer) fall back to the default. Default: 34 | Number |
 | content.options[].imageUri | URL of a small image (20x20px) rendered before the option text, in both quick reply and list menus. Options without it, or whose image fails to load, render as text only | String |
+| content.options[].description | Subtitle shown below the option text (plain text, never HTML). Quick replies grow into a small card and lists show a second line | String |
+| content.options[].badge | Short label (e.g. "New", "24h") shown as a pill next to the option text. Plain text, never HTML | String |
+| content.options[].section | Section name for list menus. A header is shown when the value changes between consecutive options, so options of the same section must be sent together. Ignored in quick replies | String |
 
 ```json
 {
@@ -62,8 +65,8 @@ Besides the standard Lime fields, the select content accepts these optional fiel
     "scope": "immediate",
     "optionPreviewSize": 60,
     "options": [
-      { "text": "Segunda via da conta", "imageUri": "https://example.com/bill.png" },
-      { "text": "Falta de energia", "imageUri": "https://example.com/power.png" }
+      { "text": "Segunda via da conta", "description": "Fatura de julho", "badge": "Rapido", "imageUri": "https://example.com/bill.png" },
+      { "text": "Falta de energia", "description": "Registrar ocorrencia", "badge": "24h", "imageUri": "https://example.com/power.png" }
     ]
   }
 }
