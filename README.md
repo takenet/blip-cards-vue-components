@@ -142,6 +142,14 @@ A structured form (several fields answered in a single interaction, optionally s
 - `on-selected` is called with a `"label: value"` summary text (dates formatted with the browser locale, option labels for `select`/`radio`/`checkbox`, the file name for `file`) and `{ type: 'application/json', content: { [field.id]: value } }` containing the fields of all steps. Empty optional fields are sent as `""` (`[]` for `checkbox`). Once sent, the card shows a read-only summary.
 - When `hide-options` is true, the fields and all buttons are disabled. Hosts such as blip-chat set it on every card that is not the latest message of the conversation.
 
+**Reading the answers in Builder** (no backend change is required; verified against Take.Blip.Builder 0.7.524 and on HMG):
+
+- Save the user input of the state that waits for the form in a variable (e.g. `formulario`). It holds the JSON content, and each field is read with `{{formulario@<field id>}}` (e.g. `{{formulario@cpf}}`).
+- Leave the input validation of that state empty or set it to type `application/json`. A type validation of `application/vnd.lime.form+json` rejects the answer, because the reply is `application/json`.
+- Use only letters, digits and `_` in field ids (`data_visita`, not `data-visita`): the variable property syntax does not accept `-`, and `.` is read as a nested property.
+- `checkbox` values are returned as a JSON array (`{{formulario@topicos}}` → `["conta","medidor"]`); indexes such as `@topicos[0]` are not supported, so use a script to split them.
+- `file` values are media links signed for a limited time (30 minutes for blip-chat uploads on HMG). Forward or store the file within that window, or renew the link with the `set /refresh-media-uri` command to `postmaster@media.msging.net`.
+
 ## Contributions
 
 Any contribution to the code via pull request would be nice and any idea and/or suggestion are very welcome.
