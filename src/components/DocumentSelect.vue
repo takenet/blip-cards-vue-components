@@ -327,14 +327,15 @@ import { MetadataService } from '../utils/metadataService.js'
 import mime from 'mime-types'
 const optionSize = 34
 
-let getOptionContent = function(item) {
+let getOptionContent = function(item, maxLength = optionSize) {
+  const limit = Number.isInteger(maxLength) && maxLength > 0 ? maxLength : optionSize
   let text =
     item.label.value.text ||
     item.label.value.title ||
     item.label.value.uri ||
     item.label.value
-  if (text.length > optionSize) {
-    return text.substring(0, optionSize) + '...'
+  if (text.length > limit) {
+    return text.substring(0, limit) + '...'
   } else {
     return text
   }
@@ -347,6 +348,10 @@ export default {
     length: {
       type: Number,
       default: 532
+    },
+    optionPreviewSize: {
+      type: Number,
+      default: 34
     },
     status: {
       type: String,
@@ -452,7 +457,7 @@ export default {
         ? this.document.header.value.aspectRatio.replace(':', '-')
         : '2-1'
       this.previewUri = this.document.header.value.uri
-      this.options = this.document.options.map(function(x) {
+      this.options = this.document.options.map((x) => {
         let opt = {
           ...x,
           isLink: x.label.type === 'application/vnd.lime.web-link+json',
@@ -466,7 +471,7 @@ export default {
             : {}
         }
 
-        opt.previewText = getOptionContent(opt)
+        opt.previewText = getOptionContent(opt, this.optionPreviewSize)
         return opt
       })
     }
@@ -540,7 +545,7 @@ export default {
             }
             : {}
         }
-        opt.previewText = getOptionContent(opt)
+        opt.previewText = getOptionContent(opt, this.optionPreviewSize)
         return opt
       })
     },
@@ -702,7 +707,7 @@ export default {
             : {}
         }
         this.selectedOption.label.value = this.selectedOption.label.value
-        this.selectedOption.previewText = getOptionContent(this.selectedOption)
+        this.selectedOption.previewText = getOptionContent(this.selectedOption, this.optionPreviewSize)
 
         if (this.selectedOption.index === -1) {
           this.options.push(this.selectedOption)

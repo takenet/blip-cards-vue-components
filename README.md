@@ -45,6 +45,54 @@ Then, reference the cards via <blip-card> tag as following
 | hide-options | Used only only in the quick reply. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
 
+### Select menu options (`application/vnd.lime.select+json` and `application/vnd.blip.rich-select+json`)
+
+Besides the standard Lime fields, the select content accepts these optional fields:
+
+> **Which type to send:** the platform deserializes `application/vnd.lime.select+json` into Lime's fixed `Select`/`SelectOption` types (options only carry `order`, `text`, `type` and `value`), so every field below is dropped before it reaches the client. To use them, send the same content under `application/vnd.blip.rich-select+json`, which the platform forwards untouched and this library renders exactly like a select menu. Only Blip Chat renders it; other channels (e.g. WhatsApp) do not know this type, so keep a regular select menu for them. What the bot receives when an option is picked is the same as with the regular select.
+
+| Field | Description | Type |
+|----------|:-------------:|------:|
+| content.optionPreviewSize | Maximum number of characters shown for each option before it is truncated with `...`. Applies to quick replies (`scope: "immediate"`); list menus always show the full text. The component also honors it for `application/vnd.lime.document-select+json`, but the platform drops the field for that type, so it only takes effect where the card is rendered directly. Missing or invalid values (null, 0, negative, non-integer) fall back to the default. Default: 34 | Number |
+| content.options[].imageUri | URL of a small image (20x20px) rendered before the option text, in both quick reply and list menus. Options without it, or whose image fails to load, render as text only (or with `emoji`, if provided) | String |
+| content.options[].emoji | Emoji (e.g. `"💳"`) rendered as the option icon, in the same 20x20px slot, in both quick reply and list menus. Plain text, never HTML. Used when the option has no `imageUri` or when its image fails to load; if both are set, the image wins | String |
+| content.options[].description | Subtitle shown below the option text (plain text, never HTML). Quick replies grow into a small card and lists show a second line | String |
+| content.options[].badge | Short label (e.g. "New", "24h") shown as a pill next to the option text. Plain text, never HTML | String |
+| content.options[].section | Section name for list menus. A header is shown when the value changes between consecutive options, so options of the same section must be sent together. Ignored in quick replies | String |
+| content.visibleOptions | List menus only. Number of options shown before the list is collapsed behind a "Show more (N)" button (label taken from `translations.showMore`). Expanding shows all options. Missing or invalid values (null, 0, negative, non-integer) or values greater than or equal to the number of options show the full list. Ignored in quick replies | Number |
+
+```json
+{
+  "type": "application/vnd.blip.rich-select+json",
+  "content": {
+    "text": "Como podemos ajudar?",
+    "scope": "immediate",
+    "optionPreviewSize": 60,
+    "options": [
+      { "text": "Segunda via da conta", "description": "Fatura de julho", "badge": "Rapido", "imageUri": "https://example.com/bill.png" },
+      { "text": "Falta de energia", "description": "Registrar ocorrencia", "badge": "24h", "emoji": "⚡" }
+    ]
+  }
+}
+```
+
+List menu with sections, collapsed after 2 options:
+
+```json
+{
+  "type": "application/vnd.blip.rich-select+json",
+  "content": {
+    "text": "Escolha o servico desejado:",
+    "visibleOptions": 2,
+    "options": [
+      { "order": 1, "section": "Mais usados", "text": "Segunda via", "description": "Fatura de julho", "badge": "Rapido" },
+      { "order": 2, "section": "Mais usados", "text": "Falta de energia", "badge": "24h" },
+      { "order": 3, "section": "Outros", "text": "Falar com atendente" }
+    ]
+  }
+}
+```
+
 ## Group Card
 Is possible to group your cards using any rule you want. For that use the <blip-group-card> tag as following
 
