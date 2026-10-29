@@ -179,7 +179,7 @@
         />
 
         <blip-select
-          v-else-if="document.type === 'application/vnd.lime.select+json'"
+          v-else-if="document.type === 'application/vnd.lime.select+json' || document.type === 'application/vnd.blip.rich-select+json'"
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :add-option-msg="translations.addOption"

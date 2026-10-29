@@ -45,9 +45,11 @@ Then, reference the cards via <blip-card> tag as following
 | hide-options | Used only only in the quick reply. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
 
-### Select menu options (`application/vnd.lime.select+json`)
+### Select menu options (`application/vnd.lime.select+json` and `application/vnd.blip.rich-select+json`)
 
 Besides the standard Lime fields, the select content accepts these optional fields:
+
+> **Which type to send:** the platform deserializes `application/vnd.lime.select+json` into Lime's fixed `Select`/`SelectOption` types (options only carry `order`, `text`, `type` and `value`), so every field below is dropped before it reaches the client. To use them, send the same content under `application/vnd.blip.rich-select+json`, which the platform forwards untouched and this library renders exactly like a select menu. Only Blip Chat renders it; other channels (e.g. WhatsApp) do not know this type, so keep a regular select menu for them. What the bot receives when an option is picked is the same as with the regular select.
 
 | Field | Description | Type |
 |----------|:-------------:|------:|
@@ -60,7 +62,7 @@ Besides the standard Lime fields, the select content accepts these optional fiel
 
 ```json
 {
-  "type": "application/vnd.lime.select+json",
+  "type": "application/vnd.blip.rich-select+json",
   "content": {
     "text": "Como podemos ajudar?",
     "scope": "immediate",
@@ -77,7 +79,7 @@ List menu with sections, collapsed after 2 options:
 
 ```json
 {
-  "type": "application/vnd.lime.select+json",
+  "type": "application/vnd.blip.rich-select+json",
   "content": {
     "text": "Escolha o servico desejado:",
     "visibleOptions": 2,
