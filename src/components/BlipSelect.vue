@@ -65,7 +65,7 @@
             <div class="fixed-options disable-selection">
               <ul class="item-list" :class="{ 'is-collapsed': hiddenOptionsCount > 0 }">
                 <template v-for="(item, index) in displayedOptions">
-                  <li v-if="startsSection(index)" v-bind:key="'section-' + index" class="option-section">{{ item.section }}</li>
+                  <li v-if="startsSection(index)" v-bind:key="'section-' + index" class="option-section"><div class="option-section-label">{{ item.section }}</div></li>
                   <li 
                     v-bind:key="index" 
                     @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
@@ -784,6 +784,14 @@ export default {
   opacity: 0.6;
   cursor: default;
   border-bottom: 0;
+}
+
+// Hosts such as Blip Chat paint list rows with the brand color (!important on the li),
+// so section headers and subtitles set their own neutral color to keep the hierarchy.
+.select .fixed-options li.option-section .option-section-label,
+.select .fixed-options .option-description {
+  color: $color-content-default;
+  text-align: left;
 }
 
 .select .fixed-options li.has-rich-option {
