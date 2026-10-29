@@ -309,6 +309,34 @@
           :reply-callback="replyCallback"
         />
 
+        <native-form
+          v-else-if="
+            document.content &&
+              document.content.validation &&
+              (document.type === 'application/vnd.blip.form+json' ||
+                (document.type === 'application/vnd.lime.input+json' &&
+                  document.content.validation.type ===
+                    'application/vnd.lime.form+json'))
+          "
+          class="blip-card"
+          :failed-to-send-msg="translations.failedToSend"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :on-selected="onSelected"
+          :on-deleted="deleteCard"
+          :deletable="deletable"
+          :hide-options="hideOptions"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :translations="translations"
+          :on-upload-file="onUploadFile"
+          :on-media-selected="onMediaSelected"
+          :reply-callback="replyCallback"
+        />
+
         <lime-input
           v-else-if="document.type === 'application/vnd.lime.input+json'"
           class="blip-card"
@@ -815,6 +843,10 @@ export default {
     },
     onImageSelected: {
       type: Function
+    },
+    onUploadFile: {
+      type: Function,
+      default: undefined
     }
   },
   data() {

@@ -42,6 +42,7 @@
           :reply-callback="replyCallback"
           :scroll-to-message-by-id="scrollToMessageById"
           :on-image-selected="onImageSelected"
+          :on-upload-file="onUploadFile"
         />
         <blip-card-date
           v-if="group.date && group.hasNotification"
@@ -170,6 +171,10 @@ export default {
     },
     onImageSelected: {
       type: Function
+    },
+    onUploadFile: {
+      type: Function,
+      default: undefined
     }
   },
   data() {
