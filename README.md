@@ -53,7 +53,7 @@ Besides the standard Lime fields, the select content accepts these optional fiel
 
 | Field | Description | Type |
 |----------|:-------------:|------:|
-| content.optionPreviewSize | Maximum number of characters shown for each option before it is truncated with `...`. Applies to quick replies (`scope: "immediate"`) and to `application/vnd.lime.document-select+json` options; list menus always show the full text. Missing or invalid values (null, 0, negative, non-integer) fall back to the default. Default: 34 | Number |
+| content.optionPreviewSize | Maximum number of characters shown for each option before it is truncated with `...`. Applies to quick replies (`scope: "immediate"`); list menus always show the full text. The component also honors it for `application/vnd.lime.document-select+json`, but the platform drops the field for that type, so it only takes effect where the card is rendered directly. Missing or invalid values (null, 0, negative, non-integer) fall back to the default. Default: 34 | Number |
 | content.options[].imageUri | URL of a small image (20x20px) rendered before the option text, in both quick reply and list menus. Options without it, or whose image fails to load, render as text only (or with `emoji`, if provided) | String |
 | content.options[].emoji | Emoji (e.g. `"💳"`) rendered as the option icon, in the same 20x20px slot, in both quick reply and list menus. Plain text, never HTML. Used when the option has no `imageUri` or when its image fails to load; if both are set, the image wins | String |
 | content.options[].description | Subtitle shown below the option text (plain text, never HTML). Quick replies grow into a small card and lists show a second line | String |
