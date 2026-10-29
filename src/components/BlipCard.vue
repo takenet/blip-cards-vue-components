@@ -327,6 +327,7 @@
           :is-external-message="externalMessage"
           :external-message-text="translations.externalMessageText"
           :translations="translations"
+          :on-upload-file="onUploadFile"
           :reply-callback="replyCallback"
         />
 
@@ -836,6 +837,10 @@ export default {
     },
     onImageSelected: {
       type: Function
+    },
+    onUploadFile: {
+      type: Function,
+      default: undefined
     }
   },
   data() {
