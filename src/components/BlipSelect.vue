@@ -817,6 +817,13 @@ export default {
   text-align: left;
 }
 
+// Sent messages (e.g. the bot menu as seen by an agent in Blip Desk) use a dark bubble,
+// where the neutral dark color above would be unreadable: follow the bubble text color.
+.select .bubble.right .fixed-options li.option-section .option-section-label,
+.select .bubble.right .fixed-options .option-description {
+  color: inherit;
+}
+
 .select .fixed-options li.has-rich-option {
   display: flex;
   align-items: center;
@@ -870,6 +877,10 @@ export default {
   font-weight: 700;
   text-align: center;
   cursor: pointer;
+}
+
+.select .bubble.right .fixed-options .option-show-more {
+  color: $color-surface-1;
 }
 
 .select .options li.has-rich-option {
