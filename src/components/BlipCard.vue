@@ -113,8 +113,7 @@
 
         <document-select
           v-else-if="
-            document.type === 'application/vnd.lime.document-select+json' ||
-            document.type === 'application/vnd.blip.rich-document-select+json'
+            document.type === 'application/vnd.lime.document-select+json'
           "
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
