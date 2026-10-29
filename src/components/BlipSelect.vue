@@ -29,8 +29,9 @@
                   v-bind:key="index" 
                   @click="disableOptions ? null : select(item, index)" 
                   class="disable-selection" 
-                  :class="[`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionImage(item, index), 'has-rich-option': isRichOption(item) }]">
+                  :class="[`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionIcon(item, index), 'has-rich-option': isRichOption(item) }]">
                   <img v-if="hasOptionImage(item, index)" :src="item.imageUri" alt="" class="option-image" @error="hideOptionImage(index)">
+                  <span v-else-if="hasOptionEmoji(item, index)" class="option-emoji" aria-hidden="true">{{ optionEmoji(item) }}</span>
                   <div v-if="isRichOption(item)" class="option-content">
                     <div class="option-title-row">
                       <div class="option-title" v-html="sanitize(item.previewText)"></div>
@@ -69,8 +70,9 @@
                   <li 
                     v-bind:key="index" 
                     @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
-                    :class="[`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionImage(item, index), 'has-rich-option': isRichOption(item) }]">
+                    :class="[`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionIcon(item, index), 'has-rich-option': isRichOption(item) }]">
                     <img v-if="hasOptionImage(item, index)" :src="item.imageUri" alt="" class="option-image" @error="hideOptionImage(index)">
+                    <span v-else-if="hasOptionEmoji(item, index)" class="option-emoji" aria-hidden="true">{{ optionEmoji(item) }}</span>
                     <div v-if="isRichOption(item)" class="option-content">
                       <div class="option-title-row">
                         <div class="option-title" v-html="sanitize(item.text)"></div>
@@ -369,6 +371,15 @@ export default {
     },
     hasOptionImage: function (item, index) {
       return !!item.imageUri && !this.failedOptionImages[index]
+    },
+    optionEmoji: function (item) {
+      return typeof item.emoji === 'string' ? item.emoji.trim() : ''
+    },
+    hasOptionEmoji: function (item, index) {
+      return !this.hasOptionImage(item, index) && !!this.optionEmoji(item)
+    },
+    hasOptionIcon: function (item, index) {
+      return this.hasOptionImage(item, index) || this.hasOptionEmoji(item, index)
     },
     hideOptionImage: function (index) {
       this.$set(this.failedOptionImages, index, true)
@@ -693,6 +704,18 @@ export default {
     object-fit: cover;
     flex-shrink: 0;
   }
+
+  .option-emoji {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+  }
 }
 
 .select .options li {
@@ -817,6 +840,16 @@ export default {
     width: auto;
     text-align: left;
   }
+}
+
+.select .fixed-options li span.option-emoji,
+.select .options li span.option-emoji {
+  flex: 0 0 20px;
+  width: 20px;
+  max-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
 }
 
 .select .fixed-options .item-list.is-collapsed li:last-child {
