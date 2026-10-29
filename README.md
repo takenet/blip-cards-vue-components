@@ -117,7 +117,22 @@ A structured form (several fields answered in a single interaction, optionally s
 | `checkbox` | checkbox group (`options`) | array of option `value`s (`[]` when none) |
 | `file` | file picker (`accept`, `maxSizeMb`, default 20) — requires `on-upload-file` | uploaded media URI |
 
-**Field properties**: `id` and `label` (required; ids must be unique across all steps), `required`, `placeholder`, `helpText`, `minLength`/`maxLength` (text, email, tel, textarea), `min`/`max` (number, date), `pattern` (JS regex source that must match the whole value; invalid expressions are ignored), `mask` (text and tel), `errorMessage` (replaces any validation message of the field, except the "wait for the upload" notice, which can only be changed with `messages.uploading`), `options` (`[{ "value", "label" }]`), `accept` and `maxSizeMb` (file).
+**Field properties**: `id` and `label` (required; ids must be unique across all steps), `required`, `placeholder`, `helpText`, `minLength`/`maxLength` (text, email, tel, textarea), `min`/`max` (number, date), `pattern` (JS regex source that must match the whole value; invalid expressions are ignored), `mask` (text and tel), `errorMessage` (replaces any validation message of the field, except the "wait for the upload" notice, which can only be changed with `messages.uploading`), `options` (`[{ "value", "label" }]`), `accept` and `maxSizeMb` (file), `value` (pre-fill, see below).
+
+- **Pre-fill** (`value`): fills a field with data the bot already knows, usually a Builder variable such as `{{contact.extras.cpf}}`. Pre-filled values are editable, validated like typed values and sent in the content and summary.
+  - `text`, `number`, `email`, `tel`, `date`, `textarea`: a string, trimmed (numbers are converted to strings). With a `mask`, the value is formatted with it (`"12345678909"` → `123.456.789-09`). `number` values must follow the HTML number format (`42`, `-1.5`, `2.5e1`; not `+5`, `0x10` or `1.`) and `date` values must be a valid `YYYY-MM-DD`; anything else is ignored.
+  - `select` / `radio`: used only when it matches one option `value`; otherwise the field starts empty.
+  - `checkbox`: an array (or a single string) of option values; values that are not options are dropped and the result follows the options order.
+  - `file`: not supported, `value` is ignored.
+  - A string that still contains an unresolved variable (`{{...}}` anywhere, e.g. `"{{contact.extras.cpf}}"` or `"Rua {{contact.street}}"` when the contact has no such data) is treated as empty. In a `checkbox` array, only those items are dropped.
+  - A pre-filled value that is invalid (e.g. `"maria@email"` in an `email` field) is not flagged on load. It shows its error and blocks sending when the user tries to continue.
+  - Pre-fills are applied when the card is created. If the same card later receives an updated document, only newly added fields are pre-filled; values of existing fields (including the user's edits) are kept. A field that keeps its `id` but changes `type` keeps its current value only if it is valid for the new type under these same rules (e.g. a text `"abc"` does not survive a change to a `select` without such option); otherwise it gets the pre-fill of its new type. A `select`/`radio` value that is no longer among the `options` counts as empty (required error, or sent as `""`), and `checkbox` values keep only existing options.
+  - **Privacy**: pre-fill only the data the user needs to confirm or that the form needs (data minimisation). Pre-filled values are part of the bot message: they remain visible in the conversation history and transcripts, and in older cards that are shown disabled.
+- **Valid state**: text inputs, selects and textareas holding a valid, non-empty value get a green border (`$color-positive`) once left (or after the user tries to continue), and pre-filled fields get it right away. Empty fields, radio/checkbox groups and `file` fields (which show ✓ after the upload) keep the neutral style. Error style takes precedence.
+
+```json
+{ "id": "cpf", "label": "CPF do titular", "type": "text", "mask": "000.000.000-00", "required": true, "value": "{{contact.extras.cpf}}" }
+```
 
 - **Masks**: `0` is a digit, `A` a letter, `*` a letter or digit; any other character is a literal inserted automatically, e.g. `000.000.000-00`, `(00) 00000-0000`, `00000-000`. The value is formatted while typing and is sent as displayed. A masked field is valid only when completely filled.
 - **Validation** happens in real time: errors are shown under a field after it is left (or after the user tries to continue) and update while typing. The form cannot be advanced/sent while there are errors in the current step; focus goes to the first invalid field.

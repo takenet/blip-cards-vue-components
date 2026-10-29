@@ -24,7 +24,7 @@
               </div>
             </div>
 
-            <div class="form-group" v-for="field in currentFields" :key="field.id" :class="{ 'has-error': showError(field) }">
+            <div class="form-group" v-for="field in currentFields" :key="field.id" :class="{ 'has-error': showError(field), 'is-valid': showValid(field) }">
               <fieldset v-if="isOptionGroup(field)"
                 class="native-form-group-fieldset"
                 :role="field.type === 'radio' ? 'radiogroup' : undefined"
@@ -277,6 +277,36 @@ const applyMask = (rawValue, mask) => {
 
 const isFiniteNumber = (value) => value !== undefined && value !== null && value !== '' && isFinite(Number(value))
 
+// A pre-fill value that still contains a variable the bot flow did not resolve
+// (e.g. "{{contact.extras.cpf}}" or "Rua {{contact.street}}") is treated as empty
+const UNRESOLVED_PLACEHOLDER = /\{\{.*?\}\}/
+// Number grammar accepted by <input type="number"> (rejects "+5", "0x10", "1.")
+const HTML_NUMBER = /^-?(\d+(\.\d+)?|\.\d+)([eE][-+]?\d+)?$/
+
+const isRealIsoDate = (value) => {
+  const match = ISO_DATE.exec(value)
+  if (!match) {
+    return false
+  }
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+  return date.getFullYear() === Number(match[1]) &&
+    date.getMonth() === Number(match[2]) - 1 &&
+    date.getDate() === Number(match[3])
+}
+
+// Pre-fill scalar: trimmed strings (unless with an unresolved placeholder) and finite numbers, as a string
+const prefillText = (value) => {
+  if (typeof value === 'number') {
+    return isFinite(value) ? String(value) : ''
+  }
+  if (typeof value !== 'string' || UNRESOLVED_PLACEHOLDER.test(value)) {
+    return ''
+  }
+  return value.trim()
+}
+
+const sameValue = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+
 const formatIsoDate = (value) => {
   const match = ISO_DATE.exec(value || '')
   return match
@@ -427,6 +457,7 @@ export default {
   data: function() {
     return {
       formValues: {},
+      prefilled: {},
       touched: {},
       attempted: {},
       uploads: {},
@@ -439,18 +470,24 @@ export default {
   methods: {
     init: function() {
       const formValues = {}
+      const prefilled = {}
       const touched = {}
       const attempted = {}
       const uploads = {}
 
+      this.fieldTypes = {}
+
       this.formFields.forEach((field) => {
-        formValues[field.id] = field.type === 'checkbox' ? [] : ''
+        this.fieldTypes[field.id] = field.type
+        formValues[field.id] = this.initialValue(field)
+        prefilled[field.id] = !this.isEmptyValue(field, formValues[field.id])
         touched[field.id] = false
         attempted[field.id] = false
         uploads[field.id] = { status: 'idle', fileName: '', message: '', token: 0 }
       })
 
       this.formValues = formValues
+      this.prefilled = prefilled
       this.touched = touched
       this.attempted = attempted
       this.uploads = uploads
@@ -460,15 +497,40 @@ export default {
       this.lastStepChangeAt = 0
     },
     // Keeps the reactive state in line with the current fields when the document (or the upload
-    // support) changes on a mounted instance: existing values are preserved, missing keys are added
+    // support) changes on a mounted instance: existing values are preserved (a new pre-fill `value` of an
+    // existing field never overwrites what the user typed), missing keys are added with their pre-fill.
+    // A field that keeps its id but changes type has its current value normalised with the pre-fill
+    // rules of the new type (e.g. text "abc" -> select without such option = empty); an empty result,
+    // or any change to/from file, falls back to the new type's pre-fill.
+    // Its `prefilled` flag is then recomputed: true only while the value is the new type's pre-fill.
     syncFieldState: function(idsChanged) {
+      const previousTypes = this.fieldTypes || {}
+      const fieldTypes = {}
+
       this.formFields.forEach((field) => {
         const value = this.formValues[field.id]
-        if (field.type === 'checkbox') {
+        const previousType = previousTypes[field.id]
+        fieldTypes[field.id] = field.type
+
+        if (value === undefined) {
+          const initial = this.initialValue(field)
+          this.$set(this.formValues, field.id, initial)
+          this.$set(this.prefilled, field.id, !this.isEmptyValue(field, initial))
+        } else if (previousType && previousType !== field.type) {
+          const initial = this.initialValue(field)
+          const involvesFile = previousType === 'file' || field.type === 'file'
+          const normalized = involvesFile ? '' : this.initialValue({ ...field, value })
+          const nextValue = this.isEmptyValue(field, normalized) ? initial : normalized
+          if (involvesFile) {
+            this.$set(this.uploads, field.id, { status: 'idle', fileName: '', message: '', token: 0 })
+          }
+          this.$set(this.formValues, field.id, nextValue)
+          this.$set(this.prefilled, field.id, !this.isEmptyValue(field, nextValue) && sameValue(nextValue, initial))
+        } else if (field.type === 'checkbox') {
           if (!Array.isArray(value)) {
             this.$set(this.formValues, field.id, [])
           }
-        } else if (value === undefined || value === null || Array.isArray(value)) {
+        } else if (value === null || Array.isArray(value)) {
           this.$set(this.formValues, field.id, '')
         }
         if (!(field.id in this.touched) || idsChanged) {
@@ -482,10 +544,73 @@ export default {
         }
       })
 
+      this.fieldTypes = fieldTypes
+
       if (idsChanged) {
         this.currentStep = 0
         this.lastStepChangeAt = 0
       }
+    },
+    // Initial value of a field from its optional `value` (data the bot flow already knows)
+    initialValue: function(field) {
+      const value = field.value
+
+      if (field.type === 'checkbox') {
+        const wanted = (Array.isArray(value) ? value : [value])
+          .map(prefillText)
+          .filter((item) => item !== '')
+        // Only existing options, in the options order
+        return (field.options || [])
+          .filter((option) => wanted.indexOf(String(option.value)) !== -1)
+          .map((option) => option.value)
+      }
+
+      if (field.type === 'file') {
+        return ''
+      }
+
+      const text = prefillText(value)
+      if (!text) {
+        return ''
+      }
+
+      if (field.type === 'select' || field.type === 'radio') {
+        const option = (field.options || []).find((item) => String(item.value) === text)
+        return option ? option.value : ''
+      }
+
+      if (field.type === 'number') {
+        return HTML_NUMBER.test(text) ? text : ''
+      }
+
+      if (field.type === 'date') {
+        return isRealIsoDate(text) ? text : ''
+      }
+
+      const mask = this.fieldMask(field)
+      return mask ? applyMask(text, mask) : text
+    },
+    // Current value as it counts for validation/sending: select/radio values that are not options are
+    // empty and checkbox arrays keep only existing options, in the options order
+    effectiveValue: function(field) {
+      const value = this.formValues[field.id]
+
+      if (field.type === 'checkbox') {
+        return (field.options || [])
+          .filter((option) => Array.isArray(value) && value.indexOf(option.value) !== -1)
+          .map((option) => option.value)
+      }
+
+      if (field.type === 'select' || field.type === 'radio') {
+        return (field.options || []).some((option) => option.value === value) ? value : ''
+      }
+
+      return value === undefined || value === null ? '' : value
+    },
+    isEmptyValue: function(field, value) {
+      return field.type === 'checkbox'
+        ? !Array.isArray(value) || value.length === 0
+        : String(value === undefined || value === null ? '' : value).trim() === ''
     },
     goToStep: function(index) {
       if (index !== this.currentStepIndex) {
@@ -597,7 +722,7 @@ export default {
       return { key, message: this.message(field, key, params) }
     },
     validateField: function(field) {
-      const value = this.formValues[field.id]
+      const value = this.effectiveValue(field)
 
       if (field.type === 'file') {
         const upload = this.uploads[field.id] || {}
@@ -609,9 +734,7 @@ export default {
         }
       }
 
-      const isEmpty = field.type === 'checkbox'
-        ? !Array.isArray(value) || value.length === 0
-        : String(value === undefined || value === null ? '' : value).trim() === ''
+      const isEmpty = this.isEmptyValue(field, value)
 
       if (isEmpty) {
         return field.required ? this.error(field, 'required') : null
@@ -693,6 +816,17 @@ export default {
       }
       // The "wait for the upload" message is shown only when the user tries to move on
       return fieldError.key !== 'uploading' || this.attempted[field.id]
+    },
+    // Success style for single-value controls (option groups stay neutral; files already show ✓):
+    // a valid non-empty value once the field was left/attempted, or from the start when pre-filled
+    showValid: function(field) {
+      if (this.isOptionGroup(field) || field.type === 'file' || this.fieldErrors[field.id]) {
+        return false
+      }
+      if (this.isEmptyValue(field, this.effectiveValue(field))) {
+        return false
+      }
+      return !!(this.touched[field.id] || this.attempted[field.id] || this.prefilled[field.id])
     },
     touch: function(field) {
       this.$set(this.touched, field.id, true)
@@ -822,7 +956,7 @@ export default {
       this.goToStep(this.currentStepIndex - 1)
     },
     formattedFieldValue: function(field) {
-      const value = this.formValues[field.id]
+      const value = this.effectiveValue(field)
 
       if (field.type === 'date') {
         return formatIsoDate(value)
@@ -834,7 +968,7 @@ export default {
 
       if (field.type === 'checkbox') {
         return (field.options || [])
-          .filter((option) => Array.isArray(value) && value.indexOf(option.value) !== -1)
+          .filter((option) => value.indexOf(option.value) !== -1)
           .map((option) => option.label)
           .join(', ')
       }
@@ -846,19 +980,11 @@ export default {
       const selectedOption = (field.options || []).find(
         (option) => option.value === value
       )
-      return selectedOption ? selectedOption.label : value
+      return selectedOption ? selectedOption.label : ''
     },
     fieldContentValue: function(field) {
-      const value = this.formValues[field.id]
-
-      if (field.type === 'checkbox') {
-        // Keeps the options order regardless of the order the user clicked them
-        return (field.options || [])
-          .filter((option) => Array.isArray(value) && value.indexOf(option.value) !== -1)
-          .map((option) => option.value)
-      }
-
-      return value === undefined || value === null ? '' : value
+      // Checkbox values keep the options order regardless of the order the user clicked them
+      return this.effectiveValue(field)
     },
     submit: function() {
       if (this.submitted || this.hideOptions || !this.$refs.form) {
@@ -999,6 +1125,11 @@ export default {
 
       textarea.form-control {
         resize: vertical;
+      }
+
+      // Error rule comes after the success one so it wins if both ever apply
+      &.is-valid .form-control {
+        border-color: $color-positive;
       }
 
       &.has-error .form-control {
