@@ -150,6 +150,7 @@
           :deletable="deletable"
           :editing="isCardEditing"
           :on-cancel="cancel"
+          :option-preview-size="document.content.optionPreviewSize"
         />
 
         <collection
@@ -178,7 +179,7 @@
         />
 
         <blip-select
-          v-else-if="document.type === 'application/vnd.lime.select+json'"
+          v-else-if="document.type === 'application/vnd.lime.select+json' || document.type === 'application/vnd.blip.rich-select+json'"
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
           :add-option-msg="translations.addOption"
@@ -208,6 +209,8 @@
           :editing="isCardEditing"
           :on-cancel="cancel"
           :readonly="readonly"
+          :option-preview-size="document.content.optionPreviewSize"
+          :show-more-msg="translations.showMore"
         />
 
         <web-link

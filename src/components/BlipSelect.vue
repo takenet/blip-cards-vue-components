@@ -29,8 +29,17 @@
                   v-bind:key="index" 
                   @click="disableOptions ? null : select(item, index)" 
                   class="disable-selection" 
-                  :class="`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`">
-                  <div v-html="sanitize(item.previewText)"></div>
+                  :class="[`${disableOptions && index != selectedIndex ? ' unselected-option' : ''} ${disableOptions ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionIcon(item, index), 'has-rich-option': isRichOption(item) }]">
+                  <img v-if="hasOptionImage(item, index)" :src="item.imageUri" alt="" class="option-image" @error="hideOptionImage(index)">
+                  <span v-else-if="hasOptionEmoji(item, index)" class="option-emoji" aria-hidden="true">{{ optionEmoji(item) }}</span>
+                  <div v-if="isRichOption(item)" class="option-content">
+                    <div class="option-title-row">
+                      <div class="option-title" v-html="sanitize(item.previewText)"></div>
+                      <span v-if="item.badge" class="option-badge">{{ item.badge }}</span>
+                    </div>
+                    <div v-if="item.description" class="option-description">{{ item.description }}</div>
+                  </div>
+                  <div v-else v-html="sanitize(item.previewText)"></div>
                 </li>
               </ul>
             </div>
@@ -55,15 +64,31 @@
           <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler"
             v-touch:swipe.right="swipeRightHandler">
             <div class="fixed-options disable-selection">
-              <ul class="item-list">
-                <li 
-                  v-for="(item, index) in options" 
-                  v-bind:key="index" 
-                  @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
-                  :class="`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`">
-                  <div v-html="sanitize(item.text)"></div>
-                </li>
+              <ul class="item-list" :class="{ 'is-collapsed': hiddenOptionsCount > 0 }">
+                <template v-for="(item, index) in displayedOptions">
+                  <li v-if="startsSection(index)" v-bind:key="'section-' + index" class="option-section"><div class="option-section-label">{{ item.section }}</div></li>
+                  <li 
+                    v-bind:key="index" 
+                    @click="disableOptions && selectedIndex != undefined ? null : select(item, index)"
+                    :class="[`${disableOptions && selectedIndex != undefined && selectedIndex != index ? ' unselected-option' : ''} ${disableOptions && selectedIndex != undefined ? ' pointer-default' : ''}`, { 'has-option-image': hasOptionIcon(item, index), 'has-rich-option': isRichOption(item) }]">
+                    <img v-if="hasOptionImage(item, index)" :src="item.imageUri" alt="" class="option-image" @error="hideOptionImage(index)">
+                    <span v-else-if="hasOptionEmoji(item, index)" class="option-emoji" aria-hidden="true">{{ optionEmoji(item) }}</span>
+                    <div v-if="isRichOption(item)" class="option-content">
+                      <div class="option-title-row">
+                        <div class="option-title" v-html="sanitize(item.text)"></div>
+                        <span v-if="item.badge" class="option-badge">{{ item.badge }}</span>
+                      </div>
+                      <div v-if="item.description" class="option-description">{{ item.description }}</div>
+                    </div>
+                    <div v-else v-html="sanitize(item.text)"></div>
+                  </li>
+                </template>
               </ul>
+              <button
+                v-if="hiddenOptionsCount > 0"
+                type="button"
+                class="option-show-more"
+                @click.stop="showAllOptions = true">{{ showMoreMsg }} ({{ hiddenOptionsCount }})</button>
             </div>
           </div>
       </div>
@@ -161,7 +186,6 @@
 import { default as base } from '../mixins/baseComponent.js'
 import { linkify, guid, isFailedMessage } from '../utils/misc'
 import debounce from 'lodash/debounce'
-const optionSize = 34
 
 export default {
   name: 'blip-select',
@@ -170,6 +194,10 @@ export default {
     hideOptions: {
       type: Boolean,
       default: false
+    },
+    optionPreviewSize: {
+      type: Number,
+      default: 34
     },
     status: {
       type: String,
@@ -221,6 +249,10 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    showMoreMsg: {
+      type: String,
+      default: 'Show more'
     }
   },
   data: function () {
@@ -233,6 +265,8 @@ export default {
       selectedIndex: undefined,
       text: undefined,
       options: undefined,
+      failedOptionImages: {},
+      showAllOptions: false,
       id: undefined,
       slideIndex: undefined,
       endOfSlider: undefined,
@@ -251,6 +285,11 @@ export default {
     })
   },
   computed: {
+    effectivePreviewSize: function () {
+      return Number.isInteger(this.optionPreviewSize) && this.optionPreviewSize > 0
+        ? this.optionPreviewSize
+        : 34
+    },
     computedText: function () {
       return linkify(this.document.text)
     },
@@ -259,6 +298,23 @@ export default {
     },
     showNext: function () {
       return !this.endOfSlider
+    },
+    visibleOptionsLimit: function () {
+      const limit = this.document.visibleOptions
+      return Number.isInteger(limit) && limit > 0 ? limit : null
+    },
+    displayedOptions: function () {
+      const options = this.options || []
+      if (this.showAllOptions || !this.visibleOptionsLimit) {
+        return options
+      }
+      return options.slice(0, this.visibleOptionsLimit)
+    },
+    hiddenOptionsCount: function () {
+      if (this.disableOptions && this.selectedIndex !== undefined) {
+        return 0
+      }
+      return (this.options || []).length - this.displayedOptions.length
     }
   },
   watch: {
@@ -280,7 +336,9 @@ export default {
       this.selectedOption = { value: {} }
       this.disableOptions = this.hideOptions
       this.text = this.document.text
-      this.options = this.document.options.map(function (x) {
+      this.failedOptionImages = {}
+      this.showAllOptions = false
+      this.options = this.document.options.map((x) => {
         let value
         if (x.value) {
           if (x.type && x.type.includes('json')) {
@@ -295,14 +353,36 @@ export default {
         let opts = {
           ...x,
           previewText:
-            x.text.length > optionSize
-              ? x.text.substring(0, optionSize) + '...'
+            x.text.length > this.effectivePreviewSize
+              ? x.text.substring(0, this.effectivePreviewSize) + '...'
               : x.text,
           value
         }
 
         return opts
       })
+    },
+    isRichOption: function (item) {
+      return !!(item.description || item.badge)
+    },
+    startsSection: function (index) {
+      const section = this.options[index].section
+      return !!section && (index === 0 || this.options[index - 1].section !== section)
+    },
+    hasOptionImage: function (item, index) {
+      return !!item.imageUri && !this.failedOptionImages[index]
+    },
+    optionEmoji: function (item) {
+      return typeof item.emoji === 'string' ? item.emoji.trim() : ''
+    },
+    hasOptionEmoji: function (item, index) {
+      return !this.hasOptionImage(item, index) && !!this.optionEmoji(item)
+    },
+    hasOptionIcon: function (item, index) {
+      return this.hasOptionImage(item, index) || this.hasOptionEmoji(item, index)
+    },
+    hideOptionImage: function (index) {
+      this.$set(this.failedOptionImages, index, true)
     },
     plusSlides: function (n) {
       this.showSlides((this.slideIndex += n))
@@ -401,8 +481,8 @@ export default {
 
       this.addOption = false
       this.selectedOption.previewText =
-        this.selectedOption.text.length > optionSize
-          ? this.selectedOption.text.substring(0, optionSize) + '...'
+        this.selectedOption.text.length > this.effectivePreviewSize
+          ? this.selectedOption.text.substring(0, this.effectivePreviewSize) + '...'
           : this.selectedOption.text
       if (!this.showPayload) {
         this.selectedOption.value = this.selectedOption.type = null
@@ -615,12 +695,34 @@ export default {
   .blip-select-metadata {
     padding: 10px 0 0 0;
   }
+
+  .option-image {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 2px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .option-emoji {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+  }
 }
 
 .select .options li {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  vertical-align: middle;
   height: 40px;
   background-color: $color-system;
   border: 1px solid $color-content-ghost;
@@ -651,6 +753,144 @@ export default {
 
 .select .fixed-options li:last-child {
   padding-bottom: 0px;
+}
+
+.select .option-content {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.select .option-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.select .option-title {
+  font-weight: 600;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.select .option-description {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.3;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+
+.select .option-badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: $color-primary;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.select .fixed-options li.option-section {
+  display: block;
+  padding: 12px 10px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-align: left;
+  opacity: 0.6;
+  cursor: default;
+  border-bottom: 0;
+}
+
+// Hosts such as Blip Chat paint list rows with the brand color (!important on the li),
+// so section headers and subtitles set their own neutral color to keep the hierarchy.
+.select .fixed-options li.option-section .option-section-label,
+.select .fixed-options .option-description {
+  color: $color-content-default;
+  text-align: left;
+}
+
+.select .fixed-options li.has-rich-option {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  .option-content {
+    flex: 1;
+    width: auto;
+    text-align: left;
+  }
+
+  .option-title-row,
+  .option-description {
+    width: 100%;
+    text-align: left;
+  }
+
+  .option-title,
+  .option-badge {
+    width: auto;
+    text-align: left;
+  }
+}
+
+.select .fixed-options li span.option-emoji,
+.select .options li span.option-emoji {
+  flex: 0 0 20px;
+  width: 20px;
+  max-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+}
+
+.select .fixed-options .item-list.is-collapsed li:last-child {
+  padding-bottom: 10px;
+}
+
+.select .fixed-options .option-show-more {
+  display: block;
+  width: calc(100% + 32px);
+  margin: 0 -16px;
+  padding: 12px 10px 0;
+  border: 0;
+  border-top: 0.5px solid $color-content-ghost;
+  background: transparent;
+  color: $color-primary;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+
+.select .options li.has-rich-option {
+  height: auto;
+  min-height: 56px;
+  max-width: 260px;
+  border-radius: 14px;
+  padding: 8px 14px;
+  white-space: normal;
+
+  .option-title-row { flex-wrap: nowrap; }
+}
+
+.select .fixed-options li.has-option-image {
+  display: flex;
+  align-items: center;
+
+  > div {
+    flex: 1;
+    text-align: left;
+  }
 }
 
 .remove-option-error {
