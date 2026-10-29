@@ -114,16 +114,16 @@ Is possible to group your cards using any rule you want. For that use the <blip-
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
 
 ## Native Form Card
-A structured form (several fields answered in a single interaction, optionally split in steps) is rendered when the bot sends an `application/vnd.lime.input+json` message whose `validation.type` is `application/vnd.lime.form+json`. No backend change is needed: the content is authored in the bot flow.
+A structured form (several fields answered in a single interaction, optionally split in steps) is rendered when the bot sends an `application/vnd.blip.form+json` message.
+
+> **Which type to send:** the platform deserializes `application/vnd.lime.input+json` into Lime's fixed `Input` type, which only keeps `label` and `validation.rule`/`type`/`regex`/`error`, so `fields`, `steps`, `submitLabel` and every other property below are dropped before the message reaches the client (the card then shows only the opening text and a default "Enviar" button). To use the form, send the same content under `application/vnd.blip.form+json`, which the platform forwards untouched. No backend change is needed: the content is authored in the bot flow. The card still also renders an `application/vnd.lime.input+json` whose `validation.type` is `application/vnd.lime.form+json` for hosts that deliver the content without the platform filtering, but flows should use `application/vnd.blip.form+json`. Only Blip Chat renders this type; other channels (e.g. WhatsApp) do not know it. What the bot receives is an `application/json` message, as described below.
 
 ```json
 {
-  "type": "application/vnd.lime.input+json",
+  "type": "application/vnd.blip.form+json",
   "content": {
     "label": { "type": "text/plain", "value": "Please fill in the fields below:" },
     "validation": {
-      "rule": "type",
-      "type": "application/vnd.lime.form+json",
       "submitLabel": "Send",
       "fields": [
         { "id": "name", "label": "Full name", "type": "text", "required": true, "minLength": 3 },
@@ -193,7 +193,7 @@ A structured form (several fields answered in a single interaction, optionally s
 **Reading the answers in Builder** (no backend change is required; verified against Take.Blip.Builder 0.7.524 and on HMG):
 
 - Save the user input of the state that waits for the form in a variable (e.g. `formulario`). It holds the JSON content, and each field is read with `{{formulario@<field id>}}` (e.g. `{{formulario@cpf}}`).
-- Leave the input validation of that state empty or set it to type `application/json`. A type validation of `application/vnd.lime.form+json` rejects the answer, because the reply is `application/json`.
+- Leave the input validation of that state empty or set it to type `application/json`. A type validation of `application/vnd.lime.form+json` or `application/vnd.blip.form+json` rejects the answer, because the reply is `application/json`.
 - Use only letters, digits and `_` in field ids (`data_visita`, not `data-visita`): the variable property syntax does not accept `-`, and `.` is read as a nested property.
 - `checkbox` values are returned as a JSON array (`{{formulario@topicos}}` → `["conta","medidor"]`); indexes such as `@topicos[0]` are not supported, so use a script to split them.
 - `file` values are media links signed for a limited time (30 minutes for blip-chat uploads on HMG). Forward or store the file within that window, or renew the link with the `set /refresh-media-uri` command to `postmaster@media.msging.net`.

@@ -311,10 +311,12 @@
 
         <native-form
           v-else-if="
-            document.type === 'application/vnd.lime.input+json' &&
+            document.content &&
               document.content.validation &&
-              document.content.validation.type ===
-                'application/vnd.lime.form+json'
+              (document.type === 'application/vnd.blip.form+json' ||
+                (document.type === 'application/vnd.lime.input+json' &&
+                  document.content.validation.type ===
+                    'application/vnd.lime.form+json'))
           "
           class="blip-card"
           :failed-to-send-msg="translations.failedToSend"
