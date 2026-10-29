@@ -1052,6 +1052,11 @@ export default {
   }
 
   .native-form-fields {
+    // Overrides the global `form { width: 300px }` rule: same desktop size, but never wider than the bubble.
+    width: 320px;
+    max-width: 100%;
+    box-sizing: border-box;
+
     .native-form-fieldset {
       border: none;
       margin: 0;
