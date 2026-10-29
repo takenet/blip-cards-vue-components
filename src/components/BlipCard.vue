@@ -333,6 +333,7 @@
           :external-message-text="translations.externalMessageText"
           :translations="translations"
           :on-upload-file="onUploadFile"
+          :on-media-selected="onMediaSelected"
           :reply-callback="replyCallback"
         />
 

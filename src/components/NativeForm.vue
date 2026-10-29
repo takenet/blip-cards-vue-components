@@ -164,7 +164,16 @@
 
         <div v-else class="native-form-summary">
           <span v-for="field in formFields" :key="field.id" class="native-form-summary-item">
-            {{ field.label }}: {{ formattedFieldValue(field) }}
+            {{ field.label }}:
+            <a
+              v-if="fileLinkUri(field)"
+              class="native-form-file-link"
+              :href="fileLinkUri(field)"
+              target="_blank"
+              rel="noopener noreferrer"
+              v-on:click.prevent="openFile(fileLinkUri(field))"
+            >{{ formattedFieldValue(field) }}</a>
+            <template v-else>{{ formattedFieldValue(field) }}</template>
           </span>
         </div>
       </div>
@@ -363,6 +372,10 @@ export default {
       type: Function
     },
     onUploadFile: {
+      type: Function,
+      default: undefined
+    },
+    onMediaSelected: {
       type: Function,
       default: undefined
     },
@@ -955,6 +968,29 @@ export default {
       }
       this.goToStep(this.currentStepIndex - 1)
     },
+    // Uploaded file address, only when it is a web link that is safe to open
+    fileLinkUri: function(field) {
+      if (field.type !== 'file') {
+        return ''
+      }
+      const uri = this.effectiveValue(field)
+      return typeof uri === 'string' && /^https?:\/\//i.test(uri) ? uri : ''
+    },
+    // The host (e.g. blip-chat) renews expired media links before opening them
+    openFile: function(uri) {
+      if (typeof this.onMediaSelected === 'function') {
+        this.onMediaSelected(uri)
+        return
+      }
+      window.open(uri, '_blank', 'noopener')
+    },
+    // Text of the answer shown in the conversation: the file name followed by its link
+    // so the file can still be opened from the history
+    summaryFieldValue: function(field) {
+      const text = this.formattedFieldValue(field)
+      const uri = this.fileLinkUri(field)
+      return uri && text ? `${text} - ${uri}` : text
+    },
     formattedFieldValue: function(field) {
       const value = this.effectiveValue(field)
 
@@ -1018,7 +1054,7 @@ export default {
 
       if (this.onSelected) {
         const summary = this.formFields
-          .map((field) => `${field.label}: ${this.formattedFieldValue(field)}`)
+          .map((field) => `${field.label}: ${this.summaryFieldValue(field)}`)
           .join(', ')
 
         const content = this.formFields.reduce((values, field) => {
@@ -1291,6 +1327,12 @@ export default {
 
     .native-form-summary-item {
       margin-bottom: 4px;
+    }
+
+    .native-form-file-link {
+      text-decoration: underline;
+      cursor: pointer;
+      word-break: break-all;
     }
   }
 }
