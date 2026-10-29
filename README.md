@@ -53,7 +53,7 @@ Besides the standard Lime fields, the select content accepts these optional fiel
 
 | Field | Description | Type |
 |----------|:-------------:|------:|
-| content.optionPreviewSize | Maximum number of characters shown for each option before it is truncated with `...`. Applies to quick replies (`scope: "immediate"`); list menus always show the full text. The component also honors it for `application/vnd.lime.document-select+json`, but the platform drops the field for that type, so it only takes effect where the card is rendered directly. Missing or invalid values (null, 0, negative, non-integer) fall back to the default. Default: 34 | Number |
+| content.optionPreviewSize | Maximum number of characters shown for each option before it is truncated with `...`. Applies to quick replies (`scope: "immediate"`); list menus always show the full text. For cards with a cover image, see the `application/vnd.blip.rich-document-select+json` section below. Missing or invalid values (null, 0, negative, non-integer) fall back to the default. Default: 34 | Number |
 | content.options[].imageUri | URL of a small image (20x20px) rendered before the option text, in both quick reply and list menus. Options without it, or whose image fails to load, render as text only (or with `emoji`, if provided) | String |
 | content.options[].emoji | Emoji (e.g. `"💳"`) rendered as the option icon, in the same 20x20px slot, in both quick reply and list menus. Plain text, never HTML. Used when the option has no `imageUri` or when its image fails to load; if both are set, the image wins | String |
 | content.options[].description | Subtitle shown below the option text (plain text, never HTML). Quick replies grow into a small card and lists show a second line | String |
@@ -88,6 +88,34 @@ List menu with sections, collapsed after 2 options:
       { "order": 1, "section": "Mais usados", "text": "Segunda via", "description": "Fatura de julho", "badge": "Rapido" },
       { "order": 2, "section": "Mais usados", "text": "Falta de energia", "badge": "24h" },
       { "order": 3, "section": "Outros", "text": "Falar com atendente" }
+    ]
+  }
+}
+```
+
+### Cards with a cover image (`application/vnd.blip.rich-document-select+json`)
+
+The platform deserializes `application/vnd.lime.document-select+json` into a fixed Lime type as well, which drops `optionPreviewSize` (it is not part of that type). To control how many characters of each option label are shown (default 34), send the same content under `application/vnd.blip.rich-document-select+json`, which the platform forwards untouched and this library renders exactly like a document select. Other channels do not know this type, so keep the regular type for them. What the bot receives when an option is picked is unchanged.
+
+| Field | Description | Type |
+|----------|:-------------:|------:|
+| content.optionPreviewSize | Maximum number of characters shown for each option label before it is truncated with `...`. Missing or invalid values fall back to the default. Default: 34 | Number |
+
+For a carousel, send a `application/vnd.lime.collection+json` whose `itemType` is `application/vnd.blip.rich-document-select+json` and set `optionPreviewSize` on each item:
+
+```json
+{
+  "type": "application/vnd.lime.collection+json",
+  "content": {
+    "itemType": "application/vnd.blip.rich-document-select+json",
+    "items": [
+      {
+        "optionPreviewSize": 60,
+        "header": { "type": "application/vnd.lime.media-link+json", "value": { "title": "Fatura de julho", "type": "image/png", "uri": "https://example.com/header.png" } },
+        "options": [
+          { "label": { "type": "text/plain", "value": "Segunda via da conta de energia eletrica - julho" }, "value": { "type": "text/plain", "value": "julho-2via" } }
+        ]
+      }
     ]
   }
 }

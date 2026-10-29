@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="'blip-container collection' + isFailedMessage(status, position)" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="document.itemType === 'application/vnd.lime.document-select+json'">
+    <div :class="'blip-container collection' + isFailedMessage(status, position)" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler" v-if="isDocumentSelectCollection">
       <div :class="'slideshow-container '+ position" :id="id" v-touch:swipe.left="swipeLeftHandler"
       v-touch:swipe.right="swipeRightHandler" >
         <div class="slideshow-list">
@@ -22,6 +22,7 @@
                 :on-selected="select" 
                 :on-open-link="onOpenLink" 
                 :document="item" 
+                :option-preview-size="item.optionPreviewSize"
                 :deletable="deletable"
                 :editable="editable" 
                 :on-save="collectionSave" 
@@ -40,6 +41,7 @@
                 :on-selected="select" 
                 :on-open-link="onOpenLink" 
                 :document="item" 
+                :option-preview-size="item.optionPreviewSize"
                 :deletable="deletable"
                 :editable="editable" 
                 :on-save="collectionSave" 
@@ -129,6 +131,12 @@ export default {
     }
   },
   computed: {
+    isDocumentSelectCollection: function() {
+      return (
+        this.document.itemType === 'application/vnd.lime.document-select+json' ||
+        this.document.itemType === 'application/vnd.blip.rich-document-select+json'
+      )
+    },
     showPrev: function() {
       return this.slideIndex !== 1
     },
@@ -180,9 +188,7 @@ export default {
       this.slideIndex === this.items.length && this.plusSlides(1)
     },
     mounted: function() {
-      if (
-        this.document.itemType === 'application/vnd.lime.document-select+json'
-      ) {
+      if (this.isDocumentSelectCollection) {
         let element = this.$el
         if (!element) return
 
