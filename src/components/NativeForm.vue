@@ -984,12 +984,17 @@ export default {
       }
       window.open(uri, '_blank', 'noopener')
     },
-    // Text of the answer shown in the conversation: the file name followed by its link
-    // so the file can still be opened from the history
+    // Text of the answer shown in the conversation: the file name as a link ([name](address), rendered
+    // by the plain text card) so the file can still be opened from the history. Other consumers see
+    // the address in the text. Names or addresses that cannot be written safely keep "name - address".
     summaryFieldValue: function(field) {
       const text = this.formattedFieldValue(field)
       const uri = this.fileLinkUri(field)
-      return uri && text ? `${text} - ${uri}` : text
+      if (!uri || !text) {
+        return text
+      }
+      const canBeNamed = !/[[\]<>"]|:\/\/|www\./i.test(text) && !/[\s()"'<>]/.test(uri)
+      return canBeNamed ? `[${text}](${uri})` : `${text} - ${uri}`
     },
     formattedFieldValue: function(field) {
       const value = this.effectiveValue(field)

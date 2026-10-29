@@ -24,10 +24,30 @@ function linkify(inputText, disableLink) {
   // Email addresses
   const emailAddressValidPattern = /[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
 
-  return inputText
+  // [label](https://...)
+  const namedMediaLinkPattern = /\[([^[\]\r\n]{1,200})\]\((https?:\/\/[^\s()"'<>]+)\)/g
+
+  // [label](signed media link): shows the file name instead of the long address.
+  // Anchors are set aside so the generic URL patterns below do not link them again.
+  const anchors = []
+  const withNamedLinks = inputText.replace(namedMediaLinkPattern, (match, label, uri) => {
+    if (!isSignedMediaUri(uri) || /:\/\/|www\./i.test(label) || /[<>"]/.test(label)) {
+      return match
+    }
+    anchors.push(`<a href="${uri}" target="_blank" rel="noopener noreferrer">${label}</a>`)
+    return `\u0001${anchors.length - 1}\u0001`
+  })
+
+  return withNamedLinks
     .replace(urlValidPattern, '<a href="$&" target="_blank">$&</a>')
     .replace(pseudoUrlValidPattern, '$1<a href="https://$2" target="_blank">$2</a>')
     .replace(emailAddressValidPattern, '<a href="mailto:$&" target="_blank">$&</a>')
+    .replace(/\u0001(\d+)\u0001/g, (match, index) => anchors[Number(index)])
+}
+
+// Links to uploaded files are signed (Azure SAS): they carry an expiry (se) and a signature (sig)
+function isSignedMediaUri(uri) {
+  return /[?&;]se=/.test(uri) && /[?&;]sig=/.test(uri)
 }
 
 function isTagA(inputText) {
@@ -64,6 +84,7 @@ function isFailedMessage(status, position) {
 
 export {
   linkify,
+  isSignedMediaUri,
   guid,
   isFailedMessage,
   isTagA,
