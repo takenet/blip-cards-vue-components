@@ -49,9 +49,9 @@
         <div class="title" v-if="document.title || document.text">
           <strong
             v-if="document.title"
-            v-html="sanitize(document.title)"
+            v-html="sanitize(translatedTitle || document.title)"
           ></strong>
-          <span v-if="document.text" v-html="sanitize(document.text)"></span>
+          <span v-if="document.text" v-html="sanitize(translatedText || document.text)"></span>
         </div>
       </div>
     </div>
@@ -194,6 +194,14 @@ export default {
     },
     onImageSelected: {
       type: Function
+    },
+    translatedTitle: {
+      type: String,
+      default: undefined
+    },
+    translatedText: {
+      type: String,
+      default: undefined
     }
   },
   data: function() {

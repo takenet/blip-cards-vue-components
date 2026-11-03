@@ -22,6 +22,7 @@
           :disable-link="parameters.disableLink"
           :readonly="parameters.readonly"
           :translations="translations"
+          :translation="translation"
           :reply-callback="replyMessage"
         />
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
@@ -43,6 +44,7 @@
             :disable-link="parameters.disableLink"
             :readonly="parameters.readonly"
             :translations="translations"
+            :translation="translation"
             :reply-callback="replyMessage"
           />
         </div>
@@ -97,10 +99,26 @@ export default {
       },
       selected: () => {},
       save: () => {},
-      deleted: () => {}
+      deleted: () => {},
+      demoTranslations: {}
     }
   },
   computed: {
+    translation() {
+      const key = (doc) => doc.id || JSON.stringify(doc.content)
+      return {
+        enabled: true,
+        showOriginal: false,
+        getTranslation: (doc) => this.demoTranslations[key(doc)] || null,
+        onTranslate: (doc) => {
+          const text = typeof doc.content === 'string' ? doc.content : (doc.content && doc.content.text) || ''
+          this.$set(this.demoTranslations, key(doc), { status: 'pending' })
+          setTimeout(() => this.$set(this.demoTranslations, key(doc), {
+            status: 'done', sourceLanguage: 'inglês', targetLanguage: 'pt-BR', text: `[pt-BR] ${text}`
+          }), 800)
+        }
+      }
+    },
     docs() {
       return this.documents.map((document) => ({ ...document, photo: this.parameters.photo ? this.photoUri : '' }))
     },

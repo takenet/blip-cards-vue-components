@@ -39,6 +39,7 @@
           :async-fetch-media="asyncFetchMedia"
           :on-async-fetch-session="onAsyncFetchSession"
           :transcription="transcription"
+          :translation="translation"
           :reply-callback="replyCallback"
           :scroll-to-message-by-id="scrollToMessageById"
           :on-image-selected="onImageSelected"
@@ -161,6 +162,10 @@ export default {
         onOpenMfeModal: (data) => {},
         scrollTo: (elementId) => {}
       })
+    },
+    translation: {
+      type: Object,
+      default: undefined
     },
     replyCallback: {
       type: Function

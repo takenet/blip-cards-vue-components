@@ -7,6 +7,14 @@
         <bds-button-icon v-if="editable" class="editIco" icon="edit" variant="primary" size="short"
           v-on:click="toggleEdit"></bds-button-icon>
         <div v-html="sanitize(computedText)" v-if="computedText"></div>
+        <blip-card-translation
+          v-if="isTranslationActive"
+          :state="translationState"
+          :label="translationFooterLabel"
+          :action-label="translationFooterActionLabel"
+          :position="position"
+          @action="onTranslationAction"
+        />
       </div>
 
       <div class="flex" :class="'notification ' + position" v-if="date">
@@ -34,12 +42,12 @@
                   <span v-else-if="hasOptionEmoji(item, index)" class="option-emoji" aria-hidden="true">{{ optionEmoji(item) }}</span>
                   <div v-if="isRichOption(item)" class="option-content">
                     <div class="option-title-row">
-                      <div class="option-title" v-html="sanitize(item.previewText)"></div>
+                      <div class="option-title" v-html="sanitize(optionLabel(item, index, true))"></div>
                       <span v-if="item.badge" class="option-badge">{{ item.badge }}</span>
                     </div>
                     <div v-if="item.description" class="option-description">{{ item.description }}</div>
                   </div>
-                  <div v-else v-html="sanitize(item.previewText)"></div>
+                  <div v-else v-html="sanitize(optionLabel(item, index, true))"></div>
                 </li>
               </ul>
             </div>
@@ -75,12 +83,12 @@
                     <span v-else-if="hasOptionEmoji(item, index)" class="option-emoji" aria-hidden="true">{{ optionEmoji(item) }}</span>
                     <div v-if="isRichOption(item)" class="option-content">
                       <div class="option-title-row">
-                        <div class="option-title" v-html="sanitize(item.text)"></div>
+                        <div class="option-title" v-html="sanitize(optionLabel(item, index, false))"></div>
                         <span v-if="item.badge" class="option-badge">{{ item.badge }}</span>
                       </div>
                       <div v-if="item.description" class="option-description">{{ item.description }}</div>
                     </div>
-                    <div v-else v-html="sanitize(item.text)"></div>
+                    <div v-else v-html="sanitize(optionLabel(item, index, false))"></div>
                   </li>
                 </template>
               </ul>
@@ -91,6 +99,14 @@
                 @click.stop="showAllOptions = true">{{ showMoreMsg }} ({{ hiddenOptionsCount }})</button>
             </div>
           </div>
+        <blip-card-translation
+          v-if="isTranslationActive"
+          :state="translationState"
+          :label="translationFooterLabel"
+          :action-label="translationFooterActionLabel"
+          :position="position"
+          @action="onTranslationAction"
+        />
       </div>
     </div>
   </div>
@@ -184,12 +200,13 @@
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
+import messageTranslation from '../mixins/messageTranslation.js'
 import { linkify, guid, isFailedMessage } from '../utils/misc'
 import debounce from 'lodash/debounce'
 
 export default {
   name: 'blip-select',
-  mixins: [base],
+  mixins: [base, messageTranslation],
   props: {
     hideOptions: {
       type: Boolean,
@@ -291,7 +308,7 @@ export default {
         : 34
     },
     computedText: function () {
-      return linkify(this.document.text)
+      return linkify(this.translatedField('text', this.document.text))
     },
     showPrev: function () {
       return this.slideIndex !== 1
@@ -364,6 +381,19 @@ export default {
     },
     isRichOption: function (item) {
       return !!(item.description || item.badge)
+    },
+    optionLabel: function (item, index, preview) {
+      const original = preview ? item.previewText : item.text
+      const options = this.isShowingTranslation && this.translationResult && this.translationResult.options
+      const translated = Array.isArray(options) ? options[index] : undefined
+
+      if (typeof translated !== 'string' || !translated.trim()) {
+        return original
+      }
+
+      return preview && translated.length > this.effectivePreviewSize
+        ? translated.substring(0, this.effectivePreviewSize) + '...'
+        : translated
     },
     startsSection: function (index) {
       const section = this.options[index].section

@@ -37,6 +37,14 @@
             </transition>
             <a style="display: block;" v-if="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
           </div>
+          <blip-card-translation
+            v-if="isTranslationActive"
+            :state="translationState"
+            :label="translationFooterLabel"
+            :action-label="translationFooterActionLabel"
+            :position="position"
+            @action="onTranslationAction"
+          />
         </div>
 
         <blip-card-reply
@@ -100,10 +108,11 @@
 <script>
 import { linkify, isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
+import messageTranslation from '../mixins/messageTranslation.js'
 
 export default {
   name: 'plain-text',
-  mixins: [base],
+  mixins: [base, messageTranslation],
   props: {
     document: {
       type: String,
@@ -136,7 +145,7 @@ export default {
   },
   computed: {
     previewDocument: function() {
-      const sanitizedDocument = this.sanitize(this.document, { disallowedTagsMode: 'escape' })
+      const sanitizedDocument = this.sanitize(this.translatedField('text', this.document), { disallowedTagsMode: 'escape' })
 
       return {
         hasPreview: sanitizedDocument.length > this.length,

@@ -43,7 +43,16 @@
             :deletable="deletable"
             :editing="isCardEditing"
             :on-cancel="cancel"
-            :on-audio-validate-uri="onAudioValidateUri" />
+            :on-audio-validate-uri="onAudioValidateUri"
+            :translated-text="translatedRepliedText" />
+          <blip-card-translation
+            v-if="isTranslationActive"
+            :state="translationState"
+            :label="translationFooterLabel"
+            :action-label="translationFooterActionLabel"
+            :position="position"
+            @action="onTranslationAction"
+          />
         </div>
       </div>
 
@@ -66,10 +75,12 @@
 
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
+import messageTranslation from '../../mixins/messageTranslation.js'
+import { MessageTypesConstants } from '../../utils/MessageTypesConstants.js'
 
 export default {
   name: 'reply-card',
-  mixins: [base],
+  mixins: [base, messageTranslation],
   props: {
     translations: {
       type: Object,
@@ -128,6 +139,14 @@ export default {
     },
     inReplyTo() {
       return this.document.inReplyTo
+    },
+    hasTranslatableContent() {
+      const replied = this.replied
+      return !!replied && replied.type === MessageTypesConstants.TEXT_MESSAGE &&
+        typeof replied.value === 'string' && replied.value.trim().length > 0
+    },
+    translatedRepliedText() {
+      return this.hasTranslatableContent ? this.translatedField('text', undefined) : undefined
     },
     blipCardReplyDocument() {
       return {

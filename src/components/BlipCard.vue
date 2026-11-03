@@ -73,6 +73,7 @@
           :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
           :translations="translations"
+          :translation="translation"
         />
 
         <media-link
@@ -109,6 +110,7 @@
           :transcription="transcription"
           :reply-callback="replyCallback"
           :on-image-selected="onImageSelected"
+          :translation="translation"
         />
 
         <document-select
@@ -211,6 +213,7 @@
           :readonly="readonly"
           :option-preview-size="document.content.optionPreviewSize"
           :show-more-msg="translations.showMore"
+          :translation="translation"
         />
 
         <web-link
@@ -607,6 +610,7 @@
           :external-message-text="translations.externalMessageText"
           :reply-callback="replyCallback"
           :scroll-to-message-by-id="scrollToMessageById"
+          :translation="translation"
         />
 
         <reaction-card
@@ -834,6 +838,10 @@ export default {
     },
     transcription: {
       type: Object
+    },
+    translation: {
+      type: Object,
+      default: undefined
     },
     replyCallback: {
       type: Function

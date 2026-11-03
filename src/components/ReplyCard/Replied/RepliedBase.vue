@@ -2,7 +2,7 @@
   <div>
     <replied-with-text 
       v-if="replied.type === MessageTypesConstants.TEXT_MESSAGE"
-      :text="repliedValue"
+      :text="translatedText || repliedValue"
     />
     <replied-with-media-link
       v-if="replied.type === MessageTypesConstants.MEDIALINK_MESSAGE"
@@ -66,6 +66,10 @@ export default {
     position: {
       type: String,
       default: 'left'
+    },
+    translatedText: {
+      type: String,
+      default: undefined
     }
   },
   computed: {

@@ -112,6 +112,83 @@ Is possible to group your cards using any rule you want. For that use the <blip-
 | readonly | Currently being used only in the quick reply. Could be implemented in other components too. This is used to avoid click actions in the quick reply options. If this attribute is true, than the <em>editable</em> and <em>deletable</em> should be false (OPTIONAL) | Boolean |
 | hide-options | Used only only in the quick reply. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
+| translation | Renders host-provided translations inside the bubbles. See [Message translation](#message-translation) (OPTIONAL) | Object |
+
+## Message translation
+`<blip-group-card>` and `<blip-card>` accept an optional `translation` prop that renders translated content inside the bubble, with a per-bubble footer ("Traduzido do {language} · Ver original") and an on-demand "Traduzir" action. The library never translates anything by itself: the host owns the translation requests and the cache, and the cards only render what `getTranslation` returns.
+
+When the prop is absent or `enabled` is not `true`, the rendering and the DOM are exactly the same as before.
+
+```html
+<blip-group-card :documents="documents" :translations="translations" :translation="translation" />
+```
+
+```js
+translation: {
+  enabled: true,
+  // Global default. Each bubble may override it locally through the footer toggle;
+  // changing this value resets every local override.
+  showOriginal: false,
+  // Must be synchronous and read reactive state (e.g. Vuex getters) so the cards re-render on updates.
+  getTranslation: (fullDocument) => ({
+    status: 'done', // 'pending' | 'done' | 'error'
+    sourceLanguage: 'espanhol', // human-readable name, shown in "Traduzido do {language}"
+    targetLanguage: 'pt-BR',
+    text: 'Olá, tudo bem?', // optional
+    title: undefined, // optional
+    options: undefined // optional, string[]
+  }), // or null when there is no translation for the message
+  onTranslate: (fullDocument) => {}, // optional, may return a Promise; called by the "Traduzir"/"Tentar novamente" actions
+  canTranslate: (fullDocument) => true // optional, defaults to `position === 'left'` (received messages)
+}
+```
+
+`fullDocument` is the original message envelope (`id`, `type`, `content`, ...).
+
+| Field returned by `getTranslation` | Replaces |
+|---|---|
+| `text` | Plain text (`text/plain`) content, select header text, media caption (image and file `text`) and the text of a received reply (`application/vnd.lime.reply+json` with a `text/plain` replied value) |
+| `title` | Image title |
+| `options[i]` | Displayed label of the select option `i`. Display only: the payload sent when an option is selected is always the original one |
+
+Footer states:
+
+| State | When | Footer |
+|---|---|---|
+| none | prop absent, `enabled !== true`, `canTranslate` false, card being edited, `getTranslation` throws, or no translation and no `onTranslate` | not rendered |
+| translate | no translation (or `done` without content) and `onTranslate` provided | "Traduzir" |
+| pending | `status: 'pending'` | "Traduzindo..." |
+| error | `status: 'error'` | "Não foi possível traduzir · Tentar novamente" (retry only with `onTranslate`) |
+| done | `status: 'done'` with a non-empty `text`, `title` or option | "Traduzido do {language} · Ver original" / "Ver tradução" |
+
+Supported cards: `text/plain` (the `#blip.payload.text` metadata variant is not translated), `application/vnd.lime.select+json`, `application/vnd.blip.rich-select+json`, image and file `application/vnd.lime.media-link+json` and received text replies. Other cards ignore the prop.
+
+### Labels
+Labels come from the existing `translations` prop under `messageTranslation`. Missing keys fall back to the pt-BR defaults below. `translatedFrom` must contain `{language}`; when it doesn't or the language is missing, `translated` is used.
+
+```js
+translations: {
+  messageTranslation: {
+    translatedFrom: 'Traduzido do {language}',
+    translated: 'Traduzido',
+    showOriginal: 'Ver original',
+    showTranslation: 'Ver tradução',
+    translate: 'Traduzir',
+    translating: 'Traduzindo...',
+    failed: 'Não foi possível traduzir',
+    retry: 'Tentar novamente'
+  }
+}
+```
+
+### Rules for hosts
+- **Do not swap the message content.** Never replace `document.content` (or any field of the envelope) with the translated text. Pass the original messages in `documents` and provide the translation only through `getTranslation`. Reply, edit and selection payloads always use the original document.
+- `getTranslation` must be cheap and side-effect free: it runs on every render of a supported card. Trigger requests only from `onTranslate`.
+- Report failures through `getTranslation` (`status: 'error'`). Errors thrown or promises rejected by `onTranslate` are swallowed by the cards.
+
+### Security notes
+- Translated strings are treated as untrusted input and go through the same pipeline as the original content (`sanitize-html` and linkify for text, `sanitize-html` for titles and options). Footer labels and languages are rendered with text interpolation only (never `v-html`).
+- Translating sends message content to the host's translation provider. The host is responsible for consent, data-protection rules and for not sending content that must not leave the platform.
 
 ## Native Form Card
 A structured form (several fields answered in a single interaction, optionally split in steps) is rendered when the bot sends an `application/vnd.blip.form+json` message.

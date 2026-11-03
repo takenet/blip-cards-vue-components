@@ -30,7 +30,9 @@
           :on-cancel="onCancel"
           :editing="editing"
           :async-fetch-media="asyncFetchMedia"
-          :on-image-selected="onImageSelected"/>
+          :on-image-selected="onImageSelected"
+          :translated-title="translatedMediaTitle"
+          :translated-text="translatedMediaText"/>
 
         <blip-sticker
           :supported-formats-msg="supportedFormatsMsg"
@@ -100,8 +102,17 @@
           :deletable="deletable"
           :on-cancel="onCancel"
           :editing="editing"
-          :async-fetch-media="asyncFetchMedia"/>
+          :async-fetch-media="asyncFetchMedia"
+          :translated-text="translatedMediaText"/>
 
+        <blip-card-translation
+          v-if="isTranslationActive"
+          :state="translationState"
+          :label="translationFooterLabel"
+          :action-label="translationFooterActionLabel"
+          :position="position"
+          @action="onTranslationAction"
+        />
       </div>
 
       <blip-card-reply
@@ -129,6 +140,7 @@ import BlipVideo from './MediaLink/Video'
 import BlipFile from './MediaLink/BlipFile'
 import BlipSticker from './MediaLink/Sticker'
 import { default as base } from '../mixins/baseComponent.js'
+import messageTranslation from '../mixins/messageTranslation.js'
 import { isFailedMessage } from '../utils/misc'
 
 export default {
@@ -182,8 +194,27 @@ export default {
       isFailedMessage
     }
   },
+  computed: {
+    mediaKind() {
+      const type = this.document.type
+      if (type.indexOf('image') !== -1) return 'image'
+      if (type.indexOf('sticker') !== -1 || type.indexOf('audio') !== -1 || type.indexOf('voice') !== -1 || type.indexOf('video') !== -1) return 'other'
+      return 'file'
+    },
+    hasTranslatableContent() {
+      if (this.mediaKind === 'image') return !!(this.document.title || this.document.text)
+      return this.mediaKind === 'file' && !!this.document.text
+    },
+    translatedMediaTitle() {
+      return this.mediaKind === 'image' && this.document.title ? this.translatedField('title', undefined) : undefined
+    },
+    translatedMediaText() {
+      return this.document.text ? this.translatedField('text', undefined) : undefined
+    }
+  },
   mixins: [
-    base
+    base,
+    messageTranslation
   ],
   components: {
     BlipImage,
