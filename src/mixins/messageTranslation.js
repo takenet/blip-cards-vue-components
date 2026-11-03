@@ -80,23 +80,40 @@ const stateFromResult = (translation, result) => {
   }
 }
 
-export function resolveTranslationState(
+const NO_TRANSLATION = Object.freeze({
+  state: TranslationStates.NONE,
+  result: null
+})
+
+export function resolveTranslation(
   translation,
   fullDocument,
   position,
   isEditing
 ) {
   if (!isTranslationEnabled(translation) || isEditing) {
-    return TranslationStates.NONE
+    return NO_TRANSLATION
   }
 
   if (!canTranslateDocument(translation, fullDocument, position)) {
-    return TranslationStates.NONE
+    return NO_TRANSLATION
   }
 
   const { result, failed } = readTranslation(translation, fullDocument)
 
-  return failed ? TranslationStates.NONE : stateFromResult(translation, result)
+  return failed
+    ? NO_TRANSLATION
+    : { state: stateFromResult(translation, result), result }
+}
+
+export function resolveTranslationState(
+  translation,
+  fullDocument,
+  position,
+  isEditing
+) {
+  return resolveTranslation(translation, fullDocument, position, isEditing)
+    .state
 }
 
 export function formatTranslatedFromLabel(template, language, fallback) {
@@ -128,24 +145,26 @@ export default {
     hasTranslatableContent() {
       return true
     },
-    translationResult() {
-      if (!isTranslationEnabled(this.translation)) {
-        return null
+    translationRead() {
+      if (
+        !isTranslationEnabled(this.translation) ||
+        !this.hasTranslatableContent
+      ) {
+        return NO_TRANSLATION
       }
 
-      return readTranslation(this.translation, this.fullDocument).result
-    },
-    translationState() {
-      if (!this.hasTranslatableContent) {
-        return TranslationStates.NONE
-      }
-
-      return resolveTranslationState(
+      return resolveTranslation(
         this.translation,
         this.fullDocument,
         this.position,
         this.isEditing
       )
+    },
+    translationResult() {
+      return this.translationRead.result
+    },
+    translationState() {
+      return this.translationRead.state
     },
     isTranslationActive() {
       return this.translationState !== TranslationStates.NONE
@@ -165,7 +184,7 @@ export default {
       )
     },
     translationLabels() {
-      // Some cards (e.g. blip-select) receive `translations` as a non-declared attribute.
+      // Not declared as a mixin prop: blip-select gets it as an attr, and declaring it would change its root DOM attrs.
       const translations = this.translations || this.$attrs.translations || {}
       return {
         ...defaultMessageTranslationLabels,
@@ -176,8 +195,6 @@ export default {
       const labels = this.translationLabels
 
       switch (this.translationState) {
-        case TranslationStates.PENDING:
-          return labels.translating
         case TranslationStates.ERROR:
           return labels.failed
         case TranslationStates.DONE:
@@ -200,6 +217,8 @@ export default {
       switch (this.translationState) {
         case TranslationStates.TRANSLATE:
           return labels.translate
+        case TranslationStates.PENDING:
+          return labels.translating
         case TranslationStates.ERROR:
           return canRequest ? labels.retry : ''
         case TranslationStates.DONE:
@@ -227,6 +246,8 @@ export default {
       ) {
         return
       }
+
+      this.translationShowOriginalOverride = false
 
       try {
         const pending = this.translation.onTranslate(this.fullDocument)

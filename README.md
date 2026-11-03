@@ -117,7 +117,7 @@ Is possible to group your cards using any rule you want. For that use the <blip-
 ## Message translation
 `<blip-group-card>` and `<blip-card>` accept an optional `translation` prop that renders translated content inside the bubble, with a per-bubble footer ("Traduzido do {language} · Ver original") and an on-demand "Traduzir" action. The library never translates anything by itself: the host owns the translation requests and the cache, and the cards only render what `getTranslation` returns.
 
-When the prop is absent or `enabled` is not `true`, the rendering and the DOM are exactly the same as before.
+When the prop is absent or `enabled` is not `true`, the rendering is visually identical to before: the only DOM difference is the empty placeholder comments (`<!---->`) Vue adds for the conditional translation elements.
 
 ```html
 <blip-group-card :documents="documents" :translations="translations" :translation="translation" />
@@ -126,7 +126,8 @@ When the prop is absent or `enabled` is not `true`, the rendering and the DOM ar
 ```js
 translation: {
   enabled: true,
-  // Global default. Each bubble may override it locally through the footer toggle;
+  // Global default. Each bubble may override it locally through the footer toggle
+  // (requesting a translation through "Traduzir" also shows it once it is done);
   // changing this value resets every local override.
   showOriginal: false,
   // Must be synchronous and read reactive state (e.g. Vuex getters) so the cards re-render on updates.
@@ -157,7 +158,7 @@ Footer states:
 |---|---|---|
 | none | prop absent, `enabled !== true`, `canTranslate` false, card being edited, `getTranslation` throws, or no translation and no `onTranslate` | not rendered |
 | translate | no translation (or `done` without content) and `onTranslate` provided | "Traduzir" |
-| pending | `status: 'pending'` | "Traduzindo..." |
+| pending | `status: 'pending'` | "Traduzindo..." (the action button stays focusable with `aria-disabled="true"`) |
 | error | `status: 'error'` | "Não foi possível traduzir · Tentar novamente" (retry only with `onTranslate`) |
 | done | `status: 'done'` with a non-empty `text`, `title` or option | "Traduzido do {language} · Ver original" / "Ver tradução" |
 
@@ -187,7 +188,7 @@ translations: {
 - Report failures through `getTranslation` (`status: 'error'`). Errors thrown or promises rejected by `onTranslate` are swallowed by the cards.
 
 ### Security notes
-- Translated strings are treated as untrusted input and go through the same pipeline as the original content (`sanitize-html` and linkify for text, `sanitize-html` for titles and options). Footer labels and languages are rendered with text interpolation only (never `v-html`).
+- Translated strings are treated as untrusted input and go through the same sanitization pipeline as the original field of each card. Footer labels and languages are rendered with text interpolation only (never `v-html`).
 - Translating sends message content to the host's translation provider. The host is responsible for consent, data-protection rules and for not sending content that must not leave the platform.
 
 ## Native Form Card

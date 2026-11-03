@@ -1,12 +1,14 @@
 <template>
-  <div :class="'blip-card-translation blip-card-translation--' + state + ' ' + position">
+  <div :class="'blip-card-translation blip-card-translation--' + state + ' ' + position" aria-live="polite">
     <span v-if="label" class="blip-card-translation-label">{{ label }}</span>
     <span v-if="label && actionLabel" class="blip-card-translation-separator" aria-hidden="true">·</span>
+    <!-- aria-disabled instead of disabled: a natively disabled button drops focus while pending -->
     <button
       v-if="actionLabel"
       type="button"
       class="blip-card-translation-action"
-      @click.stop="$emit('action')"
+      :aria-disabled="isPending ? 'true' : null"
+      @click.stop="onClick"
       @dblclick.stop
     >{{ actionLabel }}</button>
   </div>
@@ -31,6 +33,18 @@ export default {
     position: {
       type: String,
       default: 'left'
+    }
+  },
+  computed: {
+    isPending() {
+      return this.state === 'pending'
+    }
+  },
+  methods: {
+    onClick() {
+      if (!this.isPending) {
+        this.$emit('action')
+      }
     }
   }
 }
@@ -65,6 +79,12 @@ export default {
     color: inherit;
     text-decoration: underline;
     cursor: pointer;
+
+    &[aria-disabled='true'] {
+      font-weight: inherit;
+      text-decoration: none;
+      cursor: default;
+    }
   }
 }
 
