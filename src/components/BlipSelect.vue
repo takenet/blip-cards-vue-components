@@ -7,15 +7,14 @@
         <bds-button-icon v-if="editable" class="editIco" icon="edit" variant="primary" size="short"
           v-on:click="toggleEdit"></bds-button-icon>
         <div v-html="sanitize(computedText)" v-if="computedText"></div>
-        <blip-card-translation
-          v-if="isTranslationActive"
-          :state="translationState"
-          :label="translationFooterLabel"
-          :action-label="translationFooterActionLabel"
-          :position="position"
-          @action="onTranslationAction"
-        />
-      </div>
+      </div><blip-card-translation
+        v-if="translationFooterPlacement === 'row'"
+        :state="translationState"
+        :label="translationFooterLabel"
+        :action-label="translationFooterActionLabel"
+        :position="position"
+        @action="onTranslationAction"
+      />
 
       <div class="flex" :class="'notification ' + position" v-if="date">
         <img v-if="this.status === 'waiting' && this.position === 'right'" :src="clockSvg">
@@ -26,7 +25,17 @@
           {{ failedToSendMsg }}
         </div>
         <blip-card-date :status="status" :position="position" :date="date" :failed-to-send-msg="failedToSendMsg"
-          :is-external-message="isExternalMessage" :external-message-text="externalMessageText" />
+          :is-external-message="isExternalMessage" :external-message-text="externalMessageText">
+          <blip-card-translation
+            v-if="translationFooterPlacement === 'date'"
+            inline
+            :state="translationState"
+            :label="translationFooterLabel"
+            :action-label="translationFooterActionLabel"
+            :position="position"
+            @action="onTranslationAction"
+          />
+        </blip-card-date>
       </div>
         <div :class="'slideshow-container ' + position" :id="id" v-touch:swipe.left="swipeLeftHandler" v-touch:swipe.right="swipeRightHandler">
           <div class="slideshow-list">
@@ -99,15 +108,14 @@
                 @click.stop="showAllOptions = true">{{ showMoreMsg }} ({{ hiddenOptionsCount }})</button>
             </div>
           </div>
-        <blip-card-translation
-          v-if="isTranslationActive"
-          :state="translationState"
-          :label="translationFooterLabel"
-          :action-label="translationFooterActionLabel"
-          :position="position"
-          @action="onTranslationAction"
-        />
-      </div>
+      </div><blip-card-translation
+        v-if="translationFooterPlacement === 'row'"
+        :state="translationState"
+        :label="translationFooterLabel"
+        :action-label="translationFooterActionLabel"
+        :position="position"
+        @action="onTranslationAction"
+      />
     </div>
   </div>
 
@@ -309,6 +317,9 @@ export default {
     },
     computedText: function () {
       return linkify(this.translatedField('text', this.document.text))
+    },
+    hasTranslationDateRow: function () {
+      return this.document.scope === 'immediate' && !!this.date
     },
     showPrev: function () {
       return this.slideIndex !== 1

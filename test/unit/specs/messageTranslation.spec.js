@@ -1,7 +1,9 @@
 import messageTranslation, {
   resolveTranslation,
   resolveTranslationState,
-  formatTranslatedFromLabel,
+  resolveTranslationDirection,
+  resolveTranslationFooterLabels,
+  formatLanguageLabel,
   defaultMessageTranslationLabels
 } from '../../../src/mixins/messageTranslation'
 
@@ -307,53 +309,200 @@ describe('messageTranslation', () => {
       const vm = {
         translation: buildTranslation(),
         translationState: 'pending',
+        translationDirection: 'received',
+        isShowingTranslation: false,
+        translationResult: { status: 'pending' },
         translationLabels: defaultMessageTranslationLabels
       }
+      vm.translationFooterLabels = computed.translationFooterLabels.call(vm)
 
       expect(computed.translationFooterLabel.call(vm)).to.equal('')
       expect(computed.translationFooterActionLabel.call(vm)).to.equal(
         defaultMessageTranslationLabels.translating
       )
     })
+
+    describe('translationFooterPlacement', () => {
+      const host = (liftedId) => ({ isLifted: (id) => id === liftedId })
+      const placement = (overrides) =>
+        computed.translationFooterPlacement.call({
+          isTranslationActive: true,
+          translationFooterHostId: null,
+          blipTranslationFooterHost: null,
+          hasTranslationDateRow: true,
+          ...overrides
+        })
+
+      it('is none when the footer is not active', () => {
+        expect(placement({ isTranslationActive: false })).to.equal('none')
+      })
+
+      it('uses the card date row when standalone', () => {
+        expect(placement({})).to.equal('date')
+      })
+
+      it('uses its own row when the card has no date row', () => {
+        expect(placement({ hasTranslationDateRow: false })).to.equal('row')
+      })
+
+      it('uses its own row inside a group when not lifted', () => {
+        expect(placement({ blipTranslationFooterHost: host('other') })).to.equal('row')
+      })
+
+      it('is lifted to the group date row for the last message of the group', () => {
+        expect(placement({ blipTranslationFooterHost: host('msg-1'), translationFooterHostId: 'msg-1' })).to.equal('host')
+      })
+    })
+
+    it('lifts only messages with an id that the group marks as lifted', () => {
+      const hostId = (blipTranslationFooterHost, doc) =>
+        computed.translationFooterHostId.call({ blipTranslationFooterHost, fullDocument: doc })
+      const host = { isLifted: (id) => id === 'msg-1' }
+
+      expect(hostId(host, fullDocument)).to.equal('msg-1')
+      expect(hostId(host, { ...fullDocument, id: 'msg-2' })).to.equal(null)
+      expect(hostId(host, { type: 'text/plain', content: 'Hola' })).to.equal(null)
+      expect(hostId(null, fullDocument)).to.equal(null)
+    })
+
+    it('registers the lifted footer in the group and removes it when it is no longer lifted', () => {
+      const calls = []
+      const vm = {
+        blipTranslationFooterHost: {
+          setFooter: (id) => calls.push(['set', id]),
+          removeFooter: (id) => calls.push(['remove', id])
+        }
+      }
+
+      methods.syncTranslationHostFooter.call(vm, { id: 'msg-1' })
+      methods.syncTranslationHostFooter.call(vm, { id: 'msg-1' })
+      methods.syncTranslationHostFooter.call(vm, null)
+
+      expect(calls).to.deep.equal([['set', 'msg-1'], ['set', 'msg-1'], ['remove', 'msg-1']])
+      expect(vm.translationHostFooterId).to.equal(null)
+    })
   })
 
-  describe('formatTranslatedFromLabel', () => {
-    it('interpolates the language into the template', () => {
+  describe('resolveTranslationDirection', () => {
+    it('prefers the direction returned by getTranslation', () => {
+      expect(resolveTranslationDirection({ direction: 'sent' }, { direction: 'received' }, 'left')).to.equal('sent')
+    })
+
+    it('falls back to the document direction, then to the position', () => {
+      expect(resolveTranslationDirection({ direction: 'other' }, { direction: 'received' }, 'right')).to.equal('received')
+      expect(resolveTranslationDirection(null, fullDocument, 'right')).to.equal('sent')
+      expect(resolveTranslationDirection(null, fullDocument, 'left')).to.equal('received')
+      expect(resolveTranslationDirection(null, undefined, undefined)).to.equal('received')
+    })
+  })
+
+  describe('resolveTranslationFooterLabels', () => {
+    const done = {
+      status: 'done',
+      sourceLanguage: 'espanhol',
+      targetLanguage: 'português',
+      text: 'Olá'
+    }
+    const labels = (overrides) => ({
+      state: 'done',
+      direction: 'received',
+      showingTranslation: true,
+      result: done,
+      labels: defaultMessageTranslationLabels,
+      canRequest: true,
+      ...overrides
+    })
+
+    it('offers the original of a received translated message in the source language', () => {
+      expect(resolveTranslationFooterLabels(labels())).to.deep.equal({
+        label: '',
+        actionLabel: 'Ver original em espanhol'
+      })
+    })
+
+    it('offers the attendant text of a sent message in the customer language', () => {
+      expect(resolveTranslationFooterLabels(labels({ direction: 'sent' })).actionLabel).to.equal(
+        'Ver envio em espanhol'
+      )
+    })
+
+    it('offers the translation in the target language when showing the original', () => {
+      expect(resolveTranslationFooterLabels(labels({ showingTranslation: false })).actionLabel).to.equal(
+        'Ver em português'
+      )
       expect(
-        formatTranslatedFromLabel(
-          'Traduzido do {language}',
-          'espanhol',
-          'Traduzido'
-        )
-      ).to.equal('Traduzido do espanhol')
+        resolveTranslationFooterLabels(labels({ direction: 'sent', showingTranslation: false })).actionLabel
+      ).to.equal('Ver em português')
+    })
+
+    it('renders translate, pending and error states', () => {
+      expect(resolveTranslationFooterLabels(labels({ state: 'translate' }))).to.deep.equal({
+        label: '',
+        actionLabel: 'Traduzir'
+      })
+      expect(resolveTranslationFooterLabels(labels({ state: 'pending' }))).to.deep.equal({
+        label: '',
+        actionLabel: 'Traduzindo...'
+      })
+      expect(resolveTranslationFooterLabels(labels({ state: 'error' }))).to.deep.equal({
+        label: 'Não foi possível traduzir',
+        actionLabel: 'Tentar novamente'
+      })
+      expect(resolveTranslationFooterLabels(labels({ state: 'error', canRequest: false }))).to.deep.equal({
+        label: 'Não foi possível traduzir',
+        actionLabel: ''
+      })
+      expect(resolveTranslationFooterLabels(labels({ state: 'none' }))).to.deep.equal({
+        label: '',
+        actionLabel: ''
+      })
+    })
+
+    it('uses host labels', () => {
+      const custom = {
+        ...defaultMessageTranslationLabels,
+        viewOriginal: 'See original in {language}',
+        viewSent: 'See sent in {language}'
+      }
+      const result = { ...done, sourceLanguage: 'Spanish' }
+
+      expect(resolveTranslationFooterLabels(labels({ labels: custom, result })).actionLabel).to.equal(
+        'See original in Spanish'
+      )
+      expect(
+        resolveTranslationFooterLabels(labels({ labels: custom, result, direction: 'sent' })).actionLabel
+      ).to.equal('See sent in Spanish')
+    })
+  })
+
+  describe('defaultMessageTranslationLabels', () => {
+    it('exposes only the current keys', () => {
+      expect(Object.keys(defaultMessageTranslationLabels).sort()).to.deep.equal(
+        ['failed', 'retry', 'translate', 'translating', 'viewOriginal', 'viewSent', 'viewTranslation']
+      )
+    })
+  })
+
+  describe('formatLanguageLabel', () => {
+    it('interpolates the language without changing its case', () => {
+      expect(formatLanguageLabel('Ver original em {language}', 'espanhol')).to.equal(
+        'Ver original em espanhol'
+      )
+      expect(formatLanguageLabel('Ver em {language}', 'Português')).to.equal('Ver em Português')
     })
 
     it('replaces every placeholder occurrence', () => {
-      expect(
-        formatTranslatedFromLabel('{language} / {language}', 'en', 'x')
-      ).to.equal('en / en')
+      expect(formatLanguageLabel('{language} / {language}', 'en')).to.equal('en / en')
     })
 
-    it('returns the fallback when the language is missing or empty', () => {
-      expect(
-        formatTranslatedFromLabel(
-          'Traduzido do {language}',
-          undefined,
-          'Traduzido'
-        )
-      ).to.equal('Traduzido')
-      expect(
-        formatTranslatedFromLabel('Traduzido do {language}', '  ', 'Traduzido')
-      ).to.equal('Traduzido')
+    it('drops the placeholder when the language is missing or empty', () => {
+      expect(formatLanguageLabel('Ver original em {language}', undefined)).to.equal('Ver original em')
+      expect(formatLanguageLabel('Ver em {language}', '  ')).to.equal('Ver em')
     })
 
-    it('returns the fallback when the template is invalid', () => {
-      expect(
-        formatTranslatedFromLabel(undefined, 'espanhol', 'Traduzido')
-      ).to.equal('Traduzido')
-      expect(
-        formatTranslatedFromLabel('Traduzido', 'espanhol', 'Traduzido')
-      ).to.equal('Traduzido')
+    it('keeps templates without placeholder and ignores invalid templates', () => {
+      expect(formatLanguageLabel('Ver original', 'espanhol')).to.equal('Ver original')
+      expect(formatLanguageLabel(undefined, 'espanhol')).to.equal('')
     })
   })
 })

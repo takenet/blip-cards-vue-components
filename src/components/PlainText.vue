@@ -37,14 +37,6 @@
             </transition>
             <a style="display: block;" v-if="!showContent" v-on:click="showContent = true">{{ showMoreMsg }}</a>
           </div>
-          <blip-card-translation
-            v-if="isTranslationActive"
-            :state="translationState"
-            :label="translationFooterLabel"
-            :action-label="translationFooterActionLabel"
-            :position="position"
-            @action="onTranslationAction"
-          />
         </div>
 
         <blip-card-reply
@@ -52,7 +44,14 @@
           :reply-callback="replyCallback"
           :reply-tooltip-text="replyTooltipText"
         />
-      </bds-grid>
+      </bds-grid><blip-card-translation
+        v-if="translationFooterPlacement === 'row'"
+        :state="translationState"
+        :label="translationFooterLabel"
+        :action-label="translationFooterActionLabel"
+        :position="position"
+        @action="onTranslationAction"
+      />
       
       <blip-card-date
         :status="status"
@@ -61,7 +60,17 @@
         :failed-to-send-msg="failedToSendMsg"
         :is-external-message="isExternalMessage"
         :external-message-text="externalMessageText"
-      />
+      >
+        <blip-card-translation
+          v-if="translationFooterPlacement === 'date'"
+          inline
+          :state="translationState"
+          :label="translationFooterLabel"
+          :action-label="translationFooterActionLabel"
+          :position="position"
+          @action="onTranslationAction"
+        />
+      </blip-card-date>
     </div>
   </div>
 

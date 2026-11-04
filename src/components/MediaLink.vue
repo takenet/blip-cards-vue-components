@@ -105,14 +105,6 @@
           :async-fetch-media="asyncFetchMedia"
           :translated-text="translatedMediaText"/>
 
-        <blip-card-translation
-          v-if="isTranslationActive"
-          :state="translationState"
-          :label="translationFooterLabel"
-          :action-label="translationFooterActionLabel"
-          :position="position"
-          @action="onTranslationAction"
-        />
       </div>
 
       <blip-card-reply
@@ -120,7 +112,14 @@
         :reply-callback="replyCallback"
         :reply-tooltip-text="translations.replyTooltipText"
       />
-    </bds-grid>
+    </bds-grid><blip-card-translation
+      v-if="translationFooterPlacement === 'row'"
+      :state="translationState"
+      :label="translationFooterLabel"
+      :action-label="translationFooterActionLabel"
+      :position="position"
+      @action="onTranslationAction"
+    />
     <blip-card-date
       :status="status"
       :position="position"
@@ -128,7 +127,17 @@
       :failed-to-send-msg="failedToSendMsg"
       :is-external-message="isExternalMessage"
       :external-message-text="externalMessageText"
-    />
+    >
+      <blip-card-translation
+        v-if="translationFooterPlacement === 'date'"
+        inline
+        :state="translationState"
+        :label="translationFooterLabel"
+        :action-label="translationFooterActionLabel"
+        :position="position"
+        @action="onTranslationAction"
+      />
+    </blip-card-date>
   </div>
 </template>
 

@@ -12,9 +12,9 @@
       {{ showAlertIcon ? '' : failedToSendMsg }}
     </div>
     {{ isExternalMessage ? externalMessageText + ' | ' + date : date }}
-  </div>
+  <slot></slot></div>
   <div class="flex" :class="`${isGroup ? 'group-' : ''}notification ` + position" v-else>
-    <img v-if="this.status === 'dispatched' && this.position === 'right'" :src="clockSvg" draggable="false">
+    <img v-if="this.status === 'dispatched' && this.position === 'right'" :src="clockSvg" draggable="false"><slot></slot>
   </div>
 </template>
 

@@ -55,7 +55,17 @@
           :external-message-text="externalMessageText"
           :is-group="true"
           :show-alert-icon="Boolean(onFailedClickIcon)"
-        />
+        >
+          <blip-card-translation
+            v-if="groupTranslationFooter(group)"
+            inline
+            :state="groupTranslationFooter(group).state"
+            :label="groupTranslationFooter(group).label"
+            :action-label="groupTranslationFooter(group).actionLabel"
+            :position="groupTranslationFooter(group).position"
+            @action="groupTranslationFooter(group).onAction()"
+          />
+        </blip-card-date>
       </div>
       <span v-if="onFailedClickIcon && group.status === 'failed'">
         <bds-icon v-if="group.position === 'right'"
@@ -185,10 +195,50 @@ export default {
   data() {
     return {
       photoMargin: 0,
-      checkIsExternalMessage
+      checkIsExternalMessage,
+      translationFooters: {}
+    }
+  },
+  provide() {
+    return {
+      blipTranslationFooterHost: {
+        isLifted: (id) => !!this.translationLiftedIds[id],
+        setFooter: (id, footer, owner) => {
+          this.$set(this.translationFooters, id, { ...footer, owner })
+        },
+        removeFooter: (id, owner) => {
+          const current = this.translationFooters[id]
+          if (current && current.owner === owner) {
+            this.$delete(this.translationFooters, id)
+          }
+        }
+      }
     }
   },
   computed: {
+    // Ids of the last message of each group whose date row is shown: their footer goes in that row.
+    // Duplicated ids are skipped (their bubbles keep the footer on their own row).
+    translationLiftedIds() {
+      const ids = {}
+      if (!this.translation || this.translation.enabled !== true || !this.groupedDocuments) {
+        return ids
+      }
+
+      const counts = {}
+      this.documents.forEach((message) => {
+        const document = message.document || message
+        const id = document && document.id
+        if (id) counts[id] = (counts[id] || 0) + 1
+      })
+
+      this.groupedDocuments.forEach((group) => {
+        const id = this.groupLastDocumentId(group)
+        if (id && counts[id] === 1 && group.date && group.hasNotification) {
+          ids[id] = true
+        }
+      })
+      return ids
+    },
     groupedDocuments() {
       let groups = []
 
@@ -263,6 +313,15 @@ export default {
     }
   },
   methods: {
+    groupLastDocumentId(group) {
+      const last = group.msgs[group.msgs.length - 1]
+      const document = last && (last.document || last)
+      return document ? document.id : undefined
+    },
+    groupTranslationFooter(group) {
+      const id = this.groupLastDocumentId(group)
+      return (id && this.translationLiftedIds[id] && this.translationFooters[id]) || null
+    },
     isFailedMessageGroup(message, group) {
       if (message.type === MessageTypesConstants.THREAD_SUMMARY) {
         return ''

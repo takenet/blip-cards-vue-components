@@ -109,12 +109,13 @@ export default {
       return {
         enabled: true,
         showOriginal: false,
+        canTranslate: () => true,
         getTranslation: (doc) => this.demoTranslations[key(doc)] || null,
         onTranslate: (doc) => {
           const text = typeof doc.content === 'string' ? doc.content : (doc.content && doc.content.text) || ''
           this.$set(this.demoTranslations, key(doc), { status: 'pending' })
           setTimeout(() => this.$set(this.demoTranslations, key(doc), {
-            status: 'done', sourceLanguage: 'inglês', targetLanguage: 'pt-BR', text: `[pt-BR] ${text}`
+            status: 'done', sourceLanguage: 'inglês', targetLanguage: 'português', text: `[pt-BR] ${text}`
           }), 800)
         }
       }

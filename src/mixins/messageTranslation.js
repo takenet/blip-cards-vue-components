@@ -6,11 +6,22 @@ export const TranslationStates = {
   DONE: 'done'
 }
 
+export const TranslationDirections = {
+  RECEIVED: 'received',
+  SENT: 'sent'
+}
+
+export const TranslationFooterPlacements = {
+  NONE: 'none',
+  DATE: 'date',
+  ROW: 'row',
+  HOST: 'host'
+}
+
 export const defaultMessageTranslationLabels = {
-  translatedFrom: 'Traduzido do {language}',
-  translated: 'Traduzido',
-  showOriginal: 'Ver original',
-  showTranslation: 'Ver tradução',
+  viewOriginal: 'Ver original em {language}',
+  viewTranslation: 'Ver em {language}',
+  viewSent: 'Ver envio em {language}',
   translate: 'Traduzir',
   translating: 'Traduzindo...',
   failed: 'Não foi possível traduzir',
@@ -116,16 +127,68 @@ export function resolveTranslationState(
     .state
 }
 
-export function formatTranslatedFromLabel(template, language, fallback) {
-  if (
-    !isNonEmptyString(language) ||
-    !isNonEmptyString(template) ||
-    template.indexOf('{language}') === -1
-  ) {
-    return fallback
+export function formatLanguageLabel(template, language) {
+  if (typeof template !== 'string') {
+    return ''
+  }
+
+  if (!isNonEmptyString(language)) {
+    return template.replace(/\s*\{language\}/g, '').trim()
   }
 
   return template.split('{language}').join(language.trim())
+}
+
+const isDirection = (value) =>
+  value === TranslationDirections.RECEIVED || value === TranslationDirections.SENT
+
+export function resolveTranslationDirection(result, fullDocument, position) {
+  if (result && isDirection(result.direction)) {
+    return result.direction
+  }
+
+  if (fullDocument && isDirection(fullDocument.direction)) {
+    return fullDocument.direction
+  }
+
+  return position === 'right'
+    ? TranslationDirections.SENT
+    : TranslationDirections.RECEIVED
+}
+
+// Returns the footer texts: `label` is plain text, `actionLabel` is the clickable part.
+export function resolveTranslationFooterLabels({
+  state,
+  direction,
+  showingTranslation,
+  result,
+  labels,
+  canRequest
+}) {
+  switch (state) {
+    case TranslationStates.TRANSLATE:
+      return { label: '', actionLabel: labels.translate }
+    case TranslationStates.PENDING:
+      return { label: '', actionLabel: labels.translating }
+    case TranslationStates.ERROR:
+      return { label: labels.failed, actionLabel: canRequest ? labels.retry : '' }
+    case TranslationStates.DONE: {
+      const source = result && result.sourceLanguage
+      const target = result && result.targetLanguage
+
+      if (!showingTranslation) {
+        return { label: '', actionLabel: formatLanguageLabel(labels.viewTranslation, target) }
+      }
+
+      const template =
+        direction === TranslationDirections.SENT
+          ? labels.viewSent
+          : labels.viewOriginal
+      return { label: '', actionLabel: formatLanguageLabel(template, source) }
+    }
+    default:
+      return { label: '', actionLabel: '' }
+  }
 }
 
 export default {
@@ -134,6 +197,10 @@ export default {
       type: Object,
       default: undefined
     }
+  },
+  // Provided by blip-group-card so the last bubble of a group renders its footer in the group date row.
+  inject: {
+    blipTranslationFooterHost: { default: null }
   },
   data() {
     return {
@@ -191,51 +258,99 @@ export default {
         ...(translations.messageTranslation || {})
       }
     },
+    translationDirection() {
+      return resolveTranslationDirection(
+        this.translationResult,
+        this.fullDocument,
+        this.position
+      )
+    },
+    translationFooterLabels() {
+      return resolveTranslationFooterLabels({
+        state: this.translationState,
+        direction: this.translationDirection,
+        showingTranslation: this.isShowingTranslation,
+        result: this.translationResult,
+        labels: this.translationLabels,
+        canRequest:
+          !!this.translation &&
+          typeof this.translation.onTranslate === 'function'
+      })
+    },
     translationFooterLabel() {
-      const labels = this.translationLabels
-
-      switch (this.translationState) {
-        case TranslationStates.ERROR:
-          return labels.failed
-        case TranslationStates.DONE:
-          return this.isShowingTranslation
-            ? formatTranslatedFromLabel(
-                labels.translatedFrom,
-                this.translationResult && this.translationResult.sourceLanguage,
-                labels.translated
-              )
-            : ''
-        default:
-          return ''
-      }
+      return this.translationFooterLabels.label
     },
     translationFooterActionLabel() {
-      const labels = this.translationLabels
-      const canRequest =
-        !!this.translation && typeof this.translation.onTranslate === 'function'
+      return this.translationFooterLabels.actionLabel
+    },
+    // Cards without their own date row (e.g. list selects) override this to render the footer on its own row.
+    hasTranslationDateRow() {
+      return true
+    },
+    translationFooterHostId() {
+      const host = this.blipTranslationFooterHost
+      const id = this.fullDocument && this.fullDocument.id
+      return host && id && host.isLifted(id) ? id : null
+    },
+    translationFooterPlacement() {
+      if (!this.isTranslationActive) {
+        return TranslationFooterPlacements.NONE
+      }
 
-      switch (this.translationState) {
-        case TranslationStates.TRANSLATE:
-          return labels.translate
-        case TranslationStates.PENDING:
-          return labels.translating
-        case TranslationStates.ERROR:
-          return canRequest ? labels.retry : ''
-        case TranslationStates.DONE:
-          return this.isShowingTranslation
-            ? labels.showOriginal
-            : labels.showTranslation
-        default:
-          return ''
+      if (this.translationFooterHostId) {
+        return TranslationFooterPlacements.HOST
+      }
+
+      // Inside a group the per-card date row is hidden, so the footer gets its own row.
+      return this.blipTranslationFooterHost || !this.hasTranslationDateRow
+        ? TranslationFooterPlacements.ROW
+        : TranslationFooterPlacements.DATE
+    },
+    translationHostFooter() {
+      if (this.translationFooterPlacement !== TranslationFooterPlacements.HOST) {
+        return null
+      }
+
+      return {
+        id: this.translationFooterHostId,
+        state: this.translationState,
+        label: this.translationFooterLabel,
+        actionLabel: this.translationFooterActionLabel,
+        position: this.position,
+        onAction: this.onTranslationAction
       }
     }
   },
   watch: {
     translationGlobalShowOriginal() {
       this.translationShowOriginalOverride = null
+    },
+    translationHostFooter: {
+      immediate: true,
+      handler(footer) {
+        this.syncTranslationHostFooter(footer)
+      }
     }
   },
+  beforeDestroy() {
+    this.syncTranslationHostFooter(null)
+  },
   methods: {
+    syncTranslationHostFooter(footer) {
+      const host = this.blipTranslationFooterHost
+      if (!host) {
+        return
+      }
+
+      if (this.translationHostFooterId && (!footer || footer.id !== this.translationHostFooterId)) {
+        host.removeFooter(this.translationHostFooterId, this)
+      }
+
+      this.translationHostFooterId = footer ? footer.id : null
+      if (footer) {
+        host.setFooter(footer.id, footer, this)
+      }
+    },
     toggleTranslationOriginal() {
       this.translationShowOriginalOverride = !this.translationShowOriginal
     },

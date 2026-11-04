@@ -112,10 +112,17 @@ Is possible to group your cards using any rule you want. For that use the <blip-
 | readonly | Currently being used only in the quick reply. Could be implemented in other components too. This is used to avoid click actions in the quick reply options. If this attribute is true, than the <em>editable</em> and <em>deletable</em> should be false (OPTIONAL) | Boolean |
 | hide-options | Used only only in the quick reply. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
-| translation | Renders host-provided translations inside the bubbles. See [Message translation](#message-translation) (OPTIONAL) | Object |
+| translation | Renders host-provided translations in the bubbles, with a toggle on the timestamp row. See [Message translation](#message-translation) (OPTIONAL) | Object |
 
 ## Message translation
-`<blip-group-card>` and `<blip-card>` accept an optional `translation` prop that renders translated content inside the bubble, with a per-bubble footer ("Traduzido do {language} · Ver original") and an on-demand "Traduzir" action. The library never translates anything by itself: the host owns the translation requests and the cache, and the cards only render what `getTranslation` returns.
+`<blip-group-card>` and `<blip-card>` accept an optional `translation` prop that renders translated content inside the bubble and a small translation control below it, on the same row as the message time:
+
+```
+          10:12 · [icon] Ver original em espanhol      (received message, left aligned)
+10:17 · [icon] Ver envio em espanhol                    (sent message, right aligned)
+```
+
+The library never translates anything by itself: the host owns the translation requests and the cache, and the cards only render what `getTranslation` returns.
 
 When the prop is absent or `enabled` is not `true`, the rendering is visually identical to before: the only DOM difference is the empty placeholder comments (`<!---->`) Vue adds for the conditional translation elements.
 
@@ -126,18 +133,19 @@ When the prop is absent or `enabled` is not `true`, the rendering is visually id
 ```js
 translation: {
   enabled: true,
-  // Global default. Each bubble may override it locally through the footer toggle
+  // Global default. Each bubble may override it locally through the toggle
   // (requesting a translation through "Traduzir" also shows it once it is done);
   // changing this value resets every local override.
   showOriginal: false,
   // Must be synchronous and read reactive state (e.g. Vuex getters) so the cards re-render on updates.
   getTranslation: (fullDocument) => ({
     status: 'done', // 'pending' | 'done' | 'error'
-    sourceLanguage: 'espanhol', // human-readable name, shown in "Traduzido do {language}"
-    targetLanguage: 'pt-BR',
+    sourceLanguage: 'espanhol', // customer language, human-readable and already in the case to display
+    targetLanguage: 'português', // attendant language, human-readable and already in the case to display
     text: 'Olá, tudo bem?', // optional
     title: undefined, // optional
-    options: undefined // optional, string[]
+    options: undefined, // optional, string[]
+    direction: 'received' // optional, 'received' | 'sent'
   }), // or null when there is no translation for the message
   onTranslate: (fullDocument) => {}, // optional, may return a Promise; called by the "Traduzir"/"Tentar novamente" actions
   canTranslate: (fullDocument) => true // optional, defaults to `position === 'left'` (received messages)
@@ -146,34 +154,46 @@ translation: {
 
 `fullDocument` is the original message envelope (`id`, `type`, `content`, ...).
 
-| Field returned by `getTranslation` | Replaces |
+| Field returned by `getTranslation` | Replaces (while the translation is shown) |
 |---|---|
 | `text` | Plain text (`text/plain`) content, select header text, media caption (image and file `text`) and the text of a received reply (`application/vnd.lime.reply+json` with a `text/plain` replied value) |
 | `title` | Image title |
 | `options[i]` | Displayed label of the select option `i`. Display only: the payload sent when an option is selected is always the original one |
 
-Footer states:
+**Direction.** `direction` from `getTranslation` when it is `'received'` or `'sent'`; otherwise `fullDocument.direction` when it is one of these values; otherwise `'sent'` for `position === 'right'` and `'received'` for any other position.
 
-| State | When | Footer |
+- **Received** messages: `text` is the customer message translated to the attendant language. The bubble shows it by default and the toggle reads "Ver original em {sourceLanguage}"; showing the original switches it to "Ver em {targetLanguage}".
+- **Sent** messages: `text` is the attendant's original text (before it was translated and sent). The bubble shows it by default and the toggle reads "Ver envio em {sourceLanguage}"; showing the content actually sent (`document`) switches it to "Ver em {targetLanguage}". Sent messages are only evaluated when `canTranslate` is provided (the default only allows `position === 'left'`).
+
+Toggle states (rendered after the time, or after the group time for the last bubble of a `<blip-group-card>` group):
+
+| State | When | Toggle |
 |---|---|---|
 | none | prop absent, `enabled !== true`, `canTranslate` false, card being edited, `getTranslation` throws, or no translation and no `onTranslate` | not rendered |
 | translate | no translation (or `done` without content) and `onTranslate` provided | "Traduzir" |
-| pending | `status: 'pending'` | "Traduzindo..." (the action button stays focusable with `aria-disabled="true"`) |
+| pending | `status: 'pending'` | "Traduzindo..." as plain text (the button stays focusable with `aria-disabled="true"`) |
 | error | `status: 'error'` | "Não foi possível traduzir · Tentar novamente" (retry only with `onTranslate`) |
-| done | `status: 'done'` with a non-empty `text`, `title` or option | "Traduzido do {language} · Ver original" / "Ver tradução" |
+| done | `status: 'done'` with a non-empty `text`, `title` or option | "Ver original em {language}" / "Ver envio em {language}" / "Ver em {language}" (see Direction) |
 
-Supported cards: `text/plain` (the `#blip.payload.text` metadata variant is not translated), `application/vnd.lime.select+json`, `application/vnd.blip.rich-select+json`, image and file `application/vnd.lime.media-link+json` and received text replies. Other cards ignore the prop.
+The control is announced through `aria-live="polite"` and the icon is `aria-hidden`.
+
+Placement:
+- Standalone cards render the control in their own time row (`10:12 · ...`).
+- In `<blip-group-card>`, only the last bubble of a group has a time row (the group one), so its control is rendered there; the other bubbles of the group render the control on a row of their own below the bubble, without the time. A message is matched to its group row by `fullDocument.id`; messages without `id`, or whose `id` is repeated in `documents`, always use their own row.
+- List menus (non-`immediate` selects) have no time row and always use their own row.
+- The link color is `$vue-dark-blip` (`#15AFB2`), the closest teal token available to the design. Hosts can override it with the `--blip-cards-translation-link-color` CSS custom property (e.g. a darker teal to reach the required contrast on their background).
+
+Supported cards: `text/plain` (the `#blip.payload.text` metadata variant is not translated), `application/vnd.lime.select+json`, `application/vnd.blip.rich-select+json`, image and file `application/vnd.lime.media-link+json` and text replies. Other cards ignore the prop.
 
 ### Labels
-Labels come from the existing `translations` prop under `messageTranslation`. Missing keys fall back to the pt-BR defaults below. `translatedFrom` must contain `{language}`; when it doesn't or the language is missing, `translated` is used.
+Labels come from the existing `translations` prop under `messageTranslation`. Missing keys fall back to the pt-BR defaults below. `{language}` is replaced by the language name exactly as returned by the host (the library never changes its case, so pass e.g. "espanhol" for pt-BR sentences); when the language is missing, the placeholder is dropped.
 
 ```js
 translations: {
   messageTranslation: {
-    translatedFrom: 'Traduzido do {language}',
-    translated: 'Traduzido',
-    showOriginal: 'Ver original',
-    showTranslation: 'Ver tradução',
+    viewOriginal: 'Ver original em {language}', // received, translation shown; {language} = sourceLanguage
+    viewTranslation: 'Ver em {language}', // original shown; {language} = targetLanguage
+    viewSent: 'Ver envio em {language}', // sent, attendant text shown; {language} = sourceLanguage
     translate: 'Traduzir',
     translating: 'Traduzindo...',
     failed: 'Não foi possível traduzir',
