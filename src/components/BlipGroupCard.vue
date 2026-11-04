@@ -224,7 +224,7 @@ export default {
     // Duplicated ids are skipped (their bubbles keep the footer on their own row).
     translationLiftedIds() {
       const ids = {}
-      if (!this.translation || this.translation.enabled !== true || !this.groupedDocuments) {
+      if (!this.translationEnabled || !this.groupedDocuments) {
         return ids
       }
 

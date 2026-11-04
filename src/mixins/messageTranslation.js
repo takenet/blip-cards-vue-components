@@ -1,4 +1,4 @@
-export const TranslationStates = {
+const TranslationStates = {
   NONE: 'none',
   TRANSLATE: 'translate',
   PENDING: 'pending',
@@ -6,12 +6,12 @@ export const TranslationStates = {
   DONE: 'done'
 }
 
-export const TranslationDirections = {
+const TranslationDirections = {
   RECEIVED: 'received',
   SENT: 'sent'
 }
 
-export const TranslationFooterPlacements = {
+const TranslationFooterPlacements = {
   NONE: 'none',
   DATE: 'date',
   ROW: 'row',
@@ -118,16 +118,6 @@ export function resolveTranslation(
   return failed
     ? NO_TRANSLATION
     : { state: stateFromResult(translation, result), result }
-}
-
-export function resolveTranslationState(
-  translation,
-  fullDocument,
-  position,
-  isEditing
-) {
-  return resolveTranslation(translation, fullDocument, position, isEditing)
-    .state
 }
 
 export function formatLanguageLabel(template, language) {

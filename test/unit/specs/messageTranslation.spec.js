@@ -1,11 +1,12 @@
 import messageTranslation, {
   resolveTranslation,
-  resolveTranslationState,
   resolveTranslationDirection,
   resolveTranslationFooterLabels,
   formatLanguageLabel,
   defaultMessageTranslationLabels
 } from '../../../src/mixins/messageTranslation'
+
+const resolveTranslationState = (...args) => resolveTranslation(...args).state
 
 const fullDocument = { id: 'msg-1', type: 'text/plain', content: 'Hola' }
 
