@@ -22,7 +22,6 @@
           :disable-link="parameters.disableLink"
           :readonly="parameters.readonly"
           :translations="translations"
-          :translation="translation"
           :reply-callback="replyMessage"
         />
         <div v-else v-for="(item, index) in docs" v-bind:key="index">
@@ -44,7 +43,6 @@
             :disable-link="parameters.disableLink"
             :readonly="parameters.readonly"
             :translations="translations"
-            :translation="translation"
             :reply-callback="replyMessage"
           />
         </div>
@@ -99,27 +97,10 @@ export default {
       },
       selected: () => {},
       save: () => {},
-      deleted: () => {},
-      demoTranslations: {}
+      deleted: () => {}
     }
   },
   computed: {
-    translation() {
-      const key = (doc) => doc.id || JSON.stringify(doc.content)
-      return {
-        enabled: true,
-        showOriginal: false,
-        canTranslate: () => true,
-        getTranslation: (doc) => this.demoTranslations[key(doc)] || null,
-        onTranslate: (doc) => {
-          const text = typeof doc.content === 'string' ? doc.content : (doc.content && doc.content.text) || ''
-          this.$set(this.demoTranslations, key(doc), { status: 'pending' })
-          setTimeout(() => this.$set(this.demoTranslations, key(doc), {
-            status: 'done', sourceLanguage: 'inglês', targetLanguage: 'português', text: `[pt-BR] ${text}`
-          }), 800)
-        }
-      }
-    },
     docs() {
       return this.documents.map((document) => ({ ...document, photo: this.parameters.photo ? this.photoUri : '' }))
     },
@@ -134,10 +115,6 @@ export default {
       type: 'text/plain',
       content: 'Seja bem-vindo ao nosso serviço! Como podemos te ajudar?'
     })
-
-    if (this.$route && this.$route.query.scenario === 'translation') {
-      this.loadTranslationScenario()
-    }
   },
   methods: {
     sendCommand(command) {
@@ -154,38 +131,6 @@ export default {
       })
 
       setTimeout(() => this.scrollCommandsThread(), 200)
-    },
-    // /new?scenario=translation: grouped received/sent messages with translation
-    loadTranslationScenario() {
-      this.parameters.group = true
-      this.documents = []
-
-      const messages = [
-        ['r1', 'left', 'Hello, I need help with my order', 'Olá, preciso de ajuda com meu pedido'],
-        ['r2', 'left', 'It has not arrived yet', 'Ainda não chegou'],
-        ['s1', 'right', 'Olá', 'Hello'],
-        ['s2', 'right', 'Oi', 'Hi'],
-        ['s3', 'right', 'Vou verificar o status do seu pedido agora mesmo', 'I will check your order status right now'],
-        ['r3', 'left', 'Thank you!', 'Obrigado!'],
-        ['s4', 'right', 'Oi', 'Hi']
-      ]
-
-      messages.forEach(([id, position, text, translated]) => {
-        const received = position === 'left'
-        this.$set(this.demoTranslations, id, {
-          status: 'done',
-          direction: received ? 'received' : 'sent',
-          sourceLanguage: received ? 'inglês' : 'português',
-          targetLanguage: received ? 'português' : 'inglês',
-          text: received ? translated : text
-        })
-        this.documents.push({
-          document: { id, type: 'text/plain', content: received ? text : translated },
-          date: this.parameters.date,
-          position,
-          status: this.parameters.msgStatus
-        })
-      })
     },
     scrollCommandsThread() {
       const el = this.$refs.commandsThread
