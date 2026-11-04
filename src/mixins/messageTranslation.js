@@ -22,6 +22,9 @@ export const defaultMessageTranslationLabels = {
   viewOriginal: 'Ver original em {language}',
   viewTranslation: 'Ver em {language}',
   viewSent: 'Ver envio em {language}',
+  viewOriginalNoLanguage: 'Ver original',
+  viewTranslationNoLanguage: 'Ver tradução',
+  viewSentNoLanguage: 'Ver envio',
   translate: 'Traduzir',
   translating: 'Traduzindo...',
   failed: 'Não foi possível traduzir',
@@ -139,6 +142,16 @@ export function formatLanguageLabel(template, language) {
   return template.split('{language}').join(language.trim())
 }
 
+// Uses the `<key>NoLanguage` label when the language is missing; falls back to dropping the placeholder.
+const resolveLanguageLabel = (labels, key, language) => {
+  const noLanguage = labels[`${key}NoLanguage`]
+  if (!isNonEmptyString(language) && isNonEmptyString(noLanguage)) {
+    return noLanguage.trim()
+  }
+
+  return formatLanguageLabel(labels[key], language)
+}
+
 const isDirection = (value) =>
   value === TranslationDirections.RECEIVED || value === TranslationDirections.SENT
 
@@ -177,14 +190,12 @@ export function resolveTranslationFooterLabels({
       const target = result && result.targetLanguage
 
       if (!showingTranslation) {
-        return { label: '', actionLabel: formatLanguageLabel(labels.viewTranslation, target) }
+        return { label: '', actionLabel: resolveLanguageLabel(labels, 'viewTranslation', target) }
       }
 
-      const template =
-        direction === TranslationDirections.SENT
-          ? labels.viewSent
-          : labels.viewOriginal
-      return { label: '', actionLabel: formatLanguageLabel(template, source) }
+      const key =
+        direction === TranslationDirections.SENT ? 'viewSent' : 'viewOriginal'
+      return { label: '', actionLabel: resolveLanguageLabel(labels, key, source) }
     }
     default:
       return { label: '', actionLabel: '' }

@@ -64,6 +64,7 @@
         <blip-card-translation
           v-if="translationFooterPlacement === 'date'"
           inline
+          :separator="!!date"
           :state="translationState"
           :label="translationFooterLabel"
           :action-label="translationFooterActionLabel"

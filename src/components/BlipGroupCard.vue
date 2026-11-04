@@ -59,6 +59,7 @@
           <blip-card-translation
             v-if="groupTranslationFooter(group)"
             inline
+            :separator="!!group.date"
             :state="groupTranslationFooter(group).state"
             :label="groupTranslationFooter(group).label"
             :action-label="groupTranslationFooter(group).actionLabel"

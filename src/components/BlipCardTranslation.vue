@@ -1,9 +1,9 @@
 <template>
   <div
     :class="['blip-card-translation', 'blip-card-translation--' + state, position, { 'blip-card-translation--inline': inline }]"
-    aria-live="polite"
+    :aria-live="live ? 'polite' : null"
   >
-    <span v-if="inline" class="blip-card-translation-separator" aria-hidden="true">·</span>
+    <span v-if="inline && separator" class="blip-card-translation-separator" aria-hidden="true">·</span>
     <svg class="blip-card-translation-icon" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">
       <path fill="currentColor" d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
     </svg>
@@ -45,7 +45,23 @@ export default {
     inline: {
       type: Boolean,
       default: false
+    },
+    // Inline only: false when the date row has no time before the control.
+    separator: {
+      type: Boolean,
+      default: true
     }
+  },
+  data() {
+    return {
+      live: false
+    }
+  },
+  mounted() {
+    // Live only after mount, so bubbles rendered on load are not announced.
+    this.$nextTick(() => {
+      this.live = true
+    })
   },
   computed: {
     isPending() {
@@ -65,8 +81,8 @@ export default {
 <style lang="scss">
 @import '../styles/variables.scss';
 
-// $vue-dark-blip (#15AFB2) is the closest teal to the design (#00838F); hosts may override it via the custom property.
-$translation-link-color: var(--blip-cards-translation-link-color, #{$vue-dark-blip});
+// Darker than the design teal (#00838F) to keep >= 4.5:1 on white and on light-gray chat backgrounds (#ededed/#e7e7e7).
+$translation-link-color: var(--blip-cards-translation-link-color, #006e78);
 
 .blip-card-translation {
   display: flex;

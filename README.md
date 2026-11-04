@@ -173,20 +173,20 @@ Toggle states (rendered after the time, or after the group time for the last bub
 | translate | no translation (or `done` without content) and `onTranslate` provided | "Traduzir" |
 | pending | `status: 'pending'` | "Traduzindo..." as plain text (the button stays focusable with `aria-disabled="true"`) |
 | error | `status: 'error'` | "Não foi possível traduzir · Tentar novamente" (retry only with `onTranslate`) |
-| done | `status: 'done'` with a non-empty `text`, `title` or option | "Ver original em {language}" / "Ver envio em {language}" / "Ver em {language}" (see Direction) |
+| done | `status: 'done'` with a non-empty `text`, `title` or option | "Ver original em {language}" / "Ver envio em {language}" / "Ver em {language}" (see Direction); "Ver original" / "Ver envio" / "Ver tradução" when the language is missing |
 
-The control is announced through `aria-live="polite"` and the icon is `aria-hidden`.
+The control becomes an `aria-live="polite"` region right after it is mounted, so bubbles rendered on load are not announced but later state changes (e.g. "Traduzindo..." → "Ver original em espanhol") are. The icon is `aria-hidden`.
 
 Placement:
-- Standalone cards render the control in their own time row (`10:12 · ...`).
+- Standalone cards render the control in their own time row (`10:12 · ...`). Without `date`, the control is rendered without the leading `·`.
 - In `<blip-group-card>`, only the last bubble of a group has a time row (the group one), so its control is rendered there; the other bubbles of the group render the control on a row of their own below the bubble, without the time. A message is matched to its group row by `fullDocument.id`; messages without `id`, or whose `id` is repeated in `documents`, always use their own row.
 - List menus (non-`immediate` selects) have no time row and always use their own row.
-- The link color is `$vue-dark-blip` (`#15AFB2`), the closest teal token available to the design. Hosts can override it with the `--blip-cards-translation-link-color` CSS custom property (e.g. a darker teal to reach the required contrast on their background).
+- The link color defaults to `#006e78`, a teal darker than the design one (`#00838F`) so that small text keeps a WCAG AA contrast of at least 4.5:1 on white (6.0:1) and on light-gray chat backgrounds such as `#ededed` (5.1:1) or `#e7e7e7` (4.9:1). Hosts can override it with the `--blip-cards-translation-link-color` CSS custom property; check the contrast against their own background when doing so.
 
 Supported cards: `text/plain` (the `#blip.payload.text` metadata variant is not translated), `application/vnd.lime.select+json`, `application/vnd.blip.rich-select+json`, image and file `application/vnd.lime.media-link+json` and text replies. Other cards ignore the prop.
 
 ### Labels
-Labels come from the existing `translations` prop under `messageTranslation`. Missing keys fall back to the pt-BR defaults below. `{language}` is replaced by the language name exactly as returned by the host (the library never changes its case, so pass e.g. "espanhol" for pt-BR sentences); when the language is missing, the placeholder is dropped.
+Labels come from the existing `translations` prop under `messageTranslation`. Missing keys fall back to the pt-BR defaults below. `{language}` is replaced by the language name exactly as returned by the host (the library never changes its case, so pass e.g. "espanhol" for pt-BR sentences). When the language is missing or empty, the matching `*NoLanguage` label is used instead (if a host sets it to an empty string, the `{language}` placeholder is dropped from the regular label). Hosts that translate the regular labels should also translate the `*NoLanguage` ones, otherwise the pt-BR defaults are shown.
 
 ```js
 translations: {
@@ -194,6 +194,9 @@ translations: {
     viewOriginal: 'Ver original em {language}', // received, translation shown; {language} = sourceLanguage
     viewTranslation: 'Ver em {language}', // original shown; {language} = targetLanguage
     viewSent: 'Ver envio em {language}', // sent, attendant text shown; {language} = sourceLanguage
+    viewOriginalNoLanguage: 'Ver original', // viewOriginal without sourceLanguage
+    viewTranslationNoLanguage: 'Ver tradução', // viewTranslation without targetLanguage
+    viewSentNoLanguage: 'Ver envio', // viewSent without sourceLanguage
     translate: 'Traduzir',
     translating: 'Traduzindo...',
     failed: 'Não foi possível traduzir',

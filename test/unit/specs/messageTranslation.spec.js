@@ -473,13 +473,57 @@ describe('messageTranslation', () => {
         resolveTranslationFooterLabels(labels({ labels: custom, result, direction: 'sent' })).actionLabel
       ).to.equal('See sent in Spanish')
     })
+
+    it('uses the language-less labels when the language is missing', () => {
+      const noLanguage = { ...done, sourceLanguage: '', targetLanguage: undefined }
+
+      expect(resolveTranslationFooterLabels(labels({ result: noLanguage })).actionLabel).to.equal('Ver original')
+      expect(
+        resolveTranslationFooterLabels(labels({ result: noLanguage, direction: 'sent' })).actionLabel
+      ).to.equal('Ver envio')
+      expect(
+        resolveTranslationFooterLabels(labels({ result: noLanguage, showingTranslation: false })).actionLabel
+      ).to.equal('Ver tradução')
+    })
+
+    it('uses host language-less labels and drops the placeholder when they are missing', () => {
+      const noLanguage = { ...done, sourceLanguage: '  ', targetLanguage: null }
+      const custom = {
+        ...defaultMessageTranslationLabels,
+        viewOriginalNoLanguage: 'See original'
+      }
+      const withoutKeys = {
+        viewOriginal: 'See original in {language}',
+        viewTranslation: 'See in {language}'
+      }
+
+      expect(
+        resolveTranslationFooterLabels(labels({ labels: custom, result: noLanguage })).actionLabel
+      ).to.equal('See original')
+      expect(
+        resolveTranslationFooterLabels(labels({ labels: withoutKeys, result: noLanguage })).actionLabel
+      ).to.equal('See original in')
+      expect(
+        resolveTranslationFooterLabels(labels({ labels: withoutKeys, result: noLanguage, showingTranslation: false }))
+          .actionLabel
+      ).to.equal('See in')
+    })
   })
 
   describe('defaultMessageTranslationLabels', () => {
     it('exposes only the current keys', () => {
-      expect(Object.keys(defaultMessageTranslationLabels).sort()).to.deep.equal(
-        ['failed', 'retry', 'translate', 'translating', 'viewOriginal', 'viewSent', 'viewTranslation']
-      )
+      expect(Object.keys(defaultMessageTranslationLabels).sort()).to.deep.equal([
+        'failed',
+        'retry',
+        'translate',
+        'translating',
+        'viewOriginal',
+        'viewOriginalNoLanguage',
+        'viewSent',
+        'viewSentNoLanguage',
+        'viewTranslation',
+        'viewTranslationNoLanguage'
+      ])
     })
   })
 
