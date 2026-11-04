@@ -1,5 +1,5 @@
 <template>
-  <div class="blip-container">
+  <div class="blip-container" :class="{ 'blip-group-card--translation': translationEnabled }">
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
       <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
@@ -217,6 +217,9 @@ export default {
     }
   },
   computed: {
+    translationEnabled() {
+      return !!this.translation && this.translation.enabled === true
+    },
     // Ids of the last message of each group whose date row is shown: their footer goes in that row.
     // Duplicated ids are skipped (their bubbles keep the footer on their own row).
     translationLiftedIds() {
@@ -375,6 +378,11 @@ export default {
       }
     }
 
+    // Same gap the bubble margin gives between stacked bubbles.
+    .blip-card-translation:not(.blip-card-translation--inline) {
+      margin-bottom: 5px;
+    }
+
     // Bubble Right
     > :first-child :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $hard-round $soft-round $hard-round;
@@ -422,6 +430,30 @@ export default {
 
     .group-notification.right {
       float: right;
+    }
+  }
+}
+
+// The group date row floats below its group. With the translation control it can wrap and outgrow the
+// 20px group margin; the next group (a flex container) would then shrink beside the float.
+.blip-group-card--translation {
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+
+  > .blip-message-group {
+    clear: both;
+  }
+
+  .blip-card-group .group-notification {
+    flex-wrap: wrap;
+    white-space: nowrap;
+    max-width: 100%;
+
+    &.right {
+      justify-content: flex-end;
     }
   }
 }
