@@ -124,7 +124,7 @@ Is possible to group your cards using any rule you want. For that use the <blip-
 
 The library never translates anything by itself: the host owns the translation requests and the cache, and the cards only render what `getTranslation` returns.
 
-When the prop is absent or `enabled` is not `true`, the rendering is visually identical to before: the only DOM difference is the empty placeholder comments (`<!---->`) Vue adds for the conditional translation elements.
+When the prop is absent or `enabled` is not `true`, the rendered markup is identical to the version without this feature (no extra elements, classes, comment nodes or callbacks).
 
 ```html
 <blip-group-card :documents="documents" :translations="translations" :translation="translation" />

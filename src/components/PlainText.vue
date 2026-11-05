@@ -45,7 +45,8 @@
           :reply-tooltip-text="replyTooltipText"
         />
       </bds-grid><blip-card-translation
-        v-if="translationFooterPlacement === 'row'"
+        v-for="n in translationRowFooter"
+        :key="n"
         :state="translationState"
         :label="translationFooterLabel"
         :action-label="translationFooterActionLabel"
@@ -62,7 +63,8 @@
         :external-message-text="externalMessageText"
       >
         <blip-card-translation
-          v-if="translationFooterPlacement === 'date'"
+          v-for="n in translationDateFooter"
+          :key="n"
           inline
           :separator="!!date"
           :state="translationState"

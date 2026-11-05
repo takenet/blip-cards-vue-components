@@ -8,7 +8,8 @@
           v-on:click="toggleEdit"></bds-button-icon>
         <div v-html="sanitize(computedText)" v-if="computedText"></div>
       </div><blip-card-translation
-        v-if="translationFooterPlacement === 'row'"
+        v-for="n in translationRowFooter"
+        :key="n"
         :state="translationState"
         :label="translationFooterLabel"
         :action-label="translationFooterActionLabel"
@@ -27,7 +28,8 @@
         <blip-card-date :status="status" :position="position" :date="date" :failed-to-send-msg="failedToSendMsg"
           :is-external-message="isExternalMessage" :external-message-text="externalMessageText">
           <blip-card-translation
-            v-if="translationFooterPlacement === 'date'"
+            v-for="n in translationDateFooter"
+            :key="n"
             inline
             :separator="!!date"
             :state="translationState"
@@ -110,7 +112,8 @@
             </div>
           </div>
       </div><blip-card-translation
-        v-if="translationFooterPlacement === 'row'"
+        v-for="n in translationRowFooter"
+        :key="n"
         :state="translationState"
         :label="translationFooterLabel"
         :action-label="translationFooterActionLabel"

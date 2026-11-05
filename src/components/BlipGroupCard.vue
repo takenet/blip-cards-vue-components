@@ -57,14 +57,15 @@
           :show-alert-icon="Boolean(onFailedClickIcon)"
         >
           <blip-card-translation
-            v-if="groupTranslationFooter(group)"
+            v-for="footer in groupTranslationFooters(group)"
+            :key="footer.id"
             inline
             :separator="!!group.date"
-            :state="groupTranslationFooter(group).state"
-            :label="groupTranslationFooter(group).label"
-            :action-label="groupTranslationFooter(group).actionLabel"
-            :position="groupTranslationFooter(group).position"
-            @action="groupTranslationFooter(group).onAction()"
+            :state="footer.state"
+            :label="footer.label"
+            :action-label="footer.actionLabel"
+            :position="footer.position"
+            @action="footer.onAction()"
           />
         </blip-card-date>
       </div>
@@ -90,6 +91,8 @@ import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 import { checkIsExternalMessage } from '../utils/externalMessages.js'
 import { getMemberInfo, getMemberPhoneNumber } from '../utils/memberUtils.js'
+
+const NO_FOOTERS = Object.freeze([])
 
 export default {
   name: 'blip-group-card',
@@ -322,9 +325,11 @@ export default {
       const document = last && (last.document || last)
       return document ? document.id : undefined
     },
-    groupTranslationFooter(group) {
+    // A list instead of v-if: v-if leaves a comment node that would change the markup when translation is off.
+    groupTranslationFooters(group) {
       const id = this.groupLastDocumentId(group)
-      return (id && this.translationLiftedIds[id] && this.translationFooters[id]) || null
+      const footer = id && this.translationLiftedIds[id] && this.translationFooters[id]
+      return footer ? [footer] : NO_FOOTERS
     },
     isFailedMessageGroup(message, group) {
       if (message.type === MessageTypesConstants.THREAD_SUMMARY) {

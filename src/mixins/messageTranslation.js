@@ -18,6 +18,9 @@ const TranslationFooterPlacements = {
   HOST: 'host'
 }
 
+const NO_FOOTER = Object.freeze([])
+const ONE_FOOTER = Object.freeze([0])
+
 export const defaultMessageTranslationLabels = {
   viewOriginal: 'Ver original em {language}',
   viewTranslation: 'Ver em {language}',
@@ -320,6 +323,13 @@ export default {
         position: this.position,
         onAction: this.onTranslationAction
       }
+    },
+    // Templates iterate these lists instead of using v-if: v-if leaves a comment node in the markup when inactive.
+    translationRowFooter() {
+      return this.translationFooterPlacement === TranslationFooterPlacements.ROW ? ONE_FOOTER : NO_FOOTER
+    },
+    translationDateFooter() {
+      return this.translationFooterPlacement === TranslationFooterPlacements.DATE ? ONE_FOOTER : NO_FOOTER
     }
   },
   watch: {
