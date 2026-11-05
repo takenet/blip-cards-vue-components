@@ -106,6 +106,16 @@
     "webpack-hot-middleware": "^2.18.2",
     "webpack-merge": "^4.1.0"
   },
+  "release": {
+    "branches": [
+      "master",
+      {
+        "name": "release/message-translation",
+        "prerelease": "translation",
+        "channel": "translation"
+      }
+    ]
+  },
   "engines": {
     "node": ">= 8.0.0",
     "npm": ">= 4.0.0"
