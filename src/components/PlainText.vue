@@ -44,7 +44,15 @@
           :reply-callback="replyCallback"
           :reply-tooltip-text="replyTooltipText"
         />
-      </bds-grid>
+      </bds-grid><blip-card-translation
+        v-for="n in translationRowFooter"
+        :key="n"
+        :state="translationState"
+        :label="translationFooterLabel"
+        :action-label="translationFooterActionLabel"
+        :position="position"
+        @action="onTranslationAction"
+      />
       
       <blip-card-date
         :status="status"
@@ -53,7 +61,19 @@
         :failed-to-send-msg="failedToSendMsg"
         :is-external-message="isExternalMessage"
         :external-message-text="externalMessageText"
-      />
+      >
+        <blip-card-translation
+          v-for="n in translationDateFooter"
+          :key="n"
+          inline
+          :separator="!!date"
+          :state="translationState"
+          :label="translationFooterLabel"
+          :action-label="translationFooterActionLabel"
+          :position="position"
+          @action="onTranslationAction"
+        />
+      </blip-card-date>
     </div>
   </div>
 
@@ -100,10 +120,11 @@
 <script>
 import { linkify, isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
+import messageTranslation from '../mixins/messageTranslation.js'
 
 export default {
   name: 'plain-text',
-  mixins: [base],
+  mixins: [base, messageTranslation],
   props: {
     document: {
       type: String,
@@ -136,7 +157,7 @@ export default {
   },
   computed: {
     previewDocument: function() {
-      const sanitizedDocument = this.sanitize(this.document, { disallowedTagsMode: 'escape' })
+      const sanitizedDocument = this.sanitize(this.translatedField('text', this.document), { disallowedTagsMode: 'escape' })
 
       return {
         hasPreview: sanitizedDocument.length > this.length,

@@ -43,7 +43,8 @@
             :deletable="deletable"
             :editing="isCardEditing"
             :on-cancel="cancel"
-            :on-audio-validate-uri="onAudioValidateUri" />
+            :on-audio-validate-uri="onAudioValidateUri"
+            :translated-text="translatedRepliedText" />
         </div>
       </div>
 
@@ -52,7 +53,15 @@
         :reply-callback="replyCallback"
         :reply-tooltip-text="replyTooltipText"
       />
-    </bds-grid>
+    </bds-grid><blip-card-translation
+      v-for="n in translationRowFooter"
+      :key="n"
+      :state="translationState"
+      :label="translationFooterLabel"
+      :action-label="translationFooterActionLabel"
+      :position="position"
+      @action="onTranslationAction"
+    />
     <blip-card-date
       :status="status"
       :position="position"
@@ -60,16 +69,30 @@
       :failed-to-send-msg="failedToSendMsg"
       :is-external-message="isExternalMessage"
       :external-message-text="externalMessageText"
-    />
+    >
+      <blip-card-translation
+        v-for="n in translationDateFooter"
+        :key="n"
+        inline
+        :separator="!!date"
+        :state="translationState"
+        :label="translationFooterLabel"
+        :action-label="translationFooterActionLabel"
+        :position="position"
+        @action="onTranslationAction"
+      />
+    </blip-card-date>
   </div>
 </template>
 
 <script>
 import { default as base } from '../../mixins/baseComponent.js'
+import messageTranslation from '../../mixins/messageTranslation.js'
+import { MessageTypesConstants } from '../../utils/MessageTypesConstants.js'
 
 export default {
   name: 'reply-card',
-  mixins: [base],
+  mixins: [base, messageTranslation],
   props: {
     translations: {
       type: Object,
@@ -128,6 +151,14 @@ export default {
     },
     inReplyTo() {
       return this.document.inReplyTo
+    },
+    hasTranslatableContent() {
+      const replied = this.replied
+      return !!replied && replied.type === MessageTypesConstants.TEXT_MESSAGE &&
+        typeof replied.value === 'string' && replied.value.trim().length > 0
+    },
+    translatedRepliedText() {
+      return this.hasTranslatableContent ? this.translatedField('text', undefined) : undefined
     },
     blipCardReplyDocument() {
       return {

@@ -112,6 +112,107 @@ Is possible to group your cards using any rule you want. For that use the <blip-
 | readonly | Currently being used only in the quick reply. Could be implemented in other components too. This is used to avoid click actions in the quick reply options. If this attribute is true, than the <em>editable</em> and <em>deletable</em> should be false (OPTIONAL) | Boolean |
 | hide-options | Used only only in the quick reply. This is used to hide the quick reply options (OPTIONAL) | Boolean |
 | disable-link | Used only in the plain text. This is used to do not render tag 'a' (OPTIONAL) | Boolean |
+| translation | Renders host-provided translations in the bubbles, with a toggle on the timestamp row. See [Message translation](#message-translation) (OPTIONAL) | Object |
+
+## Message translation
+`<blip-group-card>` and `<blip-card>` accept an optional `translation` prop that renders translated content inside the bubble and a small translation control below it, on the same row as the message time:
+
+```
+          10:12 · [icon] Ver original em espanhol      (received message, left aligned)
+10:17 · [icon] Ver envio em espanhol                    (sent message, right aligned)
+```
+
+The library never translates anything by itself: the host owns the translation requests and the cache, and the cards only render what `getTranslation` returns.
+
+When the prop is absent or `enabled` is not `true`, the rendered markup is identical to the version without this feature (no extra elements, classes, comment nodes or callbacks).
+
+```html
+<blip-group-card :documents="documents" :translations="translations" :translation="translation" />
+```
+
+```js
+translation: {
+  enabled: true,
+  // Global default. Each bubble may override it locally through the toggle
+  // (requesting a translation through "Traduzir" also shows it once it is done);
+  // changing this value resets every local override.
+  showOriginal: false,
+  // Must be synchronous and read reactive state (e.g. Vuex getters) so the cards re-render on updates.
+  getTranslation: (fullDocument) => ({
+    status: 'done', // 'pending' | 'done' | 'error'
+    sourceLanguage: 'espanhol', // customer language, human-readable and already in the case to display
+    targetLanguage: 'português', // attendant language, human-readable and already in the case to display
+    text: 'Olá, tudo bem?', // optional
+    title: undefined, // optional
+    options: undefined, // optional, string[]
+    direction: 'received' // optional, 'received' | 'sent'
+  }), // or null when there is no translation for the message
+  onTranslate: (fullDocument) => {}, // optional, may return a Promise; called by the "Traduzir"/"Tentar novamente" actions
+  canTranslate: (fullDocument) => true // optional, defaults to `position === 'left'` (received messages)
+}
+```
+
+`fullDocument` is the original message envelope (`id`, `type`, `content`, ...).
+
+| Field returned by `getTranslation` | Replaces (while the translation is shown) |
+|---|---|
+| `text` | Plain text (`text/plain`) content, select header text, media caption (image and file `text`) and the text of a received reply (`application/vnd.lime.reply+json` with a `text/plain` replied value) |
+| `title` | Image title |
+| `options[i]` | Displayed label of the select option `i`. Display only: the payload sent when an option is selected is always the original one |
+
+**Direction.** `direction` from `getTranslation` when it is `'received'` or `'sent'`; otherwise `fullDocument.direction` when it is one of these values; otherwise `'sent'` for `position === 'right'` and `'received'` for any other position.
+
+- **Received** messages: `text` is the customer message translated to the attendant language. The bubble shows it by default and the toggle reads "Ver original em {sourceLanguage}"; showing the original switches it to "Ver em {targetLanguage}".
+- **Sent** messages: `text` is the attendant's original text (before it was translated and sent). The bubble shows it by default and the toggle reads "Ver envio em {sourceLanguage}"; showing the content actually sent (`document`) switches it to "Ver em {targetLanguage}". Sent messages are only evaluated when `canTranslate` is provided (the default only allows `position === 'left'`).
+
+Toggle states (rendered after the time, or after the group time for the last bubble of a `<blip-group-card>` group):
+
+| State | When | Toggle |
+|---|---|---|
+| none | prop absent, `enabled !== true`, `canTranslate` false, card being edited, `getTranslation` throws, or no translation and no `onTranslate` | not rendered |
+| translate | no translation (or `done` without content) and `onTranslate` provided | "Traduzir" |
+| pending | `status: 'pending'` | "Traduzindo..." as plain text (the button stays focusable with `aria-disabled="true"`) |
+| error | `status: 'error'` | "Não foi possível traduzir · Tentar novamente" (retry only with `onTranslate`) |
+| done | `status: 'done'` with a non-empty `text`, `title` or option | "Ver original em {language}" / "Ver envio em {language}" / "Ver em {language}" (see Direction); "Ver original" / "Ver envio" / "Ver tradução" when the language is missing |
+
+The control becomes an `aria-live="polite"` region right after it is mounted, so bubbles rendered on load are not announced but later state changes (e.g. "Traduzindo..." → "Ver original em espanhol") are. The icon is `aria-hidden`.
+
+Placement:
+- Standalone cards render the control in their own time row (`10:12 · ...`). Without `date`, the control is rendered without the leading `·`.
+- In `<blip-group-card>`, only the last bubble of a group has a time row (the group one), so its control is rendered there; the other bubbles of the group render the control on a row of their own below the bubble, without the time. A message is matched to its group row by `fullDocument.id`; messages without `id`, or whose `id` is repeated in `documents`, always use their own row.
+- List menus (non-`immediate` selects) have no time row and always use their own row.
+- The link color defaults to `#006e78`, a teal darker than the design one (`#00838F`) so that small text keeps a WCAG AA contrast of at least 4.5:1 on white (6.0:1) and on light-gray chat backgrounds such as `#ededed` (5.1:1) or `#e7e7e7` (4.9:1). Hosts can override it with the `--blip-cards-translation-link-color` CSS custom property; check the contrast against their own background when doing so.
+
+Supported cards: `text/plain` (the `#blip.payload.text` metadata variant is not translated), `application/vnd.lime.select+json`, `application/vnd.blip.rich-select+json`, image and file `application/vnd.lime.media-link+json` and text replies. Other cards ignore the prop.
+
+### Labels
+Labels come from the existing `translations` prop under `messageTranslation`. Missing keys fall back to the pt-BR defaults below. `{language}` is replaced by the language name exactly as returned by the host (the library never changes its case, so pass e.g. "espanhol" for pt-BR sentences). When the language is missing or empty, the matching `*NoLanguage` label is used instead (if a host sets it to an empty string, the `{language}` placeholder is dropped from the regular label). Hosts that translate the regular labels should also translate the `*NoLanguage` ones, otherwise the pt-BR defaults are shown.
+
+```js
+translations: {
+  messageTranslation: {
+    viewOriginal: 'Ver original em {language}', // received, translation shown; {language} = sourceLanguage
+    viewTranslation: 'Ver em {language}', // original shown; {language} = targetLanguage
+    viewSent: 'Ver envio em {language}', // sent, attendant text shown; {language} = sourceLanguage
+    viewOriginalNoLanguage: 'Ver original', // viewOriginal without sourceLanguage
+    viewTranslationNoLanguage: 'Ver tradução', // viewTranslation without targetLanguage
+    viewSentNoLanguage: 'Ver envio', // viewSent without sourceLanguage
+    translate: 'Traduzir',
+    translating: 'Traduzindo...',
+    failed: 'Não foi possível traduzir',
+    retry: 'Tentar novamente'
+  }
+}
+```
+
+### Rules for hosts
+- **Do not swap the message content.** Never replace `document.content` (or any field of the envelope) with the translated text. Pass the original messages in `documents` and provide the translation only through `getTranslation`. Reply, edit and selection payloads always use the original document.
+- `getTranslation` must be cheap and side-effect free: it runs on every render of a supported card. Trigger requests only from `onTranslate`.
+- Report failures through `getTranslation` (`status: 'error'`). Errors thrown or promises rejected by `onTranslate` are swallowed by the cards.
+
+### Security notes
+- Translated strings are treated as untrusted input and go through the same sanitization pipeline as the original field of each card. Footer labels and languages are rendered with text interpolation only (never `v-html`).
+- Translating sends message content to the host's translation provider. The host is responsible for consent, data-protection rules and for not sending content that must not leave the platform.
 
 ## Native Form Card
 A structured form (several fields answered in a single interaction, optionally split in steps) is rendered when the bot sends an `application/vnd.blip.form+json` message.

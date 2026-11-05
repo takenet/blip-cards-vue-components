@@ -1,5 +1,5 @@
 <template>
-  <div class="blip-container">
+  <div class="blip-container" :class="{ 'blip-group-card--translation': translationEnabled }">
     <div class="blip-message-group" v-for="group in groupedDocuments" :key="group.id">
       <div :class="'blip-card-photo ' + group.position"  v-if="group.photo && group.position === 'left'" :style="{ bottom: '10px', width: '25px', height: '25px', 'background-image': 'url(&quot;' + group.photo + '&quot;)' }">
       </div>
@@ -39,6 +39,7 @@
           :async-fetch-media="asyncFetchMedia"
           :on-async-fetch-session="onAsyncFetchSession"
           :transcription="transcription"
+          :translation="translation"
           :reply-callback="replyCallback"
           :scroll-to-message-by-id="scrollToMessageById"
           :on-image-selected="onImageSelected"
@@ -54,7 +55,19 @@
           :external-message-text="externalMessageText"
           :is-group="true"
           :show-alert-icon="Boolean(onFailedClickIcon)"
-        />
+        >
+          <blip-card-translation
+            v-for="footer in groupTranslationFooters(group)"
+            :key="footer.id"
+            inline
+            :separator="!!group.date"
+            :state="footer.state"
+            :label="footer.label"
+            :action-label="footer.actionLabel"
+            :position="footer.position"
+            @action="footer.onAction()"
+          />
+        </blip-card-date>
       </div>
       <span v-if="onFailedClickIcon && group.status === 'failed'">
         <bds-icon v-if="group.position === 'right'"
@@ -78,6 +91,8 @@ import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 import { checkIsExternalMessage } from '../utils/externalMessages.js'
 import { getMemberInfo, getMemberPhoneNumber } from '../utils/memberUtils.js'
+
+const NO_FOOTERS = Object.freeze([])
 
 export default {
   name: 'blip-group-card',
@@ -162,6 +177,10 @@ export default {
         scrollTo: (elementId) => {}
       })
     },
+    translation: {
+      type: Object,
+      default: undefined
+    },
     replyCallback: {
       type: Function
     },
@@ -180,10 +199,53 @@ export default {
   data() {
     return {
       photoMargin: 0,
-      checkIsExternalMessage
+      checkIsExternalMessage,
+      translationFooters: {}
+    }
+  },
+  provide() {
+    return {
+      blipTranslationFooterHost: {
+        isLifted: (id) => !!this.translationLiftedIds[id],
+        setFooter: (id, footer, owner) => {
+          this.$set(this.translationFooters, id, { ...footer, owner })
+        },
+        removeFooter: (id, owner) => {
+          const current = this.translationFooters[id]
+          if (current && current.owner === owner) {
+            this.$delete(this.translationFooters, id)
+          }
+        }
+      }
     }
   },
   computed: {
+    translationEnabled() {
+      return !!this.translation && this.translation.enabled === true
+    },
+    // Ids of the last message of each group whose date row is shown: their footer goes in that row.
+    // Duplicated ids are skipped (their bubbles keep the footer on their own row).
+    translationLiftedIds() {
+      const ids = {}
+      if (!this.translationEnabled || !this.groupedDocuments) {
+        return ids
+      }
+
+      const counts = {}
+      this.documents.forEach((message) => {
+        const document = message.document || message
+        const id = document && document.id
+        if (id) counts[id] = (counts[id] || 0) + 1
+      })
+
+      this.groupedDocuments.forEach((group) => {
+        const id = this.groupLastDocumentId(group)
+        if (id && counts[id] === 1 && group.date && group.hasNotification) {
+          ids[id] = true
+        }
+      })
+      return ids
+    },
     groupedDocuments() {
       let groups = []
 
@@ -258,6 +320,17 @@ export default {
     }
   },
   methods: {
+    groupLastDocumentId(group) {
+      const last = group.msgs[group.msgs.length - 1]
+      const document = last && (last.document || last)
+      return document ? document.id : undefined
+    },
+    // A list instead of v-if: v-if leaves a comment node that would change the markup when translation is off.
+    groupTranslationFooters(group) {
+      const id = this.groupLastDocumentId(group)
+      const footer = id && this.translationLiftedIds[id] && this.translationFooters[id]
+      return footer ? [footer] : NO_FOOTERS
+    },
     isFailedMessageGroup(message, group) {
       if (message.type === MessageTypesConstants.THREAD_SUMMARY) {
         return ''
@@ -310,6 +383,11 @@ export default {
       }
     }
 
+    // Same gap the bubble margin gives between stacked bubbles.
+    .blip-card-translation:not(.blip-card-translation--inline) {
+      margin-bottom: 5px;
+    }
+
     // Bubble Right
     > :first-child :not(.unsuported-content) > .bubble.right {
       border-radius: $hard-round $hard-round $soft-round $hard-round;
@@ -357,6 +435,30 @@ export default {
 
     .group-notification.right {
       float: right;
+    }
+  }
+}
+
+// The group date row floats below its group. With the translation control it can wrap and outgrow the
+// 20px group margin; the next group (a flex container) would then shrink beside the float.
+.blip-group-card--translation {
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+
+  > .blip-message-group {
+    clear: both;
+  }
+
+  .blip-card-group .group-notification {
+    flex-wrap: wrap;
+    white-space: nowrap;
+    max-width: 100%;
+
+    &.right {
+      justify-content: flex-end;
     }
   }
 }

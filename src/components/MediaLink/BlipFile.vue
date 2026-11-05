@@ -65,7 +65,7 @@
       </form>
     </div>
     <div class="file-text" v-if="document.text">
-      <span v-if="document.text" v-html="sanitize(document.text)"></span>
+      <span v-if="document.text" v-html="sanitize(translatedText || document.text)"></span>
     </div>
   </div>
 </template>
@@ -95,6 +95,10 @@ export default {
     simplified: {
       type: Boolean,
       default: false
+    },
+    translatedText: {
+      type: String,
+      default: undefined
     }
   },
   data: function() {
