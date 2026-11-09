@@ -17,6 +17,10 @@ export default {
   name: 'survey',
   mixins: [base],
   props: {
+    showDate: {
+      type: Boolean,
+      default: false
+    },
     status: {
       type: String,
       default: ''
@@ -435,6 +439,16 @@ export default {
         </div>
       </div>
     </div>
+
+    <blip-card-date
+      v-if="showDate && date"
+      :status="status"
+      :position="position"
+      :date="date"
+      :failed-to-send-msg="failedToSendMsg"
+      :is-external-message="isExternalMessage"
+      :external-message-text="externalMessageText"
+    />
   </div>
   <!-- Editing mode -->
   <div v-else class="blip-container survey">

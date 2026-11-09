@@ -120,6 +120,16 @@
         :position="position"
         @action="onTranslationAction"
       />
+
+      <blip-card-date
+        v-if="showDate && date"
+        :status="status"
+        :position="position"
+        :date="date"
+        :failed-to-send-msg="failedToSendMsg"
+        :is-external-message="isExternalMessage"
+        :external-message-text="externalMessageText"
+      />
     </div>
   </div>
 
@@ -220,6 +230,10 @@ export default {
   name: 'blip-select',
   mixins: [base, messageTranslation],
   props: {
+    showDate: {
+      type: Boolean,
+      default: false
+    },
     hideOptions: {
       type: Boolean,
       default: false

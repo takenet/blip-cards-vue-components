@@ -214,6 +214,7 @@
           :option-preview-size="document.content.optionPreviewSize"
           :show-more-msg="translations.showMore"
           :translation="translation"
+          :show-date="showDate"
         />
 
         <web-link
@@ -251,6 +252,11 @@
           :failed-to-send-msg="translations.failedToSend"
           :introduction-msg="translations.introduction"
           :status="status"
+          :position="showDate ? position : undefined"
+          :date="date"
+          :is-external-message="externalMessage"
+          :external-message-text="translations.externalMessageText"
+          :show-date="showDate"
           :on-save="saveCard"
           :editable="editable"
           :on-deleted="deleteCard"
@@ -785,6 +791,10 @@ export default {
   name: 'blip-card',
   mixins: [base],
   props: {
+    showDate: {
+      type: Boolean,
+      default: false
+    },
     status: {
       type: String,
       default: ''
