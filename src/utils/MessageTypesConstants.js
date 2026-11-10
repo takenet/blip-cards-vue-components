@@ -6,5 +6,7 @@ export const MessageTypesConstants = {
   LOCATION: 'application/vnd.lime.location+json',
   REPLY_MESSAGE: 'application/vnd.lime.reply+json',
   APPLICATION_JSON: 'application/json',
-  BLIP_EXTERNAL: 'application/vnd.lime.external+json'
+  BLIP_EXTERNAL: 'application/vnd.lime.external+json',
+  MULTI_PARTNER_CONVERSATION: 'application/vnd.iris.multi-partner-conversation+json',
+  MULTI_PARTNER_CONVERSATION_STANDBY: 'application/vnd.iris.multi-partner-conversation-standby+json'
 }

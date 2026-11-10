@@ -220,6 +220,14 @@
         <button class="button" @click="sendCopyAndPaste">
           ENVIAR copia e cola
         </button>
+        <button
+          class="button"
+          v-for="example in standbyExamples"
+          :key="example.label"
+          @click="sendStandby(example)"
+        >
+          ENVIAR Standby {{ example.label }}
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -2006,6 +2014,31 @@ export default {
       })
       this.send()
     },
+    sendStandby: function({ direction, content }) {
+      const isInbound = direction === 'inbound'
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.iris.multi-partner-conversation+json',
+        content: {
+          direction,
+          sender: isInbound ? '5531999998888' : 'bot',
+          recipient: isInbound ? 'bot' : '5531999998888',
+          source: 'standby',
+          documentContainer: {
+            type: 'application/vnd.iris.multi-partner-conversation-standby+json',
+            value: { content }
+          }
+        },
+        metadata: {
+          '#wa.timestamp': '1710000000',
+          '#wa.multiPartner.IsStandby': 'true',
+          '#wa.multiPartner.IsReadOnly': 'true'
+        }
+      })
+      this.send()
+    },
     sendReactionToText: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -3182,6 +3215,112 @@ export default {
         messageDeleted: 'Esta mensagem foi excluída.'
       },
       isExternalMessage: false,
+      standbyExamples: [
+        {
+          label: 'Usuário > Bot (texto)',
+          direction: 'inbound',
+          content: {
+            type: 'text/plain',
+            value: 'Oi, gostaria de entender como posso negociar uma dívida'
+          }
+        },
+        {
+          label: 'Bot > Usuário (texto)',
+          direction: 'outbound',
+          content: { type: 'text/plain', value: 'Olá! Posso ajudar com isso.' }
+        },
+        {
+          label: 'Bot > Usuário (imagem)',
+          direction: 'outbound',
+          content: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
+              title: 'texto de exemplo'
+            }
+          }
+        },
+        {
+          label: 'Usuário > Bot (vídeo)',
+          direction: 'inbound',
+          content: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'video/mp4',
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+            }
+          }
+        },
+        {
+          label: 'Usuário > Bot (áudio)',
+          direction: 'inbound',
+          content: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'audio/mp3',
+              uri:
+                'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+            }
+          }
+        },
+        {
+          label: 'Bot > Usuário (documento)',
+          direction: 'outbound',
+          content: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'application/pdf',
+              uri:
+                'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+              title: 'pdf_open_parameters.pdf',
+              size: '5540'
+            }
+          }
+        },
+        {
+          label: 'Usuário > Bot (localização)',
+          direction: 'inbound',
+          content: {
+            type: 'application/vnd.lime.location+json',
+            value: {
+              latitude: -19.918899,
+              longitude: -43.959275,
+              altitude: 853,
+              text: 'Takes place'
+            }
+          }
+        },
+        {
+          label: 'Bot > Usuário (application/json)',
+          direction: 'outbound',
+          content: {
+            type: 'application/json',
+            value: {
+              recipient_type: 'individual',
+              type: 'interactive',
+              interactive: {
+                type: 'cta_url',
+                body: { text: 'Toque no botão abaixo para ver as datas.' },
+                action: {
+                  name: 'cta_url',
+                  parameters: {
+                    display_text: 'Ver datas',
+                    url: 'https://take.net'
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          label: 'sem conteúdo interno (não suportado)',
+          direction: 'inbound',
+          content: undefined
+        }
+      ],
       hasMemberData: false,
       memberName: undefined,
       memberPhone: undefined
