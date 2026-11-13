@@ -42,7 +42,6 @@
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 import {
-  getExternalMessageText,
   getStandbyDirection,
   getStandbyInnerDocument
 } from '../utils/standby.js'
@@ -80,6 +79,10 @@ export default {
     translations: {
       type: Object,
       default: () => ({})
+    },
+    externalMessageLabel: {
+      type: String,
+      default: 'Mensagem externa'
     }
   },
   computed: {
@@ -104,8 +107,7 @@ export default {
     displayDate() {
       if (!this.isTemplate || !this.date) return this.date
 
-      const text = this.translations.standbyExternalMessage || getExternalMessageText(navigator.language)
-      return `${this.date} - ${text}`
+      return `${this.date} - ${this.externalMessageLabel}`
     }
   }
 }

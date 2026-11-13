@@ -2,19 +2,6 @@ import { MessageTypesConstants } from './MessageTypesConstants.js'
 
 const STANDBY_SOURCE = 'standby'
 
-const EXTERNAL_MESSAGE_TEXT = {
-  pt: 'Mensagem externa',
-  en: 'External message',
-  es: 'Mensaje externo'
-}
-
-// language: browser language code (e.g. pt-BR, en-US, es-AR); unknown languages fall back to Portuguese
-function getExternalMessageText(language) {
-  const key = String(language || '').toLowerCase().slice(0, 2)
-
-  return EXTERNAL_MESSAGE_TEXT[key] || EXTERNAL_MESSAGE_TEXT.pt
-}
-
 // Inbound sends the container in documentContainer; outbound sends it in content
 function getStandbyContainer(content) {
   return content && (content.documentContainer || content.content)
@@ -75,6 +62,5 @@ function toTemplateDocument(value) {
 export {
   isStandbyMessage,
   getStandbyDirection,
-  getStandbyInnerDocument,
-  getExternalMessageText
+  getStandbyInnerDocument
 }

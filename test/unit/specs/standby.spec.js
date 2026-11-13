@@ -1,8 +1,7 @@
 import {
   isStandbyMessage,
   getStandbyDirection,
-  getStandbyInnerDocument,
-  getExternalMessageText
+  getStandbyInnerDocument
 } from '../../../src/utils/standby'
 
 const buildStandby = (overrides = {}) => ({
@@ -63,19 +62,6 @@ describe('standby utils', () => {
     it('handles empty values', () => {
       expect(isStandbyMessage(undefined)).to.equal(false)
       expect(isStandbyMessage({ type: 'text/plain' })).to.equal(false)
-    })
-  })
-
-  describe('getExternalMessageText', () => {
-    it('returns the text for pt, en and es variants', () => {
-      expect(getExternalMessageText('pt-BR')).to.equal('Mensagem externa')
-      expect(getExternalMessageText('en-US')).to.equal('External message')
-      expect(getExternalMessageText('es-AR')).to.equal('Mensaje externo')
-    })
-
-    it('falls back to portuguese for unknown or empty languages', () => {
-      expect(getExternalMessageText('fr-FR')).to.equal('Mensagem externa')
-      expect(getExternalMessageText(undefined)).to.equal('Mensagem externa')
     })
   })
 

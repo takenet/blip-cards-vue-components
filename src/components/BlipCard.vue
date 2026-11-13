@@ -756,6 +756,7 @@
           :on-image-selected="onImageSelected"
           :translations="translations"
           :transcription="transcription"
+          :external-message-label="translations.standbyExternalMessage"
         />
 
         <unsuported-content
