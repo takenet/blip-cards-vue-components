@@ -220,6 +220,14 @@
         <button class="button" @click="sendCopyAndPaste">
           ENVIAR copia e cola
         </button>
+        <button
+          class="button"
+          v-for="example in standbyExamples"
+          :key="example.label"
+          @click="sendStandby(example)"
+        >
+          SEND Standby {{ example.label }}
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -2006,6 +2014,33 @@ export default {
       })
       this.send()
     },
+    sendStandby: function({ direction, content }) {
+      const isInbound = direction === 'inbound'
+      const container = {
+        type: 'application/vnd.iris.multi-partner-conversation-standby+json',
+        value: { content }
+      }
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.iris.multi-partner-conversation+json',
+        content: {
+          direction,
+          sender: isInbound ? '5531999998888' : 'bot',
+          recipient: isInbound ? 'bot' : '5531999998888',
+          source: 'standby',
+          // Outbound sends the container under content.content
+          ...(isInbound ? { documentContainer: container } : { content: container })
+        },
+        metadata: {
+          '#wa.timestamp': '1710000000',
+          '#wa.multiPartner.IsStandby': 'true',
+          '#wa.multiPartner.IsReadOnly': 'true'
+        }
+      })
+      this.send()
+    },
     sendReactionToText: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -3182,6 +3217,148 @@ export default {
         messageDeleted: 'Esta mensagem foi excluída.'
       },
       isExternalMessage: false,
+      standbyExamples: [
+        {
+          label: 'text (inbound)',
+          direction: 'inbound',
+          content: {
+            type: 'text/plain',
+            value: 'Hi, I would like to understand how I can negotiate a debt'
+          }
+        },
+        {
+          label: 'text (outbound)',
+          direction: 'outbound',
+          content: { type: 'text/plain', value: 'Hello! I can help you with that.' }
+        },
+        {
+          label: 'image (outbound)',
+          direction: 'outbound',
+          content: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'image/jpeg',
+              uri:
+                'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
+              title: 'example text'
+            }
+          }
+        },
+        {
+          label: 'video (inbound)',
+          direction: 'inbound',
+          content: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'video/mp4',
+              uri:
+                'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+            }
+          }
+        },
+        {
+          label: 'audio (inbound)',
+          direction: 'inbound',
+          content: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'audio/mp3',
+              uri:
+                'https://upload.wikimedia.org/wikipedia/commons/6/63/Sagetyrtle_-_citystreet3_%28cc0%29_%28freesound%29.mp3'
+            }
+          }
+        },
+        {
+          label: 'document (outbound)',
+          direction: 'outbound',
+          content: {
+            type: 'application/vnd.lime.media-link+json',
+            value: {
+              type: 'application/pdf',
+              uri:
+                'https://gradcollege.okstate.edu/sites/default/files/PDF_linking.pdf',
+              title: 'pdf_open_parameters.pdf',
+              size: '5540'
+            }
+          }
+        },
+        {
+          label: 'location (inbound)',
+          direction: 'inbound',
+          content: {
+            type: 'application/vnd.lime.location+json',
+            value: {
+              latitude: -19.918899,
+              longitude: -43.959275,
+              altitude: 853,
+              text: 'Takes place'
+            }
+          }
+        },
+        {
+          label: 'application/json (outbound)',
+          direction: 'outbound',
+          content: {
+            type: 'application/json',
+            value: {
+              recipient_type: 'individual',
+              type: 'interactive',
+              interactive: {
+                type: 'cta_url',
+                body: { text: 'Tap the button below to see the dates.' },
+                action: {
+                  name: 'cta_url',
+                  parameters: {
+                    display_text: 'See dates',
+                    url: 'https://take.net'
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          label: 'text template (outbound)',
+          direction: 'outbound',
+          content: {
+            type: 'application/vnd.iris.multi-partner-conversation-template+json',
+            value: {
+              id: 'wamid.example',
+              timestamp: '1794408971',
+              message: {
+                to: '5531999998888',
+                type: 'template',
+                recipient_type: 'individual',
+                template: {
+                  name: 'welcome',
+                  language: { policy: 'deterministic', code: 'pt_BR' },
+                  components: [
+                    {
+                      type: 'body',
+                      parameters: [{ type: 'text', text: 'John' }]
+                    }
+                  ]
+                }
+              },
+              template: {
+                id: 1689506816046083,
+                name: 'welcome',
+                components: [
+                  {
+                    type: 'BODY',
+                    text: 'Hello, {{1}}! Welcome! Choose an option to continue:\n1 - Technical support\n2 - Exchanges\n3 - Talk to an agent'
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          label: 'without inner content (unsupported)',
+          direction: 'inbound',
+          content: undefined
+        }
+      ],
       hasMemberData: false,
       memberName: undefined,
       memberPhone: undefined
