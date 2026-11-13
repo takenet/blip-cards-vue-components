@@ -1,17 +1,10 @@
 <template>
-  <div class="standby-card">
-    <span
-      v-if="directionLabel"
-      class="standby-card__label"
-      :class="innerPosition"
-    >
-      {{ directionLabel }}
-    </span>
+  <div class="standby-card" :class="'standby-card--' + innerPosition">
     <blip-card
       v-if="innerDocument"
       :document="innerDocument"
       :position="innerPosition"
-      :date="date"
+      :date="displayDate"
       :status="status"
       :editable="false"
       :deletable="false"
@@ -35,12 +28,21 @@
       :date="date"
       :translations="translations"
     />
+    <bds-icon
+      v-if="showIcon"
+      class="standby-card__icon"
+      name="message-received"
+      theme="outline"
+      size="small"
+      color="var(--color-surface-4, #141414)"
+    />
   </div>
 </template>
 
 <script>
 import { default as base } from '../mixins/baseComponent.js'
 import {
+  getExternalMessageText,
   getStandbyDirection,
   getStandbyInnerDocument
 } from '../utils/standby.js'
@@ -78,24 +80,11 @@ export default {
     translations: {
       type: Object,
       default: () => ({})
-    },
-    userToBotText: {
-      type: String,
-      default: 'Usuário > Bot'
-    },
-    botToUserText: {
-      type: String,
-      default: 'Bot > Usuário'
     }
   },
   computed: {
     direction() {
       return getStandbyDirection(this.document)
-    },
-    directionLabel() {
-      if (this.direction === 'inbound') return this.userToBotText
-      if (this.direction === 'outbound') return this.botToUserText
-      return undefined
     },
     innerPosition() {
       if (this.direction === 'inbound') return 'left'
@@ -104,31 +93,62 @@ export default {
     },
     innerDocument() {
       return getStandbyInnerDocument(this.document)
+    },
+    showIcon() {
+      return Boolean(this.innerDocument) && this.innerPosition === 'right'
+    },
+    isTemplate() {
+      const inner = this.innerDocument
+      return Boolean(inner && inner.content && inner.content.type === 'template-content')
+    },
+    displayDate() {
+      if (!this.isTemplate || !this.date) return this.date
+
+      const text = this.translations.standbyExternalMessage || getExternalMessageText(navigator.language)
+      return `${this.date} - ${text}`
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../styles/variables.scss';
 
 .standby-card {
+  position: relative;
   width: 100%;
 
-  &__label {
-    display: block;
-    margin-bottom: 4px;
-    font-size: 12px;
-    line-height: 16px;
-    color: $color-content-disable;
+  .standby-card__icon {
+    position: absolute;
+    left: 100%;
+    bottom: 24px;
+    margin-left: 4px;
+  }
 
-    &.left {
-      text-align: left;
+  &.standby-card--left .bubble.left {
+    background-color: $color-surface-1;
+    border: 1px dashed $color-content-ghost;
+    border-radius: 12px 12px 12px 0;
+  }
+
+  &.standby-card--right .bubble.right {
+    background-color: $color-surface-3;
+    border: 1px dashed $color-surface-4;
+    border-radius: 12px 12px 0 12px;
+    color: $color-surface-4;
+
+    .typo {
+      color: $color-surface-4;
     }
 
-    &.right {
-      text-align: right;
+    bds-icon[name='paperplane'] {
+      filter: invert(92%);
     }
+  }
+
+  .blip-container .bubble.template-width {
+    width: auto;
+    min-width: 0;
   }
 }
 </style>

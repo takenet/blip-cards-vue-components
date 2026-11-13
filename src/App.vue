@@ -226,7 +226,7 @@
           :key="example.label"
           @click="sendStandby(example)"
         >
-          ENVIAR Standby {{ example.label }}
+          SEND Standby {{ example.label }}
         </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
@@ -2016,6 +2016,10 @@ export default {
     },
     sendStandby: function({ direction, content }) {
       const isInbound = direction === 'inbound'
+      const container = {
+        type: 'application/vnd.iris.multi-partner-conversation-standby+json',
+        value: { content }
+      }
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
         to: 'to@msging.net',
@@ -2026,10 +2030,8 @@ export default {
           sender: isInbound ? '5531999998888' : 'bot',
           recipient: isInbound ? 'bot' : '5531999998888',
           source: 'standby',
-          documentContainer: {
-            type: 'application/vnd.iris.multi-partner-conversation-standby+json',
-            value: { content }
-          }
+          // Outbound sends the container under content.content
+          ...(isInbound ? { documentContainer: container } : { content: container })
         },
         metadata: {
           '#wa.timestamp': '1710000000',
@@ -3217,20 +3219,20 @@ export default {
       isExternalMessage: false,
       standbyExamples: [
         {
-          label: 'Usuário > Bot (texto)',
+          label: 'text (inbound)',
           direction: 'inbound',
           content: {
             type: 'text/plain',
-            value: 'Oi, gostaria de entender como posso negociar uma dívida'
+            value: 'Hi, I would like to understand how I can negotiate a debt'
           }
         },
         {
-          label: 'Bot > Usuário (texto)',
+          label: 'text (outbound)',
           direction: 'outbound',
-          content: { type: 'text/plain', value: 'Olá! Posso ajudar com isso.' }
+          content: { type: 'text/plain', value: 'Hello! I can help you with that.' }
         },
         {
-          label: 'Bot > Usuário (imagem)',
+          label: 'image (outbound)',
           direction: 'outbound',
           content: {
             type: 'application/vnd.lime.media-link+json',
@@ -3238,12 +3240,12 @@ export default {
               type: 'image/jpeg',
               uri:
                 'http://2.bp.blogspot.com/-pATX0YgNSFs/VP-82AQKcuI/AAAAAAAALSU/Vet9e7Qsjjw/s1600/Cat-hd-wallpapers.jpg',
-              title: 'texto de exemplo'
+              title: 'example text'
             }
           }
         },
         {
-          label: 'Usuário > Bot (vídeo)',
+          label: 'video (inbound)',
           direction: 'inbound',
           content: {
             type: 'application/vnd.lime.media-link+json',
@@ -3255,7 +3257,7 @@ export default {
           }
         },
         {
-          label: 'Usuário > Bot (áudio)',
+          label: 'audio (inbound)',
           direction: 'inbound',
           content: {
             type: 'application/vnd.lime.media-link+json',
@@ -3267,7 +3269,7 @@ export default {
           }
         },
         {
-          label: 'Bot > Usuário (documento)',
+          label: 'document (outbound)',
           direction: 'outbound',
           content: {
             type: 'application/vnd.lime.media-link+json',
@@ -3281,7 +3283,7 @@ export default {
           }
         },
         {
-          label: 'Usuário > Bot (localização)',
+          label: 'location (inbound)',
           direction: 'inbound',
           content: {
             type: 'application/vnd.lime.location+json',
@@ -3294,7 +3296,7 @@ export default {
           }
         },
         {
-          label: 'Bot > Usuário (application/json)',
+          label: 'application/json (outbound)',
           direction: 'outbound',
           content: {
             type: 'application/json',
@@ -3303,11 +3305,11 @@ export default {
               type: 'interactive',
               interactive: {
                 type: 'cta_url',
-                body: { text: 'Toque no botão abaixo para ver as datas.' },
+                body: { text: 'Tap the button below to see the dates.' },
                 action: {
                   name: 'cta_url',
                   parameters: {
-                    display_text: 'Ver datas',
+                    display_text: 'See dates',
                     url: 'https://take.net'
                   }
                 }
@@ -3316,7 +3318,43 @@ export default {
           }
         },
         {
-          label: 'sem conteúdo interno (não suportado)',
+          label: 'text template (outbound)',
+          direction: 'outbound',
+          content: {
+            type: 'application/vnd.iris.multi-partner-conversation-template+json',
+            value: {
+              id: 'wamid.example',
+              timestamp: '1794408971',
+              message: {
+                to: '5531999998888',
+                type: 'template',
+                recipient_type: 'individual',
+                template: {
+                  name: 'welcome',
+                  language: { policy: 'deterministic', code: 'pt_BR' },
+                  components: [
+                    {
+                      type: 'body',
+                      parameters: [{ type: 'text', text: 'John' }]
+                    }
+                  ]
+                }
+              },
+              template: {
+                id: 1689506816046083,
+                name: 'welcome',
+                components: [
+                  {
+                    type: 'BODY',
+                    text: 'Hello, {{1}}! Welcome! Choose an option to continue:\n1 - Technical support\n2 - Exchanges\n3 - Talk to an agent'
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          label: 'without inner content (unsupported)',
           direction: 'inbound',
           content: undefined
         }

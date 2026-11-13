@@ -756,8 +756,6 @@
           :on-image-selected="onImageSelected"
           :translations="translations"
           :transcription="transcription"
-          :user-to-bot-text="translations.standbyUserToBot"
-          :bot-to-user-text="translations.standbyBotToUser"
         />
 
         <unsuported-content
