@@ -111,14 +111,15 @@
                   <label v-if="!isFileLimitReached(field)" :for="fieldInputId(field.id)" class="native-form-file-button" aria-hidden="true">
                     {{ fileItems(field).length > 0 ? 'Adicionar arquivo' : 'Escolher arquivos' }}
                   </label>
-                  <span class="native-form-file-count">{{ fileItems(field).length }} de {{ maxFilesOf(field) }} arquivos</span>
+                  <span :id="fileCountId(field.id)" class="native-form-file-count">{{ fileItems(field).length }} de {{ maxFilesOf(field) }} arquivos</span>
                   <ul class="native-form-file-list" aria-live="polite">
                     <li v-for="item in fileItems(field)" :key="item.key" class="native-form-file-item">
+                      <!-- The reason is written for every failed file, not only shown by the colour -->
                       <span class="native-form-file-status" :class="'is-' + item.status">
                         <span v-if="item.status === 'uploading'" class="native-form-spinner" aria-hidden="true"></span>
                         <template v-if="item.status === 'uploading'">Enviando… {{ item.fileName }}</template>
                         <template v-else-if="item.status === 'done'">✓ {{ item.fileName }}</template>
-                        <template v-else>{{ item.fileName }}</template>
+                        <template v-else>✕ {{ item.fileName }} — {{ item.message }}</template>
                       </span>
                       <button type="button"
                         class="native-form-file-remove"
@@ -183,10 +184,14 @@
 
               <small v-if="field.helpText" :id="helpId(field.id)" class="native-form-help">{{ field.helpText }}</small>
               <span class="native-form-live" aria-live="polite">
-                <span v-if="showError(field)" :id="errorId(field.id)" class="native-form-error">
+                <span v-if="showError(field)"
+                  :id="errorId(field.id)"
+                  :tabindex="isFileList(field) ? -1 : undefined"
+                  class="native-form-error"
+                >
                   {{ fieldErrors[field.id].message }}
                 </span>
-                <span v-if="fileNotice(field)" class="native-form-error native-form-file-notice">{{ fileNotice(field) }}</span>
+                <span v-if="fileNotice(field)" :id="fileNoticeId(field.id)" class="native-form-error native-form-file-notice">{{ fileNotice(field) }}</span>
               </span>
             </div>
 
@@ -262,6 +267,9 @@ const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 const DEFAULT_MAX_SIZE_MB = 20
 const DEFAULT_MAX_FILES = 10
+// Uploads of lists of files running at the same time per form; the others wait in line. Hosts may
+// process each file before uploading it (blip-chat compresses camera photos), which is heavy on low-end phones
+const MAX_PARALLEL_UPLOADS = 3
 // Primary button actions right after a step change are ignored (double click on "Continuar")
 const STEP_CHANGE_GUARD_MS = 400
 
@@ -576,6 +584,9 @@ export default {
       this.submitted = false
       this.uploadSequence = 0
       this.lastStepChangeAt = 0
+      // Files of lists waiting for a free slot and the ones uploading ({ fieldId, field, file, item })
+      this.uploadQueue = []
+      this.activeUploads = []
     },
     // Keeps the reactive state in line with the current fields when the document (or the upload
     // support) changes on a mounted instance: existing values are preserved (a new pre-fill `value` of an
@@ -627,6 +638,8 @@ export default {
       })
 
       this.fieldTypes = fieldTypes
+      // Files dropped with their field (reset or removed) free their upload slot and never start
+      this.releaseDroppedUploads()
 
       if (idsChanged) {
         this.currentStep = 0
@@ -755,10 +768,27 @@ export default {
     },
     fileNotice: function(field) {
       const upload = this.uploads[field.id]
-      return this.isFileList(field) && upload ? upload.notice : ''
+      if (!this.isFileList(field) || !upload) {
+        return ''
+      }
+      // The blocking "too many files" error already says it
+      const fieldError = this.fieldErrors[field.id]
+      return fieldError && fieldError.key === 'maxFiles' && this.showError(field) ? '' : upload.notice
     },
     fileRemoveId: function(fieldId, itemKey) {
       return `${this.fieldInputId(fieldId)}-remove-${itemKey}`
+    },
+    fileCountId: function(fieldId) {
+      return `${this.fieldInputId(fieldId)}-count`
+    },
+    fileNoticeId: function(fieldId) {
+      return `${this.fieldInputId(fieldId)}-notice`
+    },
+    // Item still in the list of a field that is still a list of files (not removed nor reset)
+    isLiveFileItem: function(fieldId, item) {
+      const upload = this.uploads[fieldId]
+      return !!(this.fieldTypes && this.fieldTypes[fieldId] === 'file[]' &&
+        upload && Array.isArray(upload.items) && upload.items.indexOf(item) !== -1)
     },
     fieldMask: function(field) {
       return MASK_TYPES.indexOf(field.type) !== -1 && typeof field.mask === 'string' && field.mask
@@ -819,6 +849,12 @@ export default {
       if (this.showError(field)) {
         ids.push(this.errorId(field.id))
       }
+      if (this.isFileList(field)) {
+        ids.push(this.fileCountId(field.id))
+        if (this.fileNotice(field)) {
+          ids.push(this.fileNoticeId(field.id))
+        }
+      }
       return ids.length > 0 ? ids.join(' ') : undefined
     },
     message: function(field, key, params) {
@@ -842,6 +878,11 @@ export default {
         const failed = items.find((item) => item.status === 'error')
         if (failed) {
           return { key: failed.errorKey, message: `${failed.fileName}: ${failed.message}` }
+        }
+        // The limit may have been lowered after the files were picked: the extra ones must be removed
+        const max = this.maxFilesOf(field)
+        if (items.length > max) {
+          return this.error(field, 'maxFiles', { max })
         }
         if (items.some((item) => item.status === 'uploading')) {
           return this.error(field, 'uploading')
@@ -1050,7 +1091,7 @@ export default {
         })
     },
     // List of files: files beyond the limit are left out with a notice; the others are checked and
-    // uploaded in parallel, each one keeping its place in the list
+    // uploaded (at most MAX_PARALLEL_UPLOADS at a time per form), each one keeping its place in the list
     onFilesChange: function(field, event) {
       const input = event.target
       const files = Array.prototype.slice.call(input.files || [])
@@ -1091,29 +1132,58 @@ export default {
         notice: files.length > remaining ? this.message(field, 'maxFiles', { max }) : ''
       })
 
+      // Queued files keep the "uploading" status until a slot is free
+      picked
+        .filter((entry) => entry.item.status === 'uploading')
+        .forEach(({ file, item }) => {
+          this.uploadQueue.push({ fieldId: field.id, field, file, item })
+        })
+      this.pumpFileUploads()
+    },
+    pumpFileUploads: function() {
+      while (this.uploadQueue.length > 0 && this.activeUploads.length < MAX_PARALLEL_UPLOADS) {
+        const entry = this.uploadQueue.shift()
+        // Files removed or reset while waiting are never uploaded
+        if (this.isLiveFileItem(entry.fieldId, entry.item)) {
+          this.startFileUpload(entry)
+        }
+      }
+    },
+    startFileUpload: function(entry) {
+      const { fieldId, field, file, item } = entry
       // Results are applied only to items still in the list (not removed nor reset meanwhile)
-      const update = (item, changes) => {
-        if (this.fileItems(field).indexOf(item) !== -1) {
+      const update = (changes) => {
+        if (this.isLiveFileItem(fieldId, item)) {
           Object.assign(item, changes)
         }
       }
 
-      picked
-        .filter((entry) => entry.item.status === 'uploading')
-        .forEach(({ file, item }) => {
-          Promise.resolve()
-            .then(() => this.onUploadFile(file))
-            .then((result) => {
-              const uri = typeof result === 'string' ? result : result && result.uri
-              if (!uri || typeof uri !== 'string') {
-                throw new Error('Upload did not return a URI')
-              }
-              update(item, { status: 'done', uri })
-            })
-            .catch(() => {
-              update(item, { status: 'error', uri: '', errorKey: 'uploadFailed', message: this.message(field, 'uploadFailed') })
-            })
+      this.activeUploads.push(entry)
+
+      Promise.resolve()
+        .then(() => this.onUploadFile(file))
+        .then((result) => {
+          const uri = typeof result === 'string' ? result : result && result.uri
+          if (!uri || typeof uri !== 'string') {
+            throw new Error('Upload did not return a URI')
+          }
+          update({ status: 'done', uri })
         })
+        .catch(() => {
+          update({ status: 'error', uri: '', errorKey: 'uploadFailed', message: this.message(field, 'uploadFailed') })
+        })
+        .then(() => {
+          // No-op when the slot was already freed (file removed or form reset)
+          this.activeUploads = this.activeUploads.filter((current) => current !== entry)
+          this.pumpFileUploads()
+        })
+    },
+    // Frees the slots of uploading files that were removed/reset and forgets the waiting ones
+    releaseDroppedUploads: function() {
+      const isLive = (entry) => this.isLiveFileItem(entry.fieldId, entry.item)
+      this.activeUploads = (this.activeUploads || []).filter(isLive)
+      this.uploadQueue = (this.uploadQueue || []).filter(isLive)
+      this.pumpFileUploads()
     },
     removeFile: function(field, item) {
       if (this.hideOptions || this.submitted) {
@@ -1125,19 +1195,18 @@ export default {
         items: this.fileItems(field).filter((current) => current !== item),
         notice: ''
       })
+      this.releaseDroppedUploads()
       // The clicked button is gone: focus goes back to the file picker
       this.$nextTick(() => this.focusField(field))
     },
     focusField: function(field) {
       let id = this.isOptionGroup(field) ? this.optionInputId(field.id, 0) : this.fieldInputId(field.id)
-      // With the limit reached the picker is disabled: focus the remove button of the file to fix
+      // With the limit reached the picker is disabled: focus the remove button of a failed file, never
+      // the one of a file still uploading (a second Enter would remove it); otherwise the error message,
+      // when shown (focus stays where it is when there is none)
       if (this.isFileList(field) && this.isFileLimitReached(field)) {
-        const items = this.fileItems(field)
-        const item = items.find((current) => current.status === 'error') ||
-          items.find((current) => current.status === 'uploading')
-        if (item) {
-          id = this.fileRemoveId(field.id, item.key)
-        }
+        const failed = this.fileItems(field).find((current) => current.status === 'error')
+        id = failed ? this.fileRemoveId(field.id, failed.key) : this.errorId(field.id)
       }
       const element = document.getElementById(id)
       if (element && typeof element.focus === 'function') {

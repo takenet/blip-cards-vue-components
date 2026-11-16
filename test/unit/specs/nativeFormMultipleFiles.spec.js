@@ -210,6 +210,150 @@ describe('NativeForm - several files in the same field', () => {
     })
   })
 
+  it('uploads at most 3 files at a time and starts the next one when a slot is free', () => {
+    const { calls, onUploadFile } = controlledUpload()
+    const { vm, sent } = createForm([listField()], onUploadFile)
+    const field = vm.formFields[0]
+
+    pick(vm, ['a.pdf', 'b.pdf', 'c.pdf', 'd.pdf', 'e.pdf'].map(pdf))
+    return flush()
+      .then(() => {
+        expect(calls.map((call) => call.file.name)).to.deep.equal(['a.pdf', 'b.pdf', 'c.pdf'])
+        // Waiting files are shown as uploading
+        expect(vm.fileItems(field).map((item) => item.status)).to.deep.equal(
+          ['uploading', 'uploading', 'uploading', 'uploading', 'uploading'])
+        calls[1].reject(new Error('network'))
+        return flush()
+      })
+      .then(() => {
+        expect(calls.map((call) => call.file.name)).to.deep.equal(['a.pdf', 'b.pdf', 'c.pdf', 'd.pdf'])
+        calls[0].resolve('https://media.example/a')
+        return flush()
+      })
+      .then(() => {
+        expect(calls.map((call) => call.file.name)).to.deep.equal(['a.pdf', 'b.pdf', 'c.pdf', 'd.pdf', 'e.pdf'])
+        calls.slice(2).forEach((call) => call.resolve(`https://media.example/${call.file.name}`))
+        return flush()
+      })
+      .then(() => {
+        vm.removeFile(field, vm.fileItems(field)[1])
+        vm.submit()
+        expect(sent).to.have.length(1)
+        expect(sent[0].content.comprovantes).to.deep.equal([
+          'https://media.example/a', 'https://media.example/c.pdf', 'https://media.example/d.pdf', 'https://media.example/e.pdf'
+        ])
+      })
+  })
+
+  it('never uploads a waiting file that was removed or reset, and frees the slot of a removed upload', () => {
+    const { calls, onUploadFile } = controlledUpload()
+    const { vm } = createForm([listField(), listField({ id: 'outros', label: 'Outros' })], onUploadFile)
+    const field = vm.formFields[0]
+
+    pick(vm, ['a.pdf', 'b.pdf', 'c.pdf', 'd.pdf', 'e.pdf'].map(pdf))
+    pick(vm, [pdf('f.pdf')], 1)
+    return flush()
+      .then(() => {
+        expect(calls).to.have.length(3)
+        // d.pdf is waiting: removing it skips its turn
+        vm.removeFile(field, vm.fileItems(field)[3])
+        expect(calls).to.have.length(3)
+        // a.pdf is uploading: removing it frees its slot right away (its late result is ignored)
+        vm.removeFile(field, vm.fileItems(field)[0])
+        return flush()
+      })
+      .then(() => {
+        expect(calls.map((call) => call.file.name)).to.deep.equal(['a.pdf', 'b.pdf', 'c.pdf', 'e.pdf'])
+        calls[0].resolve('https://media.example/late')
+        return flush()
+      })
+      .then(() => {
+        expect(calls).to.have.length(4)
+        expect(vm.fileItems(field).map((item) => item.fileName)).to.deep.equal(['b.pdf', 'c.pdf', 'e.pdf'])
+        // The other field is reset while f.pdf waits: it never starts, even when slots are free
+        vm.document = { validation: { fields: [listField(), listField({ id: 'outros', label: 'Outros', multiple: false })] } }
+        return flush()
+      })
+      .then(() => {
+        calls.slice(1).forEach((call) => call.resolve(`https://media.example/${call.file.name}`))
+        return flush()
+      })
+      .then(() => {
+        expect(calls.map((call) => call.file.name)).to.deep.equal(['a.pdf', 'b.pdf', 'c.pdf', 'e.pdf'])
+        expect(vm.effectiveValue(vm.formFields[0])).to.deep.equal([
+          'https://media.example/b.pdf', 'https://media.example/c.pdf', 'https://media.example/e.pdf'
+        ])
+      })
+  })
+
+  it('with the limit reached, focuses a failed file remove button or the error, never an uploading file', () => {
+    const { calls, onUploadFile } = controlledUpload()
+    const { vm, sent } = createForm([listField({ maxFiles: 2 })], onUploadFile)
+    const field = vm.formFields[0]
+    const focused = []
+    const previousGetElementById = global.document.getElementById
+    global.document.getElementById = (id) => ({ focus: () => focused.push(id) })
+
+    pick(vm, [pdf('a.pdf'), pdf('b.pdf')])
+    return flush()
+      .then(() => {
+        vm.submit()
+        return flush()
+      })
+      .then(() => {
+        expect(sent).to.have.length(0)
+        expect(focused).to.deep.equal([vm.errorId(field.id)])
+        calls[1].reject(new Error('network'))
+        return flush()
+      })
+      .then(() => {
+        vm.submit()
+        return flush()
+      })
+      .then(() => {
+        const failed = vm.fileItems(field)[1]
+        expect(focused[1]).to.equal(vm.fileRemoveId(field.id, failed.key))
+
+        const vnode = render(vm)
+        const errorSpan = findAll(vnode, (node) => attrs(node).id === vm.errorId(field.id))[0]
+        expect(attrs(errorSpan).tabindex).to.equal(-1)
+        // The reason is written in the item, not only shown by the colour
+        const items = findAll(vnode, (node) => hasClass(node, 'native-form-file-item'))
+        expect(textOf(items[1])).to.contain('✕ b.pdf — Não foi possível enviar o arquivo. Tente novamente.')
+        const input = findAll(vnode, (node) => node.tag === 'input' && attrs(node).type === 'file')[0]
+        expect(attrs(input)['aria-describedby'].split(' ')).to.deep.equal([vm.errorId(field.id), vm.fileCountId(field.id)])
+      })
+      .then(() => {
+        global.document.getElementById = previousGetElementById
+      }, (error) => {
+        global.document.getElementById = previousGetElementById
+        throw error
+      })
+  })
+
+  it('blocks sending when a lower maxFiles arrives after the files were picked, until the extra ones are removed', () => {
+    const onUploadFile = (file) => Promise.resolve(`https://media.example/${file.name}`)
+    const { vm, sent } = createForm([listField({ maxFiles: 3 })], onUploadFile)
+
+    pick(vm, [pdf('a.pdf'), pdf('b.pdf'), pdf('c.pdf')])
+    return flush()
+      .then(() => {
+        vm.document = { validation: { fields: [listField({ maxFiles: 2 })] } }
+        return flush()
+      })
+      .then(() => {
+        const field = vm.formFields[0]
+        expect(vm.fieldErrors.comprovantes).to.deep.equal({ key: 'maxFiles', message: 'Você pode enviar no máximo 2 arquivos.' })
+        vm.submit()
+        expect(sent).to.have.length(0)
+
+        vm.removeFile(field, vm.fileItems(field)[2])
+        vm.submit()
+        expect(sent).to.have.length(1)
+        expect(sent[0].content.comprovantes).to.deep.equal(['https://media.example/a.pdf', 'https://media.example/b.pdf'])
+      })
+  })
+
   it('resets the field when `multiple` is turned off on the same id', () => {
     const { calls, onUploadFile } = controlledUpload()
     const { vm } = createForm([listField()], onUploadFile)
