@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import { linkify, isFailedMessage } from '../utils/misc'
+import { linkify, previewText, isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 import messageTranslation from '../mixins/messageTranslation.js'
 
@@ -158,13 +158,11 @@ export default {
   computed: {
     previewDocument: function() {
       const sanitizedDocument = this.sanitize(this.translatedField('text', this.document), { disallowedTagsMode: 'escape' })
+      const preview = previewText(sanitizedDocument, this.length, this.disableLink)
 
       return {
-        hasPreview: sanitizedDocument.length > this.length,
-        previewContent: linkify(
-          sanitizedDocument.substring(0, this.length - 3) + '...',
-          this.disableLink
-        ),
+        hasPreview: preview.hasPreview,
+        previewContent: linkify(preview.text, this.disableLink),
         content: linkify(sanitizedDocument, this.disableLink)
       }
     }
