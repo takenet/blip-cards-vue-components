@@ -270,6 +270,8 @@ const DEFAULT_MAX_FILES = 10
 // Uploads of lists of files running at the same time per form; the others wait in line. Hosts may
 // process each file before uploading it (blip-chat compresses camera photos), which is heavy on low-end phones
 const MAX_PARALLEL_UPLOADS = 3
+// Shown in the answer text for an empty optional field
+const EMPTY_SUMMARY_VALUE = '—'
 // Primary button actions right after a step change are ignored (double click on "Continuar")
 const STEP_CHANGE_GUARD_MS = 400
 
@@ -1341,9 +1343,10 @@ export default {
       this.submitted = true
 
       if (this.onSelected) {
+        // One "label: value" line per field ("—" when empty); message bubbles keep the line breaks
         const summary = this.formFields
-          .map((field) => `${field.label}: ${this.summaryFieldValue(field)}`)
-          .join(', ')
+          .map((field) => `${field.label}: ${this.summaryFieldValue(field) || EMPTY_SUMMARY_VALUE}`)
+          .join('\n')
 
         const content = this.formFields.reduce((values, field) => {
           values[field.id] = this.fieldContentValue(field)
