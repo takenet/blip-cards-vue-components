@@ -1576,9 +1576,12 @@ export default {
           align-items: center;
           gap: 8px;
 
+          // Long file names still wrap, but the error reasons are not split in the middle of words
           .native-form-file-status {
             flex: 1;
             min-width: 0;
+            word-break: normal;
+            overflow-wrap: break-word;
           }
 
           .native-form-file-status.is-error {
