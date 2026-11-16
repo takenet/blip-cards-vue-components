@@ -174,7 +174,10 @@ describe('linkify security (named media links)', () => {
       '[www.label.com](https://h/a?se=1&amp;sig=2)',
       '[a <b>](https://h/a?se=1&amp;sig=2)',
       'é www.ação.com.br ç',
-      '\u0001 0 \u0001 www.x.com'
+      '\u0001 0 \u0001 www.x.com',
+      'a < b www.x.com and 3 <4 http://x.com',
+      'x > y mail@x.com, a <= b, << www.x.com >>',
+      'see www.a.com/x?y=1&z=2 or ftp://f.io/a.zip;\r\nbye joe@x.com.'
     ]
     texts.forEach(text => {
       it(String(JSON.stringify(text)), () => {
@@ -184,6 +187,125 @@ describe('linkify security (named media links)', () => {
           const sanitized = escapeSanitize(text)
           expect(linkify(sanitized)).to.equal(previousLinkify(sanitized))
         }
+      })
+    })
+  })
+})
+
+// Locks that the URL/www/e-mail patterns never run inside a tag (stored XSS: an address written in an
+// attribute value of a tag kept by the sanitize became an anchor inside that value, and the rest of the
+// address added event handler attributes to the tag), while the text between tags is linkified as before.
+describe('linkify security (links inside tags)', () => {
+  const payloads = [
+    '<a name="http://x/onmouseover=location=/javascript:alert%281%29/.source//">hi</a>',
+    '<a target="www.x.com/onmouseover=alert`1`//">x</a>'
+  ]
+  const attributeNames = (html) => elements(html).reduce((all, { attribs }) => all.concat(Object.keys(attribs)), [])
+  const isLinkAnchor = ({ name, attribs }) =>
+    name === 'a' && 'href' in attribs && Object.keys(attribs).every(attribute => ['href', 'target', 'rel'].includes(attribute))
+
+  // Every element is one of the input (same attributes) or an anchor with only href/target/rel, and no
+  // attribute is an event handler or carries an anchor in its value.
+  const expectTagsKept = (text, html) => {
+    const original = elements(text).map(element => JSON.stringify(element))
+    const found = elements(html)
+    found.forEach(element => {
+      expect(isLinkAnchor(element) || original.includes(JSON.stringify(element)), html).to.equal(true)
+      Object.keys(element.attribs).forEach(attribute => {
+        expect(attribute, html).to.not.match(/^on/i)
+        expect(element.attribs[attribute], html).to.not.match(/<a/i)
+      })
+    })
+    return found.filter(isLinkAnchor)
+  }
+
+  payloads.forEach(payload => {
+    it(`reference implementation reproduces the vulnerability (guards this spec): ${payload}`, () => {
+      expect(attributeNames(previousLinkify(escapeSanitize(payload)))).to.include('onmouseover')
+      expect(attributeNames(previousLinkify(payload))).to.include('onmouseover')
+    })
+
+    const variants = { raw: payload, 'after the library sanitize (escape mode)': escapeSanitize(payload) }
+    Object.keys(variants).forEach(variant => {
+      it(`does not link inside the attributes of a tag: ${variant}: ${payload}`, () => {
+        const text = variants[variant]
+        const html = linkify(text)
+        expect(html).to.equal(text)
+        expect(attributeNames(html)).to.not.include('onmouseover')
+        expect(expectTagsKept(text, html)).to.have.length(0)
+      })
+    })
+
+    it(`still links the text around and inside the tag: ${payload}`, () => {
+      const text = escapeSanitize(`see www.ok.com ${payload.replace('</a>', ' http://y.com</a>')} joe@x.com`)
+      const html = linkify(text)
+      const anchors = expectTagsKept(text, html)
+      expect(anchors.map(anchor => anchor.attribs.href)).to.deep.equal(['https://www.ok.com', 'http://y.com', 'mailto:joe@x.com'])
+      expect(html.indexOf(text.slice(text.indexOf('<a '), text.indexOf('>') + 1))).to.not.equal(-1)
+    })
+  })
+
+  // Raw text (callers that sanitize afterwards): tags are read with the quoting rules of the browser.
+  describe('reads tags as the browser does', () => {
+    const texts = [
+      '<a name="x>http://y/onmouseover=alert(1)//">hi</a>',
+      "<a name='x>www.y.com/onmouseover=alert(1)//'>hi</a>",
+      '<a name="a"=" title="x>www.y.com/onmouseover=alert(1)//">hi</a>',
+      '<a name=http://y/onmouseover=alert(1)//>hi</a>',
+      '<a name\u00a0="x>www.y.com/onmouseover=alert(1)//">hi</a>',
+      '<A\nNAME = "x>www.y.com/onmouseover=alert(1)//">hi</A>',
+      '<a/name="x>www.y.com/onmouseover=alert(1)//">hi</a>',
+      '<a name="www.y.com/onmouseover=alert(1)//',
+      '<!-- x > www.y.com/x" onmouseover="alert(1) -->',
+      '<a name="x>[f](https://h/a?se=1&sig=2)">hi</a>'
+    ]
+    texts.forEach(text => {
+      it(String(JSON.stringify(text)), () => {
+        const html = linkify(text)
+        expect(html).to.equal(text)
+        expectTagsKept(text, html)
+      })
+    })
+  })
+
+  describe('benign text with tags is linkified exactly as before', () => {
+    const texts = [
+      '<b>bold</b> http://x.com <i>italic www.y.com </i>',
+      '<p>mail: joe@x.com</p><p>site: https://x.com/a?b=1</p>',
+      'line 1<br>www.x.com and http://y.com<br/>z@w.com<br />end',
+      '<ul><li>http://a.com</li><li>www.b.com and more</li><li>c@d.com</li></ul>',
+      '<strong>ok</strong> <em>http://x.com</em> <u>a@b.com</u>',
+      '<p>see www.x.com, http://y.com/x and joe@mail.com.</p>',
+      'text <i>http://x.com/www.y.com</i> <b>www.z.com/path </b>.',
+      '<div>http://x.com</div><div>mail@y.com</div>',
+      '<p>\nwww.x.com\n</p>',
+      '<a name="n">see http://x.com</a> <a target="_blank">joe@x.com</a>',
+      `<b>Arquivo:</b> [boleto.pdf](${signed}) <i>www.x.com </i>`
+    ]
+    texts.forEach(text => {
+      it(String(JSON.stringify(text)), () => {
+        expect(linkify(text)).to.equal(previousLinkify(text))
+        expect(linkify(text, true)).to.equal(previousLinkify(text, true))
+        const sanitized = escapeSanitize(text)
+        expect(linkify(sanitized)).to.equal(previousLinkify(sanitized))
+      })
+    })
+  })
+
+  // The www pattern used to run into the tag right after the address and write it inside the href
+  // (e.g. href="https://www.x.com</b>"); the address now ends where the tag starts.
+  describe('a www address right before a tag ends at the tag', () => {
+    const www = (address) => `<a href="https://${address}" target="_blank">${address}</a>`
+    const cases = {
+      '<b>www.x.com</b>': `<b>${www('www.x.com')}</b>`,
+      '<p>www.x.com/path?a=1</p> ok': `<p>${www('www.x.com/path?a=1')}</p> ok`,
+      'line<br />www.x.com<br />http://y.com': `line<br />${www('www.x.com')}<br /><a href="http://y.com" target="_blank">http://y.com</a>`
+    }
+    Object.keys(cases).forEach(text => {
+      it(String(JSON.stringify(text)), () => {
+        expect(escapeSanitize(text)).to.equal(text)
+        expect(linkify(text)).to.equal(cases[text])
+        expect(previousLinkify(text)).to.not.equal(cases[text])
       })
     })
   })

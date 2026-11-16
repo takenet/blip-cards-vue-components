@@ -39,10 +39,46 @@ function linkifyPlainText(inputText) {
   // Email addresses
   const emailAddressValidPattern = /[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
 
-  return inputText
-    .replace(urlValidPattern, '<a href="$&" target="_blank">$&</a>')
-    .replace(pseudoUrlValidPattern, '$1<a href="https://$2" target="_blank">$2</a>')
-    .replace(emailAddressValidPattern, '<a href="mailto:$&" target="_blank">$&</a>')
+  // Only the text between tags is linkified: a link written in a tag (e.g. in an attribute value)
+  // would put an anchor inside the tag and let its address add attributes to it.
+  return splitTags(inputText)
+    .map(part => part.isTag ? part.value : part.value
+      .replace(urlValidPattern, '<a href="$&" target="_blank">$&</a>')
+      .replace(pseudoUrlValidPattern, '$1<a href="https://$2" target="_blank">$2</a>')
+      .replace(emailAddressValidPattern, '<a href="mailto:$&" target="_blank">$&</a>')
+    )
+    .join('')
+}
+
+// Tags read as the browser reads them (HTML tokenizer), so a '>' inside a quoted attribute value does
+// not end the tag. Whatever is not closed (tag, quoted value, comment) runs to the end of the text.
+const tagPattern = (() => {
+  const space = '[\\t\\n\\f\\r ]'
+  const value = `${space}*=${space}*(?:"[^"]*(?:"|$)|'[^']*(?:'|$)|[^\\t\\n\\f\\r >]*)`
+  const attribute = `[^\\t\\n\\f\\r />][^\\t\\n\\f\\r />=]*(?:${value})?`
+  return new RegExp(
+    // comment
+    '<!--(?:-?>|[\\s\\S]*?(?:--!?>|$))' +
+    // <!doctype>, <?...>, </ not followed by a letter: up to the first '>'
+    '|<[!?][^>]*(?:>|$)|</(?![a-zA-Z])[^>]*(?:>|$)' +
+    // start and end tags with their attributes
+    `|</?[a-zA-Z][^\\t\\n\\f\\r />]*(?:[\\t\\n\\f\\r /]+|${attribute})*(?:>|$)`,
+    'g'
+  )
+})()
+
+// Splits the text into its tags and the text between them: [{ value, start, isTag }]
+function splitTags(inputText) {
+  const parts = []
+  let lastIndex = 0
+  inputText.replace(tagPattern, (tag, offset) => {
+    parts.push({ value: inputText.slice(lastIndex, offset), start: lastIndex, isTag: false })
+    parts.push({ value: tag, start: offset, isTag: true })
+    lastIndex = offset + tag.length
+    return tag
+  })
+  parts.push({ value: inputText.slice(lastIndex), start: lastIndex, isTag: false })
+  return parts
 }
 
 // [label](https://...)
@@ -55,17 +91,23 @@ function isNamedMediaLink(label, uri) {
   return isSignedMediaUri(uri) && !/:\/\/|www\./i.test(label) && !/[<>"]/.test(label)
 }
 
-// A link written inside a tag (e.g. in an attribute value) is left as it is: an anchor there would
-// break the tag. Any '<' not closed by a '>' before the link counts as an open tag.
-function isInsideTag(inputText, offset) {
-  return inputText.lastIndexOf('<', offset) > inputText.lastIndexOf('>', offset)
-}
-
-// Calls replacer(match, label, uri, offset) for each [label](uri) shown as the label; other matches are kept
+// Calls replacer(match, label, uri, offset) for each [label](uri) shown as the label; other matches are kept.
+// A link written inside a tag (e.g. in an attribute value) is left as it is: an anchor there would break
+// the tag. Tags are read by splitTags, as in linkifyPlainText, so both agree on what is outside them.
 function replaceNamedMediaLinks(inputText, replacer) {
-  return inputText.replace(namedMediaLinkPattern, (match, label, uri, offset) =>
-    isNamedMediaLink(label, uri) && !isInsideTag(inputText, offset) ? replacer(match, label, uri, offset) : match
-  )
+  let parts
+  let index = 0
+  return inputText.replace(namedMediaLinkPattern, (match, label, uri, offset) => {
+    if (!isNamedMediaLink(label, uri)) {
+      return match
+    }
+    parts = parts || splitTags(inputText)
+    // matches come in order: move to the part that contains the offset
+    while (parts[index].start + parts[index].value.length <= offset) {
+      index++
+    }
+    return parts[index].isTag ? match : replacer(match, label, uri, offset)
+  })
 }
 
 // Links to uploaded files are signed (Azure SAS): they carry an expiry (se) and a signature (sig)
