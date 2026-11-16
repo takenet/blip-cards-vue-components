@@ -35,6 +35,7 @@ import PlainText from './components/PlainText'
 import DeletedContent from './components/DeletedContent'
 import Redirect from './components/Redirect'
 import RequestLocation from './components/RequestLocation'
+import StandbyCard from './components/StandbyCard.vue'
 import Survey from './components/Survey'
 import ThreadSummary from './components/ThreadSummary.vue'
 import Ticket from './components/Ticket'
@@ -170,6 +171,9 @@ function install(Vue) {
   // External component
   components.push(Vue.component(BlipExternal.name, BlipExternal))
 
+  // Standby component
+  components.push(Vue.component(StandbyCard.name, StandbyCard))
+
   Vue.component(Editable.name, Editable)
 
   Vue.filter('sizeInBytesFilter', SizeInBytesFilter.filter)
@@ -218,6 +222,7 @@ export default {
   TemplateOrder,
   UnsuportedContent,
   BlipExternal,
+  StandbyCard,
   ActionFlow,
   install
 }

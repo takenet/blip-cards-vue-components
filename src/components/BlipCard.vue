@@ -738,8 +738,27 @@
           :translations="translations"
           :transcription="transcription"
           :reply-callback="replyCallback"
-        />     
-           
+        />
+
+        <standby-card
+          v-else-if="isStandbyMessage"
+          class="blip-card"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :disable-link="disableLink"
+          :on-media-selected="onMediaSelected"
+          :on-open-link="onOpenLink"
+          :on-audio-validate-uri="onAudioValidateUri"
+          :async-fetch-media="asyncFetchMedia"
+          :on-image-selected="onImageSelected"
+          :translations="translations"
+          :transcription="transcription"
+          :external-message-label="translations.standbyExternalMessage"
+        />
+
         <unsuported-content
           v-else
           class="blip-card"
@@ -779,6 +798,7 @@ import { default as base } from '../mixins/baseComponent.js'
 import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 import { checkIsExternalMessage } from '../utils/externalMessages.js'
 import { getMemberInfo } from '../utils/memberUtils.js'
+import { isStandbyMessage } from '../utils/standby.js'
 import TemplateOrder from './TemplateContent/TemplateOrder.vue'
 
 const supportedRepliedTypes = [
@@ -967,6 +987,9 @@ export default {
     },
     memberInfo() {
       return getMemberInfo(this.document)
+    },
+    isStandbyMessage() {
+      return isStandbyMessage(this.document)
     },
     isTemplateWithOrderDetails() {
       if (!this.document || !this.document.content || this.document.content.type !== 'template-content') return false
