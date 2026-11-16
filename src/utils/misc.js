@@ -142,6 +142,58 @@ function replaceNamedMediaLinks(inputText, replacer) {
   })
 }
 
+// Collapsed preview of a text that will go through linkify: a [label](signed media link) counts
+// only its label (what is shown) and is never cut in the middle. Without such links the result is
+// the plain cut at length - 3 followed by '...'.
+function previewText(text, length, disableLink) {
+  const inputText = text || ''
+  const links = []
+  if (!disableLink && !isTagA(inputText)) {
+    replaceNamedMediaLinks(inputText, (match, label, uri, offset) => {
+      links.push({ start: offset, end: offset + match.length, visibleLength: label.length })
+      return match
+    })
+  }
+
+  if (links.length === 0) {
+    return {
+      hasPreview: inputText.length > length,
+      text: inputText.substring(0, length - 3) + '...'
+    }
+  }
+
+  const visibleLength = links.reduce(
+    (total, link) => total - (link.end - link.start) + link.visibleLength,
+    inputText.length
+  )
+
+  let remaining = length - 3
+  let end = 0
+  let cut
+  for (let i = 0; i < links.length; i++) {
+    const link = links[i]
+    if (link.start - end >= remaining) {
+      cut = end + remaining
+      break
+    }
+    remaining -= link.start - end
+    if (link.visibleLength > remaining) {
+      cut = link.start
+      break
+    }
+    remaining -= link.visibleLength
+    end = link.end
+  }
+  if (cut === undefined) {
+    cut = end + remaining
+  }
+
+  return {
+    hasPreview: visibleLength > length,
+    text: inputText.substring(0, cut) + '...'
+  }
+}
+
 // Links to uploaded files are signed (Azure SAS): they carry an expiry (se) and a signature (sig)
 function isSignedMediaUri(uri) {
   return /[?&;]se=/.test(uri) && /[?&;]sig=/.test(uri)
@@ -181,6 +233,7 @@ function isFailedMessage(status, position) {
 
 export {
   linkify,
+  previewText,
   isSignedMediaUri,
   guid,
   isFailedMessage,
