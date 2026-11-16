@@ -242,4 +242,138 @@ describe('NativeForm - conditional fields (showWhen)', () => {
     expect(sent).to.have.length(1)
     expect(sent[0].content).to.deep.equal({ estado_civil: 'casado', nome_conjuge: 'Maria', email: 'maria@example.com' })
   })
+
+  it('keeps the user on the current step when an earlier step appears', () => {
+    const { vm } = createForm({
+      steps: [
+        { title: 'S0', fields: [{ id: 'x', label: 'X', type: 'text', showWhen: { field: 'src', equals: 'a' } }] },
+        { title: 'S1', fields: [{ id: 'src', label: 'Src', type: 'select', options: [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }] }] },
+        { title: 'S2', fields: [{ id: 'z', label: 'Z', type: 'text' }] }
+      ]
+    })
+    expect(vm.currentStep).to.equal(1)
+    expect(stepCountText(vm)).to.equal('Etapa 1 de 2')
+    expect(findByClass(vm, 'native-form-back')).to.have.length(0)
+
+    vm.formValues.src = 'a'
+    expect(vm.currentStepTitle).to.equal('S1')
+    expect(stepCountText(vm)).to.equal('Etapa 2 de 3')
+
+    vm.back()
+    expect(vm.currentStepTitle).to.equal('S0')
+  })
+
+  it('moves to the next visible step when a document update hides the current one, and stays there', () => {
+    const validation = {
+      steps: [
+        { title: 'S0', fields: [{ id: 'a', label: 'A', type: 'select', options: [{ value: 'x', label: 'X' }, { value: 'y', label: 'Y' }] }] },
+        { title: 'S1', fields: [{ id: 'b', label: 'B', type: 'text', showWhen: { field: 'a', equals: 'x' } }] },
+        { title: 'S2', fields: [{ id: 'c', label: 'C', type: 'text' }] }
+      ]
+    }
+    const { vm } = createForm(validation)
+    vm.formValues.a = 'x'
+    vm.submit()
+    expect(vm.currentStepTitle).to.equal('S1')
+
+    Vue.set(validation.steps[1].fields[0], 'showWhen', { field: 'a', equals: 'y' })
+    expect(vm.currentStepTitle).to.equal('S2')
+    return flush().then(() => {
+      expect(vm.currentStep).to.equal(2)
+      Vue.set(validation.steps[1].fields[0], 'showWhen', { field: 'a', equals: 'x' })
+      expect(vm.currentStepTitle).to.equal('S2')
+      expect(stepCountText(vm)).to.equal('Etapa 3 de 3')
+    })
+  })
+
+  it('never goes back to a hidden step on the final check and sends its invalid value empty', () => {
+    const { vm, sent } = createForm({
+      steps: [
+        { title: 'Titular', fields: [maritalStatus] },
+        { title: 'Cônjuge', fields: [Object.assign({}, spouseName, { minLength: 3 })] },
+        { title: 'Contato', fields: [{ id: 'email', label: 'E-mail', type: 'email', required: true }] }
+      ]
+    })
+    vm.formValues.estado_civil = 'solteiro'
+    vm.formValues.nome_conjuge = 'ab'
+    vm.submit()
+    vm.formValues.email = 'maria@example.com'
+    afterGuard(vm)
+    vm.submit()
+    expect(vm.currentStepTitle).to.equal('Contato')
+    expect(sent).to.have.length(1)
+    expect(sent[0].content.nome_conjuge).to.equal('')
+  })
+
+  it('resets `attempted` when a field gets hidden', () => {
+    const { vm } = createForm({ fields: [maritalStatus, spouseName] })
+    vm.formValues.estado_civil = 'casado'
+    vm.submit()
+    expect(vm.attempted.nome_conjuge).to.equal(true)
+
+    vm.formValues.estado_civil = 'solteiro'
+    return flush().then(() => {
+      expect(vm.attempted.nome_conjuge).to.equal(false)
+      expect(vm.touched.nome_conjuge).to.equal(false)
+      vm.formValues.estado_civil = 'casado'
+      expect(vm.showError(vm.currentFields[1])).to.equal(false)
+    })
+  })
+
+  it('uses only the condition of the first field when ids are duplicated', () => {
+    const { vm } = createForm({
+      fields: [
+        maritalStatus,
+        { id: 'dup', label: 'Primeiro', type: 'text' },
+        { id: 'dup', label: 'Segundo', type: 'text', showWhen: { field: 'estado_civil', equals: 'casado' } }
+      ]
+    })
+    expect(vm.currentFields.map((field) => field.label)).to.deep.equal(['Estado civil', 'Primeiro', 'Segundo'])
+  })
+
+  it('keeps only string, number and boolean values of `in`, falling back to `equals`', () => {
+    const conditional = (id, showWhen) => ({ id, label: id, type: 'text', showWhen })
+    const { vm } = createForm({
+      fields: [
+        maritalStatus,
+        conditional('filtered', { field: 'estado_civil', in: [null, { v: 1 }, 'casado'] }),
+        conditional('fallback', { field: 'estado_civil', in: [null], equals: 'casado' }),
+        conditional('invalid', { field: 'estado_civil', in: [null, ['casado']] })
+      ]
+    })
+    expect(renderedIds(vm)).to.deep.equal(['estado_civil', 'invalid'])
+    vm.formValues.estado_civil = 'casado'
+    expect(renderedIds(vm)).to.deep.equal(['estado_civil', 'filtered', 'fallback', 'invalid'])
+  })
+
+  it('starts waiting files of visible fields before the ones of hidden fields', () => {
+    const calls = []
+    const onUploadFile = (file) => new Promise((resolve) => calls.push({ file, resolve }))
+    const { vm } = createForm({
+      fields: [
+        maritalStatus,
+        { id: 'visivel', label: 'Visível', type: 'file', multiple: true },
+        { id: 'oculto', label: 'Oculto', type: 'file', multiple: true, showWhen: { field: 'estado_civil', equals: 'casado' } }
+      ]
+    }, onUploadFile)
+    const pdf = (name) => ({ name, size: 1, type: 'application/pdf' })
+    const pickFiles = (fieldIndex, files) => vm.onFilesChange(vm.formFields[fieldIndex], { target: { files, value: 'x' } })
+
+    vm.formValues.estado_civil = 'casado'
+    pickFiles(2, [pdf('h1.pdf'), pdf('h2.pdf'), pdf('h3.pdf'), pdf('h4.pdf')])
+    vm.formValues.estado_civil = 'solteiro'
+    pickFiles(1, [pdf('v1.pdf')])
+
+    return flush().then(() => {
+      expect(calls.map((call) => call.file.name)).to.deep.equal(['h1.pdf', 'h2.pdf', 'h3.pdf'])
+      calls[0].resolve('https://media.example/h1')
+      return flush()
+    }).then(() => {
+      expect(calls.map((call) => call.file.name)).to.deep.equal(['h1.pdf', 'h2.pdf', 'h3.pdf', 'v1.pdf'])
+      calls[1].resolve('https://media.example/h2')
+      return flush()
+    }).then(() => {
+      expect(calls.map((call) => call.file.name)).to.deep.equal(['h1.pdf', 'h2.pdf', 'h3.pdf', 'v1.pdf', 'h4.pdf'])
+    })
+  })
 })

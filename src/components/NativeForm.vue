@@ -422,8 +422,9 @@ const parseShowWhen = (field, fieldsById) => {
   if (!source || source === field || String(source.id) === String(field.id) || source.type === 'file') {
     return null
   }
-  const values = Array.isArray(rule.in) && rule.in.length > 0
-    ? rule.in
+  const inValues = Array.isArray(rule.in) ? rule.in.filter(isConditionValue) : []
+  const values = inValues.length > 0
+    ? inValues
     : (isConditionValue(rule.equals) ? [rule.equals] : [])
   return values.length > 0 ? { source, values: values.map(String) } : null
 }
@@ -532,8 +533,9 @@ export default {
 
       const candidates = Object.create(null)
       this.formFields.forEach((field) => {
-        const condition = parseShowWhen(field, fieldsById)
-        if (condition && !candidates[field.id]) {
+        // With duplicated ids, only the first field defines the condition
+        const condition = fieldsById[field.id] === field && parseShowWhen(field, fieldsById)
+        if (condition) {
           candidates[field.id] = condition
         }
       })
@@ -645,6 +647,13 @@ export default {
       const idsOf = (signature) => signature.split('#')[0].split('|').map((entry) => entry.split(':')[0]).join('|')
       this.syncFieldState(idsOf(newSignature) !== idsOf(oldSignature))
     },
+    // Keeps the stored step on the one shown (when the current step gets hidden), so a step that
+    // appears or reappears before it never moves the user
+    currentStepIndex: function(index) {
+      if (this.currentStep !== index) {
+        this.currentStep = index
+      }
+    },
     fieldVisibility: function(visibility) {
       // A field that gets hidden shows no error when it appears again until it is left or the user tries to continue
       this.formFields.forEach((field) => {
@@ -692,7 +701,7 @@ export default {
       this.touched = touched
       this.attempted = attempted
       this.uploads = uploads
-      this.currentStep = 0
+      this.currentStep = this.firstVisibleStep()
       this.submitted = false
       this.uploadSequence = 0
       this.lastStepChangeAt = 0
@@ -754,7 +763,7 @@ export default {
       this.releaseDroppedUploads()
 
       if (idsChanged) {
-        this.currentStep = 0
+        this.currentStep = this.firstVisibleStep()
         this.lastStepChangeAt = 0
       }
     },
@@ -829,6 +838,10 @@ export default {
         this.currentStep = index
         this.lastStepChangeAt = Date.now()
       }
+    },
+    // Where the form starts: the first step with a visible field
+    firstVisibleStep: function() {
+      return this.visibleStepIndexes.length > 0 ? this.visibleStepIndexes[0] : 0
     },
     ariaRequired: function(field) {
       return field.required ? 'true' : undefined
@@ -1257,7 +1270,9 @@ export default {
     },
     pumpFileUploads: function() {
       while (this.uploadQueue.length > 0 && this.activeUploads.length < MAX_PARALLEL_UPLOADS) {
-        const entry = this.uploadQueue.shift()
+        // Files of visible fields go first: waiting files of hidden fields never take a slot ahead of them
+        const visibleIndex = this.uploadQueue.findIndex((queued) => this.fieldVisibility[queued.fieldId] !== false)
+        const entry = this.uploadQueue.splice(Math.max(visibleIndex, 0), 1)[0]
         // Files removed or reset while waiting are never uploaded
         if (this.isLiveFileItem(entry.fieldId, entry.item)) {
           this.startFileUpload(entry)
