@@ -1,5 +1,6 @@
 // `lookup` on a masked field: the postal code fills the address fields of the same form.
 import Vue from 'vue'
+import sinon from 'sinon'
 import { renderVNode, findAll } from '../helpers/vueSfc'
 import NativeForm from '../../../src/components/NativeForm.vue'
 
@@ -212,6 +213,61 @@ describe('NativeForm - postal code lookup', () => {
     await flush()
 
     expect(vm.formValues).to.include({ cep: '78005-000', rua: 'Rua B', bairro: 'Centro Sul', uf: 'MT' })
+  })
+
+  it('keeps a field edited while the lookup runs and aborts the request of a postal code that was edited', async () => {
+    const { calls, fetch } = controlledFetch()
+    global.fetch = fetch
+    const { vm } = createForm(addressFields(VIACEP))
+
+    type(vm, 'cep', '01001000')
+    type(vm, 'rua', 'Minha rua')
+    calls[0].resolve(jsonResponse(VIACEP_SE))
+    await flush()
+
+    expect(vm.formValues).to.include({ rua: 'Minha rua', bairro: 'Sé' })
+    expect(vm.isLookupLocked(field(vm, 'rua'))).to.equal(false)
+    expect(vm.isLookupLocked(field(vm, 'bairro'))).to.equal(true)
+
+    type(vm, 'cep', '78005370')
+    expect(calls[1].options.signal.aborted).to.equal(false)
+    type(vm, 'cep', '7800537')
+    expect(calls[1].options.signal.aborted).to.equal(true)
+  })
+
+  it('gives up after 8 seconds and never lets the answer of a lookup started before a reset match a new one', async () => {
+    const { calls, fetch } = controlledFetch()
+    global.fetch = fetch
+    const settle = async () => {
+      for (let i = 0; i < 10; i++) {
+        await Promise.resolve()
+      }
+    }
+
+    const clock = sinon.useFakeTimers()
+    try {
+      const { vm } = createForm(addressFields(VIACEP))
+      type(vm, 'cep', '01001000')
+      clock.tick(7999)
+      await settle()
+      expect(vm.lookups.cep.status).to.equal('loading')
+      clock.tick(1)
+      await settle()
+      expect(vm.lookups.cep.status).to.equal('failed')
+      expect(calls[0].options.signal.aborted).to.equal(true)
+    } finally {
+      clock.restore()
+    }
+
+    const { vm } = createForm(addressFields(VIACEP, { value: '01001000' }))
+    vm.init()
+    expect(calls).to.have.length(3)
+    calls[1].reject(new Error('aborted'))
+    await flush()
+    expect(vm.lookups.cep.status).to.equal('loading')
+    calls[2].resolve(jsonResponse(VIACEP_SE))
+    await flush()
+    expect(vm.formValues.rua).to.equal('Praça da Sé')
   })
 
   it('ignores lookups that are not https, fields without mask and read-only cards; pre-filled values are looked up', async () => {

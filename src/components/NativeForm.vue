@@ -647,7 +647,8 @@ export default {
       this.currentStep = 0
       this.submitted = false
       this.uploadSequence = 0
-      this.lookupSequence = 0
+      // Never reset: a late answer of a lookup started before a reset must not match a new one
+      this.lookupSequence = this.lookupSequence || 0
       this.lastStepChangeAt = 0
       // Files of lists waiting for a free slot and the ones uploading ({ fieldId, field, file, item })
       this.uploadQueue = []
@@ -1426,6 +1427,11 @@ export default {
       this.lookupRequests = this.lookupRequests || {}
       this.lookupRequests[fieldId] = {
         token,
+        // Values of the fields to fill when the lookup started: the ones the user edits meanwhile are kept
+        startValues: this.lookupConfig(field).targets.reduce((values, target) => {
+          values[target.field.id] = this.formValues[target.field.id]
+          return values
+        }, {}),
         abort: () => {
           clearTimeout(timer)
           if (controller) {
@@ -1498,11 +1504,18 @@ export default {
       }
       // 400/404, `erro: true` (ViaCEP) or no value for any mapped field: not found
       const notFound = !data || typeof data !== 'object' || Array.isArray(data) || data.erro === true || data.erro === 'true'
+      const request = this.lookupRequests && this.lookupRequests[fieldId]
+      const startValues = request && request.token === token ? request.startValues : {}
       const filled = {}
       const locked = []
 
       if (!notFound) {
         config.targets.forEach((target) => {
+          const targetId = target.field.id
+          if (Object.prototype.hasOwnProperty.call(startValues, targetId) &&
+            !sameValue(this.formValues[targetId], startValues[targetId])) {
+            return
+          }
           const text = lookupText(data, target.path)
           const value = text ? this.initialValue({ ...target.field, value: text }) : ''
           if (this.isEmptyValue(target.field, value)) {
