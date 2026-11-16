@@ -11,6 +11,21 @@ function linkify(inputText, disableLink) {
     return inputText
   }
 
+  // [label](signed media link): shows the file name instead of the long address.
+  // The generic patterns run only on the text between these links, so they never reach the anchors.
+  let output = ''
+  let lastIndex = 0
+  replaceNamedMediaLinks(inputText, (match, label, uri, offset) => {
+    output += linkifyPlainText(inputText.slice(lastIndex, offset)) +
+      `<a href="${uri}" target="_blank" rel="noopener noreferrer">${label}</a>`
+    lastIndex = offset + match.length
+    return match
+  })
+
+  return output + linkifyPlainText(inputText.slice(lastIndex))
+}
+
+function linkifyPlainText(inputText) {
   // Validating url correct Pattern
   // http://, https://, ftp://
   // eslint-disable-next-line no-useless-escape
@@ -24,25 +39,33 @@ function linkify(inputText, disableLink) {
   // Email addresses
   const emailAddressValidPattern = /[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
 
-  // [label](https://...)
-  const namedMediaLinkPattern = /\[([^[\]\r\n]{1,200})\]\((https?:\/\/[^\s()"'<>]+)\)/g
-
-  // [label](signed media link): shows the file name instead of the long address.
-  // Anchors are set aside so the generic URL patterns below do not link them again.
-  const anchors = []
-  const withNamedLinks = inputText.replace(namedMediaLinkPattern, (match, label, uri) => {
-    if (!isSignedMediaUri(uri) || /:\/\/|www\./i.test(label) || /[<>"]/.test(label)) {
-      return match
-    }
-    anchors.push(`<a href="${uri}" target="_blank" rel="noopener noreferrer">${label}</a>`)
-    return `\u0001${anchors.length - 1}\u0001`
-  })
-
-  return withNamedLinks
+  return inputText
     .replace(urlValidPattern, '<a href="$&" target="_blank">$&</a>')
     .replace(pseudoUrlValidPattern, '$1<a href="https://$2" target="_blank">$2</a>')
     .replace(emailAddressValidPattern, '<a href="mailto:$&" target="_blank">$&</a>')
-    .replace(/\u0001(\d+)\u0001/g, (match, index) => anchors[Number(index)])
+}
+
+// [label](https://...)
+const namedMediaLinkPattern = /\[([^[\]\r\n]{1,200})\]\((https?:\/\/[^\s()"'<>]+)\)/g
+
+// Only links to uploaded files with a plain label are shown as the label. The uri goes into a
+// double-quoted attribute (the pattern refuses quotes, '<', '>' and spaces in it) and the label
+// into the text of the anchor, so neither can end what contains it.
+function isNamedMediaLink(label, uri) {
+  return isSignedMediaUri(uri) && !/:\/\/|www\./i.test(label) && !/[<>"]/.test(label)
+}
+
+// A link written inside a tag (e.g. in an attribute value) is left as it is: an anchor there would
+// break the tag. Any '<' not closed by a '>' before the link counts as an open tag.
+function isInsideTag(inputText, offset) {
+  return inputText.lastIndexOf('<', offset) > inputText.lastIndexOf('>', offset)
+}
+
+// Calls replacer(match, label, uri, offset) for each [label](uri) shown as the label; other matches are kept
+function replaceNamedMediaLinks(inputText, replacer) {
+  return inputText.replace(namedMediaLinkPattern, (match, label, uri, offset) =>
+    isNamedMediaLink(label, uri) && !isInsideTag(inputText, offset) ? replacer(match, label, uri, offset) : match
+  )
 }
 
 // Links to uploaded files are signed (Azure SAS): they carry an expiry (se) and a signature (sig)
