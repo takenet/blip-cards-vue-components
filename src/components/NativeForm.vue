@@ -94,6 +94,42 @@
                   class="form-control"
                 ></textarea>
 
+                <div v-else-if="isFileList(field)" class="native-form-file">
+                  <input
+                    type="file"
+                    multiple
+                    class="native-form-file-input"
+                    :id="fieldInputId(field.id)"
+                    :accept="field.accept"
+                    :required="!!field.required"
+                    :disabled="isFileLimitReached(field)"
+                    :aria-required="ariaRequired(field)"
+                    :aria-invalid="showError(field) ? 'true' : 'false'"
+                    :aria-describedby="describedBy(field)"
+                    v-on:change="onFilesChange(field, $event)"
+                  >
+                  <label v-if="!isFileLimitReached(field)" :for="fieldInputId(field.id)" class="native-form-file-button" aria-hidden="true">
+                    {{ fileItems(field).length > 0 ? 'Adicionar arquivo' : 'Escolher arquivos' }}
+                  </label>
+                  <span class="native-form-file-count">{{ fileItems(field).length }} de {{ maxFilesOf(field) }} arquivos</span>
+                  <ul class="native-form-file-list" aria-live="polite">
+                    <li v-for="item in fileItems(field)" :key="item.key" class="native-form-file-item">
+                      <span class="native-form-file-status" :class="'is-' + item.status">
+                        <span v-if="item.status === 'uploading'" class="native-form-spinner" aria-hidden="true"></span>
+                        <template v-if="item.status === 'uploading'">Enviando… {{ item.fileName }}</template>
+                        <template v-else-if="item.status === 'done'">✓ {{ item.fileName }}</template>
+                        <template v-else>{{ item.fileName }}</template>
+                      </span>
+                      <button type="button"
+                        class="native-form-file-remove"
+                        :id="fileRemoveId(field.id, item.key)"
+                        :aria-label="`Remover ${item.fileName}`"
+                        v-on:click="removeFile(field, item)"
+                      >Remover</button>
+                    </li>
+                  </ul>
+                </div>
+
                 <div v-else-if="field.type === 'file'" class="native-form-file">
                   <input
                     type="file"
@@ -150,6 +186,7 @@
                 <span v-if="showError(field)" :id="errorId(field.id)" class="native-form-error">
                   {{ fieldErrors[field.id].message }}
                 </span>
+                <span v-if="fileNotice(field)" class="native-form-error native-form-file-notice">{{ fileNotice(field) }}</span>
               </span>
             </div>
 
@@ -165,8 +202,18 @@
         <div v-else class="native-form-summary">
           <span v-for="field in formFields" :key="field.id" class="native-form-summary-item">
             {{ field.label }}:
+            <template v-if="isFileList(field)">
+              <span v-for="(item, index) in doneFileItems(field)" :key="item.key">{{ index > 0 ? ', ' : '' }}<a
+                  v-if="linkableUri(item.uri)"
+                  class="native-form-file-link"
+                  :href="linkableUri(item.uri)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  v-on:click.prevent="openFile(linkableUri(item.uri))"
+                >{{ item.fileName }}</a><template v-else>{{ item.fileName }}</template></span>
+            </template>
             <a
-              v-if="fileLinkUri(field)"
+              v-else-if="fileLinkUri(field)"
               class="native-form-file-link"
               :href="fileLinkUri(field)"
               target="_blank"
@@ -214,6 +261,7 @@ const MASK_TYPES = ['text', 'tel']
 const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 const DEFAULT_MAX_SIZE_MB = 20
+const DEFAULT_MAX_FILES = 10
 // Primary button actions right after a step change are ignored (double click on "Continuar")
 const STEP_CHANGE_GUARD_MS = 400
 
@@ -230,8 +278,12 @@ const DEFAULT_MESSAGES = {
   fileType: 'Tipo de arquivo não permitido.',
   fileSize: 'O arquivo deve ter no máximo {max} MB.',
   uploadFailed: 'Não foi possível enviar o arquivo. Tente novamente.',
-  uploading: 'Aguarde o envio do arquivo.'
+  uploading: 'Aguarde o envio do arquivo.',
+  maxFiles: 'Você pode enviar no máximo {max} arquivos.'
 }
+
+// Notices that `field.errorMessage` does not replace
+const NOTICE_KEYS = ['uploading', 'maxFiles']
 
 const isMaskSlot = (char) => char === '0' || char === 'A' || char === '*'
 
@@ -333,6 +385,22 @@ const WILDCARD_EXTENSIONS = {
 const hasExtension = (fileName, extension) =>
   fileName.length >= extension.length && fileName.slice(-extension.length) === extension
 
+const emptyUpload = () => ({ status: 'idle', fileName: '', message: '', token: 0, items: [], notice: '' })
+
+// `file` fields with `multiple: true` (list of files) have their own kind, so toggling it resets the field
+const isFileKind = (kind) => kind === 'file' || kind === 'file[]'
+
+const fileMaxSizeMb = (field) => isFiniteNumber(field.maxSizeMb) && Number(field.maxSizeMb) > 0
+  ? Number(field.maxSizeMb)
+  : DEFAULT_MAX_SIZE_MB
+
+// File name written as a link in the summary text; names or addresses that cannot be written safely
+// keep "name - address"
+const linkedFileName = (name, uri) => {
+  const canBeNamed = !/[[\]<>"]|:\/\/|www\./i.test(name) && !/[\s()"'<>]/.test(uri)
+  return canBeNamed ? `[${name}](${uri})` : `${name} - ${uri}`
+}
+
 const fileMatchesAccept = (file, accept) => {
   if (!accept) {
     return true
@@ -424,7 +492,7 @@ export default {
     },
     fieldsSignature: function() {
       // Changes whenever a field is added/removed/retyped or file fields become (un)available
-      return this.formFields.map((field) => `${field.id}:${field.type}`).join('|') +
+      return this.formFields.map((field) => `${field.id}:${this.fieldKind(field)}`).join('|') +
         `#${typeof this.onUploadFile === 'function'}`
     },
     currentStepIndex: function() {
@@ -491,12 +559,12 @@ export default {
       this.fieldTypes = {}
 
       this.formFields.forEach((field) => {
-        this.fieldTypes[field.id] = field.type
+        this.fieldTypes[field.id] = this.fieldKind(field)
         formValues[field.id] = this.initialValue(field)
         prefilled[field.id] = !this.isEmptyValue(field, formValues[field.id])
         touched[field.id] = false
         attempted[field.id] = false
-        uploads[field.id] = { status: 'idle', fileName: '', message: '', token: 0 }
+        uploads[field.id] = emptyUpload()
       })
 
       this.formValues = formValues
@@ -514,7 +582,7 @@ export default {
     // existing field never overwrites what the user typed), missing keys are added with their pre-fill.
     // A field that keeps its id but changes type has its current value normalised with the pre-fill
     // rules of the new type (e.g. text "abc" -> select without such option = empty); an empty result,
-    // or any change to/from file, falls back to the new type's pre-fill.
+    // or any change to/from file (including turning `multiple` on/off), falls back to the new type's pre-fill.
     // Its `prefilled` flag is then recomputed: true only while the value is the new type's pre-fill.
     syncFieldState: function(idsChanged) {
       const previousTypes = this.fieldTypes || {}
@@ -523,23 +591,24 @@ export default {
       this.formFields.forEach((field) => {
         const value = this.formValues[field.id]
         const previousType = previousTypes[field.id]
-        fieldTypes[field.id] = field.type
+        const kind = this.fieldKind(field)
+        fieldTypes[field.id] = kind
 
         if (value === undefined) {
           const initial = this.initialValue(field)
           this.$set(this.formValues, field.id, initial)
           this.$set(this.prefilled, field.id, !this.isEmptyValue(field, initial))
-        } else if (previousType && previousType !== field.type) {
+        } else if (previousType && previousType !== kind) {
           const initial = this.initialValue(field)
-          const involvesFile = previousType === 'file' || field.type === 'file'
+          const involvesFile = isFileKind(previousType) || isFileKind(kind)
           const normalized = involvesFile ? '' : this.initialValue({ ...field, value })
           const nextValue = this.isEmptyValue(field, normalized) ? initial : normalized
           if (involvesFile) {
-            this.$set(this.uploads, field.id, { status: 'idle', fileName: '', message: '', token: 0 })
+            this.$set(this.uploads, field.id, emptyUpload())
           }
           this.$set(this.formValues, field.id, nextValue)
           this.$set(this.prefilled, field.id, !this.isEmptyValue(field, nextValue) && sameValue(nextValue, initial))
-        } else if (field.type === 'checkbox') {
+        } else if (field.type === 'checkbox' || kind === 'file[]') {
           if (!Array.isArray(value)) {
             this.$set(this.formValues, field.id, [])
           }
@@ -553,7 +622,7 @@ export default {
           this.$set(this.attempted, field.id, false)
         }
         if (!this.uploads[field.id]) {
-          this.$set(this.uploads, field.id, { status: 'idle', fileName: '', message: '', token: 0 })
+          this.$set(this.uploads, field.id, emptyUpload())
         }
       })
 
@@ -579,7 +648,7 @@ export default {
       }
 
       if (field.type === 'file') {
-        return ''
+        return this.isFileList(field) ? [] : ''
       }
 
       const text = prefillText(value)
@@ -608,6 +677,11 @@ export default {
     effectiveValue: function(field) {
       const value = this.formValues[field.id]
 
+      // A list of files is read from its upload state: the addresses already uploaded, in the order picked
+      if (this.isFileList(field)) {
+        return this.doneFileItems(field).map((item) => item.uri)
+      }
+
       if (field.type === 'checkbox') {
         return (field.options || [])
           .filter((option) => Array.isArray(value) && value.indexOf(option.value) !== -1)
@@ -621,7 +695,7 @@ export default {
       return value === undefined || value === null ? '' : value
     },
     isEmptyValue: function(field, value) {
-      return field.type === 'checkbox'
+      return field.type === 'checkbox' || this.isFileList(field)
         ? !Array.isArray(value) || value.length === 0
         : String(value === undefined || value === null ? '' : value).trim() === ''
     },
@@ -658,6 +732,33 @@ export default {
     },
     isOptionGroup: function(field) {
       return field.type === 'radio' || field.type === 'checkbox'
+    },
+    isFileList: function(field) {
+      return field.type === 'file' && field.multiple === true
+    },
+    fieldKind: function(field) {
+      return this.isFileList(field) ? 'file[]' : field.type
+    },
+    maxFilesOf: function(field) {
+      const max = Math.floor(Number(field.maxFiles))
+      return isFiniteNumber(field.maxFiles) && max >= 1 ? max : DEFAULT_MAX_FILES
+    },
+    fileItems: function(field) {
+      const upload = this.uploads[field.id]
+      return (upload && upload.items) || []
+    },
+    doneFileItems: function(field) {
+      return this.fileItems(field).filter((item) => item.status === 'done')
+    },
+    isFileLimitReached: function(field) {
+      return this.fileItems(field).length >= this.maxFilesOf(field)
+    },
+    fileNotice: function(field) {
+      const upload = this.uploads[field.id]
+      return this.isFileList(field) && upload ? upload.notice : ''
+    },
+    fileRemoveId: function(fieldId, itemKey) {
+      return `${this.fieldInputId(fieldId)}-remove-${itemKey}`
     },
     fieldMask: function(field) {
       return MASK_TYPES.indexOf(field.type) !== -1 && typeof field.mask === 'string' && field.mask
@@ -722,7 +823,7 @@ export default {
     },
     message: function(field, key, params) {
       const customMessages = this.formValidation.messages || {}
-      const template = (key !== 'uploading' && field.errorMessage) ||
+      const template = (NOTICE_KEYS.indexOf(key) === -1 && field.errorMessage) ||
         customMessages[key] ||
         DEFAULT_MESSAGES[key]
 
@@ -735,6 +836,19 @@ export default {
       return { key, message: this.message(field, key, params) }
     },
     validateField: function(field) {
+      if (this.isFileList(field)) {
+        const items = this.fileItems(field)
+        // A failed file is reported right away (the user removes it); pending uploads only block
+        const failed = items.find((item) => item.status === 'error')
+        if (failed) {
+          return { key: failed.errorKey, message: `${failed.fileName}: ${failed.message}` }
+        }
+        if (items.some((item) => item.status === 'uploading')) {
+          return this.error(field, 'uploading')
+        }
+        return field.required && this.doneFileItems(field).length === 0 ? this.error(field, 'required') : null
+      }
+
       const value = this.effectiveValue(field)
 
       if (field.type === 'file') {
@@ -886,9 +1000,7 @@ export default {
       this.uploadSequence = (this.uploadSequence || 0) + 1
       const token = this.uploadSequence
       const fileName = file.name || ''
-      const maxSizeMb = isFiniteNumber(field.maxSizeMb) && Number(field.maxSizeMb) > 0
-        ? Number(field.maxSizeMb)
-        : DEFAULT_MAX_SIZE_MB
+      const maxSizeMb = fileMaxSizeMb(field)
 
       this.$set(this.touched, field.id, true)
       this.$set(this.attempted, field.id, false)
@@ -937,8 +1049,96 @@ export default {
           }
         })
     },
+    // List of files: files beyond the limit are left out with a notice; the others are checked and
+    // uploaded in parallel, each one keeping its place in the list
+    onFilesChange: function(field, event) {
+      const input = event.target
+      const files = Array.prototype.slice.call(input.files || [])
+
+      if (files.length === 0 || this.hideOptions || this.submitted) {
+        return
+      }
+
+      input.value = ''
+
+      const max = this.maxFilesOf(field)
+      const maxSizeMb = fileMaxSizeMb(field)
+      const currentItems = this.fileItems(field)
+      const remaining = Math.max(max - currentItems.length, 0)
+      const picked = files.slice(0, remaining).map((file) => {
+        this.uploadSequence = (this.uploadSequence || 0) + 1
+        const item = {
+          key: this.uploadSequence,
+          fileName: file.name || '',
+          status: 'uploading',
+          uri: '',
+          errorKey: '',
+          message: ''
+        }
+        if (!fileMatchesAccept(file, field.accept)) {
+          Object.assign(item, { status: 'error', errorKey: 'fileType', message: this.message(field, 'fileType') })
+        } else if (file.size > maxSizeMb * 1024 * 1024) {
+          Object.assign(item, { status: 'error', errorKey: 'fileSize', message: this.message(field, 'fileSize', { max: maxSizeMb }) })
+        }
+        return { file, item }
+      })
+
+      this.$set(this.touched, field.id, true)
+      this.$set(this.attempted, field.id, false)
+      this.$set(this.uploads, field.id, {
+        ...(this.uploads[field.id] || emptyUpload()),
+        items: currentItems.concat(picked.map((entry) => entry.item)),
+        notice: files.length > remaining ? this.message(field, 'maxFiles', { max }) : ''
+      })
+
+      // Results are applied only to items still in the list (not removed nor reset meanwhile)
+      const update = (item, changes) => {
+        if (this.fileItems(field).indexOf(item) !== -1) {
+          Object.assign(item, changes)
+        }
+      }
+
+      picked
+        .filter((entry) => entry.item.status === 'uploading')
+        .forEach(({ file, item }) => {
+          Promise.resolve()
+            .then(() => this.onUploadFile(file))
+            .then((result) => {
+              const uri = typeof result === 'string' ? result : result && result.uri
+              if (!uri || typeof uri !== 'string') {
+                throw new Error('Upload did not return a URI')
+              }
+              update(item, { status: 'done', uri })
+            })
+            .catch(() => {
+              update(item, { status: 'error', uri: '', errorKey: 'uploadFailed', message: this.message(field, 'uploadFailed') })
+            })
+        })
+    },
+    removeFile: function(field, item) {
+      if (this.hideOptions || this.submitted) {
+        return
+      }
+      const upload = this.uploads[field.id] || emptyUpload()
+      this.$set(this.uploads, field.id, {
+        ...upload,
+        items: this.fileItems(field).filter((current) => current !== item),
+        notice: ''
+      })
+      // The clicked button is gone: focus goes back to the file picker
+      this.$nextTick(() => this.focusField(field))
+    },
     focusField: function(field) {
-      const id = this.isOptionGroup(field) ? this.optionInputId(field.id, 0) : this.fieldInputId(field.id)
+      let id = this.isOptionGroup(field) ? this.optionInputId(field.id, 0) : this.fieldInputId(field.id)
+      // With the limit reached the picker is disabled: focus the remove button of the file to fix
+      if (this.isFileList(field) && this.isFileLimitReached(field)) {
+        const items = this.fileItems(field)
+        const item = items.find((current) => current.status === 'error') ||
+          items.find((current) => current.status === 'uploading')
+        if (item) {
+          id = this.fileRemoveId(field.id, item.key)
+        }
+      }
       const element = document.getElementById(id)
       if (element && typeof element.focus === 'function') {
         element.focus()
@@ -973,7 +1173,9 @@ export default {
       if (field.type !== 'file') {
         return ''
       }
-      const uri = this.effectiveValue(field)
+      return this.linkableUri(this.effectiveValue(field))
+    },
+    linkableUri: function(uri) {
       return typeof uri === 'string' && /^https?:\/\//i.test(uri) ? uri : ''
     },
     // The host (e.g. blip-chat) renews expired media links before opening them
@@ -987,16 +1189,28 @@ export default {
     // Text of the answer shown in the conversation: the file name as a link ([name](address), rendered
     // by the plain text card) so the file can still be opened from the history. Other consumers see
     // the address in the text. Names or addresses that cannot be written safely keep "name - address".
+    // A list of files has one entry per uploaded file, separated by ", ".
     summaryFieldValue: function(field) {
+      if (this.isFileList(field)) {
+        return this.doneFileItems(field)
+          .map((item) => {
+            const uri = this.linkableUri(item.uri)
+            return uri && item.fileName ? linkedFileName(item.fileName, uri) : item.fileName
+          })
+          .join(', ')
+      }
       const text = this.formattedFieldValue(field)
       const uri = this.fileLinkUri(field)
       if (!uri || !text) {
         return text
       }
-      const canBeNamed = !/[[\]<>"]|:\/\/|www\./i.test(text) && !/[\s()"'<>]/.test(uri)
-      return canBeNamed ? `[${text}](${uri})` : `${text} - ${uri}`
+      return linkedFileName(text, uri)
     },
     formattedFieldValue: function(field) {
+      if (this.isFileList(field)) {
+        return this.doneFileItems(field).map((item) => item.fileName).join(', ')
+      }
+
       const value = this.effectiveValue(field)
 
       if (field.type === 'date') {
@@ -1110,7 +1324,8 @@ export default {
 
       .native-form-submit,
       .native-form-back,
-      .native-form-file-button {
+      .native-form-file-button,
+      .native-form-file-remove {
         cursor: not-allowed;
       }
     }
@@ -1270,6 +1485,47 @@ export default {
           border-radius: 50%;
           vertical-align: middle;
           animation: native-form-spin 0.8s linear infinite;
+        }
+
+        .native-form-file-count {
+          font-size: 12px;
+          color: $vue-gray;
+        }
+
+        .native-form-file-list {
+          flex-basis: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+
+        .native-form-file-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .native-form-file-status {
+            flex: 1;
+            min-width: 0;
+          }
+
+          .native-form-file-status.is-error {
+            color: $color-negative;
+          }
+        }
+
+        .native-form-file-remove {
+          flex-shrink: 0;
+          padding: 0;
+          border: none;
+          background: transparent;
+          color: $vue-light-blip;
+          font-size: 14px;
+          text-decoration: underline;
+          cursor: pointer;
         }
       }
 
