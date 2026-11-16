@@ -167,11 +167,9 @@ describe('linkify security (named media links)', () => {
       'mail joe.doe@example.com or ann-x@sub.example.co.uk',
       'mixed: https://a.com www.b.com c@d.com\nwww.e.com\nhttp://f.com/www.g.com',
       'www.a.comhttps://b.com/x',
-      'www.a.com(https://b.com/x)',
       '<b>bold</b> www.example.com <i>http://x.com</i>',
       '<a href="http://x.com">x</a>',
       '[not signed](https://example.com/file.pdf)',
-      '[www.label.com](https://h/a?se=1&amp;sig=2)',
       '[a <b>](https://h/a?se=1&amp;sig=2)',
       'é www.ação.com.br ç',
       '\u0001 0 \u0001 www.x.com',
@@ -306,6 +304,155 @@ describe('linkify security (links inside tags)', () => {
         expect(escapeSanitize(text)).to.equal(text)
         expect(linkify(text)).to.equal(cases[text])
         expect(previousLinkify(text)).to.not.equal(cases[text])
+      })
+    })
+  })
+})
+
+// Locks that each address is linked once and that no link carries a quote, '<', '>' or '`' (stored XSS:
+// the www pattern took the '"' after an address into the href, and the patterns, run one after another
+// over the html, linked addresses again inside the anchors already written), while text with ordinary
+// addresses is linkified exactly as before.
+describe('linkify security (each address linked once)', () => {
+  const www = (address) => `<a href="https://${address}" target="_blank">${address}</a>`
+  const url = (address) => `<a href="${address}" target="_blank">${address}</a>`
+  const mail = (address) => `<a href="mailto:${address}" target="_blank">${address}</a>`
+
+  // Every element is an anchor with only href/target/rel, no anchor is inside another one and no
+  // attribute is an event handler.
+  const expectSafeLinks = (html) => {
+    let open = 0
+    const found = []
+    const parser = new Parser({
+      onopentag: (name, attribs) => {
+        expect(name, html).to.equal('a')
+        expect(open, `nested anchor: ${html}`).to.equal(0)
+        Object.keys(attribs).forEach(attribute => {
+          expect(attribute, html).to.not.match(/^on/i)
+          expect(['href', 'target', 'rel'], html).to.include(attribute)
+        })
+        found.push(attribs)
+        open++
+      },
+      onclosetag: () => { open-- }
+    }, { decodeEntities: true })
+    parser.write(html)
+    parser.end()
+    return found
+  }
+  // The old output had an anchor inside another, an attribute other than href/target/rel (event handlers
+  // included) or a quote, '<', '>' or '`' in an href
+  const isBroken = (html) => {
+    let open = 0
+    let broken = false
+    const parser = new Parser({
+      onopentag: (name, attribs) => {
+        broken = broken || open > 0 || /["'<>`]/.test(attribs.href || '') ||
+          Object.keys(attribs).some(attribute => !['href', 'target', 'rel'].includes(attribute))
+        open++
+      },
+      onclosetag: () => { open-- }
+    }, { decodeEntities: true })
+    parser.write(html)
+    parser.end()
+    return broken
+  }
+
+  const payloads = {
+    'www.x.com"onmouseover=alert(1)//': `${www('www.x.com')}"onmouseover=alert(1)//`,
+    "www.x.com'onmouseover=alert(1)//": `${www('www.x.com')}'onmouseover=alert(1)//`,
+    'http://x/a,www.evil.com/onmouseover=alert//x': url('http://x/a,www.evil.com/onmouseover=alert//x'),
+    'https://h.com/a&a@b.com': url('https://h.com/a&a@b.com'),
+    'www.x.com/a@evil.com"onmouseover=alert(1)//': `${www('www.x.com/a@evil.com')}"onmouseover=alert(1)//`
+  }
+  Object.keys(payloads).forEach(payload => {
+    it(`reference implementation reproduces the vulnerability (guards this spec): ${payload}`, () => {
+      expect(isBroken(previousLinkify(payload))).to.equal(true)
+      expect(isBroken(previousLinkify(escapeSanitize(payload)))).to.equal(true)
+    })
+
+    it(`links the address once and keeps the quotes out of it: ${payload}`, () => {
+      expect(linkify(payload)).to.equal(payloads[payload])
+      expect(expectSafeLinks(linkify(payload))).to.have.length(1)
+      const html = linkify(escapeSanitize(payload))
+      expect(expectSafeLinks(html)).to.have.length(1)
+      // as written: the href has no quote, '<', '>', '`' nor space
+      expect(html.match(/<a /g), html).to.have.length(1)
+      expect(html, html).to.match(/<a href="[^"'<>`\s]+" target="_blank">/)
+    })
+  })
+
+  // The old output of these was broken html (a quote or a tag in the href, or a link inside another);
+  // each address is now linked once, and ends before the quote or the next link.
+  describe('addresses that used to break the html', () => {
+    const cases = {
+      'www.a.com(https://b.com/x)': `${www('www.a.com')}(${url('https://b.com/x')})`,
+      '[www.label.com](https://h/a?se=1&amp;sig=2)': `[${www('www.label.com')}](${url('https://h/a?se=1&amp;sig=2')})`,
+      'see www.a.com/,http://b.com': `see ${www('www.a.com')}/,${url('http://b.com')}`,
+      'diga "www.x.com"': `diga "${www('www.x.com')}"`,
+      'www.x.com`a': `${www('www.x.com')}\`a`,
+      'www.x.com/a>b': `${www('www.x.com/a')}>b`,
+      'https://user:pass@host.com:8443/path': url('https://user:pass@host.com:8443/path'),
+      'http://a.com/?q=www.b.com': url('http://a.com/?q=www.b.com'),
+      'www.site.com/contato@empresa.com.br': www('www.site.com/contato@empresa.com.br'),
+      'mail www.x.com/a@b.com"x or c@d.com': `mail ${www('www.x.com/a@b.com')}"x or ${mail('c@d.com')}`
+    }
+    Object.keys(cases).forEach(text => {
+      it(String(JSON.stringify(text)), () => {
+        expect(linkify(text)).to.equal(cases[text])
+        expectSafeLinks(linkify(text))
+        expectSafeLinks(linkify(escapeSanitize(text)))
+        expect(previousLinkify(text)).to.not.equal(cases[text])
+      })
+    })
+  })
+
+  describe('text with ordinary addresses is linkified exactly as before', () => {
+    const texts = [
+      'Acesse https://www.blip.ai/pt/precos?plano=pro&ciclo=anual#detalhes para ver os planos.',
+      'Porta: http://localhost:8080/api/v1/status?verbose=true e https://10.0.0.1:443/health',
+      'IP http://192.168.0.1:3000/ e porta www.x.com:8080/a',
+      'ftp://ftp.example.com:21/pub/file.tar.gz',
+      'https://example.com/a_b-c~d/e%20f?x=1;y=2|z',
+      'http://ex.com/a#b?c=d&e and https://ex.com/#/route/1',
+      'Links: http://a.com, http://b.com; http://c.com. http://d.com! http://e.com?',
+      'Fim de frase com link http://x.com/a.',
+      'Pergunta? https://x.com/a?b=c! Exclamação.',
+      'url entre parênteses (https://x.com/path) e colchetes [https://y.com]',
+      'veja "www.x.com" ou "https://y.com/a" agora',
+      "aspas simples 'www.x.com' e 'http://y.com' no meio",
+      'www.blip.ai/pt/contato?origem=chat&canal=whatsapp#form',
+      'Visite www.exemplo.com.br/loja/produto-123.html hoje',
+      'www.a.com www.b.com.br/x www.c.org/y?z=1',
+      'site:www.x.com, outro;www.y.com.',
+      'www.x.com/a(b)c d',
+      'http://x.com/www.y.com e //www.z.com',
+      'http://a.com/x,http://b.com/y',
+      'Envie para atendimento@empresa.com.br ou suporte.tecnico@blip.ai.',
+      'contatos: a.b-c_d@mail.example.org, x@y.io; z@w.museum',
+      'E-mail (joao.silva@empresa.com) e telefone (11) 99999-9999.',
+      'emails colados: a@b.coma@b.com',
+      'Olá, João! Seu pedido nº 123 foi enviado. Acompanhe em https://rastreio.com.br/pedido/123?cpf=***&token=abc ou fale com sac@loja.com.br.',
+      'Boleto: https://pagamentos.exemplo.com/boleto/987?v=2 vence amanhã às 18h — dúvidas? ajuda@exemplo.com',
+      'Preço: R$ 10,00 — veja https://loja.com/p?id=1&cor=azul#avaliacoes.',
+      'endereço www.ação.com.br e e-mail joão@ação.com',
+      'Linha 1: http://a.com\nLinha 2: www.b.com\r\nLinha 3: c@d.com\n\nfim',
+      '1) http://a.com 2) www.b.com 3) c@d.com',
+      'https://a.com/path www.b.com/path?x=1&y=2 c@d.com https://e.com:8080/#/route',
+      'tabs\thttp://x.com\twww.y.com\tz@w.com',
+      'FTP://UPPER.COM/X e WWW.UPPER.COM e Joe@Upper.COM',
+      'joe@x.comwww.y.com and a@b.cowww.x.com',
+      'www.a.com\nhttps://b.com\nc@d.com www.e.com',
+      'texto com www. solto, @ solto e http:// sem host',
+      'São Paulo, 16/11/2026. Prezado(a), segue o link: https://portal.gov.br/servicos?id=42 — atenciosamente, equipe@portal.gov.br',
+      'a < b e c > d: www.x.com/a?b=1 & http://y.com <= z@w.com'
+    ]
+    texts.forEach(text => {
+      it(String(JSON.stringify(text)), () => {
+        expect(linkify(text)).to.equal(previousLinkify(text))
+        const sanitized = escapeSanitize(text)
+        expect(linkify(sanitized)).to.equal(previousLinkify(sanitized))
+        expectSafeLinks(linkify(sanitized))
       })
     })
   })

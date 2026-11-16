@@ -26,28 +26,60 @@ function linkify(inputText, disableLink) {
 }
 
 function linkifyPlainText(inputText) {
-  // Validating url correct Pattern
-  // http://, https://, ftp://
-  // eslint-disable-next-line no-useless-escape
-  const urlValidPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim
-
-  // Pseudo URL correct Pattern
-  // www. without http:// or https://
-  const pseudoUrlValidPattern = /(^|[^/])(www\.[\S]+(\b|$))/gim
-
-  // Email address correct Pattern
-  // Email addresses
-  const emailAddressValidPattern = /[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim
-
   // Only the text between tags is linkified: a link written in a tag (e.g. in an attribute value)
   // would put an anchor inside the tag and let its address add attributes to it.
   return splitTags(inputText)
-    .map(part => part.isTag ? part.value : part.value
-      .replace(urlValidPattern, '<a href="$&" target="_blank">$&</a>')
-      .replace(pseudoUrlValidPattern, '$1<a href="https://$2" target="_blank">$2</a>')
-      .replace(emailAddressValidPattern, '<a href="mailto:$&" target="_blank">$&</a>')
-    )
+    .map(part => part.isTag ? part.value : linkAddresses(part.value, linkPatterns, false))
     .join('')
+}
+
+// Address patterns, by priority. No address found by them contains quotes, '<', '>' or '`', so it can
+// never end the href (double quoted) nor the anchor it is written in.
+const linkPatterns = [
+  // http://, https://, ftp://
+  {
+    // eslint-disable-next-line no-useless-escape
+    pattern: /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim,
+    link: (match) => ({ before: '', address: match, href: match })
+  },
+  // www. without http:// or https://; the character before it (not a '/') is not part of the link
+  {
+    pattern: /(^|[^/])(www\.[^\s"'<>`]+(\b|$))/gim,
+    link: (match, before, address) => ({ before, address, href: `https://${address}` })
+  },
+  // e-mail addresses
+  {
+    pattern: /[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim,
+    link: (match) => ({ before: '', address: match, href: `mailto:${match}` })
+  }
+]
+
+// Links the addresses found by the first pattern and, only in the text between them, those found by
+// the next patterns, as when the patterns ran one after another over the text, except that a link is
+// never read again: no address is linked twice nor inside another link.
+// followedByLink: the text ends where a link starts. The patterns then see a '<' after the text (the
+// start of the anchor, as they did before), so an address ends there as it ended before the anchor.
+function linkAddresses(text, patterns, followedByLink) {
+  if (!text || patterns.length === 0) {
+    return text
+  }
+
+  const [{ pattern, link }, ...nextPatterns] = patterns
+  let output = ''
+  let lastIndex = 0
+  const source = followedByLink ? `${text}<` : text
+  source.replace(pattern, (...args) => {
+    const match = args[0]
+    const offset = args[args.length - 2]
+    const { before, address, href } = link(...args)
+    const start = offset + before.length
+    output += linkAddresses(text.slice(lastIndex, start), nextPatterns, true) +
+      `<a href="${href}" target="_blank">${address}</a>`
+    lastIndex = offset + match.length
+    return match
+  })
+
+  return output + linkAddresses(text.slice(lastIndex), nextPatterns, followedByLink)
 }
 
 // Tags read as the browser reads them (HTML tokenizer), so a '>' inside a quoted attribute value does
