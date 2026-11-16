@@ -235,7 +235,8 @@ A structured form (several fields answered in a single interaction, optionally s
         { "id": "visit", "label": "Visit date", "type": "date", "min": "2026-01-01" },
         { "id": "reason", "label": "Reason", "type": "select", "required": true, "options": [{ "value": "bill", "label": "Bill copy" }] },
         { "id": "topics", "label": "Topics", "type": "checkbox", "options": [{ "value": "bill", "label": "Bill" }, { "value": "meter", "label": "Meter" }] },
-        { "id": "photo", "label": "Meter photo", "type": "file", "accept": "image/*,application/pdf", "maxSizeMb": 5 }
+        { "id": "photo", "label": "Meter photo", "type": "file", "accept": "image/*,application/pdf", "maxSizeMb": 5 },
+        { "id": "comprovantes", "label": "Supporting documents", "type": "file", "multiple": true, "maxFiles": 5, "accept": "image/*,application/pdf" }
       ]
     }
   }
@@ -249,7 +250,7 @@ A structured form (several fields answered in a single interaction, optionally s
 | `fields` | Fields of a single-step form. |
 | `steps` | `[{ "title"?: string, "fields": Field[] }]`. When present and non-empty, `fields` is ignored. Steps left without valid fields are dropped. |
 | `submitLabel` / `nextLabel` / `backLabel` | Button labels. Defaults: `Enviar`, `Continuar`, `Voltar`. |
-| `messages` | Overrides the default (pt-BR) validation messages by key: `required`, `email`, `tel`, `minLength`, `maxLength`, `min`, `max`, `pattern`, `mask`, `fileType`, `fileSize`, `uploadFailed`, `uploading`. `{min}`, `{max}` and `{mask}` are replaced. |
+| `messages` | Overrides the default (pt-BR) validation messages by key: `required`, `email`, `tel`, `minLength`, `maxLength`, `min`, `max`, `pattern`, `mask`, `fileType`, `fileSize`, `uploadFailed`, `uploading`, `maxFiles`. `{min}`, `{max}` and `{mask}` are replaced. |
 
 **Field types** (unknown types are rendered as `text`)
 
@@ -264,9 +265,9 @@ A structured form (several fields answered in a single interaction, optionally s
 | `select` | dropdown (`options`) | option `value` |
 | `radio` | radio group (`options`) | option `value` |
 | `checkbox` | checkbox group (`options`) | array of option `value`s (`[]` when none) |
-| `file` | file picker (`accept`, `maxSizeMb`, default 20) — requires `on-upload-file` | uploaded media URI |
+| `file` | file picker (`accept`, `maxSizeMb`, default 20) — requires `on-upload-file`. With `multiple: true`, a list of files (`maxFiles`, default 10) | uploaded media URI; with `multiple: true`, array of uploaded media URIs in the order the files were picked (`[]` when none) |
 
-**Field properties**: `id` and `label` (required; ids must be unique across all steps), `required`, `placeholder`, `helpText`, `minLength`/`maxLength` (text, email, tel, textarea), `min`/`max` (number, date), `pattern` (JS regex source that must match the whole value; invalid expressions are ignored), `mask` (text and tel), `errorMessage` (replaces any validation message of the field, except the "wait for the upload" notice, which can only be changed with `messages.uploading`), `options` (`[{ "value", "label" }]`), `accept` and `maxSizeMb` (file), `value` (pre-fill, see below).
+**Field properties**: `id` and `label` (required; ids must be unique across all steps), `required`, `placeholder`, `helpText`, `minLength`/`maxLength` (text, email, tel, textarea), `min`/`max` (number, date), `pattern` (JS regex source that must match the whole value; invalid expressions are ignored), `mask` (text and tel), `errorMessage` (replaces any validation message of the field, except the "wait for the upload" and "too many files" notices, which can only be changed with `messages.uploading` and `messages.maxFiles`), `options` (`[{ "value", "label" }]`), `accept` and `maxSizeMb` (file, checked for each file), `multiple` (file: the boolean `true` accepts several files in the same field; any other value, including the string `"true"`, is ignored. Turning it on or off on an existing id resets the field, like a type change) and `maxFiles` (file with `multiple`: maximum number of files, rounded down; missing, invalid or below 1 means 10), `value` (pre-fill, see below).
 
 - **Pre-fill** (`value`): fills a field with data the bot already knows, usually a Builder variable such as `{{contact.extras.cpf}}`. Pre-filled values are editable, validated like typed values and sent in the content and summary.
   - `text`, `number`, `email`, `tel`, `date`, `textarea`: a string, trimmed (numbers are converted to strings). With a `mask`, the value is formatted with it (`"12345678909"` → `123.456.789-09`). `number` values must follow the HTML number format (`42`, `-1.5`, `2.5e1`; not `+5`, `0x10` or `1.`) and `date` values must be a valid `YYYY-MM-DD`; anything else is ignored.
@@ -288,8 +289,9 @@ A structured form (several fields answered in a single interaction, optionally s
 - **Steps**: with more than one step, a "Etapa n de N" header with a progress bar is shown; `Voltar` keeps the values and only the current step is validated before moving on. Single-step forms have no header nor back button.
 - Fields without an `id`, `select`/`radio`/`checkbox` fields without `options` and `file` fields when the host does not provide `on-upload-file` are ignored. Labels are rendered as plain text.
 - **Upload**: hosts enable `file` fields by passing `on-upload-file` to `blip-card`/`blip-group-card`: `(file: File) => Promise<string | { uri: string }>`. The file type (`accept`, MIME type or extension, wildcards such as `image/*`) and size are checked before calling it; the form cannot be sent while an upload is pending, and a rejected promise shows an error so the user can choose another file.
-- After the form is sent, the read-only summary shows the file name of each `file` field as a link. It calls `on-media-selected(uri)` when the host provides it (blip-chat renews an expired link before opening it) and otherwise opens the address in a new tab. Only `http(s)` addresses are linked.
-- `on-selected` is called with a `"label: value"` summary text (dates formatted with the browser locale, option labels for `select`/`radio`/`checkbox`, the file name as a link (`[name](https://…)`) for `file`, so the file can still be opened from the conversation history) and `{ type: 'application/json', content: { [field.id]: value } }` containing the fields of all steps. Empty optional fields are sent as `""` (`[]` for `checkbox`). Once sent, the card shows a read-only summary.
+  - With `multiple: true`, several files can be picked at once or added one by one (`Escolher arquivos` / `Adicionar arquivo`, with a "n de N arquivos" counter). Each file is checked and uploaded on its own, at most 3 at a time per form (the others are shown as `Enviando…` and start when an upload finishes), is listed with its status (with the reason when it failed) and a `Remover` button, and the picker is disabled once `maxFiles` is reached. Files picked beyond the limit are left out with the `maxFiles` notice, which does not block sending. A file that failed (type, size or upload) blocks sending until it is removed; if the card receives a lower `maxFiles` after the files were picked, the extra files block sending (with the `maxFiles` message) until they are removed; `required` means at least one uploaded file.
+- After the form is sent, the read-only summary shows the file name of each `file` field as a link (one link per file, separated by `, `, with `multiple`). It calls `on-media-selected(uri)` when the host provides it (blip-chat renews an expired link before opening it) and otherwise opens the address in a new tab. Only `http(s)` addresses are linked.
+- `on-selected` is called with a `"label: value"` summary text (dates formatted with the browser locale, option labels for `select`/`radio`/`checkbox`, the file name as a link (`[name](https://…)`) for `file`, one per file separated by `, ` with `multiple`, so the file can still be opened from the conversation history) and `{ type: 'application/json', content: { [field.id]: value } }` containing the fields of all steps. Empty optional fields are sent as `""` (`[]` for `checkbox` and `file` with `multiple`). In the message bubble each link shows only the file name, and the collapsed preview ("Ver mais") counts only that name and never cuts a link in half. Once sent, the card shows a read-only summary.
 - When `hide-options` is true, the fields and all buttons are disabled. Hosts such as blip-chat set it on every card that is not the latest message of the conversation.
 
 **Reading the answers in Builder** (no backend change is required; verified against Take.Blip.Builder 0.7.524 and on HMG):
@@ -298,6 +300,7 @@ A structured form (several fields answered in a single interaction, optionally s
 - Leave the input validation of that state empty or set it to type `application/json`. A type validation of `application/vnd.lime.form+json` or `application/vnd.blip.form+json` rejects the answer, because the reply is `application/json`.
 - Use only letters, digits and `_` in field ids (`data_visita`, not `data-visita`): the variable property syntax does not accept `-`, and `.` is read as a nested property.
 - `checkbox` values are returned as a JSON array (`{{formulario@topicos}}` → `["conta","medidor"]`); indexes such as `@topicos[0]` are not supported, so use a script to split them.
+- `file` fields with `multiple` are returned as a JSON array of links, like `checkbox` (`{{formulario@comprovantes}}` → `["https://…","https://…"]`); each link is signed for a limited time, as below.
 - `file` values are media links signed for a limited time (30 minutes for blip-chat uploads on HMG). Forward or store the file within that window, or renew the link with the `set /refresh-media-uri` command to `postmaster@media.msging.net`.
 
 ## Contributions
