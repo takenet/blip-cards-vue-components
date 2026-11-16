@@ -207,7 +207,8 @@
         <div v-else class="native-form-summary">
           <span v-for="field in formFields" :key="field.id" class="native-form-summary-item">
             {{ field.label }}:
-            <template v-if="isFileList(field)">
+            <template v-if="isEmptySummaryValue(field)">{{ emptySummaryValue }}</template>
+            <template v-else-if="isFileList(field)">
               <span v-for="(item, index) in doneFileItems(field)" :key="item.key">{{ index > 0 ? ', ' : '' }}<a
                   v-if="linkableUri(item.uri)"
                   class="native-form-file-link"
@@ -270,7 +271,7 @@ const DEFAULT_MAX_FILES = 10
 // Uploads of lists of files running at the same time per form; the others wait in line. Hosts may
 // process each file before uploading it (blip-chat compresses camera photos), which is heavy on low-end phones
 const MAX_PARALLEL_UPLOADS = 3
-// Shown in the answer text for an empty optional field
+// Shown in the answer text and in the card summary for an empty optional field
 const EMPTY_SUMMARY_VALUE = '—'
 // Primary button actions right after a step change are ignored (double click on "Continuar")
 const STEP_CHANGE_GUARD_MS = 400
@@ -555,6 +556,7 @@ export default {
       currentStep: 0,
       submitted: false,
       instanceId: Math.random().toString(36).slice(2),
+      emptySummaryValue: EMPTY_SUMMARY_VALUE,
       isFailedMessage
     }
   },
@@ -1261,6 +1263,15 @@ export default {
     // by the plain text card) so the file can still be opened from the history. Other consumers see
     // the address in the text. Names or addresses that cannot be written safely keep "name - address".
     // A list of files has one entry per uploaded file, separated by ", ".
+    isEmptySummaryValue: function(field) {
+      return String(this.formattedFieldValue(field) || '').trim() === ''
+    },
+    // Value written after "label: " in the answer text: its own line breaks (e.g. a textarea) become " / ",
+    // so every line of the answer is a field
+    answerLineValue: function(field) {
+      const text = String(this.summaryFieldValue(field) || '').trim().replace(/\s*[\r\n]+\s*/g, ' / ')
+      return text || EMPTY_SUMMARY_VALUE
+    },
     summaryFieldValue: function(field) {
       if (this.isFileList(field)) {
         return this.doneFileItems(field)
@@ -1345,7 +1356,7 @@ export default {
       if (this.onSelected) {
         // One "label: value" line per field ("—" when empty); message bubbles keep the line breaks
         const summary = this.formFields
-          .map((field) => `${field.label}: ${this.summaryFieldValue(field) || EMPTY_SUMMARY_VALUE}`)
+          .map((field) => `${field.label}: ${this.answerLineValue(field)}`)
           .join('\n')
 
         const content = this.formFields.reduce((values, field) => {
