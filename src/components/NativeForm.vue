@@ -17,7 +17,7 @@
         <form v-if="!submitted" novalidate ref="form" v-on:submit.prevent="submit" class="native-form-fields">
           <fieldset :disabled="hideOptions" class="native-form-fieldset">
             <div v-if="isMultiStep" class="native-form-progress" aria-live="polite">
-              <span class="native-form-step-count">Etapa {{ currentStepIndex + 1 }} de {{ formSteps.length }}</span>
+              <span class="native-form-step-count">Etapa {{ stepPosition + 1 }} de {{ stepCount }}</span>
               <span v-if="currentStepTitle" class="native-form-step-title">{{ currentStepTitle }}</span>
               <div class="native-form-progress-bar">
                 <div class="native-form-progress-fill" :style="{ width: progressWidth }"></div>
@@ -196,7 +196,7 @@
             </div>
 
             <div class="native-form-actions" :class="{ 'is-multi-step': isMultiStep }">
-              <button v-if="currentStepIndex > 0" type="button" class="native-form-back" v-on:click="back">{{ backLabelText }}</button>
+              <button v-if="stepPosition > 0" type="button" class="native-form-back" v-on:click="back">{{ backLabelText }}</button>
               <!-- Distinct keys: a step change never reuses the element that received the previous click -->
               <button v-if="isLastStep" key="native-form-submit" type="submit" class="native-form-submit">{{ submitLabelText }}</button>
               <button v-else key="native-form-next" type="submit" class="native-form-submit native-form-next">{{ nextLabelText }}</button>
@@ -205,7 +205,7 @@
         </form>
 
         <div v-else class="native-form-summary">
-          <span v-for="field in formFields" :key="field.id" class="native-form-summary-item">
+          <span v-for="field in visibleFields" :key="field.id" class="native-form-summary-item">
             {{ field.label }}:
             <template v-if="isEmptySummaryValue(field)">{{ emptySummaryValue }}</template>
             <template v-else-if="isFileList(field)">
@@ -412,6 +412,26 @@ const linkedFileName = (name, uri) => {
   return canBeNamed ? `[${name}](${uri})` : `${name} - ${uri}`
 }
 
+const isConditionValue = (value) => ['string', 'number', 'boolean'].indexOf(typeof value) !== -1
+
+// `showWhen` of a field as { source, values } (values as strings), or null when it is not usable: not an
+// object, unknown/own/`file` source or no values. `fieldsById` has no prototype
+const parseShowWhen = (field, fieldsById) => {
+  const rule = field.showWhen
+  if (Object.prototype.toString.call(rule) !== '[object Object]' || typeof rule.field !== 'string') {
+    return null
+  }
+  const source = fieldsById[rule.field]
+  if (!source || source === field || String(source.id) === String(field.id) || source.type === 'file') {
+    return null
+  }
+  const inValues = Array.isArray(rule.in) ? rule.in.filter(isConditionValue) : []
+  const values = inValues.length > 0
+    ? inValues
+    : (isConditionValue(rule.equals) ? [rule.equals] : [])
+  return values.length > 0 ? { source, values: values.map(String) } : null
+}
+
 const fileMatchesAccept = (file, accept) => {
   if (!accept) {
     return true
@@ -506,27 +526,112 @@ export default {
       return this.formFields.map((field) => `${field.id}:${this.fieldKind(field)}`).join('|') +
         `#${typeof this.onUploadFile === 'function'}`
     },
+    // Usable `showWhen` of each field by id. Invalid conditions, including the ones in a cycle
+    // (A -> B -> A), are left out so the field is always shown and visibility never loops
+    fieldConditions: function() {
+      const fieldsById = Object.create(null)
+      this.formFields.forEach((field) => {
+        fieldsById[field.id] = fieldsById[field.id] || field
+      })
+
+      const candidates = Object.create(null)
+      this.formFields.forEach((field) => {
+        // With duplicated ids, only the first field defines the condition
+        const condition = fieldsById[field.id] === field && parseShowWhen(field, fieldsById)
+        if (condition) {
+          candidates[field.id] = condition
+        }
+      })
+
+      const inCycle = (id) => {
+        const seen = Object.create(null)
+        let current = candidates[id] && String(candidates[id].source.id)
+        while (current && !seen[current]) {
+          if (current === String(id)) {
+            return true
+          }
+          seen[current] = true
+          current = candidates[current] && String(candidates[current].source.id)
+        }
+        return false
+      }
+
+      return Object.keys(candidates).reduce((conditions, id) => {
+        if (!inCycle(id)) {
+          conditions[id] = candidates[id]
+        }
+        return conditions
+      }, Object.create(null))
+    },
+    // Visibility by field id: a conditional field is shown when its source is shown and holds one of the
+    // values (a checkbox source when any selected value is one of them)
+    fieldVisibility: function() {
+      const conditions = this.fieldConditions
+      const visibility = Object.create(null)
+      const isVisible = (field) => {
+        if (!(field.id in visibility)) {
+          const condition = conditions[field.id]
+          let visible = true
+          if (condition) {
+            const value = this.effectiveValue(condition.source)
+            visible = isVisible(condition.source) &&
+              (Array.isArray(value) ? value : [value]).some((item) => condition.values.indexOf(String(item)) !== -1)
+          }
+          visibility[field.id] = visible
+        }
+        return visibility[field.id]
+      }
+      this.formFields.forEach(isVisible)
+      return visibility
+    },
+    visibleFields: function() {
+      return this.formFields.filter((field) => this.isFieldVisible(field))
+    },
+    // Steps with at least one visible field (the single empty step of a form without fields counts)
+    visibleStepIndexes: function() {
+      return this.formSteps.reduce((indexes, step, index) => {
+        if (step.fields.length === 0 || step.fields.some((field) => this.isFieldVisible(field))) {
+          indexes.push(index)
+        }
+        return indexes
+      }, [])
+    },
     currentStepIndex: function() {
-      return Math.min(Math.max(this.currentStep, 0), this.formSteps.length - 1)
+      const index = Math.min(Math.max(this.currentStep, 0), this.formSteps.length - 1)
+      const visible = this.visibleStepIndexes
+      if (visible.length === 0 || visible.indexOf(index) !== -1) {
+        return index
+      }
+      // A hidden step is never shown: the next visible one is, or the previous one when there is none after it
+      const next = visible.find((visibleIndex) => visibleIndex > index)
+      return next !== undefined ? next : visible[visible.length - 1]
+    },
+    // Position of the current step among the visible ones
+    stepPosition: function() {
+      return Math.max(this.visibleStepIndexes.indexOf(this.currentStepIndex), 0)
+    },
+    stepCount: function() {
+      return Math.max(this.visibleStepIndexes.length, 1)
     },
     currentFields: function() {
-      return this.formSteps[this.currentStepIndex].fields
+      return this.formSteps[this.currentStepIndex].fields.filter((field) => this.isFieldVisible(field))
     },
     currentStepTitle: function() {
       return this.formSteps[this.currentStepIndex].title
     },
     isMultiStep: function() {
-      return this.formSteps.length > 1
+      return this.stepCount > 1
     },
     isLastStep: function() {
-      return this.currentStepIndex === this.formSteps.length - 1
+      return this.stepPosition === this.stepCount - 1
     },
     progressWidth: function() {
-      return `${((this.currentStepIndex + 1) / this.formSteps.length) * 100}%`
+      return `${((this.stepPosition + 1) / this.stepCount) * 100}%`
     },
     fieldErrors: function() {
+      // Hidden fields are never validated
       return this.formFields.reduce((result, field) => {
-        result[field.id] = this.validateField(field)
+        result[field.id] = this.isFieldVisible(field) ? this.validateField(field) : null
         return result
       }, {})
     },
@@ -544,6 +649,22 @@ export default {
     fieldsSignature: function(newSignature, oldSignature) {
       const idsOf = (signature) => signature.split('#')[0].split('|').map((entry) => entry.split(':')[0]).join('|')
       this.syncFieldState(idsOf(newSignature) !== idsOf(oldSignature))
+    },
+    // Keeps the stored step on the one shown (when the current step gets hidden), so a step that
+    // appears or reappears before it never moves the user
+    currentStepIndex: function(index) {
+      if (this.currentStep !== index) {
+        this.currentStep = index
+      }
+    },
+    fieldVisibility: function(visibility) {
+      // A field that gets hidden shows no error when it appears again until it is left or the user tries to continue
+      this.formFields.forEach((field) => {
+        if (visibility[field.id] === false && (this.touched[field.id] || this.attempted[field.id])) {
+          this.$set(this.touched, field.id, false)
+          this.$set(this.attempted, field.id, false)
+        }
+      })
     }
   },
   data: function() {
@@ -584,7 +705,7 @@ export default {
       this.touched = touched
       this.attempted = attempted
       this.uploads = uploads
-      this.currentStep = 0
+      this.currentStep = this.firstVisibleStep()
       this.submitted = false
       this.uploadSequence = 0
       this.lastStepChangeAt = 0
@@ -646,7 +767,7 @@ export default {
       this.releaseDroppedUploads()
 
       if (idsChanged) {
-        this.currentStep = 0
+        this.currentStep = this.firstVisibleStep()
         this.lastStepChangeAt = 0
       }
     },
@@ -722,6 +843,10 @@ export default {
         this.lastStepChangeAt = Date.now()
       }
     },
+    // Where the form starts: the first step with a visible field
+    firstVisibleStep: function() {
+      return this.visibleStepIndexes.length > 0 ? this.visibleStepIndexes[0] : 0
+    },
     ariaRequired: function(field) {
       return field.required ? 'true' : undefined
     },
@@ -752,6 +877,9 @@ export default {
     },
     isFileList: function(field) {
       return field.type === 'file' && field.multiple === true
+    },
+    isFieldVisible: function(field) {
+      return this.fieldVisibility[field.id] !== false
     },
     fieldKind: function(field) {
       return this.isFileList(field) ? 'file[]' : field.type
@@ -1146,7 +1274,9 @@ export default {
     },
     pumpFileUploads: function() {
       while (this.uploadQueue.length > 0 && this.activeUploads.length < MAX_PARALLEL_UPLOADS) {
-        const entry = this.uploadQueue.shift()
+        // Files of visible fields go first: waiting files of hidden fields never take a slot ahead of them
+        const visibleIndex = this.uploadQueue.findIndex((queued) => this.fieldVisibility[queued.fieldId] !== false)
+        const entry = this.uploadQueue.splice(Math.max(visibleIndex, 0), 1)[0]
         // Files removed or reset while waiting are never uploaded
         if (this.isLiveFileItem(entry.fieldId, entry.item)) {
           this.startFileUpload(entry)
@@ -1236,10 +1366,10 @@ export default {
       return true
     },
     back: function() {
-      if (this.submitted || this.hideOptions || this.currentStepIndex === 0) {
+      if (this.submitted || this.hideOptions || this.stepPosition === 0) {
         return
       }
-      this.goToStep(this.currentStepIndex - 1)
+      this.goToStep(this.visibleStepIndexes[this.stepPosition - 1])
     },
     // Uploaded file address, only when it is a web link that is safe to open
     fileLinkUri: function(field) {
@@ -1320,6 +1450,10 @@ export default {
       return selectedOption ? selectedOption.label : ''
     },
     fieldContentValue: function(field) {
+      // Hidden fields are sent empty, whatever was typed while they were shown
+      if (!this.isFieldVisible(field)) {
+        return field.type === 'checkbox' || this.isFileList(field) ? [] : ''
+      }
       // Checkbox values keep the options order regardless of the order the user clicked them
       return this.effectiveValue(field)
     },
@@ -1337,7 +1471,7 @@ export default {
       }
 
       if (!this.isLastStep) {
-        this.goToStep(this.currentStepIndex + 1)
+        this.goToStep(this.visibleStepIndexes[this.stepPosition + 1])
         return
       }
 
@@ -1354,8 +1488,8 @@ export default {
       this.submitted = true
 
       if (this.onSelected) {
-        // One "label: value" line per field ("—" when empty); message bubbles keep the line breaks
-        const summary = this.formFields
+        // One "label: value" line per visible field ("—" when empty); message bubbles keep the line breaks
+        const summary = this.visibleFields
           .map((field) => `${field.label}: ${this.answerLineValue(field)}`)
           .join('\n')
 
