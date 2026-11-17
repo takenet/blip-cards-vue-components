@@ -106,7 +106,7 @@ describe('NativeForm - searchable select and options that depend on another fiel
     vm.submit()
     expect(sent).to.have.length(1)
     expect(sent[0].content).to.deep.equal({ estado: 'MS', cidade: '5003702' })
-    expect(sent[0].summary).to.equal('Estado: Mato Grosso do Sul, Cidade: Dourados')
+    expect(sent[0].summary).to.equal('Estado: Mato Grosso do Sul\nCidade: Dourados')
   })
 
   it('searches ignoring case and accents, with the options that start with the text first', () => {

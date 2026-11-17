@@ -108,7 +108,7 @@ describe('NativeForm - conditional fields (showWhen)', () => {
     vm.submit()
     expect(sent).to.have.length(1)
     expect(sent[0].content.nome_conjuge).to.equal('Maria')
-    expect(sent[0].summary).to.equal('Estado civil: União estável, Nome do cônjuge: Maria')
+    expect(sent[0].summary).to.equal('Estado civil: União estável\nNome do cônjuge: Maria')
   })
 
   it('matches `equals` on a radio source and any selected value of a checkbox source', () => {
