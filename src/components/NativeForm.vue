@@ -24,7 +24,7 @@
               </div>
             </div>
 
-            <div class="form-group" v-for="field in currentFields" :key="field.id" :class="{ 'has-error': showError(field), 'is-valid': showValid(field) }">
+            <div class="form-group" v-for="field in currentFields" :key="field.id" :class="{ 'has-error': showError(field), 'is-valid': showValid(field), 'is-locked': isLookupLocked(field) }">
               <fieldset v-if="isOptionGroup(field)"
                 class="native-form-group-fieldset"
                 :role="field.type === 'radio' ? 'radiogroup' : undefined"
@@ -66,6 +66,7 @@
                 <select v-if="field.type === 'select'"
                   :id="fieldInputId(field.id)"
                   :required="!!field.required"
+                  :disabled="isLookupLocked(field)"
                   :aria-required="ariaRequired(field)"
                   :aria-invalid="showError(field) ? 'true' : 'false'"
                   :aria-describedby="describedBy(field)"
@@ -87,6 +88,7 @@
                   rows="3"
                   :placeholder="field.placeholder"
                   :maxlength="maxLengthAttr(field)"
+                  :readonly="isLookupLocked(field)"
                   :aria-invalid="showError(field) ? 'true' : 'false'"
                   :aria-describedby="describedBy(field)"
                   v-model="formValues[field.id]"
@@ -170,6 +172,7 @@
                   :maxlength="maxLengthAttr(field)"
                   :min="rangeAttr(field, 'min')"
                   :max="rangeAttr(field, 'max')"
+                  :readonly="isLookupLocked(field)"
                   :aria-invalid="showError(field) ? 'true' : 'false'"
                   :aria-describedby="describedBy(field)"
                   :value="formValues[field.id]"
@@ -192,6 +195,13 @@
                   {{ fieldErrors[field.id].message }}
                 </span>
                 <span v-if="fileNotice(field)" :id="fileNoticeId(field.id)" class="native-form-error native-form-file-notice">{{ fileNotice(field) }}</span>
+                <span v-if="lookupStatusText(field)"
+                  :id="lookupStatusId(field.id)"
+                  class="native-form-lookup-status"
+                  :class="'is-' + lookups[field.id].status"
+                >
+                  <span v-if="lookups[field.id].status === 'loading'" class="native-form-spinner" aria-hidden="true"></span>{{ lookupStatusText(field) }}
+                </span>
               </span>
             </div>
 
@@ -256,6 +266,7 @@
 </template>
 
 <script>
+/* global AbortController */
 import { isFailedMessage } from '../utils/misc'
 import { default as base } from '../mixins/baseComponent.js'
 
@@ -287,11 +298,50 @@ const DEFAULT_MESSAGES = {
   fileSize: 'O arquivo deve ter no máximo {max} MB.',
   uploadFailed: 'Não foi possível enviar o arquivo. Tente novamente.',
   uploading: 'Aguarde o envio do arquivo.',
-  maxFiles: 'Você pode enviar no máximo {max} arquivos.'
+  maxFiles: 'Você pode enviar no máximo {max} arquivos.',
+  lookupLoading: 'Buscando endereço…',
+  lookupPending: 'Aguarde a busca do endereço.',
+  lookupNotFound: 'CEP não encontrado. Preencha o endereço.',
+  lookupFailed: 'Não foi possível buscar o endereço. Preencha o endereço.'
 }
 
 // Notices that `field.errorMessage` does not replace
-const NOTICE_KEYS = ['uploading', 'maxFiles']
+const NOTICE_KEYS = ['uploading', 'maxFiles', 'lookupLoading', 'lookupPending', 'lookupNotFound', 'lookupFailed']
+// Errors shown only when the user tries to move on (the wait is not the user's mistake)
+const WAIT_KEYS = ['uploading', 'lookupPending']
+
+// Lookup (e.g. postal code -> address) of a masked field, configured by the bot flow in `field.lookup`
+const LOOKUP_TIMEOUT_MS = 8000
+const LOOKUP_PROVIDERS = {
+  viacep: 'https://viacep.com.br/ws/{value}/json/'
+}
+const LOOKUP_URL = /^https:\/\/[^\s/?#]+[^\s]*$/i
+// Field types that a lookup can fill (option groups and files are never filled)
+const LOOKUP_TARGET_TYPES = ['text', 'number', 'email', 'tel', 'date', 'textarea', 'select']
+
+const emptyLookup = () => ({ status: 'idle', query: '', filled: {}, locked: [], token: 0 })
+
+// Value of `path` ("a.b.c") in a JSON answer, as plain text: strings and finite numbers only
+const lookupText = (data, path) => {
+  const value = String(path).split('.').reduce(
+    (current, key) => current !== null && typeof current === 'object' && Object.prototype.hasOwnProperty.call(current, key)
+      ? current[key]
+      : undefined,
+    data
+  )
+  if (typeof value === 'number') {
+    return isFinite(value) ? String(value) : ''
+  }
+  if (typeof value !== 'string') {
+    return ''
+  }
+  // Control characters (line breaks included) become spaces
+  return value.split('')
+    .map((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127 ? ' ' : char)
+    .join('')
+    .replace(/ {2,}/g, ' ')
+    .trim()
+}
 
 const isMaskSlot = (char) => char === '0' || char === 'A' || char === '*'
 
@@ -343,6 +393,12 @@ const applyMask = (rawValue, mask) => {
 
   return result
 }
+
+// Characters typed in the slots of a complete masked value, without the literals ("01001-000" -> "01001000")
+const maskSlotsOf = (value, mask) => String(value)
+  .split('')
+  .filter((char, index) => isMaskSlot(mask[index]))
+  .join('')
 
 const isFiniteNumber = (value) => value !== undefined && value !== null && value !== '' && isFinite(Number(value))
 
@@ -664,6 +720,9 @@ export default {
       })
     }
   },
+  beforeDestroy: function() {
+    this.abortLookups()
+  },
   data: function() {
     return {
       formValues: {},
@@ -671,6 +730,7 @@ export default {
       touched: {},
       attempted: {},
       uploads: {},
+      lookups: {},
       currentStep: 0,
       submitted: false,
       instanceId: Math.random().toString(36).slice(2),
@@ -684,7 +744,9 @@ export default {
       const touched = {}
       const attempted = {}
       const uploads = {}
+      const lookups = {}
 
+      this.abortLookups()
       this.fieldTypes = {}
 
       this.formFields.forEach((field) => {
@@ -694,6 +756,7 @@ export default {
         touched[field.id] = false
         attempted[field.id] = false
         uploads[field.id] = emptyUpload()
+        lookups[field.id] = emptyLookup()
       })
 
       this.formValues = formValues
@@ -701,13 +764,17 @@ export default {
       this.touched = touched
       this.attempted = attempted
       this.uploads = uploads
+      this.lookups = lookups
       this.currentStep = this.firstVisibleStep()
       this.submitted = false
       this.uploadSequence = 0
+      // Never reset: a late answer of a lookup started before a reset must not match a new one
+      this.lookupSequence = this.lookupSequence || 0
       this.lastStepChangeAt = 0
       // Files of lists waiting for a free slot and the ones uploading ({ fieldId, field, file, item })
       this.uploadQueue = []
       this.activeUploads = []
+      this.startPrefilledLookups()
     },
     // Keeps the reactive state in line with the current fields when the document (or the upload
     // support) changes on a mounted instance: existing values are preserved (a new pre-fill `value` of an
@@ -755,6 +822,11 @@ export default {
         }
         if (!this.uploads[field.id]) {
           this.$set(this.uploads, field.id, emptyUpload())
+        }
+        // A retyped field forgets its lookup (and a late answer of it is ignored)
+        if (!this.lookups[field.id] || (previousType && previousType !== kind)) {
+          this.abortLookup(field.id)
+          this.$set(this.lookups, field.id, emptyLookup())
         }
       })
 
@@ -983,6 +1055,9 @@ export default {
           ids.push(this.fileNoticeId(field.id))
         }
       }
+      if (this.lookupStatusText(field)) {
+        ids.push(this.lookupStatusId(field.id))
+      }
       return ids.length > 0 ? ids.join(' ') : undefined
     },
     message: function(field, key, params) {
@@ -1000,6 +1075,18 @@ export default {
       return { key, message: this.message(field, key, params) }
     },
     validateField: function(field) {
+      const fieldError = this.validateFieldValue(field)
+      if (fieldError) {
+        return fieldError
+      }
+      // A complete postal code still being looked up holds the form until the address arrives (or fails)
+      const lookup = this.lookups[field.id]
+      if (lookup && lookup.status === 'loading' && this.lookupConfig(field)) {
+        return this.error(field, 'lookupPending')
+      }
+      return null
+    },
+    validateFieldValue: function(field) {
       if (this.isFileList(field)) {
         const items = this.fileItems(field)
         // A failed file is reported right away (the user removes it); pending uploads only block
@@ -1110,8 +1197,8 @@ export default {
       if (!fieldError || !this.touched[field.id]) {
         return false
       }
-      // The "wait for the upload" message is shown only when the user tries to move on
-      return fieldError.key !== 'uploading' || this.attempted[field.id]
+      // The "wait for the upload/lookup" messages are shown only when the user tries to move on
+      return WAIT_KEYS.indexOf(fieldError.key) === -1 || this.attempted[field.id]
     },
     // Success style for single-value controls (option groups stay neutral; files already show ✓):
     // a valid non-empty value once the field was left/attempted, or from the start when pre-filled
@@ -1120,6 +1207,10 @@ export default {
         return false
       }
       if (this.isEmptyValue(field, this.effectiveValue(field))) {
+        return false
+      }
+      // A postal code that was not found keeps the neutral style next to its notice
+      if (this.lookupNotice(field)) {
         return false
       }
       return !!(this.touched[field.id] || this.attempted[field.id] || this.prefilled[field.id])
@@ -1143,6 +1234,11 @@ export default {
       if (event.isComposing || target.composing) {
         return
       }
+      // Address filled by a lookup stays as found (`readonly` already blocks typing)
+      if (this.isLookupLocked(field)) {
+        target.value = this.formValues[field.id]
+        return
+      }
       const mask = this.fieldMask(field)
       let value = target.value
 
@@ -1154,6 +1250,7 @@ export default {
       }
 
       this.$set(this.formValues, field.id, value)
+      this.onLookupValue(field)
     },
     onFileChange: function(field, event) {
       const input = event.target
@@ -1342,6 +1439,246 @@ export default {
       if (element && typeof element.focus === 'function') {
         element.focus()
       }
+    },
+    // Lookup of a masked field (`field.lookup`, e.g. postal code -> address): { url, targets } or null when
+    // it cannot be used (no mask, not https, no `{value}` in the address or no field that can be filled)
+    lookupConfig: function(field) {
+      const lookup = field.lookup
+      if (!lookup || typeof lookup !== 'object' || !this.fieldMask(field)) {
+        return null
+      }
+      const providerUrl = typeof lookup.provider === 'string' &&
+        Object.prototype.hasOwnProperty.call(LOOKUP_PROVIDERS, lookup.provider)
+        ? LOOKUP_PROVIDERS[lookup.provider]
+        : ''
+      const url = typeof lookup.url === 'string' && lookup.url.trim() ? lookup.url.trim() : providerUrl
+      if (!LOOKUP_URL.test(url) || url.indexOf('{value}') === -1) {
+        return null
+      }
+      const fill = lookup.fill && typeof lookup.fill === 'object' && !Array.isArray(lookup.fill) ? lookup.fill : {}
+      const targets = Object.keys(fill)
+        .filter((targetId) => targetId !== field.id && typeof fill[targetId] === 'string' && fill[targetId].trim())
+        .map((targetId) => ({
+          field: this.formFields.find((current) => current.id === targetId),
+          path: fill[targetId].trim()
+        }))
+        .filter((target) => target.field && LOOKUP_TARGET_TYPES.indexOf(target.field.type) !== -1)
+      return targets.length > 0 ? { url, targets } : null
+    },
+    isLookupComplete: function(field) {
+      const mask = this.fieldMask(field)
+      const value = this.formValues[field.id]
+      return !!mask && typeof value === 'string' && value.length === mask.length && !this.validateFieldValue(field)
+    },
+    // Field filled by a lookup: it keeps the value found until the looked-up field changes or is hidden
+    isLookupLocked: function(field) {
+      return this.formFields.some((source) => {
+        const lookup = this.lookups[source.id]
+        return !!lookup && lookup.status === 'found' && lookup.locked.indexOf(field.id) !== -1 &&
+          sameValue(this.formValues[field.id], lookup.filled[field.id]) && !!this.lookupConfig(source) &&
+          this.isFieldVisible(source)
+      })
+    },
+    // "Not found"/"failed" notice of a looked-up field (it never blocks sending: the user types the address)
+    lookupNotice: function(field) {
+      const lookup = this.lookups[field.id]
+      if (!lookup || !this.lookupConfig(field)) {
+        return ''
+      }
+      if (lookup.status === 'notFound') {
+        return this.message(field, 'lookupNotFound')
+      }
+      return lookup.status === 'failed' ? this.message(field, 'lookupFailed') : ''
+    },
+    lookupStatusText: function(field) {
+      const lookup = this.lookups[field.id]
+      if (lookup && lookup.status === 'loading' && this.lookupConfig(field)) {
+        // The "wait for the address" error already says it
+        const fieldError = this.fieldErrors[field.id]
+        return fieldError && fieldError.key === 'lookupPending' && this.showError(field)
+          ? ''
+          : this.message(field, 'lookupLoading')
+      }
+      return this.lookupNotice(field)
+    },
+    lookupStatusId: function(fieldId) {
+      return `${this.fieldInputId(fieldId)}-lookup`
+    },
+    // Looks up the value once its mask is complete; editing it again drops the address it filled
+    onLookupValue: function(field) {
+      if (!this.lookupConfig(field) || this.hideOptions || this.submitted) {
+        return
+      }
+      const lookup = this.lookups[field.id] || emptyLookup()
+      const query = this.isLookupComplete(field)
+        ? encodeURIComponent(maskSlotsOf(this.formValues[field.id], this.fieldMask(field)))
+        : ''
+      if (query === lookup.query) {
+        return
+      }
+      this.clearLookup(field)
+      if (query) {
+        this.startLookup(field, query)
+      }
+    },
+    // Pre-filled values are looked up when the card is created, unless the flow already sent the address
+    startPrefilledLookups: function() {
+      if (this.hideOptions) {
+        return
+      }
+      this.formFields.forEach((field) => {
+        const config = this.lookupConfig(field)
+        // A hidden postal code (`showWhen`) is not looked up
+        if (config && this.isFieldVisible(field) && config.targets.every((target) => this.isEmptyValue(target.field, this.formValues[target.field.id]))) {
+          this.onLookupValue(field)
+        }
+      })
+    },
+    clearLookup: function(field) {
+      const lookup = this.lookups[field.id]
+      this.abortLookup(field.id)
+      if (lookup) {
+        Object.keys(lookup.filled).forEach((targetId) => {
+          if (sameValue(this.formValues[targetId], lookup.filled[targetId])) {
+            this.$set(this.formValues, targetId, '')
+            this.$set(this.touched, targetId, false)
+          }
+        })
+      }
+      this.$set(this.lookups, field.id, emptyLookup())
+    },
+    startLookup: function(field, query) {
+      const fieldId = field.id
+      const url = this.lookupConfig(field).url.split('{value}').join(query)
+      this.lookupSequence = (this.lookupSequence || 0) + 1
+      const token = this.lookupSequence
+      const controller = typeof AbortController === 'function' ? new AbortController() : null
+      let timer = null
+
+      this.$set(this.lookups, fieldId, { ...emptyLookup(), status: 'loading', query, token })
+      this.lookupRequests = this.lookupRequests || {}
+      this.lookupRequests[fieldId] = {
+        token,
+        // Values of the fields to fill when the lookup started: the ones the user edits meanwhile are kept
+        startValues: this.lookupConfig(field).targets.reduce((values, target) => {
+          values[target.field.id] = this.formValues[target.field.id]
+          return values
+        }, {}),
+        abort: () => {
+          clearTimeout(timer)
+          if (controller) {
+            controller.abort()
+          }
+        }
+      }
+
+      const timeout = new Promise((resolve, reject) => {
+        timer = setTimeout(() => {
+          if (controller) {
+            controller.abort()
+          }
+          reject(new Error('Lookup timed out'))
+        }, LOOKUP_TIMEOUT_MS)
+      })
+      // No cookies nor referrer: the service only receives the typed value
+      let request = null
+      try {
+        if (typeof fetch !== 'function') {
+          throw new Error('fetch is not available')
+        }
+        request = Promise.resolve(fetch(url, {
+          method: 'GET',
+          credentials: 'omit',
+          referrerPolicy: 'no-referrer',
+          headers: { Accept: 'application/json' },
+          signal: controller ? controller.signal : undefined
+        }))
+      } catch (e) {
+        request = Promise.reject(e)
+      }
+      request = request
+        .then((response) => {
+          if (response.status === 400 || response.status === 404) {
+            return null
+          }
+          if (!response.ok) {
+            throw new Error(`Lookup failed with status ${response.status}`)
+          }
+          return response.json()
+        })
+
+      Promise.race([request, timeout])
+        .then((data) => this.applyLookup(fieldId, token, data))
+        .catch(() => this.finishLookup(fieldId, token, 'failed'))
+        .then(() => {
+          clearTimeout(timer)
+          if (this.lookupRequests[fieldId] && this.lookupRequests[fieldId].token === token) {
+            delete this.lookupRequests[fieldId]
+          }
+        })
+    },
+    // Answer of the current lookup only (a value edited, a reset or a new card make it stale)
+    isCurrentLookup: function(fieldId, token) {
+      const lookup = this.lookups[fieldId]
+      return !!lookup && lookup.token === token && lookup.status === 'loading'
+    },
+    // Fills the mapped fields with the values found (formatted and checked like a pre-fill). Values that
+    // are valid are locked; an invalid one stays editable so the user is never stuck with it.
+    applyLookup: function(fieldId, token, data) {
+      if (!this.isCurrentLookup(fieldId, token)) {
+        return
+      }
+      const field = this.formFields.find((current) => current.id === fieldId)
+      const config = field && this.lookupConfig(field)
+      if (!config) {
+        this.$set(this.lookups, fieldId, emptyLookup())
+        return
+      }
+      // 400/404, `erro: true` (ViaCEP) or no value for any mapped field: not found
+      const notFound = !data || typeof data !== 'object' || Array.isArray(data) || data.erro === true || data.erro === 'true'
+      const request = this.lookupRequests && this.lookupRequests[fieldId]
+      const startValues = request && request.token === token ? request.startValues : {}
+      const filled = {}
+      const locked = []
+
+      if (!notFound) {
+        config.targets.forEach((target) => {
+          const targetId = target.field.id
+          if (Object.prototype.hasOwnProperty.call(startValues, targetId) &&
+            !sameValue(this.formValues[targetId], startValues[targetId])) {
+            return
+          }
+          const text = lookupText(data, target.path)
+          const value = text ? this.initialValue({ ...target.field, value: text }) : ''
+          if (this.isEmptyValue(target.field, value)) {
+            return
+          }
+          filled[target.field.id] = value
+          this.$set(this.formValues, target.field.id, value)
+          this.$set(this.touched, target.field.id, true)
+          if (!this.validateFieldValue(target.field)) {
+            locked.push(target.field.id)
+          }
+        })
+      }
+
+      const found = Object.keys(filled).length > 0
+      this.$set(this.lookups, fieldId, { ...this.lookups[fieldId], status: found ? 'found' : 'notFound', filled, locked })
+    },
+    finishLookup: function(fieldId, token, status) {
+      if (this.isCurrentLookup(fieldId, token)) {
+        this.$set(this.lookups, fieldId, { ...this.lookups[fieldId], status })
+      }
+    },
+    abortLookup: function(fieldId) {
+      const request = this.lookupRequests && this.lookupRequests[fieldId]
+      if (request) {
+        request.abort()
+        delete this.lookupRequests[fieldId]
+      }
+    },
+    abortLookups: function() {
+      Object.keys(this.lookupRequests || {}).forEach((fieldId) => this.abortLookup(fieldId))
     },
     validateCurrentStep: function() {
       let firstInvalid = null
@@ -1752,6 +2089,37 @@ export default {
         margin-top: 4px;
         font-size: 12px;
         color: $color-negative;
+      }
+
+      // Address filled by the postal code lookup: kept as found until the postal code changes
+      &.is-locked .form-control {
+        background-color: $vue-cotton;
+        cursor: default;
+      }
+
+      .native-form-lookup-status {
+        display: block;
+        white-space: normal;
+        margin-top: 4px;
+        font-size: 12px;
+        color: $vue-gray;
+
+        &.is-notFound,
+        &.is-failed {
+          color: $color-negative;
+        }
+
+        .native-form-spinner {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          margin-right: 4px;
+          border: 2px solid $vue-cotton;
+          border-top-color: $vue-light-blip;
+          border-radius: 50%;
+          vertical-align: middle;
+          animation: native-form-spin 0.8s linear infinite;
+        }
       }
     }
 
