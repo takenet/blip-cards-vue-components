@@ -290,6 +290,37 @@ describe('NativeForm - postal code lookup', () => {
     expect(vm.isLookupLocked(field(vm, 'rua'))).to.equal(false)
   })
 
+  it('fills a state and the city that depends on it, and locks the city only when it is an option of that state', async () => {
+    const { calls, fetch } = controlledFetch()
+    global.fetch = fetch
+    const fields = [
+      { id: 'cep', label: 'CEP', type: 'text', mask: '00000-000', lookup: { provider: 'viacep', fill: { cidade: 'ibge', uf: 'uf' } } },
+      { id: 'uf', label: 'UF', type: 'select', options: [{ value: 'MT', label: 'MT' }, { value: 'SP', label: 'SP' }] },
+      {
+        id: 'cidade',
+        label: 'Cidade',
+        type: 'select',
+        searchable: true,
+        dependsOn: 'uf',
+        options: { MT: [{ value: '5103403', label: 'Cuiabá' }], SP: [{ value: '3550308', label: 'São Paulo' }] }
+      }
+    ]
+    const { vm } = createForm(fields)
+
+    type(vm, 'cep', '78005370')
+    calls[0].resolve(jsonResponse({ uf: 'MT', ibge: '5103403' }))
+    await flush()
+    expect(vm.formValues).to.include({ uf: 'MT', cidade: '5103403' })
+    expect(vm.isLookupLocked(field(vm, 'cidade'))).to.equal(true)
+
+    // A city that is not an option of the state found stays free
+    type(vm, 'cep', '01001000')
+    calls[1].resolve(jsonResponse({ uf: 'MT', ibge: '3550308' }))
+    await flush()
+    expect(vm.isLookupLocked(field(vm, 'uf'))).to.equal(true)
+    expect(vm.isLookupLocked(field(vm, 'cidade'))).to.equal(false)
+  })
+
   it('ignores lookups that are not https, fields without mask and read-only cards; pre-filled values are looked up', async () => {
     const { calls, fetch } = controlledFetch()
     global.fetch = fetch

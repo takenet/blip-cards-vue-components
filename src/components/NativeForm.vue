@@ -32,7 +32,7 @@
                 :aria-describedby="describedBy(field)"
               >
                 <legend>{{ field.label }}</legend>
-                <label v-for="(option, index) in field.options"
+                <label v-for="(option, index) in optionsOf(field)"
                   :key="option.value"
                   :for="optionInputId(field.id, index)"
                   class="native-form-option"
@@ -63,10 +63,58 @@
               <template v-else>
                 <label :for="fieldInputId(field.id)">{{ field.label }}</label>
 
-                <select v-if="field.type === 'select'"
+                <div v-if="isSearchable(field)" class="native-form-combobox">
+                  <input
+                    type="text"
+                    role="combobox"
+                    autocomplete="off"
+                    spellcheck="false"
+                    aria-autocomplete="list"
+                    :id="fieldInputId(field.id)"
+                    :required="!!field.required"
+                    :disabled="!hasOptionsToChoose(field) || isLookupLocked(field)"
+                    :placeholder="field.placeholder || 'Digite para buscar'"
+                    :aria-expanded="isListOpen(field) ? 'true' : 'false'"
+                    :aria-controls="listboxId(field.id)"
+                    :aria-activedescendant="activeOptionId(field)"
+                    :aria-required="ariaRequired(field)"
+                    :aria-invalid="showError(field) ? 'true' : 'false'"
+                    :aria-describedby="describedBy(field)"
+                    :value="comboboxText(field)"
+                    v-on:input="onSearchInput(field, $event)"
+                    v-on:focus="onComboboxFocus(field, $event)"
+                    v-on:click="openList(field)"
+                    v-on:keydown="onComboboxKeydown(field, $event)"
+                    v-on:blur="onComboboxBlur(field)"
+                    class="form-control native-form-combobox-input"
+                  >
+                  <!-- mousedown is prevented so choosing an option (or scrolling the list) keeps the focus in the input.
+                       tabindex -1: browsers put scrollable areas in the Tab order, and this one is removed on blur -->
+                  <ul v-if="isListOpen(field)"
+                    role="listbox"
+                    tabindex="-1"
+                    class="native-form-combobox-list"
+                    :id="listboxId(field.id)"
+                    :aria-label="field.label"
+                    v-on:mousedown.prevent
+                  >
+                    <li v-for="(option, index) in listState.visible"
+                      :key="option.value"
+                      role="option"
+                      class="native-form-combobox-option"
+                      :class="{ 'is-active': index === listState.activeIndex, 'is-selected': option.value === listState.selectedValue }"
+                      :id="comboboxOptionId(field.id, index)"
+                      :aria-selected="index === listState.activeIndex ? 'true' : undefined"
+                      v-on:click="chooseOption(field, option)"
+                    >{{ option.label }}</li>
+                  </ul>
+                  <span v-if="isListOpen(field)" class="native-form-combobox-status" aria-live="polite">{{ comboboxStatus(field) }}</span>
+                </div>
+
+                <select v-else-if="field.type === 'select'"
                   :id="fieldInputId(field.id)"
                   :required="!!field.required"
-                  :disabled="isLookupLocked(field)"
+                  :disabled="!hasOptionsToChoose(field) || isLookupLocked(field)"
                   :aria-required="ariaRequired(field)"
                   :aria-invalid="showError(field) ? 'true' : 'false'"
                   :aria-describedby="describedBy(field)"
@@ -76,7 +124,7 @@
                   class="form-control"
                 >
                   <option value="" disabled>{{ field.label }}</option>
-                  <option v-for="option in field.options" :key="option.value" :value="option.value">
+                  <option v-for="option in optionsOf(field)" :key="option.value" :value="option.value">
                     {{ option.label }}
                   </option>
                 </select>
@@ -186,6 +234,7 @@
               </template>
 
               <small v-if="field.helpText" :id="helpId(field.id)" class="native-form-help">{{ field.helpText }}</small>
+              <small v-if="optionsNotice(field)" :id="optionsNoticeId(field.id)" class="native-form-help native-form-options-notice">{{ optionsNotice(field) }}</small>
               <span class="native-form-live" aria-live="polite">
                 <span v-if="showError(field)"
                   :id="errorId(field.id)"
@@ -302,6 +351,10 @@ const DEFAULT_MESSAGES = {
   uploadFailed: 'Não foi possível enviar o arquivo. Tente novamente.',
   uploading: 'Aguarde o envio do arquivo.',
   maxFiles: 'Você pode enviar no máximo {max} arquivos.',
+  option: 'Escolha uma opção da lista.',
+  dependsOn: 'Escolha primeiro: {field}.',
+  noOptions: 'Nenhuma opção disponível.',
+  noResults: 'Nenhuma opção encontrada.',
   lookupLoading: 'Buscando endereço…',
   lookupPending: 'Aguarde a busca do endereço.',
   lookupNotFound: 'CEP não encontrado. Preencha o endereço.',
@@ -309,7 +362,23 @@ const DEFAULT_MESSAGES = {
 }
 
 // Notices that `field.errorMessage` does not replace
-const NOTICE_KEYS = ['uploading', 'maxFiles', 'lookupLoading', 'lookupPending', 'lookupNotFound', 'lookupFailed']
+const NOTICE_KEYS = ['uploading', 'maxFiles', 'dependsOn', 'noOptions', 'noResults', 'lookupLoading', 'lookupPending', 'lookupNotFound', 'lookupFailed']
+
+// Options rendered at a time in the list of a searchable select; typing narrows the list down
+const MAX_VISIBLE_OPTIONS = 50
+
+// Case- and accent-insensitive text used to search the options ("sao" finds "São Paulo")
+const searchKey = (text) => {
+  const value = String(text === undefined || text === null ? '' : text).toLowerCase().trim()
+  return typeof value.normalize === 'function' ? value.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : value
+}
+
+// Options of a field that depends on another one: `{ "<parent value>": [{ value, label }] }`
+const isGroupedOptions = (options) => !!options && typeof options === 'object' && !Array.isArray(options)
+
+// Field types whose value can choose the options of another field
+const PARENT_TYPES = ['text', 'number', 'email', 'tel', 'date', 'textarea', 'select', 'radio']
+
 // Errors shown only when the user tries to move on (the wait is not the user's mistake)
 const WAIT_KEYS = ['uploading', 'lookupPending']
 
@@ -570,12 +639,75 @@ export default {
           title: step && typeof step.title === 'string' ? step.title : '',
           fields: this.normalizeFields(step && step.fields)
         }))
-        .filter((step) => step.fields.length > 0)
 
-      return steps.length > 0 ? steps : [{ title: '', fields: [] }]
+      // A field whose options depend on another one needs that field before it (same or earlier step,
+      // holding a single value); otherwise it could never be answered and is ignored
+      const parents = {}
+      steps.forEach((step) => {
+        step.fields = step.fields.filter((field) => {
+          if (this.isDependent(field) && !parents[field.dependsOn]) {
+            return false
+          }
+          if (PARENT_TYPES.indexOf(field.type) !== -1) {
+            parents[field.id] = true
+          }
+          return true
+        })
+      })
+
+      const validSteps = steps.filter((step) => step.fields.length > 0)
+
+      return validSteps.length > 0 ? validSteps : [{ title: '', fields: [] }]
     },
     formFields: function() {
       return this.formSteps.reduce((all, step) => all.concat(step.fields), [])
+    },
+    fieldsById: function() {
+      return this.formFields.reduce((result, field) => {
+        result[field.id] = field
+        return result
+      }, {})
+    },
+    // Options each field shows now and, for dependent fields, the parent value that chose them. Resolved
+    // once per change, in the fields order (a parent always comes before its dependents), so long lists
+    // and chains (state → city → district) are not filtered again for every option rendered
+    optionsState: function() {
+      const options = {}
+      const parents = {}
+      this.formFields.forEach((field) => {
+        if (!this.isDependent(field)) {
+          options[field.id] = Array.isArray(field.options) ? field.options : []
+          return
+        }
+        const parent = this.fieldsById[field.dependsOn]
+        const parentValue = parent ? this.resolvedValue(parent, options) : ''
+        const group = parentValue !== '' && Object.prototype.hasOwnProperty.call(field.options, parentValue)
+          ? field.options[parentValue]
+          : null
+        parents[field.id] = parentValue
+        options[field.id] = Array.isArray(group) ? group : []
+      })
+      return { options, parents }
+    },
+    // Value of the parent of each dependent field; the dependent field is cleared when it changes
+    parentValues: function() {
+      return this.optionsState.parents
+    },
+    // Options shown by the searchable select that has the focus (only one list is open at a time)
+    listState: function() {
+      const field = this.fieldsById[this.openListId]
+      if (!field || !this.isSearchable(field)) {
+        return { fieldId: '', matches: [], visible: [], activeIndex: -1, selectedValue: '' }
+      }
+      const matches = this.matchingOptions(field)
+      const visible = matches.slice(0, MAX_VISIBLE_OPTIONS)
+      return {
+        fieldId: field.id,
+        matches,
+        visible,
+        activeIndex: this.activeOptionIndex < visible.length ? this.activeOptionIndex : -1,
+        selectedValue: this.effectiveValue(field)
+      }
     },
     fieldsSignature: function() {
       // Changes whenever a field is added/removed/retyped or file fields become (un)available
@@ -583,7 +715,8 @@ export default {
         `#${typeof this.onUploadFile === 'function'}`
     },
     // Usable `showWhen` of each field by id. Invalid conditions, including the ones in a cycle
-    // (A -> B -> A), are left out so the field is always shown and visibility never loops
+    // (A -> B -> A, also through `dependsOn`), are left out so the field is always shown and visibility
+    // never loops
     fieldConditions: function() {
       const fieldsById = Object.create(null)
       this.formFields.forEach((field) => {
@@ -599,15 +732,28 @@ export default {
         }
       })
 
+      // Fields a field needs to be shown: its `showWhen` source and the field its options depend on
+      const needs = (id) => {
+        const field = fieldsById[id]
+        const ids = candidates[id] ? [String(candidates[id].source.id)] : []
+        if (field && this.isDependent(field) && fieldsById[field.dependsOn]) {
+          ids.push(String(field.dependsOn))
+        }
+        return ids
+      }
+
       const inCycle = (id) => {
         const seen = Object.create(null)
-        let current = candidates[id] && String(candidates[id].source.id)
-        while (current && !seen[current]) {
+        const pending = needs(id)
+        while (pending.length > 0) {
+          const current = pending.pop()
           if (current === String(id)) {
             return true
           }
-          seen[current] = true
-          current = candidates[current] && String(candidates[current].source.id)
+          if (!seen[current]) {
+            seen[current] = true
+            pending.push.apply(pending, needs(current))
+          }
         }
         return false
       }
@@ -620,7 +766,8 @@ export default {
       }, Object.create(null))
     },
     // Visibility by field id: a conditional field is shown when its source is shown and holds one of the
-    // values (a checkbox source when any selected value is one of them)
+    // values (a checkbox source when any selected value is one of them). A field whose options depend on
+    // another one (`dependsOn`) is hidden with it, since it could never be answered
     fieldVisibility: function() {
       const conditions = this.fieldConditions
       const visibility = Object.create(null)
@@ -632,6 +779,10 @@ export default {
             const value = this.effectiveValue(condition.source)
             visible = isVisible(condition.source) &&
               (Array.isArray(value) ? value : [value]).some((item) => condition.values.indexOf(String(item)) !== -1)
+          }
+          const parent = this.isDependent(field) && this.fieldsById[field.dependsOn]
+          if (visible && parent) {
+            visible = isVisible(parent)
           }
           visibility[field.id] = visible
         }
@@ -721,6 +872,15 @@ export default {
           this.$set(this.attempted, field.id, false)
         }
       })
+    },
+    parentValues: function(values) {
+      const previous = this.lastParentValues || {}
+      Object.keys(values).forEach((fieldId) => {
+        if (fieldId in previous && !sameValue(previous[fieldId], values[fieldId])) {
+          this.resetDependentField(this.fieldsById[fieldId])
+        }
+      })
+      this.lastParentValues = values
     }
   },
   beforeDestroy: function() {
@@ -733,6 +893,10 @@ export default {
       touched: {},
       attempted: {},
       uploads: {},
+      // Text typed in each searchable select; null while it shows the chosen option
+      searchTexts: {},
+      openListId: '',
+      activeOptionIndex: -1,
       lookups: {},
       currentStep: 0,
       submitted: false,
@@ -748,6 +912,7 @@ export default {
       const touched = {}
       const attempted = {}
       const uploads = {}
+      const searchTexts = {}
       const lookups = {}
 
       this.abortLookups()
@@ -760,6 +925,7 @@ export default {
         touched[field.id] = false
         attempted[field.id] = false
         uploads[field.id] = emptyUpload()
+        searchTexts[field.id] = null
         lookups[field.id] = emptyLookup()
       })
 
@@ -768,6 +934,11 @@ export default {
       this.touched = touched
       this.attempted = attempted
       this.uploads = uploads
+      this.searchTexts = searchTexts
+      this.openListId = ''
+      this.activeOptionIndex = -1
+      // Pre-filled values are the starting point: only later changes of a parent clear its dependents
+      this.lastParentValues = this.parentValues
       this.lookups = lookups
       this.currentStep = this.firstVisibleStep()
       this.submitted = false
@@ -827,6 +998,9 @@ export default {
         if (!this.uploads[field.id]) {
           this.$set(this.uploads, field.id, emptyUpload())
         }
+        if (!(field.id in this.searchTexts) || idsChanged) {
+          this.$set(this.searchTexts, field.id, null)
+        }
         // A retyped field forgets its lookup (and a late answer of it is ignored)
         if (!this.lookups[field.id] || (previousType && previousType !== kind)) {
           this.abortLookup(field.id)
@@ -852,7 +1026,7 @@ export default {
           .map(prefillText)
           .filter((item) => item !== '')
         // Only existing options, in the options order
-        return (field.options || [])
+        return this.allOptionsOf(field)
           .filter((option) => wanted.indexOf(String(option.value)) !== -1)
           .map((option) => option.value)
       }
@@ -867,7 +1041,9 @@ export default {
       }
 
       if (field.type === 'select' || field.type === 'radio') {
-        const option = (field.options || []).find((item) => String(item.value) === text)
+        // A dependent field accepts an option of any group: it counts only while it belongs to the
+        // group of the parent value (e.g. a pre-filled city of the pre-filled state)
+        const option = this.allOptionsOf(field).find((item) => String(item.value) === text)
         return option ? option.value : ''
       }
 
@@ -893,13 +1069,13 @@ export default {
       }
 
       if (field.type === 'checkbox') {
-        return (field.options || [])
+        return this.optionsOf(field)
           .filter((option) => Array.isArray(value) && value.indexOf(option.value) !== -1)
           .map((option) => option.value)
       }
 
       if (field.type === 'select' || field.type === 'radio') {
-        return (field.options || []).some((option) => option.value === value) ? value : ''
+        return this.optionsOf(field).some((option) => option.value === value) ? value : ''
       }
 
       return value === undefined || value === null ? '' : value
@@ -936,6 +1112,10 @@ export default {
         // Skips authoring mistakes that would otherwise block the submission or mix values up
         .filter((field) => {
           if (OPTION_TYPES.indexOf(field.type) !== -1) {
+            // Grouped options only make sense with the field they depend on (checked in formSteps)
+            if (isGroupedOptions(field.options)) {
+              return this.isDependent(field)
+            }
             return Array.isArray(field.options) && field.options.length > 0
           }
           if (field.type === 'file') {
@@ -943,6 +1123,232 @@ export default {
           }
           return true
         })
+    },
+    // Option field whose `options` are grouped by the value of the field named in `dependsOn`
+    isDependent: function(field) {
+      return OPTION_TYPES.indexOf(field.type) !== -1 && isGroupedOptions(field.options) &&
+        typeof field.dependsOn === 'string' && field.dependsOn !== '' && field.dependsOn !== field.id
+    },
+    isSearchable: function(field) {
+      return field.type === 'select' && field.searchable === true
+    },
+    parentValue: function(field) {
+      return this.optionsState.parents[field.id] || ''
+    },
+    // Value of a parent as it chooses the options of its dependents: only a valid value counts (e.g. a
+    // CEP still incomplete does not). Option fields are checked against the options already resolved,
+    // since reading optionsOf here would read optionsState while it is being computed
+    resolvedValue: function(parent, resolvedOptions) {
+      if (OPTION_TYPES.indexOf(parent.type) !== -1) {
+        const value = this.formValues[parent.id]
+        const isOption = (resolvedOptions[parent.id] || []).some((option) => option.value === value)
+        return isOption ? String(value).trim() : ''
+      }
+      const value = this.effectiveValue(parent)
+      return this.isEmptyValue(parent, value) || this.validateField(parent) ? '' : String(value).trim()
+    },
+    // Options the user can choose now: the group of the parent value for a dependent field
+    optionsOf: function(field) {
+      const resolved = this.optionsState.options[field.id]
+      if (resolved && this.fieldsById[field.id] === field) {
+        return resolved
+      }
+      return !this.isDependent(field) && Array.isArray(field.options) ? field.options : []
+    },
+    allOptionsOf: function(field) {
+      if (!this.isDependent(field)) {
+        return Array.isArray(field.options) ? field.options : []
+      }
+      return Object.keys(field.options).reduce(
+        (all, key) => all.concat(Array.isArray(field.options[key]) ? field.options[key] : []),
+        []
+      )
+    },
+    isWaitingParent: function(field) {
+      return this.isDependent(field) && this.parentValue(field) === ''
+    },
+    // Disabled while the parent has no value, or when the flow sent no option for the chosen one
+    hasOptionsToChoose: function(field) {
+      return this.optionsOf(field).length > 0
+    },
+    optionsNotice: function(field) {
+      if (!this.isDependent(field) || this.hasOptionsToChoose(field)) {
+        return ''
+      }
+      if (this.isWaitingParent(field)) {
+        const parent = this.fieldsById[field.dependsOn]
+        return this.message(field, 'dependsOn', { field: parent.label })
+      }
+      return this.message(field, 'noOptions')
+    },
+    optionsNoticeId: function(fieldId) {
+      return `${this.fieldInputId(fieldId)}-options`
+    },
+    // The parent changed: the previous answer is cleared (unless it is still an option) and the field
+    // starts over, without showing errors for an answer the user has not given yet
+    resetDependentField: function(field) {
+      if (!field) {
+        return
+      }
+      const value = this.effectiveValue(field)
+      if (!sameValue(value, this.formValues[field.id])) {
+        this.$set(this.formValues, field.id, value)
+        this.$set(this.touched, field.id, false)
+        this.$set(this.attempted, field.id, false)
+        this.$set(this.prefilled, field.id, false)
+      }
+      if (this.searchTexts[field.id] !== null && this.searchTexts[field.id] !== undefined) {
+        this.$set(this.searchTexts, field.id, null)
+      }
+    },
+    listboxId: function(fieldId) {
+      return `${this.fieldInputId(fieldId)}-listbox`
+    },
+    comboboxOptionId: function(fieldId, index) {
+      return `${this.fieldInputId(fieldId)}-option-${index}`
+    },
+    isListOpen: function(field) {
+      return this.openListId === field.id && !this.hideOptions && !this.submitted && this.hasOptionsToChoose(field)
+    },
+    activeOptionId: function(field) {
+      return this.isListOpen(field) && this.listState.activeIndex !== -1
+        ? this.comboboxOptionId(field.id, this.listState.activeIndex)
+        : undefined
+    },
+    selectedOption: function(field) {
+      const value = this.effectiveValue(field)
+      return this.optionsOf(field).find((option) => option.value === value) || null
+    },
+    comboboxText: function(field) {
+      const text = this.searchTexts[field.id]
+      if (text !== null && text !== undefined) {
+        return text
+      }
+      const option = this.selectedOption(field)
+      return option ? option.label : ''
+    },
+    // Options whose label contains the typed text: the exact label first, then the ones starting with
+    // the text and then the others, each in the options order
+    matchingOptions: function(field) {
+      const options = this.optionsOf(field)
+      const query = searchKey(this.searchTexts[field.id])
+      if (!query) {
+        return options
+      }
+      const exact = []
+      const starting = []
+      const containing = []
+      options.forEach((option) => {
+        const label = searchKey(option.label)
+        const position = label.indexOf(query)
+        if (label === query) {
+          exact.push(option)
+        } else if (position === 0) {
+          starting.push(option)
+        } else if (position > 0) {
+          containing.push(option)
+        }
+      })
+      return exact.concat(starting, containing)
+    },
+    comboboxStatus: function(field) {
+      const { matches, visible } = this.listState
+      if (matches.length === 0) {
+        return this.message(field, 'noResults')
+      }
+      if (visible.length < matches.length) {
+        return `Mostrando ${visible.length} de ${matches.length}. Digite para filtrar.`
+      }
+      return matches.length === 1 ? '1 opção' : `${matches.length} opções`
+    },
+    openList: function(field) {
+      if (this.hideOptions || this.submitted || !this.hasOptionsToChoose(field)) {
+        return
+      }
+      if (this.openListId !== field.id) {
+        this.openListId = field.id
+        this.activeOptionIndex = -1
+      }
+    },
+    closeList: function() {
+      this.openListId = ''
+      this.activeOptionIndex = -1
+    },
+    onComboboxFocus: function(field, event) {
+      this.openList(field)
+      // The chosen option is selected so typing starts a new search
+      if (event && event.target && typeof event.target.select === 'function' && event.target.value) {
+        event.target.select()
+      }
+    },
+    onSearchInput: function(field, event) {
+      const text = event.target.value
+      this.$set(this.searchTexts, field.id, text)
+      // An exact label (ignoring case and accents) is chosen right away; anything else is only a search
+      const query = searchKey(text)
+      const exact = query ? this.optionsOf(field).filter((option) => searchKey(option.label) === query) : []
+      this.$set(this.formValues, field.id, exact.length === 1 ? exact[0].value : '')
+      this.openList(field)
+      this.activeOptionIndex = query ? 0 : -1
+    },
+    chooseOption: function(field, option) {
+      if (this.hideOptions || this.submitted) {
+        return
+      }
+      this.$set(this.formValues, field.id, option.value)
+      this.$set(this.searchTexts, field.id, null)
+      this.touch(field)
+      this.closeList()
+    },
+    onComboboxBlur: function(field) {
+      const text = this.searchTexts[field.id]
+      // An emptied search clears the answer; a chosen option shows its label again
+      if (text !== null && text !== undefined && (text.trim() === '' || this.selectedOption(field))) {
+        this.$set(this.searchTexts, field.id, null)
+      }
+      if (this.openListId === field.id) {
+        this.closeList()
+      }
+      this.touch(field)
+    },
+    moveActiveOption: function(field, step) {
+      const count = this.listState.visible.length
+      if (count === 0) {
+        return
+      }
+      const current = this.listState.activeIndex
+      this.activeOptionIndex = current === -1
+        ? (step > 0 ? 0 : count - 1)
+        : (current + step + count) % count
+      this.$nextTick(() => {
+        const element = document.getElementById(this.comboboxOptionId(field.id, this.activeOptionIndex))
+        if (element && typeof element.scrollIntoView === 'function') {
+          element.scrollIntoView({ block: 'nearest' })
+        }
+      })
+    },
+    onComboboxKeydown: function(field, event) {
+      const isOpen = this.isListOpen(field)
+
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault()
+        if (!isOpen) {
+          this.openList(field)
+          return
+        }
+        this.moveActiveOption(field, event.key === 'ArrowDown' ? 1 : -1)
+      } else if (event.key === 'Enter' && isOpen) {
+        const { visible, activeIndex } = this.listState
+        const option = visible[activeIndex] || (visible.length === 1 ? visible[0] : null)
+        // Enter chooses the highlighted option instead of sending the form
+        if (option) {
+          event.preventDefault()
+          this.chooseOption(field, option)
+        }
+      } else if (event.key === 'Escape' && isOpen) {
+        event.preventDefault()
+        this.closeList()
+      }
     },
     isOptionGroup: function(field) {
       return field.type === 'radio' || field.type === 'checkbox'
@@ -1050,6 +1456,9 @@ export default {
       if (field.helpText) {
         ids.push(this.helpId(field.id))
       }
+      if (this.optionsNotice(field)) {
+        ids.push(this.optionsNoticeId(field.id))
+      }
       if (this.showError(field)) {
         ids.push(this.errorId(field.id))
       }
@@ -1122,6 +1531,19 @@ export default {
       }
 
       const isEmpty = this.isEmptyValue(field, value)
+
+      if (this.isSearchable(field) && isEmpty) {
+        const text = this.searchTexts[field.id]
+        // Typed text that is not one of the options is not an answer
+        if (text !== null && text !== undefined && text.trim() !== '') {
+          return this.error(field, 'option')
+        }
+      }
+
+      // A dependent field without options for the chosen parent value cannot be answered: it is sent empty
+      if (isEmpty && this.isDependent(field) && !this.isWaitingParent(field) && !this.hasOptionsToChoose(field)) {
+        return null
+      }
 
       if (isEmpty) {
         return field.required ? this.error(field, 'required') : null
@@ -1431,6 +1853,10 @@ export default {
       this.$nextTick(() => this.focusField(field))
     },
     focusField: function(field) {
+      // A dependent field waiting for its parent cannot be filled: the parent is the one to answer first
+      while (this.isDependent(field) && this.isWaitingParent(field) && this.fieldsById[field.dependsOn]) {
+        field = this.fieldsById[field.dependsOn]
+      }
       let id = this.isOptionGroup(field) ? this.optionInputId(field.id, 0) : this.fieldInputId(field.id)
       // With the limit reached the picker is disabled: focus the remove button of a failed file, never
       // the one of a file still uploading (a second Enter would remove it); otherwise the error message,
@@ -1660,8 +2086,14 @@ export default {
           filled[target.field.id] = value
           this.$set(this.formValues, target.field.id, value)
           this.$set(this.touched, target.field.id, true)
-          if (!this.validateFieldValue(target.field)) {
-            locked.push(target.field.id)
+        })
+        // Checked once every field is filled: the options of a dependent field (e.g. city) follow the
+        // parent (e.g. state) filled by the same answer. A value that is not one of its options stays free
+        config.targets.forEach((target) => {
+          const targetId = target.field.id
+          if (Object.prototype.hasOwnProperty.call(filled, targetId) && !this.validateFieldValue(target.field) &&
+            sameValue(this.effectiveValue(target.field), filled[targetId])) {
+            locked.push(targetId)
           }
         })
       }
@@ -1771,7 +2203,7 @@ export default {
       }
 
       if (field.type === 'checkbox') {
-        return (field.options || [])
+        return this.optionsOf(field)
           .filter((option) => value.indexOf(option.value) !== -1)
           .map((option) => option.label)
           .join(', ')
@@ -1781,7 +2213,7 @@ export default {
         return value
       }
 
-      const selectedOption = (field.options || []).find(
+      const selectedOption = this.optionsOf(field).find(
         (option) => option.value === value
       )
       return selectedOption ? selectedOption.label : ''
@@ -1940,6 +2372,74 @@ export default {
 
       textarea.form-control {
         resize: vertical;
+      }
+
+      select.form-control:disabled,
+      .native-form-combobox-input:disabled {
+        background-color: $vue-cotton;
+        cursor: not-allowed;
+      }
+
+      .native-form-combobox {
+        position: relative;
+        white-space: normal;
+
+        // Chevron that tells it is a list, drawn on the right of the input
+        &::after {
+          content: '';
+          position: absolute;
+          top: 13px;
+          right: 12px;
+          width: 6px;
+          height: 6px;
+          border-right: 2px solid $vue-gray;
+          border-bottom: 2px solid $vue-gray;
+          transform: rotate(45deg);
+          pointer-events: none;
+        }
+
+        .native-form-combobox-input {
+          padding-right: 30px;
+        }
+
+        // In the flow of the bubble (not floating), so the conversation scroll reaches every option
+        .native-form-combobox-list {
+          max-height: 216px;
+          overflow-y: auto;
+          margin: 4px 0 0;
+          padding: 4px 0;
+          list-style: none;
+          border: 1px solid $color-content-ghost;
+          border-radius: $soft-round;
+          background-color: $vue-white;
+          color: $vue-dark-gray;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .native-form-combobox-option {
+          min-height: 36px;
+          padding: 8px 10px;
+          box-sizing: border-box;
+          font-size: 14px;
+          line-height: 20px;
+          cursor: pointer;
+
+          &.is-selected {
+            font-weight: 600;
+          }
+
+          &.is-active,
+          &:hover {
+            background-color: $vue-cotton;
+          }
+        }
+
+        .native-form-combobox-status {
+          display: block;
+          margin-top: 4px;
+          font-size: 12px;
+          color: $vue-gray;
+        }
       }
 
       // Error rule comes after the success one so it wins if both ever apply
