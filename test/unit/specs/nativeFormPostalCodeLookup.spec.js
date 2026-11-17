@@ -270,6 +270,26 @@ describe('NativeForm - postal code lookup', () => {
     expect(vm.formValues.rua).to.equal('Praça da Sé')
   })
 
+  it('does not look up a hidden postal code and unlocks the address when the postal code is hidden', async () => {
+    const { calls, fetch } = controlledFetch()
+    global.fetch = fetch
+    const tipo = { id: 'tipo', label: 'Tipo', type: 'select', value: 'outro', options: [{ value: 'novo', label: 'Novo' }, { value: 'outro', label: 'Outro' }] }
+    const withCondition = (cep) => [tipo].concat(addressFields(VIACEP, Object.assign({ showWhen: { field: 'tipo', equals: 'novo' } }, cep)))
+
+    createForm(withCondition({ value: '01001000' }))
+    expect(calls).to.have.length(0)
+
+    const { vm } = createForm(withCondition())
+    vm.formValues.tipo = 'novo'
+    type(vm, 'cep', '01001000')
+    calls[0].resolve(jsonResponse(VIACEP_SE))
+    await flush()
+    expect(vm.isLookupLocked(field(vm, 'rua'))).to.equal(true)
+
+    vm.formValues.tipo = 'outro'
+    expect(vm.isLookupLocked(field(vm, 'rua'))).to.equal(false)
+  })
+
   it('ignores lookups that are not https, fields without mask and read-only cards; pre-filled values are looked up', async () => {
     const { calls, fetch } = controlledFetch()
     global.fetch = fetch
