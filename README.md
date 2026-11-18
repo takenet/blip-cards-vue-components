@@ -148,11 +148,14 @@ translation: {
     direction: 'received' // optional, 'received' | 'sent'
   }), // or null when there is no translation for the message
   onTranslate: (fullDocument) => {}, // optional, may return a Promise; called by the "Traduzir"/"Tentar novamente" actions
+  onToggleOriginal: (fullDocument, showingOriginal) => {}, // optional; called when the footer action switches between the translation and the original (state "done")
   canTranslate: (fullDocument) => true // optional, defaults to `position === 'left'` (received messages)
 }
 ```
 
 `fullDocument` is the original message envelope (`id`, `type`, `content`, ...).
+
+`onToggleOriginal` is called only when the footer action is clicked in the `done` state, after the local toggle was applied, in both directions. `showingOriginal` is `true` when the bubble switched to the original content (for sent messages, the content actually sent) and `false` when it switched back to the translation. It is not called in the `translate`, `pending` or `error` states (those use `onTranslate` or nothing). Errors thrown or promises rejected by the callback are swallowed by the cards.
 
 | Field returned by `getTranslation` | Replaces (while the translation is shown) |
 |---|---|

@@ -384,9 +384,31 @@ export default {
         // The host reports failures through getTranslation (status 'error').
       }
     },
+    notifyTranslationToggle(showingOriginal) {
+      if (
+        !this.translation ||
+        typeof this.translation.onToggleOriginal !== 'function'
+      ) {
+        return
+      }
+
+      try {
+        const pending = this.translation.onToggleOriginal(
+          this.fullDocument,
+          showingOriginal
+        )
+        if (pending && typeof pending.catch === 'function') {
+          pending.catch(() => {})
+        }
+      } catch (e) {
+        // Host callback failures must not affect the toggle.
+      }
+    },
     onTranslationAction() {
       if (this.translationState === TranslationStates.DONE) {
+        const showingOriginal = !this.translationShowOriginal
         this.toggleTranslationOriginal()
+        this.notifyTranslationToggle(showingOriginal)
       } else if (
         this.translationState === TranslationStates.TRANSLATE ||
         this.translationState === TranslationStates.ERROR
