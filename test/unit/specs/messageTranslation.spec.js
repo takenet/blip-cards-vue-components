@@ -306,6 +306,119 @@ describe('messageTranslation', () => {
       expect(vm.translationShowOriginalOverride).to.equal(null)
     })
 
+    describe('onTranslationAction', () => {
+      const buildActionVm = (state, translation) => {
+        const vm = {
+          translation,
+          fullDocument,
+          translationState: state,
+          translationShowOriginalOverride: null,
+          get translationShowOriginal() {
+            return computed.translationShowOriginal.call(this)
+          },
+          get translationGlobalShowOriginal() {
+            return !!(this.translation && this.translation.showOriginal)
+          }
+        }
+        Object.keys(methods).forEach((name) => {
+          vm[name] = methods[name]
+        })
+        return vm
+      }
+
+      it('notifies the host with the resulting state in both directions when done', () => {
+        const calls = []
+        const vm = buildActionVm(
+          'done',
+          buildTranslation({
+            onToggleOriginal: (doc, showingOriginal) =>
+              calls.push([doc, showingOriginal])
+          })
+        )
+
+        vm.onTranslationAction()
+        vm.onTranslationAction()
+
+        expect(calls).to.deep.equal([
+          [fullDocument, true],
+          [fullDocument, false]
+        ])
+        expect(calls[0][0]).to.equal(fullDocument)
+      })
+
+      it('reports the effective state when showOriginal is global', () => {
+        const calls = []
+        const vm = buildActionVm(
+          'done',
+          buildTranslation({
+            showOriginal: true,
+            onToggleOriginal: (doc, showingOriginal) => calls.push(showingOriginal)
+          })
+        )
+
+        vm.onTranslationAction()
+
+        expect(calls).to.deep.equal([false])
+      })
+
+      it('toggles normally without onToggleOriginal', () => {
+        const vm = buildActionVm('done', buildTranslation())
+
+        vm.onTranslationAction()
+
+        expect(vm.translationShowOriginalOverride).to.equal(true)
+      })
+
+      it('toggles even when onToggleOriginal throws or rejects', () => {
+        const throwing = buildActionVm(
+          'done',
+          buildTranslation({
+            onToggleOriginal: () => {
+              throw new Error('host failure')
+            }
+          })
+        )
+        let swallowed = false
+        const rejecting = buildActionVm(
+          'done',
+          buildTranslation({
+            // Promise-like to keep the spec independent of a Promise polyfill
+            onToggleOriginal: () => ({
+              catch: (handler) => {
+                handler(new Error('host failure'))
+                swallowed = true
+              }
+            })
+          })
+        )
+
+        expect(() => throwing.onTranslationAction()).to.not.throw()
+        expect(() => rejecting.onTranslationAction()).to.not.throw()
+        expect(swallowed).to.equal(true)
+        expect(throwing.translationShowOriginalOverride).to.equal(true)
+        expect(rejecting.translationShowOriginalOverride).to.equal(true)
+      })
+
+      it('only calls onTranslate in the translate and error states', () => {
+        ;['translate', 'error', 'pending'].forEach((state) => {
+          let translated = 0
+          let toggled = 0
+          const vm = buildActionVm(
+            state,
+            buildTranslation({
+              onTranslate: () => translated++,
+              onToggleOriginal: () => toggled++
+            })
+          )
+
+          vm.onTranslationAction()
+
+          expect(translated).to.equal(state === 'pending' ? 0 : 1)
+          expect(toggled).to.equal(0)
+        })
+      })
+    })
+
     it('renders the pending label as the (disabled) action', () => {
       const vm = {
         translation: buildTranslation(),
