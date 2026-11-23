@@ -1,7 +1,7 @@
 <template>
   <div class="standby-card" :class="'standby-card--' + innerPosition">
     <blip-card
-      v-if="innerDocument"
+      v-if="innerDocument && !renderFailed"
       :document="innerDocument"
       :position="innerPosition"
       :date="displayDate"
@@ -85,6 +85,18 @@ export default {
       default: 'Mensagem externa'
     }
   },
+  data() {
+    return { renderFailed: false }
+  },
+  watch: {
+    document() {
+      this.renderFailed = false
+    }
+  },
+  errorCaptured(_error, vm, info) {
+    // A failed inner render leaves an empty card, so the absolute icon would float over the previous message
+    if (info === 'render') this.renderFailed = true
+  },
   computed: {
     direction() {
       return getStandbyDirection(this.document)
@@ -98,7 +110,7 @@ export default {
       return getStandbyInnerDocument(this.document)
     },
     showIcon() {
-      return Boolean(this.innerDocument) && this.innerPosition === 'right'
+      return Boolean(this.innerDocument) && !this.renderFailed && this.innerPosition === 'right'
     },
     isTemplate() {
       const inner = this.innerDocument

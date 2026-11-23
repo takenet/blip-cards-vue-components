@@ -9,5 +9,7 @@ export const MessageTypesConstants = {
   BLIP_EXTERNAL: 'application/vnd.lime.external+json',
   MULTI_PARTNER_CONVERSATION: 'application/vnd.iris.multi-partner-conversation+json',
   MULTI_PARTNER_CONVERSATION_STANDBY: 'application/vnd.iris.multi-partner-conversation-standby+json',
-  MULTI_PARTNER_CONVERSATION_TEMPLATE: 'application/vnd.iris.multi-partner-conversation-template+json'
+  MULTI_PARTNER_CONVERSATION_TEMPLATE: 'application/vnd.iris.multi-partner-conversation-template+json',
+  MULTI_PARTNER_CONVERSATION_CONTEXT: 'application/vnd.iris.multi-partner-conversation-context+json',
+  MULTI_PARTNER_CONVERSATION_CONTROL_PASSED: 'application/vnd.iris.multi-partner-conversation-control-passed+json'
 }

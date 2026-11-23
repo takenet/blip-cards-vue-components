@@ -111,6 +111,33 @@ describe('standby utils', () => {
       })
     })
 
+    it('defaults missing template components so the template always renders', () => {
+      const content = buildOutboundStandby().content
+      content.content.value.content = {
+        type: 'application/vnd.iris.multi-partner-conversation-template+json',
+        value: {
+          message: { template: { language: { code: 'pt_BR' } } },
+          template: { name: 'pingmkt', components: [{ type: 'BODY', text: 'Ping' }] }
+        }
+      }
+
+      const inner = getStandbyInnerDocument(content).content
+      expect(inner.template.components).to.deep.equal([])
+      expect(inner.template.name).to.equal('pingmkt')
+      expect(inner.templateContent.components).to.deep.equal([{ type: 'BODY', text: 'Ping' }])
+    })
+
+    it('adds an empty BODY when the template definition has none', () => {
+      const content = buildOutboundStandby().content
+      content.content.value.content = {
+        type: 'application/vnd.iris.multi-partner-conversation-template+json',
+        value: { message: { template: { name: 'tpl' } }, template: { name: 'tpl' } }
+      }
+
+      const inner = getStandbyInnerDocument(content).content
+      expect(inner.templateContent.components).to.deep.equal([{ type: 'BODY', text: '' }])
+    })
+
     it('returns undefined for an incomplete template container', () => {
       const content = buildOutboundStandby().content
       content.content.value.content = {

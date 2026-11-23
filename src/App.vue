@@ -228,6 +228,14 @@
         >
           SEND Standby {{ example.label }}
         </button>
+        <button
+          class="button"
+          v-for="example in aiContextExamples"
+          :key="example.label"
+          @click="sendAiContext(example)"
+        >
+          SEND AI context {{ example.label }}
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -2041,6 +2049,27 @@ export default {
       })
       this.send()
     },
+    sendAiContext: function({ containerType, value, metadata }) {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.iris.multi-partner-conversation+json',
+        content: {
+          direction: 'outbound',
+          sender: 'bot',
+          recipient: '5531999998888',
+          source: 'messages',
+          documentContainer: { type: containerType, value }
+        },
+        metadata: {
+          '#wa.timestamp': '1710000005',
+          '#wa.multiPartner.IsReadOnly': 'true',
+          ...metadata
+        }
+      })
+      this.send()
+    },
     sendReactionToText: function() {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -3217,6 +3246,44 @@ export default {
         messageDeleted: 'Esta mensagem foi excluída.'
       },
       isExternalMessage: false,
+      aiContextExamples: [
+        {
+          label: 'summary (long)',
+          containerType: 'application/vnd.iris.multi-partner-conversation-context+json',
+          metadata: { '#wa.multiPartner.IsContextIA': 'true' },
+          value: {
+            type: 'summary',
+            summary: {
+              text: 'The customer said they want to understand how to negotiate a debt. No amounts, conditions or deadlines were informed yet. Next step: identify the debt and present the available options.'
+            }
+          }
+        },
+        {
+          label: 'summary (short)',
+          containerType: 'application/vnd.iris.multi-partner-conversation-context+json',
+          metadata: { '#wa.multiPartner.IsContextIA': 'true' },
+          value: { type: 'summary', summary: { text: 'The customer asked for a second copy of the invoice.' } }
+        },
+        {
+          label: 'inside control_passed',
+          containerType: 'application/vnd.iris.multi-partner-conversation-control-passed+json',
+          metadata: { '#wa.multiPartner.IsContextIA': 'true' },
+          value: {
+            previous_owner_role: 'ai_agent',
+            new_owner_role: 'escalation',
+            conversation_context: {
+              type: 'summary',
+              summary: { text: 'The customer wants to cancel the subscription and was already offered a discount.' }
+            }
+          }
+        },
+        {
+          label: 'without summary text (unsupported)',
+          containerType: 'application/vnd.iris.multi-partner-conversation-context+json',
+          metadata: {},
+          value: { type: 'summary', summary: {} }
+        }
+      ],
       standbyExamples: [
         {
           label: 'text (inbound)',
