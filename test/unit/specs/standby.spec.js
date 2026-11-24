@@ -138,6 +138,18 @@ describe('standby utils', () => {
       expect(inner.templateContent.components).to.deep.equal([{ type: 'BODY', text: '' }])
     })
 
+    it('appends an empty BODY after the header when the definition has none', () => {
+      const header = { type: 'HEADER', format: 'IMAGE' }
+      const content = buildOutboundStandby().content
+      content.content.value.content = {
+        type: 'application/vnd.iris.multi-partner-conversation-template+json',
+        value: { message: { template: { name: 'tpl' } }, template: { name: 'tpl', components: [header] } }
+      }
+
+      const inner = getStandbyInnerDocument(content).content
+      expect(inner.templateContent.components).to.deep.equal([header, { type: 'BODY', text: '' }])
+    })
+
     it('returns undefined for an incomplete template container', () => {
       const content = buildOutboundStandby().content
       content.content.value.content = {

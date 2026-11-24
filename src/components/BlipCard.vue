@@ -762,6 +762,7 @@
         <ai-context-card
           v-else-if="isAiContextMessage"
           class="blip-card"
+          @updated="updatedPhotoMargin"
           :status="status"
           :position="position"
           :document="editableDocument.content"
@@ -967,9 +968,8 @@ export default {
         })
         bubbleHeight -= 10 // Time height
       } else {
-        bubbleHeight = element.querySelector('.bubble')
-          ? element.querySelector('.bubble').offsetHeight
-          : 0
+        const bubble = element.querySelector('.bubble') || element.querySelector('.ai-context__card')
+        bubbleHeight = bubble ? bubble.offsetHeight : 0
       }
       const photoHeight = 25
 

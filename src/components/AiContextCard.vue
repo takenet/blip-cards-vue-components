@@ -26,6 +26,7 @@
         </div>
       </div>
       <p
+        :id="textId"
         ref="text"
         class="ai-context__text"
         :class="{ 'ai-context__text--collapsed': !expanded }"
@@ -36,6 +37,8 @@
           variant="text"
           size="short"
           color="primary"
+          :aria-expanded="expanded ? 'true' : 'false'"
+          :aria-controls="textId"
           :icon-right="expanded ? 'arrow-up' : 'arrow-down'"
           @click="expanded = !expanded"
         >{{ expanded ? collapseText : readMoreText }}</bds-button>
@@ -57,7 +60,7 @@
 import { default as base } from '../mixins/baseComponent.js'
 import { getAiContextText } from '../utils/aiContext.js'
 
-let gradientCount = 0
+let instanceCount = 0
 
 export default {
   name: 'ai-context-card',
@@ -89,10 +92,13 @@ export default {
     }
   },
   data() {
+    const id = ++instanceCount
+
     return {
       expanded: false,
       overflowing: undefined,
-      gradientId: `ai-context-gradient-${++gradientCount}`
+      gradientId: `ai-context-gradient-${id}`,
+      textId: `ai-context-text-${id}`
     }
   },
   computed: {
@@ -107,23 +113,54 @@ export default {
     text() {
       this.expanded = false
       this.$nextTick(this.measure)
+    },
+    expanded() {
+      this.$nextTick(() => this.$emit('updated'))
     }
   },
   mounted() {
+    if (typeof window.ResizeObserver !== 'undefined') {
+      this.resizeObserver = new window.ResizeObserver(() => {
+        this.measure()
+        this.$emit('updated')
+      })
+      this.resizeObserver.observe(this.$refs.text)
+    }
     this.measure()
   },
+  beforeDestroy() {
+    if (this.resizeObserver) this.resizeObserver.disconnect()
+  },
   methods: {
-    // Read more only makes sense when the collapsed text is actually cut
+    // Without a ResizeObserver the cut cannot be tracked, so Read more stays available
     measure() {
       const element = this.$refs.text
-      if (element && !this.expanded) {
+      if (this.resizeObserver && element && !this.expanded) {
         this.overflowing = element.scrollHeight > element.clientHeight + 1
       }
     },
     copy() {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(this.text)
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(this.text).catch(() => this.copyWithTextarea())
+      } else {
+        this.copyWithTextarea()
       }
+    },
+    copyWithTextarea() {
+      const textArea = document.createElement('textarea')
+      textArea.value = this.text
+      textArea.style.position = 'fixed'
+      textArea.style.opacity = '0'
+      document.body.appendChild(textArea)
+      textArea.select()
+
+      try {
+        document.execCommand('copy')
+      } catch (error) {
+        // Nothing else to try when the browser blocks copying
+      }
+
+      document.body.removeChild(textArea)
     }
   }
 }
