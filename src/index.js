@@ -36,6 +36,7 @@ import DeletedContent from './components/DeletedContent'
 import Redirect from './components/Redirect'
 import RequestLocation from './components/RequestLocation'
 import StandbyCard from './components/StandbyCard.vue'
+import AiContextCard from './components/AiContextCard.vue'
 import Survey from './components/Survey'
 import ThreadSummary from './components/ThreadSummary.vue'
 import Ticket from './components/Ticket'
@@ -174,6 +175,9 @@ function install(Vue) {
   // Standby component
   components.push(Vue.component(StandbyCard.name, StandbyCard))
 
+  // AI context component
+  components.push(Vue.component(AiContextCard.name, AiContextCard))
+
   Vue.component(Editable.name, Editable)
 
   Vue.filter('sizeInBytesFilter', SizeInBytesFilter.filter)
@@ -223,6 +227,7 @@ export default {
   UnsuportedContent,
   BlipExternal,
   StandbyCard,
+  AiContextCard,
   ActionFlow,
   install
 }

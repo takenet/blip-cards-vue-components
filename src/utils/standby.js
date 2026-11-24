@@ -44,19 +44,35 @@ function getStandbyInnerDocument(content) {
 }
 
 // message.template holds the sent parameters; template holds the definition (BODY, BUTTONS...)
+// TemplateContent needs both component lists as arrays and a BODY, which templates without variables or text omit
+// The BODY goes last: MediaContent reads the header media from the first component
 function toTemplateDocument(value) {
   const { message, template } = value || {}
 
   if (!message || !message.template || !template) return undefined
 
+  const definitionComponents = toArray(template.components)
+  const hasBody = definitionComponents.some(component => component && component.type === 'BODY')
+
   return {
     type: 'template',
     content: {
       type: 'template-content',
-      template: message.template,
-      templateContent: template
+      template: {
+        ...message.template,
+        name: message.template.name || template.name,
+        components: toArray(message.template.components)
+      },
+      templateContent: {
+        ...template,
+        components: hasBody ? definitionComponents : [...definitionComponents, { type: 'BODY', text: '' }]
+      }
     }
   }
+}
+
+function toArray(value) {
+  return Array.isArray(value) ? value : []
 }
 
 export {

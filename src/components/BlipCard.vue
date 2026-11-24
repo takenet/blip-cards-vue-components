@@ -759,6 +759,22 @@
           :external-message-label="translations.standbyExternalMessage"
         />
 
+        <ai-context-card
+          v-else-if="isAiContextMessage"
+          class="blip-card"
+          @updated="updatedPhotoMargin"
+          :status="status"
+          :position="position"
+          :document="editableDocument.content"
+          :full-document="editableDocument"
+          :date="date"
+          :title-text="translations.aiContextTitle"
+          :subtitle-text="translations.aiContextSubtitle"
+          :read-more-text="translations.aiContextReadMore"
+          :collapse-text="translations.aiContextCollapse"
+          :copy-text="translations.aiContextCopy"
+        />
+
         <unsuported-content
           v-else
           class="blip-card"
@@ -799,6 +815,7 @@ import { MessageTypesConstants } from '../utils/MessageTypesConstants.js'
 import { checkIsExternalMessage } from '../utils/externalMessages.js'
 import { getMemberInfo } from '../utils/memberUtils.js'
 import { isStandbyMessage } from '../utils/standby.js'
+import { isAiContextMessage } from '../utils/aiContext.js'
 import TemplateOrder from './TemplateContent/TemplateOrder.vue'
 
 const supportedRepliedTypes = [
@@ -951,9 +968,8 @@ export default {
         })
         bubbleHeight -= 10 // Time height
       } else {
-        bubbleHeight = element.querySelector('.bubble')
-          ? element.querySelector('.bubble').offsetHeight
-          : 0
+        const bubble = element.querySelector('.bubble') || element.querySelector('.ai-context__card')
+        bubbleHeight = bubble ? bubble.offsetHeight : 0
       }
       const photoHeight = 25
 
@@ -990,6 +1006,9 @@ export default {
     },
     isStandbyMessage() {
       return isStandbyMessage(this.document)
+    },
+    isAiContextMessage() {
+      return isAiContextMessage(this.document)
     },
     isTemplateWithOrderDetails() {
       if (!this.document || !this.document.content || this.document.content.type !== 'template-content') return false
