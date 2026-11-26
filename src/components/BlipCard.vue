@@ -760,17 +760,6 @@
         />
 
         <template v-else-if="isThreadDivider || isAiContextMessage">
-          <thread-divider
-            v-if="isThreadDivider"
-            class="blip-card"
-            :document="editableDocument.content"
-            :full-document="editableDocument"
-            :control-taken-text="translations.threadDividerControlTaken"
-            :control-passed-text="translations.threadDividerControlPassed"
-            :control-taken-meta-agent-text="translations.threadDividerControlTakenMetaAgent"
-            :control-passed-meta-agent-text="translations.threadDividerControlPassedMetaAgent"
-          />
-
           <ai-context-card
             v-if="isAiContextMessage"
             class="blip-card"
@@ -785,6 +774,17 @@
             :read-more-text="translations.aiContextReadMore"
             :collapse-text="translations.aiContextCollapse"
             :copy-text="translations.aiContextCopy"
+          />
+
+          <thread-divider
+            v-if="isThreadDivider"
+            class="blip-card"
+            :document="editableDocument.content"
+            :full-document="editableDocument"
+            :control-taken-text="translations.threadDividerControlTaken"
+            :control-passed-text="translations.threadDividerControlPassed"
+            :control-taken-meta-agent-text="translations.threadDividerControlTakenMetaAgent"
+            :control-passed-meta-agent-text="translations.threadDividerControlPassedMetaAgent"
           />
         </template>
 
@@ -984,12 +984,6 @@ export default {
       } else {
         const bubble = element.querySelector('.bubble') || element.querySelector('.ai-context__card')
         bubbleHeight = bubble ? bubble.offsetHeight : 0
-
-        // The divider rendered above the card pushes it down
-        const divider = element.querySelector('.thread-divider')
-        if (bubble && divider) {
-          bubbleHeight += divider.offsetHeight + parseInt(window.getComputedStyle(divider).marginBottom, 10)
-        }
       }
       const photoHeight = 25
 
