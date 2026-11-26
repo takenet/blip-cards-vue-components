@@ -2,7 +2,7 @@
   <div v-if="editableDocument" class="blip-relative" @dblclick="editCard">
     <div
       :class="'blip-card-photo ' + position"
-      v-if="photo && position === 'left'"
+      v-if="photo && position === 'left' && !isThreadDividerOnly"
       :style="{
         top: photoMargin + 'px',
         width: '25px',
@@ -10,7 +10,7 @@
         'background-image': 'url(&quot;' + photo + '&quot;)'
       }"
     ></div>
-    <div :class="{ 'blip-container--with-photo': photo, [position]: true }">
+    <div :class="{ 'blip-container--with-photo': photo && !isThreadDividerOnly, [position]: true }">
       <div class="blip-card-container">
         <deleted-content
           v-if="document.type === 'application/vnd.lime.deleted-content+json'"
@@ -759,21 +759,34 @@
           :external-message-label="translations.standbyExternalMessage"
         />
 
-        <ai-context-card
-          v-else-if="isAiContextMessage"
-          class="blip-card"
-          @updated="updatedPhotoMargin"
-          :status="status"
-          :position="position"
-          :document="editableDocument.content"
-          :full-document="editableDocument"
-          :date="date"
-          :title-text="translations.aiContextTitle"
-          :subtitle-text="translations.aiContextSubtitle"
-          :read-more-text="translations.aiContextReadMore"
-          :collapse-text="translations.aiContextCollapse"
-          :copy-text="translations.aiContextCopy"
-        />
+        <template v-else-if="isThreadDivider || isAiContextMessage">
+          <thread-divider
+            v-if="isThreadDivider"
+            class="blip-card"
+            :document="editableDocument.content"
+            :full-document="editableDocument"
+            :control-taken-text="translations.threadDividerControlTaken"
+            :control-passed-text="translations.threadDividerControlPassed"
+            :control-taken-meta-agent-text="translations.threadDividerControlTakenMetaAgent"
+            :control-passed-meta-agent-text="translations.threadDividerControlPassedMetaAgent"
+          />
+
+          <ai-context-card
+            v-if="isAiContextMessage"
+            class="blip-card"
+            @updated="updatedPhotoMargin"
+            :status="status"
+            :position="position"
+            :document="editableDocument.content"
+            :full-document="editableDocument"
+            :date="date"
+            :title-text="translations.aiContextTitle"
+            :subtitle-text="translations.aiContextSubtitle"
+            :read-more-text="translations.aiContextReadMore"
+            :collapse-text="translations.aiContextCollapse"
+            :copy-text="translations.aiContextCopy"
+          />
+        </template>
 
         <unsuported-content
           v-else
@@ -796,7 +809,7 @@
       </div>
       <div
         :class="'blip-card-photo ' + position"
-        v-if="photo && position === 'right'"
+        v-if="photo && position === 'right' && !isThreadDividerOnly"
         :style="{
           top: photoMargin + 'px',
           right: '0%',
@@ -816,6 +829,7 @@ import { checkIsExternalMessage } from '../utils/externalMessages.js'
 import { getMemberInfo } from '../utils/memberUtils.js'
 import { isStandbyMessage } from '../utils/standby.js'
 import { isAiContextMessage } from '../utils/aiContext.js'
+import { isThreadDividerMessage } from '../utils/threadDivider.js'
 import TemplateOrder from './TemplateContent/TemplateOrder.vue'
 
 const supportedRepliedTypes = [
@@ -970,6 +984,12 @@ export default {
       } else {
         const bubble = element.querySelector('.bubble') || element.querySelector('.ai-context__card')
         bubbleHeight = bubble ? bubble.offsetHeight : 0
+
+        // The divider rendered above the card pushes it down
+        const divider = element.querySelector('.thread-divider')
+        if (bubble && divider) {
+          bubbleHeight += divider.offsetHeight + parseInt(window.getComputedStyle(divider).marginBottom, 10)
+        }
       }
       const photoHeight = 25
 
@@ -1010,6 +1030,12 @@ export default {
     isAiContextMessage() {
       return isAiContextMessage(this.document)
     },
+    isThreadDivider() {
+      return isThreadDividerMessage(this.document)
+    },
+    isThreadDividerOnly() {
+      return this.isThreadDivider && !this.isAiContextMessage
+    },
     isTemplateWithOrderDetails() {
       if (!this.document || !this.document.content || this.document.content.type !== 'template-content') return false
 
@@ -1033,10 +1059,18 @@ export default {
 .blip-container--with-photo {
   &.left {
     margin-left: 35px;
+
+    > .blip-card-container > .thread-divider {
+      margin-left: -35px;
+    }
   }
 
   &.right {
     margin-right: 55px;
+
+    > .blip-card-container > .thread-divider {
+      margin-right: -55px;
+    }
   }
 }
 

@@ -11,5 +11,6 @@ export const MessageTypesConstants = {
   MULTI_PARTNER_CONVERSATION_STANDBY: 'application/vnd.iris.multi-partner-conversation-standby+json',
   MULTI_PARTNER_CONVERSATION_TEMPLATE: 'application/vnd.iris.multi-partner-conversation-template+json',
   MULTI_PARTNER_CONVERSATION_CONTEXT: 'application/vnd.iris.multi-partner-conversation-context+json',
+  MULTI_PARTNER_CONVERSATION_CONTROL_TAKEN: 'application/vnd.iris.multi-partner-conversation-control-taken+json',
   MULTI_PARTNER_CONVERSATION_CONTROL_PASSED: 'application/vnd.iris.multi-partner-conversation-control-passed+json'
 }

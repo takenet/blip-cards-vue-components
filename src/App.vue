@@ -236,6 +236,14 @@
         >
           SEND AI context {{ example.label }}
         </button>
+        <button
+          class="button"
+          v-for="example in threadDividerExamples"
+          :key="example.label"
+          @click="sendThreadDivider(example)"
+        >
+          SEND Thread divider {{ example.label }}
+        </button>
         <button class="button" @click="sendThreadSummary">
           ENVIAR Resumo da conversa
         </button>
@@ -2049,6 +2057,27 @@ export default {
       })
       this.send()
     },
+    sendThreadDivider: function({ containerType, value, metadata }) {
+      this.json = JSON.stringify({
+        id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
+        to: 'to@msging.net',
+        from: 'from@msging.net',
+        type: 'application/vnd.iris.multi-partner-conversation+json',
+        content: {
+          direction: 'outbound',
+          sender: 'bot',
+          recipient: '5531999998888',
+          source: 'messaging_handovers',
+          documentContainer: { type: containerType, value }
+        },
+        metadata: {
+          '#wa.timestamp': '1710000010',
+          '#wa.multiPartner.IsReadOnly': 'true',
+          ...metadata
+        }
+      })
+      this.send()
+    },
     sendAiContext: function({ containerType, value, metadata }) {
       this.json = JSON.stringify({
         id: 'b1c3398f-ef63-426d-98b8-37ca84478f8f',
@@ -3246,6 +3275,45 @@ export default {
         messageDeleted: 'Esta mensagem foi excluída.'
       },
       isExternalMessage: false,
+      threadDividerExamples: [
+        {
+          label: 'control taken',
+          containerType: 'application/vnd.iris.multi-partner-conversation-control-taken+json',
+          metadata: { '#wa.multiPartner.IsControlTaken': 'true' },
+          value: { new_owner_app_id: '1143680903703001', new_owner_role: 'external_provider', metadata: 'customer_request' }
+        },
+        {
+          label: 'control passed',
+          containerType: 'application/vnd.iris.multi-partner-conversation-control-passed+json',
+          metadata: { '#wa.multiPartner.IsControlPassed': 'true' },
+          value: { previous_owner_app_id: '1143680903703002', previous_owner_role: 'external_provider', new_owner_role: 'escalation', metadata: 'customer_request' }
+        },
+        {
+          label: 'control taken (Meta agent)',
+          containerType: 'application/vnd.iris.multi-partner-conversation-control-taken+json',
+          metadata: { '#wa.multiPartner.IsControlTaken': 'true' },
+          value: { new_owner_app_id: '1143680903703001', new_owner_role: 'ai_agent', metadata: 'customer_request' }
+        },
+        {
+          label: 'control passed (Meta agent)',
+          containerType: 'application/vnd.iris.multi-partner-conversation-control-passed+json',
+          metadata: { '#wa.multiPartner.IsControlPassed': 'true' },
+          value: { previous_owner_app_id: '1143680903703001', previous_owner_app_role: 'meta_business_agent', previous_owner_role: 'ai_agent', new_owner_role: 'escalation', metadata: 'customer_request' }
+        },
+        {
+          label: 'control passed (Meta agent) with context',
+          containerType: 'application/vnd.iris.multi-partner-conversation-control-passed+json',
+          metadata: { '#wa.multiPartner.IsControlPassed': 'true' },
+          value: {
+            previous_owner_app_id: '1143680903703001',
+            previous_owner_app_role: 'meta_business_agent',
+            previous_owner_role: 'ai_agent',
+            new_owner_role: 'escalation',
+            metadata: 'customer_request',
+            conversation_context: { type: 'summary', summary: { text: 'Customer asked about an order delivery and needs a human agent.' } }
+          }
+        }
+      ],
       aiContextExamples: [
         {
           label: 'summary (long)',

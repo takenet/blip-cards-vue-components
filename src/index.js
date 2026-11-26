@@ -37,6 +37,7 @@ import Redirect from './components/Redirect'
 import RequestLocation from './components/RequestLocation'
 import StandbyCard from './components/StandbyCard.vue'
 import AiContextCard from './components/AiContextCard.vue'
+import ThreadDivider from './components/ThreadDivider.vue'
 import Survey from './components/Survey'
 import ThreadSummary from './components/ThreadSummary.vue'
 import Ticket from './components/Ticket'
@@ -178,6 +179,9 @@ function install(Vue) {
   // AI context component
   components.push(Vue.component(AiContextCard.name, AiContextCard))
 
+  // Thread divider component
+  components.push(Vue.component(ThreadDivider.name, ThreadDivider))
+
   Vue.component(Editable.name, Editable)
 
   Vue.filter('sizeInBytesFilter', SizeInBytesFilter.filter)
@@ -228,6 +232,7 @@ export default {
   BlipExternal,
   StandbyCard,
   AiContextCard,
+  ThreadDivider,
   ActionFlow,
   install
 }
