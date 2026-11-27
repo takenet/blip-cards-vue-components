@@ -1,0 +1,39 @@
+name: Publish
+
+on:
+  release:
+    types: [ published ]
+  push:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/npmpublish.yml'
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 8
+      - run: npm ci
+      - run: npm i -g codecov
+      - run: npm run lint
+        env:
+          CODECOV_TOKEN: ${{secrets.codecov_token}}
+
+  publish-npm:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 8
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm run bundle
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
